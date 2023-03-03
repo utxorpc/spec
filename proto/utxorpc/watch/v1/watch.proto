@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package utxorpc.watch.v1;
+
+message Tx {
+
+}
+
+message WaitForTxRequest {
+    uint32 max_depth = 1;
+    string pattern = 2; 
+}
+
+service Watch {
+    rpc WaitForTx(WaitForTxRequest) returns (stream Tx);
+    rpc FollowTx(WaitForTxRequest) returns (stream Tx);
+}

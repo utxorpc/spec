@@ -1,0 +1,24 @@
+version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    default: github.com/bufbuild/buf-tour/gen
+plugins:
+  - plugin: buf.build/protocolbuffers/go
+    out: gen/go
+    opt: paths=source_relative
+  - plugin: buf.build/bufbuild/connect-go
+    out: gen/go
+    opt: paths=source_relative
+  - name: prost
+    out: gen/rust/src
+    opt:
+      - bytes=.
+      - file_descriptor_set
+  - name: prost-crate
+    out: gen/rust
+    strategy: all
+    opt:
+      - gen_crate=gen/rust/Cargo.toml
+  - name: tonic
+    out: gen/rust/src
