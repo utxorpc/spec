@@ -7,16 +7,6 @@ message Intersection {
 
 }
 
-message BlockStreamRequest {
-    Intersection intersect = 1;
-}
-
-message BlockFetchRequest {
-    uint64 slot = 1;
-    uint64 height = 2;
-    string hash = 3; 
-}
-
 message BlockHeader {
     uint64 slot = 1;
     uint64 height = 2;
@@ -33,7 +23,26 @@ message Block {
     bytes cbor = 3;
 }
 
-service ChainSync {
-    rpc StreamBlocks(BlockStreamRequest) returns (stream Block);
-    rpc FetchBlock(BlockFetchRequest) returns (Block);
+message StreamBlocksRequest {
+    Intersection intersect = 1;
+}
+
+message StreamBlocksResponse {
+
+}
+
+
+message FetchBlocksRequest {
+    uint64 slot = 1;
+    uint64 height = 2;
+    string hash = 3; 
+}
+
+message FetchBlocksResponse {
+
+}
+
+service ChainSyncService {
+    rpc StreamBlocks(StreamBlocksRequest) returns (stream StreamBlocksResponse);
+    rpc FetchBlocks(FetchBlocksRequest) returns (FetchBlocksResponse);
 }

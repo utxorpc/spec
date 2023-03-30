@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package utxorpc.watch.v1;
 
-message Tx {
+message TxEvent {
 
 }
 
@@ -11,7 +11,21 @@ message WaitForTxRequest {
     string pattern = 2; 
 }
 
-service Watch {
-    rpc WaitForTx(WaitForTxRequest) returns (stream Tx);
-    rpc FollowTx(WaitForTxRequest) returns (stream Tx);
+message WaitForTxResponse {
+    TxEvent item = 1;
+}
+
+message FollowTxsRequest {
+    uint32 min_depth = 1;
+    uint32 max_depth = 2;
+    string pattern = 3; 
+}
+
+message FollowTxsResponse {
+    TxEvent item = 1;
+}
+
+service ChainWatchService {
+    rpc WaitForTx(WaitForTxRequest) returns (WaitForTxResponse);
+    rpc FollowTxs(FollowTxsRequest) returns (stream FollowTxsResponse);
 }

@@ -2,53 +2,41 @@ syntax = "proto3";
 
 package utxorpc.state.v1;
 
+import "google/protobuf/field_mask.proto";
+import "utxorpc/ledger/v1/tx.proto";
+
 message Empty {}
 
 message UtxoByAddressRequest {
-   string address = 1;
+  string address = 1;
 }
 
 message UtxoByTxRequest {
-    string hash = 1;
-    uint32 index = 2;
-}
-
-message Asset {
-    string policy = 1;
-    string name = 2;
-    uint64 quantity = 3;
-}
-
-message Value {
-    uint64 native = 1;
-    map<string, Asset> assets = 2;
-}
-
-message Datum {
-    string hash = 1;
-    bytes data = 2;
-}
-
-message Utxo {
-    string address = 1;
-    Value value = 2; 
-    Datum datum = 3;
-    string script_ref = 4;
+  string hash = 1;
+  uint32 index = 2;
 }
 
 message UtxoSet {
-    repeated Utxo items = 1;
-    string next_token = 2;
+  repeated utxorpc.ledger.v1.TxOutput items = 1;
+  string next_token = 2;
 }
 
 message ChainPoint {
-    uint64 slot = 1;
-    uint64 height = 2;
-    string hash = 3;
+  uint64 slot = 1;
+  uint64 height = 2;
+  string hash = 3;
 }
 
-service LedgerState {
-    rpc GetChainTip(Empty) returns (ChainPoint);
-    rpc GetUtxoByAddress(UtxoByAddressRequest) returns (UtxoSet);
-    rpc GetUtxoByTx(UtxoByTxRequest) returns (UtxoSet);
+message GetTxRequest {
+  repeated bytes tx_hash = 1;
+  google.protobuf.FieldMask field_mask = 2;
+}
+
+message GetTxResponse {}
+
+service LedgerStateService {
+  rpc GetChainTip(Empty) returns (ChainPoint);
+  rpc GetUtxoByAddress(UtxoByAddressRequest) returns (UtxoSet);
+  rpc GetUtxoByTx(UtxoByTxRequest) returns (UtxoSet);
+  rpc GetTx(GetTxRequest) returns (GetTxResponse);
 }
