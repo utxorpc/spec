@@ -4,12 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bytes = "1.4.0"
-pbjson = "0.5.1"
-pbjson-types = "0.5.1"
-prost = "0.11.8"
-serde = "1.0.160"
-tonic = "0.9.1"
+bytes = "^1.4"
+pbjson = "^0.5"
+pbjson-types = "^0.5"
+prost = "^0.11"
+serde = "^1.0"
+tonic = "^0.9"
 
 [features]
 default = []
