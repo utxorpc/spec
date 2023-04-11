@@ -10,15 +10,19 @@ plugins:
   - plugin: buf.build/bufbuild/connect-go
     out: gen/go
     opt: paths=source_relative
-  - name: prost
+  - plugin: prost
     out: gen/rust/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - name: prost-crate
+  - plugin: prost-crate
     out: gen/rust
     strategy: all
     opt:
       - gen_crate=gen/rust/Cargo.toml
-  - name: tonic
+  - plugin: tonic
     out: gen/rust/src
+  - plugin: buf.build/grpc-ecosystem/openapiv2
+    out: gen/openapi
+  - plugin: buf.build/community/pseudomuto-doc
+    out: gen/docs

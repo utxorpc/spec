@@ -1,15 +1,15 @@
 // @generated
 /// Generated client implementations.
-pub mod chain_sync_client {
+pub mod chain_sync_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     ///
     #[derive(Debug, Clone)]
-    pub struct ChainSyncClient<T> {
+    pub struct ChainSyncServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl ChainSyncClient<tonic::transport::Channel> {
+    impl ChainSyncServiceClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -20,7 +20,7 @@ pub mod chain_sync_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> ChainSyncClient<T>
+    impl<T> ChainSyncServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -38,7 +38,7 @@ pub mod chain_sync_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> ChainSyncClient<InterceptedService<T, F>>
+        ) -> ChainSyncServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -52,7 +52,7 @@ pub mod chain_sync_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            ChainSyncClient::new(InterceptedService::new(inner, interceptor))
+            ChainSyncServiceClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -72,9 +72,9 @@ pub mod chain_sync_client {
         ///
         pub async fn stream_blocks(
             &mut self,
-            request: impl tonic::IntoRequest<super::BlockStreamRequest>,
+            request: impl tonic::IntoRequest<super::StreamBlocksRequest>,
         ) -> Result<
-            tonic::Response<tonic::codec::Streaming<super::Block>>,
+            tonic::Response<tonic::codec::Streaming<super::StreamBlocksResponse>>,
             tonic::Status,
         > {
             self.inner
@@ -88,15 +88,15 @@ pub mod chain_sync_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.sync.v1.ChainSync/StreamBlocks",
+                "/utxorpc.sync.v1.ChainSyncService/StreamBlocks",
             );
             self.inner.server_streaming(request.into_request(), path, codec).await
         }
         ///
-        pub async fn fetch_block(
+        pub async fn fetch_blocks(
             &mut self,
-            request: impl tonic::IntoRequest<super::BlockFetchRequest>,
-        ) -> Result<tonic::Response<super::Block>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::FetchBlocksRequest>,
+        ) -> Result<tonic::Response<super::FetchBlocksResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -108,45 +108,45 @@ pub mod chain_sync_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.sync.v1.ChainSync/FetchBlock",
+                "/utxorpc.sync.v1.ChainSyncService/FetchBlocks",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
 }
 /// Generated server implementations.
-pub mod chain_sync_server {
+pub mod chain_sync_service_server {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
-    /// Generated trait containing gRPC methods that should be implemented for use with ChainSyncServer.
+    /// Generated trait containing gRPC methods that should be implemented for use with ChainSyncServiceServer.
     #[async_trait]
-    pub trait ChainSync: Send + Sync + 'static {
+    pub trait ChainSyncService: Send + Sync + 'static {
         /// Server streaming response type for the StreamBlocks method.
         type StreamBlocksStream: futures_core::Stream<
-                Item = Result<super::Block, tonic::Status>,
+                Item = Result<super::StreamBlocksResponse, tonic::Status>,
             >
             + Send
             + 'static;
         ///
         async fn stream_blocks(
             &self,
-            request: tonic::Request<super::BlockStreamRequest>,
+            request: tonic::Request<super::StreamBlocksRequest>,
         ) -> Result<tonic::Response<Self::StreamBlocksStream>, tonic::Status>;
         ///
-        async fn fetch_block(
+        async fn fetch_blocks(
             &self,
-            request: tonic::Request<super::BlockFetchRequest>,
-        ) -> Result<tonic::Response<super::Block>, tonic::Status>;
+            request: tonic::Request<super::FetchBlocksRequest>,
+        ) -> Result<tonic::Response<super::FetchBlocksResponse>, tonic::Status>;
     }
     ///
     #[derive(Debug)]
-    pub struct ChainSyncServer<T: ChainSync> {
+    pub struct ChainSyncServiceServer<T: ChainSyncService> {
         inner: _Inner<T>,
         accept_compression_encodings: EnabledCompressionEncodings,
         send_compression_encodings: EnabledCompressionEncodings,
     }
     struct _Inner<T>(Arc<T>);
-    impl<T: ChainSync> ChainSyncServer<T> {
+    impl<T: ChainSyncService> ChainSyncServiceServer<T> {
         pub fn new(inner: T) -> Self {
             Self::from_arc(Arc::new(inner))
         }
@@ -180,9 +180,9 @@ pub mod chain_sync_server {
             self
         }
     }
-    impl<T, B> tonic::codegen::Service<http::Request<B>> for ChainSyncServer<T>
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for ChainSyncServiceServer<T>
     where
-        T: ChainSync,
+        T: ChainSyncService,
         B: Body + Send + 'static,
         B::Error: Into<StdError> + Send + 'static,
     {
@@ -198,14 +198,14 @@ pub mod chain_sync_server {
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             let inner = self.inner.clone();
             match req.uri().path() {
-                "/utxorpc.sync.v1.ChainSync/StreamBlocks" => {
+                "/utxorpc.sync.v1.ChainSyncService/StreamBlocks" => {
                     #[allow(non_camel_case_types)]
-                    struct StreamBlocksSvc<T: ChainSync>(pub Arc<T>);
+                    struct StreamBlocksSvc<T: ChainSyncService>(pub Arc<T>);
                     impl<
-                        T: ChainSync,
-                    > tonic::server::ServerStreamingService<super::BlockStreamRequest>
+                        T: ChainSyncService,
+                    > tonic::server::ServerStreamingService<super::StreamBlocksRequest>
                     for StreamBlocksSvc<T> {
-                        type Response = super::Block;
+                        type Response = super::StreamBlocksResponse;
                         type ResponseStream = T::StreamBlocksStream;
                         type Future = BoxFuture<
                             tonic::Response<Self::ResponseStream>,
@@ -213,7 +213,7 @@ pub mod chain_sync_server {
                         >;
                         fn call(
                             &mut self,
-                            request: tonic::Request<super::BlockStreamRequest>,
+                            request: tonic::Request<super::StreamBlocksRequest>,
                         ) -> Self::Future {
                             let inner = self.0.clone();
                             let fut = async move {
@@ -239,24 +239,26 @@ pub mod chain_sync_server {
                     };
                     Box::pin(fut)
                 }
-                "/utxorpc.sync.v1.ChainSync/FetchBlock" => {
+                "/utxorpc.sync.v1.ChainSyncService/FetchBlocks" => {
                     #[allow(non_camel_case_types)]
-                    struct FetchBlockSvc<T: ChainSync>(pub Arc<T>);
+                    struct FetchBlocksSvc<T: ChainSyncService>(pub Arc<T>);
                     impl<
-                        T: ChainSync,
-                    > tonic::server::UnaryService<super::BlockFetchRequest>
-                    for FetchBlockSvc<T> {
-                        type Response = super::Block;
+                        T: ChainSyncService,
+                    > tonic::server::UnaryService<super::FetchBlocksRequest>
+                    for FetchBlocksSvc<T> {
+                        type Response = super::FetchBlocksResponse;
                         type Future = BoxFuture<
                             tonic::Response<Self::Response>,
                             tonic::Status,
                         >;
                         fn call(
                             &mut self,
-                            request: tonic::Request<super::BlockFetchRequest>,
+                            request: tonic::Request<super::FetchBlocksRequest>,
                         ) -> Self::Future {
                             let inner = self.0.clone();
-                            let fut = async move { (*inner).fetch_block(request).await };
+                            let fut = async move {
+                                (*inner).fetch_blocks(request).await
+                            };
                             Box::pin(fut)
                         }
                     }
@@ -265,7 +267,7 @@ pub mod chain_sync_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let inner = inner.0;
-                        let method = FetchBlockSvc(inner);
+                        let method = FetchBlocksSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(
@@ -292,7 +294,7 @@ pub mod chain_sync_server {
             }
         }
     }
-    impl<T: ChainSync> Clone for ChainSyncServer<T> {
+    impl<T: ChainSyncService> Clone for ChainSyncServiceServer<T> {
         fn clone(&self) -> Self {
             let inner = self.inner.clone();
             Self {
@@ -302,7 +304,7 @@ pub mod chain_sync_server {
             }
         }
     }
-    impl<T: ChainSync> Clone for _Inner<T> {
+    impl<T: ChainSyncService> Clone for _Inner<T> {
         fn clone(&self) -> Self {
             Self(self.0.clone())
         }
@@ -312,7 +314,7 @@ pub mod chain_sync_server {
             write!(f, "{:?}", self.0)
         }
     }
-    impl<T: ChainSync> tonic::server::NamedService for ChainSyncServer<T> {
-        const NAME: &'static str = "utxorpc.sync.v1.ChainSync";
+    impl<T: ChainSyncService> tonic::server::NamedService for ChainSyncServiceServer<T> {
+        const NAME: &'static str = "utxorpc.sync.v1.ChainSyncService";
     }
 }

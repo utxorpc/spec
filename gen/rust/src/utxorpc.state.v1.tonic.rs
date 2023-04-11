@@ -1,15 +1,15 @@
 // @generated
 /// Generated client implementations.
-pub mod ledger_state_client {
+pub mod ledger_state_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     ///
     #[derive(Debug, Clone)]
-    pub struct LedgerStateClient<T> {
+    pub struct LedgerStateServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl LedgerStateClient<tonic::transport::Channel> {
+    impl LedgerStateServiceClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -20,7 +20,7 @@ pub mod ledger_state_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> LedgerStateClient<T>
+    impl<T> LedgerStateServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -38,7 +38,7 @@ pub mod ledger_state_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> LedgerStateClient<InterceptedService<T, F>>
+        ) -> LedgerStateServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -52,7 +52,7 @@ pub mod ledger_state_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            LedgerStateClient::new(InterceptedService::new(inner, interceptor))
+            LedgerStateServiceClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -85,7 +85,7 @@ pub mod ledger_state_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.state.v1.LedgerState/GetChainTip",
+                "/utxorpc.state.v1.LedgerStateService/GetChainTip",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -105,7 +105,7 @@ pub mod ledger_state_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.state.v1.LedgerState/GetUtxoByAddress",
+                "/utxorpc.state.v1.LedgerStateService/GetUtxoByAddress",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -125,19 +125,39 @@ pub mod ledger_state_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.state.v1.LedgerState/GetUtxoByTx",
+                "/utxorpc.state.v1.LedgerStateService/GetUtxoByTx",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        ///
+        pub async fn get_tx(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetTxRequest>,
+        ) -> Result<tonic::Response<super::GetTxResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/utxorpc.state.v1.LedgerStateService/GetTx",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
 }
 /// Generated server implementations.
-pub mod ledger_state_server {
+pub mod ledger_state_service_server {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
-    /// Generated trait containing gRPC methods that should be implemented for use with LedgerStateServer.
+    /// Generated trait containing gRPC methods that should be implemented for use with LedgerStateServiceServer.
     #[async_trait]
-    pub trait LedgerState: Send + Sync + 'static {
+    pub trait LedgerStateService: Send + Sync + 'static {
         ///
         async fn get_chain_tip(
             &self,
@@ -153,16 +173,21 @@ pub mod ledger_state_server {
             &self,
             request: tonic::Request<super::UtxoByTxRequest>,
         ) -> Result<tonic::Response<super::UtxoSet>, tonic::Status>;
+        ///
+        async fn get_tx(
+            &self,
+            request: tonic::Request<super::GetTxRequest>,
+        ) -> Result<tonic::Response<super::GetTxResponse>, tonic::Status>;
     }
     ///
     #[derive(Debug)]
-    pub struct LedgerStateServer<T: LedgerState> {
+    pub struct LedgerStateServiceServer<T: LedgerStateService> {
         inner: _Inner<T>,
         accept_compression_encodings: EnabledCompressionEncodings,
         send_compression_encodings: EnabledCompressionEncodings,
     }
     struct _Inner<T>(Arc<T>);
-    impl<T: LedgerState> LedgerStateServer<T> {
+    impl<T: LedgerStateService> LedgerStateServiceServer<T> {
         pub fn new(inner: T) -> Self {
             Self::from_arc(Arc::new(inner))
         }
@@ -196,9 +221,9 @@ pub mod ledger_state_server {
             self
         }
     }
-    impl<T, B> tonic::codegen::Service<http::Request<B>> for LedgerStateServer<T>
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for LedgerStateServiceServer<T>
     where
-        T: LedgerState,
+        T: LedgerStateService,
         B: Body + Send + 'static,
         B::Error: Into<StdError> + Send + 'static,
     {
@@ -214,10 +239,10 @@ pub mod ledger_state_server {
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             let inner = self.inner.clone();
             match req.uri().path() {
-                "/utxorpc.state.v1.LedgerState/GetChainTip" => {
+                "/utxorpc.state.v1.LedgerStateService/GetChainTip" => {
                     #[allow(non_camel_case_types)]
-                    struct GetChainTipSvc<T: LedgerState>(pub Arc<T>);
-                    impl<T: LedgerState> tonic::server::UnaryService<super::Empty>
+                    struct GetChainTipSvc<T: LedgerStateService>(pub Arc<T>);
+                    impl<T: LedgerStateService> tonic::server::UnaryService<super::Empty>
                     for GetChainTipSvc<T> {
                         type Response = super::ChainPoint;
                         type Future = BoxFuture<
@@ -252,11 +277,11 @@ pub mod ledger_state_server {
                     };
                     Box::pin(fut)
                 }
-                "/utxorpc.state.v1.LedgerState/GetUtxoByAddress" => {
+                "/utxorpc.state.v1.LedgerStateService/GetUtxoByAddress" => {
                     #[allow(non_camel_case_types)]
-                    struct GetUtxoByAddressSvc<T: LedgerState>(pub Arc<T>);
+                    struct GetUtxoByAddressSvc<T: LedgerStateService>(pub Arc<T>);
                     impl<
-                        T: LedgerState,
+                        T: LedgerStateService,
                     > tonic::server::UnaryService<super::UtxoByAddressRequest>
                     for GetUtxoByAddressSvc<T> {
                         type Response = super::UtxoSet;
@@ -292,11 +317,11 @@ pub mod ledger_state_server {
                     };
                     Box::pin(fut)
                 }
-                "/utxorpc.state.v1.LedgerState/GetUtxoByTx" => {
+                "/utxorpc.state.v1.LedgerStateService/GetUtxoByTx" => {
                     #[allow(non_camel_case_types)]
-                    struct GetUtxoByTxSvc<T: LedgerState>(pub Arc<T>);
+                    struct GetUtxoByTxSvc<T: LedgerStateService>(pub Arc<T>);
                     impl<
-                        T: LedgerState,
+                        T: LedgerStateService,
                     > tonic::server::UnaryService<super::UtxoByTxRequest>
                     for GetUtxoByTxSvc<T> {
                         type Response = super::UtxoSet;
@@ -332,6 +357,43 @@ pub mod ledger_state_server {
                     };
                     Box::pin(fut)
                 }
+                "/utxorpc.state.v1.LedgerStateService/GetTx" => {
+                    #[allow(non_camel_case_types)]
+                    struct GetTxSvc<T: LedgerStateService>(pub Arc<T>);
+                    impl<
+                        T: LedgerStateService,
+                    > tonic::server::UnaryService<super::GetTxRequest> for GetTxSvc<T> {
+                        type Response = super::GetTxResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::GetTxRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).get_tx(request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = GetTxSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
                 _ => {
                     Box::pin(async move {
                         Ok(
@@ -347,7 +409,7 @@ pub mod ledger_state_server {
             }
         }
     }
-    impl<T: LedgerState> Clone for LedgerStateServer<T> {
+    impl<T: LedgerStateService> Clone for LedgerStateServiceServer<T> {
         fn clone(&self) -> Self {
             let inner = self.inner.clone();
             Self {
@@ -357,7 +419,7 @@ pub mod ledger_state_server {
             }
         }
     }
-    impl<T: LedgerState> Clone for _Inner<T> {
+    impl<T: LedgerStateService> Clone for _Inner<T> {
         fn clone(&self) -> Self {
             Self(self.0.clone())
         }
@@ -367,7 +429,8 @@ pub mod ledger_state_server {
             write!(f, "{:?}", self.0)
         }
     }
-    impl<T: LedgerState> tonic::server::NamedService for LedgerStateServer<T> {
-        const NAME: &'static str = "utxorpc.state.v1.LedgerState";
+    impl<T: LedgerStateService> tonic::server::NamedService
+    for LedgerStateServiceServer<T> {
+        const NAME: &'static str = "utxorpc.state.v1.LedgerStateService";
     }
 }

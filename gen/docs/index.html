@@ -1,0 +1,2710 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Protocol Documentation</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic"/>
+    <style>
+      body {
+        width: 60em;
+        margin: 1em auto;
+        color: #222;
+        font-family: "Ubuntu", sans-serif;
+        padding-bottom: 4em;
+      }
+
+      h1 {
+        font-weight: normal;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+      }
+
+      h2 {
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+        margin: 1.5em 0;
+      }
+
+      h3 {
+        font-weight: normal;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+      }
+
+      a {
+        text-decoration: none;
+        color: #567e25;
+      }
+
+      table {
+        width: 100%;
+        font-size: 80%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        font-weight: 700;
+        background-color: #dcdcdc;
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #fbfbfb;
+      }
+
+      td {
+        border: 1px solid #ccc;
+        padding: 0.5ex 2ex;
+      }
+
+      td p {
+        text-indent: 1em;
+        margin: 0;
+      }
+
+      td p:nth-child(1) {
+        text-indent: 0;  
+      }
+
+       
+      .field-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .field-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .field-table td:nth-child(3) {  
+        width: 6em;
+      }
+      .field-table td:nth-child(4) {  
+        width: auto;
+      }
+
+       
+      .extension-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(3) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(4) {  
+        width: 5em;
+      }
+      .extension-table td:nth-child(5) {  
+        width: auto;
+      }
+
+       
+      .enum-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .enum-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .enum-table td:nth-child(3) {  
+        width: auto;
+      }
+
+       
+      .scalar-value-types-table tr {
+        height: 3em;
+      }
+
+       
+      #toc-container ul {
+        list-style-type: none;
+        padding-left: 1em;
+        line-height: 180%;
+        margin: 0;
+      }
+      #toc > li > a {
+        font-weight: bold;
+      }
+
+       
+      .file-heading {
+        width: 100%;
+        display: table;
+        border-bottom: 1px solid #aaa;
+        margin: 4em 0 1.5em 0;
+      }
+      .file-heading h2 {
+        border: none;
+        display: table-cell;
+      }
+      .file-heading a {
+        text-align: right;
+        display: table-cell;
+      }
+
+       
+      .badge {
+        width: 1.6em;
+        height: 1.6em;
+        display: inline-block;
+
+        line-height: 1.6em;
+        text-align: center;
+        font-weight: bold;
+        font-size: 60%;
+
+        color: #89ba48;
+        background-color: #dff0c8;
+
+        margin: 0.5ex 1em 0.5ex -1em;
+        border: 1px solid #fbfbfb;
+        border-radius: 1ex;
+      }
+    </style>
+
+    
+    <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+  </head>
+
+  <body>
+
+    <h1 id="title">Protocol Documentation</h1>
+
+    <h2>Table of Contents</h2>
+
+    <div id="toc-container">
+      <ul id="toc">
+        
+          
+          <li>
+            <a href="#utxorpc%2fledger%2fv1%2fprimitives.proto">utxorpc/ledger/v1/primitives.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Coin"><span class="badge">M</span>Coin</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#utxorpc%2fledger%2fv1%2fcerts.proto">utxorpc/ledger/v1/certs.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Certificate"><span class="badge">M</span>Certificate</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.GenesisKeyDelegationCert"><span class="badge">M</span>GenesisKeyDelegationCert</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.MoveInstantaneousRewardCert"><span class="badge">M</span>MoveInstantaneousRewardCert</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.PoolMetadata"><span class="badge">M</span>PoolMetadata</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.PoolRegistrationCert"><span class="badge">M</span>PoolRegistrationCert</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.PoolRetirementCert"><span class="badge">M</span>PoolRetirementCert</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Relay"><span class="badge">M</span>Relay</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.StakeCredential"><span class="badge">M</span>StakeCredential</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.StakeDelegationCert"><span class="badge">M</span>StakeDelegationCert</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.UnitInterval"><span class="badge">M</span>UnitInterval</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#utxorpc%2fledger%2fv1%2fmetadata.proto">utxorpc/ledger/v1/metadata.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Metadata"><span class="badge">M</span>Metadata</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Metadatum"><span class="badge">M</span>Metadatum</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.MetadatumArray"><span class="badge">M</span>MetadatumArray</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.MetadatumMap"><span class="badge">M</span>MetadatumMap</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.MetadatumPair"><span class="badge">M</span>MetadatumPair</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#utxorpc%2fledger%2fv1%2fscripts.proto">utxorpc/ledger/v1/scripts.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.BigInt"><span class="badge">M</span>BigInt</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.BoundedBytes"><span class="badge">M</span>BoundedBytes</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Constr"><span class="badge">M</span>Constr</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.NativeScript"><span class="badge">M</span>NativeScript</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.NativeScriptList"><span class="badge">M</span>NativeScriptList</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.PlutusData"><span class="badge">M</span>PlutusData</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.PlutusDataArray"><span class="badge">M</span>PlutusDataArray</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.PlutusDataMap"><span class="badge">M</span>PlutusDataMap</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.PlutusDataPair"><span class="badge">M</span>PlutusDataPair</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Script"><span class="badge">M</span>Script</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.ScriptNOfK"><span class="badge">M</span>ScriptNOfK</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#utxorpc%2fledger%2fv1%2ftx.proto">utxorpc/ledger/v1/tx.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Asset"><span class="badge">M</span>Asset</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.AuxData"><span class="badge">M</span>AuxData</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Collateral"><span class="badge">M</span>Collateral</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Multiasset"><span class="badge">M</span>Multiasset</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Redeemer"><span class="badge">M</span>Redeemer</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Tx"><span class="badge">M</span>Tx</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.TxInput"><span class="badge">M</span>TxInput</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.TxOutput"><span class="badge">M</span>TxOutput</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.TxValidity"><span class="badge">M</span>TxValidity</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.VKeyWitness"><span class="badge">M</span>VKeyWitness</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Withdrawal"><span class="badge">M</span>Withdrawal</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.WitnessSet"><span class="badge">M</span>WitnessSet</a>
+                </li>
+              
+              
+                <li>
+                  <a href="#utxorpc.ledger.v1.Purpose"><span class="badge">E</span>Purpose</a>
+                </li>
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#utxorpc%2fstate%2fv1%2fstate.proto">utxorpc/state/v1/state.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#utxorpc.state.v1.ChainPoint"><span class="badge">M</span>ChainPoint</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.state.v1.Empty"><span class="badge">M</span>Empty</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.state.v1.GetTxRequest"><span class="badge">M</span>GetTxRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.state.v1.GetTxResponse"><span class="badge">M</span>GetTxResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.state.v1.UtxoByAddressRequest"><span class="badge">M</span>UtxoByAddressRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.state.v1.UtxoByTxRequest"><span class="badge">M</span>UtxoByTxRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.state.v1.UtxoSet"><span class="badge">M</span>UtxoSet</a>
+                </li>
+              
+              
+              
+              
+                <li>
+                  <a href="#utxorpc.state.v1.LedgerStateService"><span class="badge">S</span>LedgerStateService</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#utxorpc%2fsync%2fv1%2fsync.proto">utxorpc/sync/v1/sync.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#utxorpc.sync.v1.Block"><span class="badge">M</span>Block</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.sync.v1.BlockBody"><span class="badge">M</span>BlockBody</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.sync.v1.BlockHeader"><span class="badge">M</span>BlockHeader</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.sync.v1.FetchBlocksRequest"><span class="badge">M</span>FetchBlocksRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.sync.v1.FetchBlocksResponse"><span class="badge">M</span>FetchBlocksResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.sync.v1.Intersection"><span class="badge">M</span>Intersection</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.sync.v1.StreamBlocksRequest"><span class="badge">M</span>StreamBlocksRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.sync.v1.StreamBlocksResponse"><span class="badge">M</span>StreamBlocksResponse</a>
+                </li>
+              
+              
+              
+              
+                <li>
+                  <a href="#utxorpc.sync.v1.ChainSyncService"><span class="badge">S</span>ChainSyncService</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#utxorpc%2fwatch%2fv1%2fwatch.proto">utxorpc/watch/v1/watch.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#utxorpc.watch.v1.FollowTxsRequest"><span class="badge">M</span>FollowTxsRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.watch.v1.FollowTxsResponse"><span class="badge">M</span>FollowTxsResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.watch.v1.TxEvent"><span class="badge">M</span>TxEvent</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.watch.v1.WaitForTxRequest"><span class="badge">M</span>WaitForTxRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.watch.v1.WaitForTxResponse"><span class="badge">M</span>WaitForTxResponse</a>
+                </li>
+              
+              
+              
+              
+                <li>
+                  <a href="#utxorpc.watch.v1.ChainWatchService"><span class="badge">S</span>ChainWatchService</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+        <li><a href="#scalar-value-types">Scalar Value Types</a></li>
+      </ul>
+    </div>
+
+    
+      
+      <div class="file-heading">
+        <h2 id="utxorpc/ledger/v1/primitives.proto">utxorpc/ledger/v1/primitives.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="utxorpc.ledger.v1.Coin">Coin</h3>
+        <p></p>
+
+        
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="utxorpc/ledger/v1/certs.proto">utxorpc/ledger/v1/certs.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="utxorpc.ledger.v1.Certificate">Certificate</h3>
+        <p>Represents a certificate in Cardano.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>stake_registration</td>
+                  <td><a href="#utxorpc.ledger.v1.StakeCredential">StakeCredential</a></td>
+                  <td></td>
+                  <td><p>Stake registration certificate. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>stake_deregistration</td>
+                  <td><a href="#utxorpc.ledger.v1.StakeCredential">StakeCredential</a></td>
+                  <td></td>
+                  <td><p>Stake deregistration certificate. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>stake_delegation</td>
+                  <td><a href="#utxorpc.ledger.v1.StakeDelegationCert">StakeDelegationCert</a></td>
+                  <td></td>
+                  <td><p>Stake delegation certificate. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>pool_registration</td>
+                  <td><a href="#utxorpc.ledger.v1.PoolRegistrationCert">PoolRegistrationCert</a></td>
+                  <td></td>
+                  <td><p>Pool registration certificate. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>pool_retirement</td>
+                  <td><a href="#utxorpc.ledger.v1.PoolRetirementCert">PoolRetirementCert</a></td>
+                  <td></td>
+                  <td><p>Pool retirement certificate. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>genesis_key_delegation</td>
+                  <td><a href="#utxorpc.ledger.v1.GenesisKeyDelegationCert">GenesisKeyDelegationCert</a></td>
+                  <td></td>
+                  <td><p>Genesis key delegation certificate. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>move_instantaneous_rewards_cert</td>
+                  <td><a href="#utxorpc.ledger.v1.MoveInstantaneousRewardCert">MoveInstantaneousRewardCert</a></td>
+                  <td></td>
+                  <td><p>Move instantaneous rewards certificate. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.GenesisKeyDelegationCert">GenesisKeyDelegationCert</h3>
+        <p>Represents a genesis key delegation certificate in Cardano.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>genesis_hash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Genesis hash. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>genesis_delegate_hash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Genesis delegate hash. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>vrf_keyhash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>VRF key hash. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.MoveInstantaneousRewardCert">MoveInstantaneousRewardCert</h3>
+        <p>Represents a move instantaneous reward certificate in Cardano.</p><p>Define the fields of MoveInstantaneousReward based on your original Rust code</p>
+
+        
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.PoolMetadata">PoolMetadata</h3>
+        <p>Represents pool metadata in Cardano.</p><p>Define the fields of PoolMetadata based on your original Rust code</p>
+
+        
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.PoolRegistrationCert">PoolRegistrationCert</h3>
+        <p>Represents a pool registration certificate in Cardano.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>operator</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Operator key hash. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>vrf_keyhash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>VRF key hash. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>pledge</td>
+                  <td><a href="#utxorpc.ledger.v1.Coin">Coin</a></td>
+                  <td></td>
+                  <td><p>Pledge amount. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>cost</td>
+                  <td><a href="#utxorpc.ledger.v1.Coin">Coin</a></td>
+                  <td></td>
+                  <td><p>Pool cost. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>margin</td>
+                  <td><a href="#utxorpc.ledger.v1.UnitInterval">UnitInterval</a></td>
+                  <td></td>
+                  <td><p>Pool margin. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>reward_account</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Reward account. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>pool_owners</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td>repeated</td>
+                  <td><p>List of pool owner key hashes. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>relays</td>
+                  <td><a href="#utxorpc.ledger.v1.Relay">Relay</a></td>
+                  <td>repeated</td>
+                  <td><p>List of relays. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>pool_metadata</td>
+                  <td><a href="#utxorpc.ledger.v1.PoolMetadata">PoolMetadata</a></td>
+                  <td></td>
+                  <td><p>Pool metadata. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.PoolRetirementCert">PoolRetirementCert</h3>
+        <p>Represents a pool retirement certificate in Cardano.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>pool_keyhash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Pool key hash. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>epoch</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>Retirement epoch. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.Relay">Relay</h3>
+        <p>Represents a relay in Cardano.</p><p>Define the fields of Relay based on your original Rust code</p>
+
+        
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.StakeCredential">StakeCredential</h3>
+        <p>Represents a stake credential in Cardano.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>addr_key_hash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Address key hash. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>script_hash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Script hash. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.StakeDelegationCert">StakeDelegationCert</h3>
+        <p>Represents a stake delegation certificate in Cardano.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>stake_credential</td>
+                  <td><a href="#utxorpc.ledger.v1.StakeCredential">StakeCredential</a></td>
+                  <td></td>
+                  <td><p>Stake credential. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>pool_keyhash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Pool key hash. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.UnitInterval">UnitInterval</h3>
+        <p>Represents a unit interval in Cardano.</p><p>Define the fields of UnitInterval based on your original Rust code</p>
+
+        
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="utxorpc/ledger/v1/metadata.proto">utxorpc/ledger/v1/metadata.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="utxorpc.ledger.v1.Metadata">Metadata</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>label</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#utxorpc.ledger.v1.Metadatum">Metadatum</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.Metadatum">Metadatum</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Int</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>Bytes</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>Text</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>Array</td>
+                  <td><a href="#utxorpc.ledger.v1.MetadatumArray">MetadatumArray</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>Map</td>
+                  <td><a href="#utxorpc.ledger.v1.MetadatumMap">MetadatumMap</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.MetadatumArray">MetadatumArray</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>items</td>
+                  <td><a href="#utxorpc.ledger.v1.Metadatum">Metadatum</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.MetadatumMap">MetadatumMap</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>pairs</td>
+                  <td><a href="#utxorpc.ledger.v1.MetadatumPair">MetadatumPair</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.MetadatumPair">MetadatumPair</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#utxorpc.ledger.v1.Metadatum">Metadatum</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#utxorpc.ledger.v1.Metadatum">Metadatum</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="utxorpc/ledger/v1/scripts.proto">utxorpc/ledger/v1/scripts.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="utxorpc.ledger.v1.BigInt">BigInt</h3>
+        <p>Represents a big integer for Plutus data in Cardano.</p><p>Define the fields of BigInt based on your original Rust code</p>
+
+        
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.BoundedBytes">BoundedBytes</h3>
+        <p>Represents a bounded bytes for Plutus data in Cardano.</p><p>Define the fields of BoundedBytes based on your original Rust code</p>
+
+        
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.Constr">Constr</h3>
+        <p>Represents a constructor for Plutus data in Cardano.</p><p>Define the fields of Constr based on your original Rust code</p>
+
+        
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.NativeScript">NativeScript</h3>
+        <p>Represents a native script in Cardano.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>script_pubkey</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Script based on an address key hash. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>script_all</td>
+                  <td><a href="#utxorpc.ledger.v1.NativeScriptList">NativeScriptList</a></td>
+                  <td></td>
+                  <td><p>Script that requires all nested scripts to be satisfied. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>script_any</td>
+                  <td><a href="#utxorpc.ledger.v1.NativeScriptList">NativeScriptList</a></td>
+                  <td></td>
+                  <td><p>Script that requires any of the nested scripts to be satisfied. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>script_n_of_k</td>
+                  <td><a href="#utxorpc.ledger.v1.ScriptNOfK">ScriptNOfK</a></td>
+                  <td></td>
+                  <td><p>Script that requires k out of n nested scripts to be satisfied. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>invalid_before</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>Slot number before which the script is invalid. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>invalid_hereafter</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>Slot number after which the script is invalid. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.NativeScriptList">NativeScriptList</h3>
+        <p>Represents a list of native scripts.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>items</td>
+                  <td><a href="#utxorpc.ledger.v1.NativeScript">NativeScript</a></td>
+                  <td>repeated</td>
+                  <td><p>List of native scripts. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.PlutusData">PlutusData</h3>
+        <p>Represents a Plutus data item in Cardano.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Constr</td>
+                  <td><a href="#utxorpc.ledger.v1.Constr">Constr</a></td>
+                  <td></td>
+                  <td><p>Constructor. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>Map</td>
+                  <td><a href="#utxorpc.ledger.v1.PlutusDataMap">PlutusDataMap</a></td>
+                  <td></td>
+                  <td><p>Map of Plutus data. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>BigInt</td>
+                  <td><a href="#utxorpc.ledger.v1.BigInt">BigInt</a></td>
+                  <td></td>
+                  <td><p>Big integer. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>BoundedBytes</td>
+                  <td><a href="#utxorpc.ledger.v1.BoundedBytes">BoundedBytes</a></td>
+                  <td></td>
+                  <td><p>Bounded bytes. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>Array</td>
+                  <td><a href="#utxorpc.ledger.v1.PlutusDataArray">PlutusDataArray</a></td>
+                  <td></td>
+                  <td><p>Array of Plutus data. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.PlutusDataArray">PlutusDataArray</h3>
+        <p>Represents an array of Plutus data in Cardano.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>items</td>
+                  <td><a href="#utxorpc.ledger.v1.PlutusData">PlutusData</a></td>
+                  <td>repeated</td>
+                  <td><p>List of Plutus data items. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.PlutusDataMap">PlutusDataMap</h3>
+        <p>Represents a map of Plutus data in Cardano.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>pairs</td>
+                  <td><a href="#utxorpc.ledger.v1.PlutusDataPair">PlutusDataPair</a></td>
+                  <td>repeated</td>
+                  <td><p>List of key-value pairs. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.PlutusDataPair">PlutusDataPair</h3>
+        <p>Represents a key-value pair for Plutus data in Cardano.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#utxorpc.ledger.v1.PlutusData">PlutusData</a></td>
+                  <td></td>
+                  <td><p>Key of the pair. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#utxorpc.ledger.v1.PlutusData">PlutusData</a></td>
+                  <td></td>
+                  <td><p>Value of the pair. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.Script">Script</h3>
+        <p>Represents a script in Cardano.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Native</td>
+                  <td><a href="#utxorpc.ledger.v1.NativeScript">NativeScript</a></td>
+                  <td></td>
+                  <td><p>Native script. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>PlutusV1</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Plutus V1 script. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>PlutusV2</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Plutus V2 script. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.ScriptNOfK">ScriptNOfK</h3>
+        <p>Represents a "k out of n" native script.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>k</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>The number of required satisfied scripts. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>scripts</td>
+                  <td><a href="#utxorpc.ledger.v1.NativeScript">NativeScript</a></td>
+                  <td>repeated</td>
+                  <td><p>List of native scripts. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="utxorpc/ledger/v1/tx.proto">utxorpc/ledger/v1/tx.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="utxorpc.ledger.v1.Asset">Asset</h3>
+        <p>Represents a custom asset in the Cardano blockchain.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>name</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Name of the custom asset. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>quantity</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>Quantity of the custom asset. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.AuxData">AuxData</h3>
+        <p>Auxiliary data not directly tied to the validation process</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>metadata</td>
+                  <td><a href="#utxorpc.ledger.v1.Metadata">Metadata</a></td>
+                  <td>repeated</td>
+                  <td><p>List of auxiliary metadata elements. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>scripts</td>
+                  <td><a href="#utxorpc.ledger.v1.Script">Script</a></td>
+                  <td>repeated</td>
+                  <td><p>List of auxiliary scripts. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.Collateral">Collateral</h3>
+        <p>Represents the collateral information for a transaction.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>collateral</td>
+                  <td><a href="#utxorpc.ledger.v1.TxInput">TxInput</a></td>
+                  <td>repeated</td>
+                  <td><p>Collateral inputs for the transaction. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>collateral_return</td>
+                  <td><a href="#utxorpc.ledger.v1.TxOutput">TxOutput</a></td>
+                  <td></td>
+                  <td><p>Collateral return in case of script failure. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>total_collateral</td>
+                  <td><a href="#utxorpc.ledger.v1.Coin">Coin</a></td>
+                  <td></td>
+                  <td><p>Total amount of collateral. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.Multiasset">Multiasset</h3>
+        <p>Represents a multi-asset group in the Cardano blockchain.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>policy_id</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Policy ID governing the custom assets. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>assets</td>
+                  <td><a href="#utxorpc.ledger.v1.Asset">Asset</a></td>
+                  <td>repeated</td>
+                  <td><p>List of custom assets. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.Redeemer">Redeemer</h3>
+        <p>Redeemer information for a Plutus script.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>purpose</td>
+                  <td><a href="#utxorpc.ledger.v1.Purpose">Purpose</a></td>
+                  <td></td>
+                  <td><p>Purpose of the redeemer. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>datum</td>
+                  <td><a href="#utxorpc.ledger.v1.PlutusData">PlutusData</a></td>
+                  <td></td>
+                  <td><p>Plutus data associated with the redeemer. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.Tx">Tx</h3>
+        <p>Represents a transaction in the Cardano blockchain.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>inputs</td>
+                  <td><a href="#utxorpc.ledger.v1.TxInput">TxInput</a></td>
+                  <td>repeated</td>
+                  <td><p>List of transaction inputs </p></td>
+                </tr>
+              
+                <tr>
+                  <td>outputs</td>
+                  <td><a href="#utxorpc.ledger.v1.TxOutput">TxOutput</a></td>
+                  <td>repeated</td>
+                  <td><p>List of transaction outputs </p></td>
+                </tr>
+              
+                <tr>
+                  <td>certificates</td>
+                  <td><a href="#utxorpc.ledger.v1.Certificate">Certificate</a></td>
+                  <td>repeated</td>
+                  <td><p>List of certificates </p></td>
+                </tr>
+              
+                <tr>
+                  <td>withdrawals</td>
+                  <td><a href="#utxorpc.ledger.v1.Withdrawal">Withdrawal</a></td>
+                  <td>repeated</td>
+                  <td><p>List of withdrawals </p></td>
+                </tr>
+              
+                <tr>
+                  <td>mint</td>
+                  <td><a href="#utxorpc.ledger.v1.Multiasset">Multiasset</a></td>
+                  <td>repeated</td>
+                  <td><p>List of minted custom assets </p></td>
+                </tr>
+              
+                <tr>
+                  <td>reference_inputs</td>
+                  <td><a href="#utxorpc.ledger.v1.TxInput">TxInput</a></td>
+                  <td>repeated</td>
+                  <td><p>List of reference inputs </p></td>
+                </tr>
+              
+                <tr>
+                  <td>witnesses</td>
+                  <td><a href="#utxorpc.ledger.v1.WitnessSet">WitnessSet</a></td>
+                  <td></td>
+                  <td><p>Witnesses that validte the transaction </p></td>
+                </tr>
+              
+                <tr>
+                  <td>collateral</td>
+                  <td><a href="#utxorpc.ledger.v1.Collateral">Collateral</a></td>
+                  <td></td>
+                  <td><p>Collateral details in case of failed transaction </p></td>
+                </tr>
+              
+                <tr>
+                  <td>fee</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>Transaction fee in ADA </p></td>
+                </tr>
+              
+                <tr>
+                  <td>validity</td>
+                  <td><a href="#utxorpc.ledger.v1.TxValidity">TxValidity</a></td>
+                  <td></td>
+                  <td><p>Validity interval of the transaction </p></td>
+                </tr>
+              
+                <tr>
+                  <td>successful</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>Flag indicating whether the transaction was successful </p></td>
+                </tr>
+              
+                <tr>
+                  <td>auxiliary</td>
+                  <td><a href="#utxorpc.ledger.v1.AuxData">AuxData</a></td>
+                  <td></td>
+                  <td><p>Auxiliary data not directly tied to the validation process </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.TxInput">TxInput</h3>
+        <p>Represents a transaction input in the Cardano blockchain.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>tx_hash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Hash of the previous transaction. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>output_index</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>Index of the output in the previous transaction. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>as_output</td>
+                  <td><a href="#utxorpc.ledger.v1.TxOutput">TxOutput</a></td>
+                  <td></td>
+                  <td><p>Content of the input represented as output of the related transaction </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.TxOutput">TxOutput</h3>
+        <p>Represents a transaction output in the Cardano blockchain.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>address</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Address receiving the output. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>coin</td>
+                  <td><a href="#utxorpc.ledger.v1.Coin">Coin</a></td>
+                  <td></td>
+                  <td><p>Amount of ADA in the output. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>assets</td>
+                  <td><a href="#utxorpc.ledger.v1.Multiasset">Multiasset</a></td>
+                  <td>repeated</td>
+                  <td><p>Additional native (non-ADA) assets in the output. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>datum</td>
+                  <td><a href="#utxorpc.ledger.v1.PlutusData">PlutusData</a></td>
+                  <td></td>
+                  <td><p>Plutus data associated with the output. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>datum_hash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Hash of the Plutus data. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>script</td>
+                  <td><a href="#utxorpc.ledger.v1.Script">Script</a></td>
+                  <td></td>
+                  <td><p>Script associated with the output. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>redeemer</td>
+                  <td><a href="#utxorpc.ledger.v1.Redeemer">Redeemer</a></td>
+                  <td></td>
+                  <td><p>Redeemer for the Plutus script. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.TxValidity">TxValidity</h3>
+        <p>Represents the validity interval of a transaction.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>start</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>Start of the validity interval. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>ttl</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>End of the validity interval (TTL: Time to Live). </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.VKeyWitness">VKeyWitness</h3>
+        <p>Represents a VKey witness used to sign a transaction.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>vkey</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Verification key. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>signature</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Signature generated using the associated private key. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.Withdrawal">Withdrawal</h3>
+        <p>Represents a withdrawal from a reward account.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>reward_account</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Address of the reward account. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>coin</td>
+                  <td><a href="#utxorpc.ledger.v1.Coin">Coin</a></td>
+                  <td></td>
+                  <td><p>Amount of ADA withdrawn. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.ledger.v1.WitnessSet">WitnessSet</h3>
+        <p>Represents a set of witnesses that validate a transaction</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>vkeywitness</td>
+                  <td><a href="#utxorpc.ledger.v1.VKeyWitness">VKeyWitness</a></td>
+                  <td>repeated</td>
+                  <td><p>List of VKey witnesses. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>script</td>
+                  <td><a href="#utxorpc.ledger.v1.Script">Script</a></td>
+                  <td>repeated</td>
+                  <td><p>List of scripts. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>plutus_datums</td>
+                  <td><a href="#utxorpc.ledger.v1.PlutusData">PlutusData</a></td>
+                  <td>repeated</td>
+                  <td><p>List of Plutus data elements associated with the transaction. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+        <h3 id="utxorpc.ledger.v1.Purpose">Purpose</h3>
+        <p>Purpose of the redeemer in a transaction.</p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>NO_PURPOSE</td>
+                <td>0</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>SPEND</td>
+                <td>1</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>MINT</td>
+                <td>2</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>CERT</td>
+                <td>3</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>REWARD</td>
+                <td>4</td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="utxorpc/state/v1/state.proto">utxorpc/state/v1/state.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="utxorpc.state.v1.ChainPoint">ChainPoint</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>slot</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>height</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>hash</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.state.v1.Empty">Empty</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="utxorpc.state.v1.GetTxRequest">GetTxRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>tx_hash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>field_mask</td>
+                  <td><a href="#google.protobuf.FieldMask">google.protobuf.FieldMask</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.state.v1.GetTxResponse">GetTxResponse</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="utxorpc.state.v1.UtxoByAddressRequest">UtxoByAddressRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>address</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.state.v1.UtxoByTxRequest">UtxoByTxRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>hash</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>index</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.state.v1.UtxoSet">UtxoSet</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>items</td>
+                  <td><a href="#utxorpc.ledger.v1.TxOutput">utxorpc.ledger.v1.TxOutput</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>next_token</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+        <h3 id="utxorpc.state.v1.LedgerStateService">LedgerStateService</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>GetChainTip</td>
+                <td><a href="#utxorpc.state.v1.Empty">Empty</a></td>
+                <td><a href="#utxorpc.state.v1.ChainPoint">ChainPoint</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>GetUtxoByAddress</td>
+                <td><a href="#utxorpc.state.v1.UtxoByAddressRequest">UtxoByAddressRequest</a></td>
+                <td><a href="#utxorpc.state.v1.UtxoSet">UtxoSet</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>GetUtxoByTx</td>
+                <td><a href="#utxorpc.state.v1.UtxoByTxRequest">UtxoByTxRequest</a></td>
+                <td><a href="#utxorpc.state.v1.UtxoSet">UtxoSet</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>GetTx</td>
+                <td><a href="#utxorpc.state.v1.GetTxRequest">GetTxRequest</a></td>
+                <td><a href="#utxorpc.state.v1.GetTxResponse">GetTxResponse</a></td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+
+        
+    
+      
+      <div class="file-heading">
+        <h2 id="utxorpc/sync/v1/sync.proto">utxorpc/sync/v1/sync.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="utxorpc.sync.v1.Block">Block</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>header</td>
+                  <td><a href="#utxorpc.sync.v1.BlockHeader">BlockHeader</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>body</td>
+                  <td><a href="#utxorpc.sync.v1.BlockBody">BlockBody</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>cbor</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.sync.v1.BlockBody">BlockBody</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="utxorpc.sync.v1.BlockHeader">BlockHeader</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>slot</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>height</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>hash</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.sync.v1.FetchBlocksRequest">FetchBlocksRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>slot</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>height</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>hash</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.sync.v1.FetchBlocksResponse">FetchBlocksResponse</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="utxorpc.sync.v1.Intersection">Intersection</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>era</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.sync.v1.StreamBlocksRequest">StreamBlocksRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>intersect</td>
+                  <td><a href="#utxorpc.sync.v1.Intersection">Intersection</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.sync.v1.StreamBlocksResponse">StreamBlocksResponse</h3>
+        <p></p>
+
+        
+
+        
+      
+
+      
+
+      
+
+      
+        <h3 id="utxorpc.sync.v1.ChainSyncService">ChainSyncService</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>StreamBlocks</td>
+                <td><a href="#utxorpc.sync.v1.StreamBlocksRequest">StreamBlocksRequest</a></td>
+                <td><a href="#utxorpc.sync.v1.StreamBlocksResponse">StreamBlocksResponse</a> stream</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>FetchBlocks</td>
+                <td><a href="#utxorpc.sync.v1.FetchBlocksRequest">FetchBlocksRequest</a></td>
+                <td><a href="#utxorpc.sync.v1.FetchBlocksResponse">FetchBlocksResponse</a></td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+
+        
+    
+      
+      <div class="file-heading">
+        <h2 id="utxorpc/watch/v1/watch.proto">utxorpc/watch/v1/watch.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="utxorpc.watch.v1.FollowTxsRequest">FollowTxsRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>min_depth</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>max_depth</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>pattern</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.watch.v1.FollowTxsResponse">FollowTxsResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>item</td>
+                  <td><a href="#utxorpc.watch.v1.TxEvent">TxEvent</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.watch.v1.TxEvent">TxEvent</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="utxorpc.watch.v1.WaitForTxRequest">WaitForTxRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>max_depth</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>pattern</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.watch.v1.WaitForTxResponse">WaitForTxResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>item</td>
+                  <td><a href="#utxorpc.watch.v1.TxEvent">TxEvent</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+        <h3 id="utxorpc.watch.v1.ChainWatchService">ChainWatchService</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>WaitForTx</td>
+                <td><a href="#utxorpc.watch.v1.WaitForTxRequest">WaitForTxRequest</a></td>
+                <td><a href="#utxorpc.watch.v1.WaitForTxResponse">WaitForTxResponse</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>FollowTxs</td>
+                <td><a href="#utxorpc.watch.v1.FollowTxsRequest">FollowTxsRequest</a></td>
+                <td><a href="#utxorpc.watch.v1.FollowTxsResponse">FollowTxsResponse</a> stream</td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+
+        
+    
+
+    <h2 id="scalar-value-types">Scalar Value Types</h2>
+    <table class="scalar-value-types-table">
+      <thead>
+        <tr><td>.proto Type</td><td>Notes</td><td>C++</td><td>Java</td><td>Python</td><td>Go</td><td>C#</td><td>PHP</td><td>Ruby</td></tr>
+      </thead>
+      <tbody>
+        
+          <tr id="double">
+            <td>double</td>
+            <td></td>
+            <td>double</td>
+            <td>double</td>
+            <td>float</td>
+            <td>float64</td>
+            <td>double</td>
+            <td>float</td>
+            <td>Float</td>
+          </tr>
+        
+          <tr id="float">
+            <td>float</td>
+            <td></td>
+            <td>float</td>
+            <td>float</td>
+            <td>float</td>
+            <td>float32</td>
+            <td>float</td>
+            <td>float</td>
+            <td>Float</td>
+          </tr>
+        
+          <tr id="int32">
+            <td>int32</td>
+            <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="int64">
+            <td>int64</td>
+            <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="uint32">
+            <td>uint32</td>
+            <td>Uses variable-length encoding.</td>
+            <td>uint32</td>
+            <td>int</td>
+            <td>int/long</td>
+            <td>uint32</td>
+            <td>uint</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="uint64">
+            <td>uint64</td>
+            <td>Uses variable-length encoding.</td>
+            <td>uint64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>uint64</td>
+            <td>ulong</td>
+            <td>integer/string</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sint32">
+            <td>sint32</td>
+            <td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sint64">
+            <td>sint64</td>
+            <td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="fixed32">
+            <td>fixed32</td>
+            <td>Always four bytes. More efficient than uint32 if values are often greater than 2^28.</td>
+            <td>uint32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>uint32</td>
+            <td>uint</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="fixed64">
+            <td>fixed64</td>
+            <td>Always eight bytes. More efficient than uint64 if values are often greater than 2^56.</td>
+            <td>uint64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>uint64</td>
+            <td>ulong</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="sfixed32">
+            <td>sfixed32</td>
+            <td>Always four bytes.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sfixed64">
+            <td>sfixed64</td>
+            <td>Always eight bytes.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="bool">
+            <td>bool</td>
+            <td></td>
+            <td>bool</td>
+            <td>boolean</td>
+            <td>boolean</td>
+            <td>bool</td>
+            <td>bool</td>
+            <td>boolean</td>
+            <td>TrueClass/FalseClass</td>
+          </tr>
+        
+          <tr id="string">
+            <td>string</td>
+            <td>A string must always contain UTF-8 encoded or 7-bit ASCII text.</td>
+            <td>string</td>
+            <td>String</td>
+            <td>str/unicode</td>
+            <td>string</td>
+            <td>string</td>
+            <td>string</td>
+            <td>String (UTF-8)</td>
+          </tr>
+        
+          <tr id="bytes">
+            <td>bytes</td>
+            <td>May contain any arbitrary sequence of bytes.</td>
+            <td>string</td>
+            <td>ByteString</td>
+            <td>str</td>
+            <td>[]byte</td>
+            <td>ByteString</td>
+            <td>string</td>
+            <td>String (ASCII-8BIT)</td>
+          </tr>
+        
+      </tbody>
+    </table>
+  </body>
+</html>
+

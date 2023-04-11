@@ -1,5 +1,13 @@
 // @generated
 pub mod utxorpc {
+    pub mod ledger {
+        #[cfg(feature = "utxorpc-ledger-v1")]
+        // @@protoc_insertion_point(attribute:utxorpc.ledger.v1)
+        pub mod v1 {
+            include!("utxorpc.ledger.v1.rs");
+            // @@protoc_insertion_point(utxorpc.ledger.v1)
+        }
+    }
     pub mod state {
         #[cfg(feature = "utxorpc-state-v1")]
         // @@protoc_insertion_point(attribute:utxorpc.state.v1)

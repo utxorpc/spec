@@ -1,0 +1,64 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "utxorpc/sync/v1/sync.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ChainSyncService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1FetchBlocksResponse": {
+      "type": "object"
+    },
+    "v1Intersection": {
+      "type": "object",
+      "properties": {
+        "era": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "v1StreamBlocksResponse": {
+      "type": "object"
+    }
+  }
+}

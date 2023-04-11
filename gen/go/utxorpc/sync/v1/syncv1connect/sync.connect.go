@@ -21,88 +21,104 @@ import (
 const _ = connect_go.IsAtLeastVersion0_1_0
 
 const (
-	// ChainSyncName is the fully-qualified name of the ChainSync service.
-	ChainSyncName = "utxorpc.sync.v1.ChainSync"
+	// ChainSyncServiceName is the fully-qualified name of the ChainSyncService service.
+	ChainSyncServiceName = "utxorpc.sync.v1.ChainSyncService"
 )
 
-// ChainSyncClient is a client for the utxorpc.sync.v1.ChainSync service.
-type ChainSyncClient interface {
-	StreamBlocks(context.Context, *connect_go.Request[v1.BlockStreamRequest]) (*connect_go.ServerStreamForClient[v1.Block], error)
-	FetchBlock(context.Context, *connect_go.Request[v1.BlockFetchRequest]) (*connect_go.Response[v1.Block], error)
+// These constants are the fully-qualified names of the RPCs defined in this package. They're
+// exposed at runtime as Spec.Procedure and as the final two segments of the HTTP route.
+//
+// Note that these are different from the fully-qualified method names used by
+// google.golang.org/protobuf/reflect/protoreflect. To convert from these constants to
+// reflection-formatted method names, remove the leading slash and convert the remaining slash to a
+// period.
+const (
+	// ChainSyncServiceStreamBlocksProcedure is the fully-qualified name of the ChainSyncService's
+	// StreamBlocks RPC.
+	ChainSyncServiceStreamBlocksProcedure = "/utxorpc.sync.v1.ChainSyncService/StreamBlocks"
+	// ChainSyncServiceFetchBlocksProcedure is the fully-qualified name of the ChainSyncService's
+	// FetchBlocks RPC.
+	ChainSyncServiceFetchBlocksProcedure = "/utxorpc.sync.v1.ChainSyncService/FetchBlocks"
+)
+
+// ChainSyncServiceClient is a client for the utxorpc.sync.v1.ChainSyncService service.
+type ChainSyncServiceClient interface {
+	StreamBlocks(context.Context, *connect_go.Request[v1.StreamBlocksRequest]) (*connect_go.ServerStreamForClient[v1.StreamBlocksResponse], error)
+	FetchBlocks(context.Context, *connect_go.Request[v1.FetchBlocksRequest]) (*connect_go.Response[v1.FetchBlocksResponse], error)
 }
 
-// NewChainSyncClient constructs a client for the utxorpc.sync.v1.ChainSync service. By default, it
-// uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
-// uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or
-// connect.WithGRPCWeb() options.
+// NewChainSyncServiceClient constructs a client for the utxorpc.sync.v1.ChainSyncService service.
+// By default, it uses the Connect protocol with the binary Protobuf Codec, asks for gzipped
+// responses, and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the
+// connect.WithGRPC() or connect.WithGRPCWeb() options.
 //
 // The URL supplied here should be the base URL for the Connect or gRPC server (for example,
 // http://api.acme.com or https://acme.com/grpc).
-func NewChainSyncClient(httpClient connect_go.HTTPClient, baseURL string, opts ...connect_go.ClientOption) ChainSyncClient {
+func NewChainSyncServiceClient(httpClient connect_go.HTTPClient, baseURL string, opts ...connect_go.ClientOption) ChainSyncServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
-	return &chainSyncClient{
-		streamBlocks: connect_go.NewClient[v1.BlockStreamRequest, v1.Block](
+	return &chainSyncServiceClient{
+		streamBlocks: connect_go.NewClient[v1.StreamBlocksRequest, v1.StreamBlocksResponse](
 			httpClient,
-			baseURL+"/utxorpc.sync.v1.ChainSync/StreamBlocks",
+			baseURL+ChainSyncServiceStreamBlocksProcedure,
 			opts...,
 		),
-		fetchBlock: connect_go.NewClient[v1.BlockFetchRequest, v1.Block](
+		fetchBlocks: connect_go.NewClient[v1.FetchBlocksRequest, v1.FetchBlocksResponse](
 			httpClient,
-			baseURL+"/utxorpc.sync.v1.ChainSync/FetchBlock",
+			baseURL+ChainSyncServiceFetchBlocksProcedure,
 			opts...,
 		),
 	}
 }
 
-// chainSyncClient implements ChainSyncClient.
-type chainSyncClient struct {
-	streamBlocks *connect_go.Client[v1.BlockStreamRequest, v1.Block]
-	fetchBlock   *connect_go.Client[v1.BlockFetchRequest, v1.Block]
+// chainSyncServiceClient implements ChainSyncServiceClient.
+type chainSyncServiceClient struct {
+	streamBlocks *connect_go.Client[v1.StreamBlocksRequest, v1.StreamBlocksResponse]
+	fetchBlocks  *connect_go.Client[v1.FetchBlocksRequest, v1.FetchBlocksResponse]
 }
 
-// StreamBlocks calls utxorpc.sync.v1.ChainSync.StreamBlocks.
-func (c *chainSyncClient) StreamBlocks(ctx context.Context, req *connect_go.Request[v1.BlockStreamRequest]) (*connect_go.ServerStreamForClient[v1.Block], error) {
+// StreamBlocks calls utxorpc.sync.v1.ChainSyncService.StreamBlocks.
+func (c *chainSyncServiceClient) StreamBlocks(ctx context.Context, req *connect_go.Request[v1.StreamBlocksRequest]) (*connect_go.ServerStreamForClient[v1.StreamBlocksResponse], error) {
 	return c.streamBlocks.CallServerStream(ctx, req)
 }
 
-// FetchBlock calls utxorpc.sync.v1.ChainSync.FetchBlock.
-func (c *chainSyncClient) FetchBlock(ctx context.Context, req *connect_go.Request[v1.BlockFetchRequest]) (*connect_go.Response[v1.Block], error) {
-	return c.fetchBlock.CallUnary(ctx, req)
+// FetchBlocks calls utxorpc.sync.v1.ChainSyncService.FetchBlocks.
+func (c *chainSyncServiceClient) FetchBlocks(ctx context.Context, req *connect_go.Request[v1.FetchBlocksRequest]) (*connect_go.Response[v1.FetchBlocksResponse], error) {
+	return c.fetchBlocks.CallUnary(ctx, req)
 }
 
-// ChainSyncHandler is an implementation of the utxorpc.sync.v1.ChainSync service.
-type ChainSyncHandler interface {
-	StreamBlocks(context.Context, *connect_go.Request[v1.BlockStreamRequest], *connect_go.ServerStream[v1.Block]) error
-	FetchBlock(context.Context, *connect_go.Request[v1.BlockFetchRequest]) (*connect_go.Response[v1.Block], error)
+// ChainSyncServiceHandler is an implementation of the utxorpc.sync.v1.ChainSyncService service.
+type ChainSyncServiceHandler interface {
+	StreamBlocks(context.Context, *connect_go.Request[v1.StreamBlocksRequest], *connect_go.ServerStream[v1.StreamBlocksResponse]) error
+	FetchBlocks(context.Context, *connect_go.Request[v1.FetchBlocksRequest]) (*connect_go.Response[v1.FetchBlocksResponse], error)
 }
 
-// NewChainSyncHandler builds an HTTP handler from the service implementation. It returns the path
-// on which to mount the handler and the handler itself.
+// NewChainSyncServiceHandler builds an HTTP handler from the service implementation. It returns the
+// path on which to mount the handler and the handler itself.
 //
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
-func NewChainSyncHandler(svc ChainSyncHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
+func NewChainSyncServiceHandler(svc ChainSyncServiceHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
 	mux := http.NewServeMux()
-	mux.Handle("/utxorpc.sync.v1.ChainSync/StreamBlocks", connect_go.NewServerStreamHandler(
-		"/utxorpc.sync.v1.ChainSync/StreamBlocks",
+	mux.Handle(ChainSyncServiceStreamBlocksProcedure, connect_go.NewServerStreamHandler(
+		ChainSyncServiceStreamBlocksProcedure,
 		svc.StreamBlocks,
 		opts...,
 	))
-	mux.Handle("/utxorpc.sync.v1.ChainSync/FetchBlock", connect_go.NewUnaryHandler(
-		"/utxorpc.sync.v1.ChainSync/FetchBlock",
-		svc.FetchBlock,
+	mux.Handle(ChainSyncServiceFetchBlocksProcedure, connect_go.NewUnaryHandler(
+		ChainSyncServiceFetchBlocksProcedure,
+		svc.FetchBlocks,
 		opts...,
 	))
-	return "/utxorpc.sync.v1.ChainSync/", mux
+	return "/utxorpc.sync.v1.ChainSyncService/", mux
 }
 
-// UnimplementedChainSyncHandler returns CodeUnimplemented from all methods.
-type UnimplementedChainSyncHandler struct{}
+// UnimplementedChainSyncServiceHandler returns CodeUnimplemented from all methods.
+type UnimplementedChainSyncServiceHandler struct{}
 
-func (UnimplementedChainSyncHandler) StreamBlocks(context.Context, *connect_go.Request[v1.BlockStreamRequest], *connect_go.ServerStream[v1.Block]) error {
-	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.sync.v1.ChainSync.StreamBlocks is not implemented"))
+func (UnimplementedChainSyncServiceHandler) StreamBlocks(context.Context, *connect_go.Request[v1.StreamBlocksRequest], *connect_go.ServerStream[v1.StreamBlocksResponse]) error {
+	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.sync.v1.ChainSyncService.StreamBlocks is not implemented"))
 }
 
-func (UnimplementedChainSyncHandler) FetchBlock(context.Context, *connect_go.Request[v1.BlockFetchRequest]) (*connect_go.Response[v1.Block], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.sync.v1.ChainSync.FetchBlock is not implemented"))
+func (UnimplementedChainSyncServiceHandler) FetchBlocks(context.Context, *connect_go.Request[v1.FetchBlocksRequest]) (*connect_go.Response[v1.FetchBlocksResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.sync.v1.ChainSyncService.FetchBlocks is not implemented"))
 }

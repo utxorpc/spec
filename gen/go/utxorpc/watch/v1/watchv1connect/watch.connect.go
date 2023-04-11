@@ -21,88 +21,104 @@ import (
 const _ = connect_go.IsAtLeastVersion0_1_0
 
 const (
-	// WatchName is the fully-qualified name of the Watch service.
-	WatchName = "utxorpc.watch.v1.Watch"
+	// ChainWatchServiceName is the fully-qualified name of the ChainWatchService service.
+	ChainWatchServiceName = "utxorpc.watch.v1.ChainWatchService"
 )
 
-// WatchClient is a client for the utxorpc.watch.v1.Watch service.
-type WatchClient interface {
-	WaitForTx(context.Context, *connect_go.Request[v1.WaitForTxRequest]) (*connect_go.ServerStreamForClient[v1.Tx], error)
-	FollowTx(context.Context, *connect_go.Request[v1.WaitForTxRequest]) (*connect_go.ServerStreamForClient[v1.Tx], error)
+// These constants are the fully-qualified names of the RPCs defined in this package. They're
+// exposed at runtime as Spec.Procedure and as the final two segments of the HTTP route.
+//
+// Note that these are different from the fully-qualified method names used by
+// google.golang.org/protobuf/reflect/protoreflect. To convert from these constants to
+// reflection-formatted method names, remove the leading slash and convert the remaining slash to a
+// period.
+const (
+	// ChainWatchServiceWaitForTxProcedure is the fully-qualified name of the ChainWatchService's
+	// WaitForTx RPC.
+	ChainWatchServiceWaitForTxProcedure = "/utxorpc.watch.v1.ChainWatchService/WaitForTx"
+	// ChainWatchServiceFollowTxsProcedure is the fully-qualified name of the ChainWatchService's
+	// FollowTxs RPC.
+	ChainWatchServiceFollowTxsProcedure = "/utxorpc.watch.v1.ChainWatchService/FollowTxs"
+)
+
+// ChainWatchServiceClient is a client for the utxorpc.watch.v1.ChainWatchService service.
+type ChainWatchServiceClient interface {
+	WaitForTx(context.Context, *connect_go.Request[v1.WaitForTxRequest]) (*connect_go.Response[v1.WaitForTxResponse], error)
+	FollowTxs(context.Context, *connect_go.Request[v1.FollowTxsRequest]) (*connect_go.ServerStreamForClient[v1.FollowTxsResponse], error)
 }
 
-// NewWatchClient constructs a client for the utxorpc.watch.v1.Watch service. By default, it uses
-// the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
-// uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or
-// connect.WithGRPCWeb() options.
+// NewChainWatchServiceClient constructs a client for the utxorpc.watch.v1.ChainWatchService
+// service. By default, it uses the Connect protocol with the binary Protobuf Codec, asks for
+// gzipped responses, and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply
+// the connect.WithGRPC() or connect.WithGRPCWeb() options.
 //
 // The URL supplied here should be the base URL for the Connect or gRPC server (for example,
 // http://api.acme.com or https://acme.com/grpc).
-func NewWatchClient(httpClient connect_go.HTTPClient, baseURL string, opts ...connect_go.ClientOption) WatchClient {
+func NewChainWatchServiceClient(httpClient connect_go.HTTPClient, baseURL string, opts ...connect_go.ClientOption) ChainWatchServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
-	return &watchClient{
-		waitForTx: connect_go.NewClient[v1.WaitForTxRequest, v1.Tx](
+	return &chainWatchServiceClient{
+		waitForTx: connect_go.NewClient[v1.WaitForTxRequest, v1.WaitForTxResponse](
 			httpClient,
-			baseURL+"/utxorpc.watch.v1.Watch/WaitForTx",
+			baseURL+ChainWatchServiceWaitForTxProcedure,
 			opts...,
 		),
-		followTx: connect_go.NewClient[v1.WaitForTxRequest, v1.Tx](
+		followTxs: connect_go.NewClient[v1.FollowTxsRequest, v1.FollowTxsResponse](
 			httpClient,
-			baseURL+"/utxorpc.watch.v1.Watch/FollowTx",
+			baseURL+ChainWatchServiceFollowTxsProcedure,
 			opts...,
 		),
 	}
 }
 
-// watchClient implements WatchClient.
-type watchClient struct {
-	waitForTx *connect_go.Client[v1.WaitForTxRequest, v1.Tx]
-	followTx  *connect_go.Client[v1.WaitForTxRequest, v1.Tx]
+// chainWatchServiceClient implements ChainWatchServiceClient.
+type chainWatchServiceClient struct {
+	waitForTx *connect_go.Client[v1.WaitForTxRequest, v1.WaitForTxResponse]
+	followTxs *connect_go.Client[v1.FollowTxsRequest, v1.FollowTxsResponse]
 }
 
-// WaitForTx calls utxorpc.watch.v1.Watch.WaitForTx.
-func (c *watchClient) WaitForTx(ctx context.Context, req *connect_go.Request[v1.WaitForTxRequest]) (*connect_go.ServerStreamForClient[v1.Tx], error) {
-	return c.waitForTx.CallServerStream(ctx, req)
+// WaitForTx calls utxorpc.watch.v1.ChainWatchService.WaitForTx.
+func (c *chainWatchServiceClient) WaitForTx(ctx context.Context, req *connect_go.Request[v1.WaitForTxRequest]) (*connect_go.Response[v1.WaitForTxResponse], error) {
+	return c.waitForTx.CallUnary(ctx, req)
 }
 
-// FollowTx calls utxorpc.watch.v1.Watch.FollowTx.
-func (c *watchClient) FollowTx(ctx context.Context, req *connect_go.Request[v1.WaitForTxRequest]) (*connect_go.ServerStreamForClient[v1.Tx], error) {
-	return c.followTx.CallServerStream(ctx, req)
+// FollowTxs calls utxorpc.watch.v1.ChainWatchService.FollowTxs.
+func (c *chainWatchServiceClient) FollowTxs(ctx context.Context, req *connect_go.Request[v1.FollowTxsRequest]) (*connect_go.ServerStreamForClient[v1.FollowTxsResponse], error) {
+	return c.followTxs.CallServerStream(ctx, req)
 }
 
-// WatchHandler is an implementation of the utxorpc.watch.v1.Watch service.
-type WatchHandler interface {
-	WaitForTx(context.Context, *connect_go.Request[v1.WaitForTxRequest], *connect_go.ServerStream[v1.Tx]) error
-	FollowTx(context.Context, *connect_go.Request[v1.WaitForTxRequest], *connect_go.ServerStream[v1.Tx]) error
+// ChainWatchServiceHandler is an implementation of the utxorpc.watch.v1.ChainWatchService service.
+type ChainWatchServiceHandler interface {
+	WaitForTx(context.Context, *connect_go.Request[v1.WaitForTxRequest]) (*connect_go.Response[v1.WaitForTxResponse], error)
+	FollowTxs(context.Context, *connect_go.Request[v1.FollowTxsRequest], *connect_go.ServerStream[v1.FollowTxsResponse]) error
 }
 
-// NewWatchHandler builds an HTTP handler from the service implementation. It returns the path on
-// which to mount the handler and the handler itself.
+// NewChainWatchServiceHandler builds an HTTP handler from the service implementation. It returns
+// the path on which to mount the handler and the handler itself.
 //
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
-func NewWatchHandler(svc WatchHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
+func NewChainWatchServiceHandler(svc ChainWatchServiceHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
 	mux := http.NewServeMux()
-	mux.Handle("/utxorpc.watch.v1.Watch/WaitForTx", connect_go.NewServerStreamHandler(
-		"/utxorpc.watch.v1.Watch/WaitForTx",
+	mux.Handle(ChainWatchServiceWaitForTxProcedure, connect_go.NewUnaryHandler(
+		ChainWatchServiceWaitForTxProcedure,
 		svc.WaitForTx,
 		opts...,
 	))
-	mux.Handle("/utxorpc.watch.v1.Watch/FollowTx", connect_go.NewServerStreamHandler(
-		"/utxorpc.watch.v1.Watch/FollowTx",
-		svc.FollowTx,
+	mux.Handle(ChainWatchServiceFollowTxsProcedure, connect_go.NewServerStreamHandler(
+		ChainWatchServiceFollowTxsProcedure,
+		svc.FollowTxs,
 		opts...,
 	))
-	return "/utxorpc.watch.v1.Watch/", mux
+	return "/utxorpc.watch.v1.ChainWatchService/", mux
 }
 
-// UnimplementedWatchHandler returns CodeUnimplemented from all methods.
-type UnimplementedWatchHandler struct{}
+// UnimplementedChainWatchServiceHandler returns CodeUnimplemented from all methods.
+type UnimplementedChainWatchServiceHandler struct{}
 
-func (UnimplementedWatchHandler) WaitForTx(context.Context, *connect_go.Request[v1.WaitForTxRequest], *connect_go.ServerStream[v1.Tx]) error {
-	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.watch.v1.Watch.WaitForTx is not implemented"))
+func (UnimplementedChainWatchServiceHandler) WaitForTx(context.Context, *connect_go.Request[v1.WaitForTxRequest]) (*connect_go.Response[v1.WaitForTxResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.watch.v1.ChainWatchService.WaitForTx is not implemented"))
 }
 
-func (UnimplementedWatchHandler) FollowTx(context.Context, *connect_go.Request[v1.WaitForTxRequest], *connect_go.ServerStream[v1.Tx]) error {
-	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.watch.v1.Watch.FollowTx is not implemented"))
+func (UnimplementedChainWatchServiceHandler) FollowTxs(context.Context, *connect_go.Request[v1.FollowTxsRequest], *connect_go.ServerStream[v1.FollowTxsResponse]) error {
+	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.watch.v1.ChainWatchService.FollowTxs is not implemented"))
 }

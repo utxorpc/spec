@@ -1,15 +1,15 @@
 // @generated
 /// Generated client implementations.
-pub mod watch_client {
+pub mod chain_watch_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     ///
     #[derive(Debug, Clone)]
-    pub struct WatchClient<T> {
+    pub struct ChainWatchServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl WatchClient<tonic::transport::Channel> {
+    impl ChainWatchServiceClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -20,7 +20,7 @@ pub mod watch_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> WatchClient<T>
+    impl<T> ChainWatchServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -38,7 +38,7 @@ pub mod watch_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> WatchClient<InterceptedService<T, F>>
+        ) -> ChainWatchServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -52,7 +52,7 @@ pub mod watch_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            WatchClient::new(InterceptedService::new(inner, interceptor))
+            ChainWatchServiceClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -73,7 +73,7 @@ pub mod watch_client {
         pub async fn wait_for_tx(
             &mut self,
             request: impl tonic::IntoRequest<super::WaitForTxRequest>,
-        ) -> Result<tonic::Response<tonic::codec::Streaming<super::Tx>>, tonic::Status> {
+        ) -> Result<tonic::Response<super::WaitForTxResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -85,15 +85,18 @@ pub mod watch_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.watch.v1.Watch/WaitForTx",
+                "/utxorpc.watch.v1.ChainWatchService/WaitForTx",
             );
-            self.inner.server_streaming(request.into_request(), path, codec).await
+            self.inner.unary(request.into_request(), path, codec).await
         }
         ///
-        pub async fn follow_tx(
+        pub async fn follow_txs(
             &mut self,
-            request: impl tonic::IntoRequest<super::WaitForTxRequest>,
-        ) -> Result<tonic::Response<tonic::codec::Streaming<super::Tx>>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::FollowTxsRequest>,
+        ) -> Result<
+            tonic::Response<tonic::codec::Streaming<super::FollowTxsResponse>>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -105,51 +108,45 @@ pub mod watch_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.watch.v1.Watch/FollowTx",
+                "/utxorpc.watch.v1.ChainWatchService/FollowTxs",
             );
             self.inner.server_streaming(request.into_request(), path, codec).await
         }
     }
 }
 /// Generated server implementations.
-pub mod watch_server {
+pub mod chain_watch_service_server {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
-    /// Generated trait containing gRPC methods that should be implemented for use with WatchServer.
+    /// Generated trait containing gRPC methods that should be implemented for use with ChainWatchServiceServer.
     #[async_trait]
-    pub trait Watch: Send + Sync + 'static {
-        /// Server streaming response type for the WaitForTx method.
-        type WaitForTxStream: futures_core::Stream<
-                Item = Result<super::Tx, tonic::Status>,
-            >
-            + Send
-            + 'static;
+    pub trait ChainWatchService: Send + Sync + 'static {
         ///
         async fn wait_for_tx(
             &self,
             request: tonic::Request<super::WaitForTxRequest>,
-        ) -> Result<tonic::Response<Self::WaitForTxStream>, tonic::Status>;
-        /// Server streaming response type for the FollowTx method.
-        type FollowTxStream: futures_core::Stream<
-                Item = Result<super::Tx, tonic::Status>,
+        ) -> Result<tonic::Response<super::WaitForTxResponse>, tonic::Status>;
+        /// Server streaming response type for the FollowTxs method.
+        type FollowTxsStream: futures_core::Stream<
+                Item = Result<super::FollowTxsResponse, tonic::Status>,
             >
             + Send
             + 'static;
         ///
-        async fn follow_tx(
+        async fn follow_txs(
             &self,
-            request: tonic::Request<super::WaitForTxRequest>,
-        ) -> Result<tonic::Response<Self::FollowTxStream>, tonic::Status>;
+            request: tonic::Request<super::FollowTxsRequest>,
+        ) -> Result<tonic::Response<Self::FollowTxsStream>, tonic::Status>;
     }
     ///
     #[derive(Debug)]
-    pub struct WatchServer<T: Watch> {
+    pub struct ChainWatchServiceServer<T: ChainWatchService> {
         inner: _Inner<T>,
         accept_compression_encodings: EnabledCompressionEncodings,
         send_compression_encodings: EnabledCompressionEncodings,
     }
     struct _Inner<T>(Arc<T>);
-    impl<T: Watch> WatchServer<T> {
+    impl<T: ChainWatchService> ChainWatchServiceServer<T> {
         pub fn new(inner: T) -> Self {
             Self::from_arc(Arc::new(inner))
         }
@@ -183,9 +180,9 @@ pub mod watch_server {
             self
         }
     }
-    impl<T, B> tonic::codegen::Service<http::Request<B>> for WatchServer<T>
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for ChainWatchServiceServer<T>
     where
-        T: Watch,
+        T: ChainWatchService,
         B: Body + Send + 'static,
         B::Error: Into<StdError> + Send + 'static,
     {
@@ -201,17 +198,16 @@ pub mod watch_server {
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             let inner = self.inner.clone();
             match req.uri().path() {
-                "/utxorpc.watch.v1.Watch/WaitForTx" => {
+                "/utxorpc.watch.v1.ChainWatchService/WaitForTx" => {
                     #[allow(non_camel_case_types)]
-                    struct WaitForTxSvc<T: Watch>(pub Arc<T>);
+                    struct WaitForTxSvc<T: ChainWatchService>(pub Arc<T>);
                     impl<
-                        T: Watch,
-                    > tonic::server::ServerStreamingService<super::WaitForTxRequest>
+                        T: ChainWatchService,
+                    > tonic::server::UnaryService<super::WaitForTxRequest>
                     for WaitForTxSvc<T> {
-                        type Response = super::Tx;
-                        type ResponseStream = T::WaitForTxStream;
+                        type Response = super::WaitForTxResponse;
                         type Future = BoxFuture<
-                            tonic::Response<Self::ResponseStream>,
+                            tonic::Response<Self::Response>,
                             tonic::Status,
                         >;
                         fn call(
@@ -235,30 +231,30 @@ pub mod watch_server {
                                 accept_compression_encodings,
                                 send_compression_encodings,
                             );
-                        let res = grpc.server_streaming(method, req).await;
+                        let res = grpc.unary(method, req).await;
                         Ok(res)
                     };
                     Box::pin(fut)
                 }
-                "/utxorpc.watch.v1.Watch/FollowTx" => {
+                "/utxorpc.watch.v1.ChainWatchService/FollowTxs" => {
                     #[allow(non_camel_case_types)]
-                    struct FollowTxSvc<T: Watch>(pub Arc<T>);
+                    struct FollowTxsSvc<T: ChainWatchService>(pub Arc<T>);
                     impl<
-                        T: Watch,
-                    > tonic::server::ServerStreamingService<super::WaitForTxRequest>
-                    for FollowTxSvc<T> {
-                        type Response = super::Tx;
-                        type ResponseStream = T::FollowTxStream;
+                        T: ChainWatchService,
+                    > tonic::server::ServerStreamingService<super::FollowTxsRequest>
+                    for FollowTxsSvc<T> {
+                        type Response = super::FollowTxsResponse;
+                        type ResponseStream = T::FollowTxsStream;
                         type Future = BoxFuture<
                             tonic::Response<Self::ResponseStream>,
                             tonic::Status,
                         >;
                         fn call(
                             &mut self,
-                            request: tonic::Request<super::WaitForTxRequest>,
+                            request: tonic::Request<super::FollowTxsRequest>,
                         ) -> Self::Future {
                             let inner = self.0.clone();
-                            let fut = async move { (*inner).follow_tx(request).await };
+                            let fut = async move { (*inner).follow_txs(request).await };
                             Box::pin(fut)
                         }
                     }
@@ -267,7 +263,7 @@ pub mod watch_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let inner = inner.0;
-                        let method = FollowTxSvc(inner);
+                        let method = FollowTxsSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(
@@ -294,7 +290,7 @@ pub mod watch_server {
             }
         }
     }
-    impl<T: Watch> Clone for WatchServer<T> {
+    impl<T: ChainWatchService> Clone for ChainWatchServiceServer<T> {
         fn clone(&self) -> Self {
             let inner = self.inner.clone();
             Self {
@@ -304,7 +300,7 @@ pub mod watch_server {
             }
         }
     }
-    impl<T: Watch> Clone for _Inner<T> {
+    impl<T: ChainWatchService> Clone for _Inner<T> {
         fn clone(&self) -> Self {
             Self(self.0.clone())
         }
@@ -314,7 +310,8 @@ pub mod watch_server {
             write!(f, "{:?}", self.0)
         }
     }
-    impl<T: Watch> tonic::server::NamedService for WatchServer<T> {
-        const NAME: &'static str = "utxorpc.watch.v1.Watch";
+    impl<T: ChainWatchService> tonic::server::NamedService
+    for ChainWatchServiceServer<T> {
+        const NAME: &'static str = "utxorpc.watch.v1.ChainWatchService";
     }
 }
