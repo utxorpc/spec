@@ -41,7 +41,7 @@ pub struct GetTxRequest {
     #[prost(bytes="bytes", repeated, tag="1")]
     pub tx_hash: ::prost::alloc::vec::Vec<::prost::bytes::Bytes>,
     #[prost(message, optional, tag="2")]
-    pub field_mask: ::core::option::Option<::prost_types::FieldMask>,
+    pub field_mask: ::core::option::Option<::pbjson_types::FieldMask>,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -181,6 +181,6 @@ pub const FILE_DESCRIPTOR_SET: &[u8] = &[
     0x00, 0x02, 0x03, 0x02, 0x12, 0x03, 0x28, 0x0c, 0x18, 0x0a, 0x0c, 0x0a, 0x05, 0x06, 0x00, 0x02,
     0x03, 0x03, 0x12, 0x03, 0x28, 0x23, 0x30, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 ];
-include!("utxorpc.state.v1.tonic.rs");
 include!("utxorpc.state.v1.serde.rs");
+include!("utxorpc.state.v1.tonic.rs");
 // @@protoc_insertion_point(module)
