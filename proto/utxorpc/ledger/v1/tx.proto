@@ -26,15 +26,16 @@ message Redeemer {
 message TxInput {
   bytes tx_hash = 1; // Hash of the previous transaction.
   uint32 output_index = 2; // Index of the output in the previous transaction.
+  TxOutput as_output = 3; // Content of the input represented as output of the related transaction
 }
 
 // Represents a transaction output in the Cardano blockchain.
 message TxOutput {
   bytes address = 1; // Address receiving the output.
   Coin coin = 2; // Amount of ADA in the output.
-  repeated Multiasset assets = 3; // Additional custom assets in the output.
+  repeated Multiasset assets = 3; // Additional native (non-ADA) assets in the output.
   PlutusData datum = 4; // Plutus data associated with the output.
-  PlutusData datum_hash = 5; // Hash of the Plutus data.
+  bytes datum_hash = 5; // Hash of the Plutus data.
   Script script = 6; // Script associated with the output.
   Redeemer redeemer = 7; // Redeemer for the Plutus script.
 }
@@ -70,22 +71,33 @@ message Withdrawal {
   Coin coin = 2; // Amount of ADA withdrawn.
 }
 
+// Represents a set of witnesses that validate a transaction
+message WitnessSet {
+  repeated VKeyWitness vkeywitness = 1; // List of VKey witnesses.
+  repeated Script script = 2; // List of scripts.
+  repeated PlutusData plutus_datums = 3; // List of Plutus data elements associated with the transaction.
+}
+
+// Auxiliary data not directly tied to the validation process
+message AuxData {
+  repeated Metadata metadata = 1; // List of auxiliary metadata elements.
+  repeated Script scripts = 2; // List of auxiliary scripts.
+}
+
 // Represents a transaction in the Cardano blockchain.
 message Tx {
-  repeated TxInput inputs = 1; // List of transaction inputs.
-  repeated TxOutput outputs = 2; // List of transaction outputs.
-  repeated Certificate certificates = 3; // List of certificates.
-  repeated Withdrawal withdrawals = 4; // List of withdrawals.
-  repeated Multiasset mint = 5; // List of minted custom assets.
-  repeated TxInput reference_inputs = 6; // List of reference inputs.
-  repeated VKeyWitness vkeywitness = 7; // List of VKey witnesses.
-  repeated Script script = 8; // List of scripts.
-  repeated PlutusData plutus_datums = 10; // List of Plutus data elements associated with the transaction.
-  uint64 fee = 11; // Transaction fee in ADA.
-  TxValidity validity = 12; // Validity interval of the transaction.
-  bool successful = 13; // Flag indicating whether the transaction was successful.
-  repeated Metadata aux_metadata = 14; // List of auxiliary metadata elements.
-  repeated Script aux_scripts = 15; // List of auxiliary scripts.
+  repeated TxInput inputs = 1; // List of transaction inputs
+  repeated TxOutput outputs = 2; // List of transaction outputs
+  repeated Certificate certificates = 3; // List of certificates
+  repeated Withdrawal withdrawals = 4; // List of withdrawals
+  repeated Multiasset mint = 5; // List of minted custom assets
+  repeated TxInput reference_inputs = 6; // List of reference inputs
+  WitnessSet witnesses = 7; // Witnesses that validte the transaction
+  Collateral collateral = 8; // Collateral details in case of failed transaction
+  uint64 fee = 9; // Transaction fee in ADA
+  TxValidity validity = 10; // Validity interval of the transaction
+  bool successful = 11; // Flag indicating whether the transaction was successful
+  AuxData auxiliary = 12; // Auxiliary data not directly tied to the validation process
 }
 
 // Represents a VKey witness used to sign a transaction.
