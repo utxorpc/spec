@@ -22,6 +22,10 @@ plugins:
       - gen_crate=gen/rust/Cargo.toml
   - plugin: tonic
     out: gen/rust/src
+  - plugin: prost-serde
+    out: gen/rust/src
+    opt:
+      - extern_path=.google.protobuf=::pbjson_types
   - plugin: buf.build/grpc-ecosystem/openapiv2
     out: gen/openapi
   - plugin: buf.build/community/pseudomuto-doc

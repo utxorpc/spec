@@ -16,6 +16,10 @@ cargo install protoc-gen-crate
 cargo install protoc-gen-tonic
 ```
 
+```sh
+cargo install protoc-gen-prost-serde
+```
+
 ## ARR
 
 - the ledger IDL favors developer experience over direct 1:1 mappings into underlying blockchain primitives.

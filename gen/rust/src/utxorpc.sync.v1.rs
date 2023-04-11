@@ -176,4 +176,5 @@ pub const FILE_DESCRIPTOR_SET: &[u8] = &[
     0x2e, 0x31, 0x44, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 ];
 include!("utxorpc.sync.v1.tonic.rs");
+include!("utxorpc.sync.v1.serde.rs");
 // @@protoc_insertion_point(module)

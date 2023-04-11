@@ -129,4 +129,5 @@ pub const FILE_DESCRIPTOR_SET: &[u8] = &[
     0x74, 0x6f, 0x33,
 ];
 include!("utxorpc.watch.v1.tonic.rs");
+include!("utxorpc.watch.v1.serde.rs");
 // @@protoc_insertion_point(module)
