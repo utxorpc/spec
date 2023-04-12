@@ -1,0 +1,351 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "utxorpc/state/v1/state.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "LedgerStateService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1Asset": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "format": "byte",
+          "description": "Name of the custom asset."
+        },
+        "quantity": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Quantity of the custom asset."
+        }
+      },
+      "description": "Represents a custom asset in the Cardano blockchain."
+    },
+    "v1BigInt": {
+      "type": "object",
+      "description": "Represents a big integer for Plutus data in Cardano.\n\nDefine the fields of BigInt based on your original Rust code"
+    },
+    "v1BoundedBytes": {
+      "type": "object",
+      "description": "Represents a bounded bytes for Plutus data in Cardano.\n\nDefine the fields of BoundedBytes based on your original Rust code"
+    },
+    "v1ChainPoint": {
+      "type": "object",
+      "properties": {
+        "slot": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "height": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "hash": {
+          "type": "string"
+        }
+      }
+    },
+    "v1Constr": {
+      "type": "object",
+      "description": "Represents a constructor for Plutus data in Cardano.\n\nDefine the fields of Constr based on your original Rust code"
+    },
+    "v1GetTxResponse": {
+      "type": "object"
+    },
+    "v1Multiasset": {
+      "type": "object",
+      "properties": {
+        "policyId": {
+          "type": "string",
+          "format": "byte",
+          "description": "Policy ID governing the custom assets."
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Asset"
+          },
+          "description": "List of custom assets."
+        }
+      },
+      "description": "Represents a multi-asset group in the Cardano blockchain."
+    },
+    "v1NativeScript": {
+      "type": "object",
+      "properties": {
+        "scriptPubkey": {
+          "type": "string",
+          "format": "byte",
+          "description": "Script based on an address key hash."
+        },
+        "scriptAll": {
+          "$ref": "#/definitions/v1NativeScriptList",
+          "description": "Script that requires all nested scripts to be satisfied."
+        },
+        "scriptAny": {
+          "$ref": "#/definitions/v1NativeScriptList",
+          "description": "Script that requires any of the nested scripts to be satisfied."
+        },
+        "scriptNOfK": {
+          "$ref": "#/definitions/v1ScriptNOfK",
+          "description": "Script that requires k out of n nested scripts to be satisfied."
+        },
+        "invalidBefore": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Slot number before which the script is invalid."
+        },
+        "invalidHereafter": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Slot number after which the script is invalid."
+        }
+      },
+      "description": "Represents a native script in Cardano."
+    },
+    "v1NativeScriptList": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1NativeScript"
+          },
+          "description": "List of native scripts."
+        }
+      },
+      "description": "Represents a list of native scripts."
+    },
+    "v1PlutusData": {
+      "type": "object",
+      "properties": {
+        "Constr": {
+          "$ref": "#/definitions/v1Constr",
+          "description": "Constructor."
+        },
+        "Map": {
+          "$ref": "#/definitions/v1PlutusDataMap",
+          "description": "Map of Plutus data."
+        },
+        "BigInt": {
+          "$ref": "#/definitions/v1BigInt",
+          "description": "Big integer."
+        },
+        "BoundedBytes": {
+          "$ref": "#/definitions/v1BoundedBytes",
+          "description": "Bounded bytes."
+        },
+        "Array": {
+          "$ref": "#/definitions/v1PlutusDataArray",
+          "description": "Array of Plutus data."
+        }
+      },
+      "description": "Represents a Plutus data item in Cardano."
+    },
+    "v1PlutusDataArray": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PlutusData"
+          },
+          "description": "List of Plutus data items."
+        }
+      },
+      "description": "Represents an array of Plutus data in Cardano."
+    },
+    "v1PlutusDataMap": {
+      "type": "object",
+      "properties": {
+        "pairs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PlutusDataPair"
+          },
+          "description": "List of key-value pairs."
+        }
+      },
+      "description": "Represents a map of Plutus data in Cardano."
+    },
+    "v1PlutusDataPair": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "$ref": "#/definitions/v1PlutusData",
+          "description": "Key of the pair."
+        },
+        "value": {
+          "$ref": "#/definitions/v1PlutusData",
+          "description": "Value of the pair."
+        }
+      },
+      "description": "Represents a key-value pair for Plutus data in Cardano."
+    },
+    "v1Purpose": {
+      "type": "string",
+      "enum": [
+        "NO_PURPOSE",
+        "SPEND",
+        "MINT",
+        "CERT",
+        "REWARD"
+      ],
+      "default": "NO_PURPOSE",
+      "description": "Purpose of the redeemer in a transaction."
+    },
+    "v1Redeemer": {
+      "type": "object",
+      "properties": {
+        "purpose": {
+          "$ref": "#/definitions/v1Purpose",
+          "description": "Purpose of the redeemer."
+        },
+        "datum": {
+          "$ref": "#/definitions/v1PlutusData",
+          "description": "Plutus data associated with the redeemer."
+        }
+      },
+      "description": "Redeemer information for a Plutus script."
+    },
+    "v1Script": {
+      "type": "object",
+      "properties": {
+        "Native": {
+          "$ref": "#/definitions/v1NativeScript",
+          "description": "Native script."
+        },
+        "PlutusV1": {
+          "type": "string",
+          "format": "byte",
+          "description": "Plutus V1 script."
+        },
+        "PlutusV2": {
+          "type": "string",
+          "format": "byte",
+          "description": "Plutus V2 script."
+        }
+      },
+      "description": "Represents a script in Cardano."
+    },
+    "v1ScriptNOfK": {
+      "type": "object",
+      "properties": {
+        "k": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The number of required satisfied scripts."
+        },
+        "scripts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1NativeScript"
+          },
+          "description": "List of native scripts."
+        }
+      },
+      "description": "Represents a \"k out of n\" native script."
+    },
+    "v1TxOutput": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "format": "byte",
+          "description": "Address receiving the output."
+        },
+        "coin": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Amount of ADA in the output."
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Multiasset"
+          },
+          "description": "Additional native (non-ADA) assets in the output."
+        },
+        "datum": {
+          "$ref": "#/definitions/v1PlutusData",
+          "description": "Plutus data associated with the output."
+        },
+        "datumHash": {
+          "type": "string",
+          "format": "byte",
+          "description": "Hash of the Plutus data."
+        },
+        "script": {
+          "$ref": "#/definitions/v1Script",
+          "description": "Script associated with the output."
+        },
+        "redeemer": {
+          "$ref": "#/definitions/v1Redeemer",
+          "description": "Redeemer for the Plutus script."
+        }
+      },
+      "description": "Represents a transaction output in the Cardano blockchain."
+    },
+    "v1UtxoSet": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TxOutput"
+          }
+        },
+        "nextToken": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

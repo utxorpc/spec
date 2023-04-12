@@ -1,0 +1,6 @@
+version: v1
+directories:
+  - ledger/proto
+  - state/proto
+  - watch/proto
+  - sync/proto
