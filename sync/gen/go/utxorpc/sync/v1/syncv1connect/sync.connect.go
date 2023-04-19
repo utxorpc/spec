@@ -33,18 +33,22 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// ChainSyncServiceStreamBlocksProcedure is the fully-qualified name of the ChainSyncService's
-	// StreamBlocks RPC.
-	ChainSyncServiceStreamBlocksProcedure = "/utxorpc.sync.v1.ChainSyncService/StreamBlocks"
-	// ChainSyncServiceFetchBlocksProcedure is the fully-qualified name of the ChainSyncService's
-	// FetchBlocks RPC.
-	ChainSyncServiceFetchBlocksProcedure = "/utxorpc.sync.v1.ChainSyncService/FetchBlocks"
+	// ChainSyncServiceFetchBlockProcedure is the fully-qualified name of the ChainSyncService's
+	// FetchBlock RPC.
+	ChainSyncServiceFetchBlockProcedure = "/utxorpc.sync.v1.ChainSyncService/FetchBlock"
+	// ChainSyncServiceDumpHistoryProcedure is the fully-qualified name of the ChainSyncService's
+	// DumpHistory RPC.
+	ChainSyncServiceDumpHistoryProcedure = "/utxorpc.sync.v1.ChainSyncService/DumpHistory"
+	// ChainSyncServiceFollowTipProcedure is the fully-qualified name of the ChainSyncService's
+	// FollowTip RPC.
+	ChainSyncServiceFollowTipProcedure = "/utxorpc.sync.v1.ChainSyncService/FollowTip"
 )
 
 // ChainSyncServiceClient is a client for the utxorpc.sync.v1.ChainSyncService service.
 type ChainSyncServiceClient interface {
-	StreamBlocks(context.Context, *connect_go.Request[v1.StreamBlocksRequest]) (*connect_go.ServerStreamForClient[v1.StreamBlocksResponse], error)
-	FetchBlocks(context.Context, *connect_go.Request[v1.FetchBlocksRequest]) (*connect_go.Response[v1.FetchBlocksResponse], error)
+	FetchBlock(context.Context, *connect_go.Request[v1.FetchBlockRequest]) (*connect_go.Response[v1.FetchBlockResponse], error)
+	DumpHistory(context.Context, *connect_go.Request[v1.DumpHistoryRequest]) (*connect_go.Response[v1.DumpHistoryResponse], error)
+	FollowTip(context.Context, *connect_go.Request[v1.FollowTipRequest]) (*connect_go.ServerStreamForClient[v1.FollowTipResponse], error)
 }
 
 // NewChainSyncServiceClient constructs a client for the utxorpc.sync.v1.ChainSyncService service.
@@ -57,14 +61,19 @@ type ChainSyncServiceClient interface {
 func NewChainSyncServiceClient(httpClient connect_go.HTTPClient, baseURL string, opts ...connect_go.ClientOption) ChainSyncServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &chainSyncServiceClient{
-		streamBlocks: connect_go.NewClient[v1.StreamBlocksRequest, v1.StreamBlocksResponse](
+		fetchBlock: connect_go.NewClient[v1.FetchBlockRequest, v1.FetchBlockResponse](
 			httpClient,
-			baseURL+ChainSyncServiceStreamBlocksProcedure,
+			baseURL+ChainSyncServiceFetchBlockProcedure,
 			opts...,
 		),
-		fetchBlocks: connect_go.NewClient[v1.FetchBlocksRequest, v1.FetchBlocksResponse](
+		dumpHistory: connect_go.NewClient[v1.DumpHistoryRequest, v1.DumpHistoryResponse](
 			httpClient,
-			baseURL+ChainSyncServiceFetchBlocksProcedure,
+			baseURL+ChainSyncServiceDumpHistoryProcedure,
+			opts...,
+		),
+		followTip: connect_go.NewClient[v1.FollowTipRequest, v1.FollowTipResponse](
+			httpClient,
+			baseURL+ChainSyncServiceFollowTipProcedure,
 			opts...,
 		),
 	}
@@ -72,24 +81,31 @@ func NewChainSyncServiceClient(httpClient connect_go.HTTPClient, baseURL string,
 
 // chainSyncServiceClient implements ChainSyncServiceClient.
 type chainSyncServiceClient struct {
-	streamBlocks *connect_go.Client[v1.StreamBlocksRequest, v1.StreamBlocksResponse]
-	fetchBlocks  *connect_go.Client[v1.FetchBlocksRequest, v1.FetchBlocksResponse]
+	fetchBlock  *connect_go.Client[v1.FetchBlockRequest, v1.FetchBlockResponse]
+	dumpHistory *connect_go.Client[v1.DumpHistoryRequest, v1.DumpHistoryResponse]
+	followTip   *connect_go.Client[v1.FollowTipRequest, v1.FollowTipResponse]
 }
 
-// StreamBlocks calls utxorpc.sync.v1.ChainSyncService.StreamBlocks.
-func (c *chainSyncServiceClient) StreamBlocks(ctx context.Context, req *connect_go.Request[v1.StreamBlocksRequest]) (*connect_go.ServerStreamForClient[v1.StreamBlocksResponse], error) {
-	return c.streamBlocks.CallServerStream(ctx, req)
+// FetchBlock calls utxorpc.sync.v1.ChainSyncService.FetchBlock.
+func (c *chainSyncServiceClient) FetchBlock(ctx context.Context, req *connect_go.Request[v1.FetchBlockRequest]) (*connect_go.Response[v1.FetchBlockResponse], error) {
+	return c.fetchBlock.CallUnary(ctx, req)
 }
 
-// FetchBlocks calls utxorpc.sync.v1.ChainSyncService.FetchBlocks.
-func (c *chainSyncServiceClient) FetchBlocks(ctx context.Context, req *connect_go.Request[v1.FetchBlocksRequest]) (*connect_go.Response[v1.FetchBlocksResponse], error) {
-	return c.fetchBlocks.CallUnary(ctx, req)
+// DumpHistory calls utxorpc.sync.v1.ChainSyncService.DumpHistory.
+func (c *chainSyncServiceClient) DumpHistory(ctx context.Context, req *connect_go.Request[v1.DumpHistoryRequest]) (*connect_go.Response[v1.DumpHistoryResponse], error) {
+	return c.dumpHistory.CallUnary(ctx, req)
+}
+
+// FollowTip calls utxorpc.sync.v1.ChainSyncService.FollowTip.
+func (c *chainSyncServiceClient) FollowTip(ctx context.Context, req *connect_go.Request[v1.FollowTipRequest]) (*connect_go.ServerStreamForClient[v1.FollowTipResponse], error) {
+	return c.followTip.CallServerStream(ctx, req)
 }
 
 // ChainSyncServiceHandler is an implementation of the utxorpc.sync.v1.ChainSyncService service.
 type ChainSyncServiceHandler interface {
-	StreamBlocks(context.Context, *connect_go.Request[v1.StreamBlocksRequest], *connect_go.ServerStream[v1.StreamBlocksResponse]) error
-	FetchBlocks(context.Context, *connect_go.Request[v1.FetchBlocksRequest]) (*connect_go.Response[v1.FetchBlocksResponse], error)
+	FetchBlock(context.Context, *connect_go.Request[v1.FetchBlockRequest]) (*connect_go.Response[v1.FetchBlockResponse], error)
+	DumpHistory(context.Context, *connect_go.Request[v1.DumpHistoryRequest]) (*connect_go.Response[v1.DumpHistoryResponse], error)
+	FollowTip(context.Context, *connect_go.Request[v1.FollowTipRequest], *connect_go.ServerStream[v1.FollowTipResponse]) error
 }
 
 // NewChainSyncServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -99,14 +115,19 @@ type ChainSyncServiceHandler interface {
 // and JSON codecs. They also support gzip compression.
 func NewChainSyncServiceHandler(svc ChainSyncServiceHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
 	mux := http.NewServeMux()
-	mux.Handle(ChainSyncServiceStreamBlocksProcedure, connect_go.NewServerStreamHandler(
-		ChainSyncServiceStreamBlocksProcedure,
-		svc.StreamBlocks,
+	mux.Handle(ChainSyncServiceFetchBlockProcedure, connect_go.NewUnaryHandler(
+		ChainSyncServiceFetchBlockProcedure,
+		svc.FetchBlock,
 		opts...,
 	))
-	mux.Handle(ChainSyncServiceFetchBlocksProcedure, connect_go.NewUnaryHandler(
-		ChainSyncServiceFetchBlocksProcedure,
-		svc.FetchBlocks,
+	mux.Handle(ChainSyncServiceDumpHistoryProcedure, connect_go.NewUnaryHandler(
+		ChainSyncServiceDumpHistoryProcedure,
+		svc.DumpHistory,
+		opts...,
+	))
+	mux.Handle(ChainSyncServiceFollowTipProcedure, connect_go.NewServerStreamHandler(
+		ChainSyncServiceFollowTipProcedure,
+		svc.FollowTip,
 		opts...,
 	))
 	return "/utxorpc.sync.v1.ChainSyncService/", mux
@@ -115,10 +136,14 @@ func NewChainSyncServiceHandler(svc ChainSyncServiceHandler, opts ...connect_go.
 // UnimplementedChainSyncServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedChainSyncServiceHandler struct{}
 
-func (UnimplementedChainSyncServiceHandler) StreamBlocks(context.Context, *connect_go.Request[v1.StreamBlocksRequest], *connect_go.ServerStream[v1.StreamBlocksResponse]) error {
-	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.sync.v1.ChainSyncService.StreamBlocks is not implemented"))
+func (UnimplementedChainSyncServiceHandler) FetchBlock(context.Context, *connect_go.Request[v1.FetchBlockRequest]) (*connect_go.Response[v1.FetchBlockResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.sync.v1.ChainSyncService.FetchBlock is not implemented"))
 }
 
-func (UnimplementedChainSyncServiceHandler) FetchBlocks(context.Context, *connect_go.Request[v1.FetchBlocksRequest]) (*connect_go.Response[v1.FetchBlocksResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.sync.v1.ChainSyncService.FetchBlocks is not implemented"))
+func (UnimplementedChainSyncServiceHandler) DumpHistory(context.Context, *connect_go.Request[v1.DumpHistoryRequest]) (*connect_go.Response[v1.DumpHistoryResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.sync.v1.ChainSyncService.DumpHistory is not implemented"))
+}
+
+func (UnimplementedChainSyncServiceHandler) FollowTip(context.Context, *connect_go.Request[v1.FollowTipRequest], *connect_go.ServerStream[v1.FollowTipResponse]) error {
+	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.sync.v1.ChainSyncService.FollowTip is not implemented"))
 }

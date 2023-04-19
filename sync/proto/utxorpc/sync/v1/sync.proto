@@ -2,47 +2,76 @@ syntax = "proto3";
 
 package utxorpc.sync.v1;
 
-message Intersection {
-    uint32 era = 1;
+import "google/protobuf/field_mask.proto";
+import "utxorpc/ledger/v1/tx.proto";
 
+// Represents a reference to a specific block.
+message BlockRef {
+  uint64 slot = 1; // Slot number.
+  uint64 height = 2; // Block height.
+  string hash = 3; // Block hash.
 }
 
+// Contains the header information for a block.
 message BlockHeader {
-    uint64 slot = 1;
-    uint64 height = 2;
-    string hash = 3; 
+  uint64 slot = 1; // Slot number.
+  uint64 height = 2; // Block height.
+  string hash = 3; // Block hash.
 }
 
+// Contains the transaction data for a block.
 message BlockBody {
-
+  repeated utxorpc.ledger.v1.Tx tx = 1; // List of transactions.
 }
 
+// Represents a complete block, including header and body.
 message Block {
-    BlockHeader header = 1;
-    BlockBody body = 2;
-    bytes cbor = 3;
+  BlockHeader header = 1; // Block header.
+  BlockBody body = 2; // Block body.
+  bytes cbor = 3; // CBOR-encoded block data.
 }
 
-message StreamBlocksRequest {
-    Intersection intersect = 1;
+// Request to fetch a block by its reference.
+message FetchBlockRequest {
+  repeated BlockRef ref = 1; // List of block references.
+  google.protobuf.FieldMask field_mask = 4; // Field mask to selectively return fields.
 }
 
-message StreamBlocksResponse {
-
+// Response containing the fetched blocks.
+message FetchBlockResponse {
+  repeated Block block = 1; // List of fetched blocks.
 }
 
-
-message FetchBlocksRequest {
-    uint64 slot = 1;
-    uint64 height = 2;
-    string hash = 3; 
+// Request to dump the block history.
+message DumpHistoryRequest {
+  BlockRef start_token = 2; // Starting point for the block history dump.
+  uint32 max_items = 3; // Maximum number of items to return.
+  google.protobuf.FieldMask field_mask = 4; // Field mask to selectively return fields.
 }
 
-message FetchBlocksResponse {
-
+// Response containing the dumped block history.
+message DumpHistoryResponse {
+  repeated Block block = 1; // List of blocks in the history.
+  BlockRef next_token = 2; // Next token for pagination.
 }
 
+// Request to follow the tip of the blockchain.
+message FollowTipRequest {
+  repeated BlockRef intersect = 1; // List of block references to find the intersection.
+}
+
+// Response containing the action to perform while following the tip.
+message FollowTipResponse {
+  oneof action {
+    Block apply = 1; // Apply this block.
+    Block undo = 2; // Undo this block.
+    BlockRef reset = 3; // Reset to this block reference.
+  }
+}
+
+// Service definition for syncing chain data.
 service ChainSyncService {
-    rpc StreamBlocks(StreamBlocksRequest) returns (stream StreamBlocksResponse);
-    rpc FetchBlocks(FetchBlocksRequest) returns (FetchBlocksResponse);
+  rpc FetchBlock(FetchBlockRequest) returns (FetchBlockResponse); // Fetch a block by its reference.
+  rpc DumpHistory(DumpHistoryRequest) returns (DumpHistoryResponse); // Dump the block history.
+  rpc FollowTip(FollowTipRequest) returns (stream FollowTipResponse); // Follow the tip of the blockchain.
 }

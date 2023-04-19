@@ -45,20 +45,860 @@
         }
       }
     },
-    "v1FetchBlocksResponse": {
-      "type": "object"
-    },
-    "v1Intersection": {
+    "v1Asset": {
       "type": "object",
       "properties": {
-        "era": {
-          "type": "integer",
-          "format": "int64"
+        "name": {
+          "type": "string",
+          "format": "byte",
+          "description": "Name of the custom asset."
+        },
+        "quantity": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Quantity of the custom asset."
+        }
+      },
+      "description": "Represents a custom asset in the Cardano blockchain."
+    },
+    "v1AuxData": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Metadata"
+          },
+          "description": "List of auxiliary metadata elements."
+        },
+        "scripts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Script"
+          },
+          "description": "List of auxiliary scripts."
+        }
+      },
+      "title": "Auxiliary data not directly tied to the validation process"
+    },
+    "v1BigInt": {
+      "type": "object",
+      "description": "Represents a big integer for Plutus data in Cardano.\n\nDefine the fields of BigInt based on your original Rust code"
+    },
+    "v1Block": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "$ref": "#/definitions/v1BlockHeader",
+          "description": "Block header."
+        },
+        "body": {
+          "$ref": "#/definitions/v1BlockBody",
+          "description": "Block body."
+        },
+        "cbor": {
+          "type": "string",
+          "format": "byte",
+          "description": "CBOR-encoded block data."
+        }
+      },
+      "description": "Represents a complete block, including header and body."
+    },
+    "v1BlockBody": {
+      "type": "object",
+      "properties": {
+        "tx": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Tx"
+          },
+          "description": "List of transactions."
+        }
+      },
+      "description": "Contains the transaction data for a block."
+    },
+    "v1BlockHeader": {
+      "type": "object",
+      "properties": {
+        "slot": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Slot number."
+        },
+        "height": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Block height."
+        },
+        "hash": {
+          "type": "string",
+          "description": "Block hash."
+        }
+      },
+      "description": "Contains the header information for a block."
+    },
+    "v1BlockRef": {
+      "type": "object",
+      "properties": {
+        "slot": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Slot number."
+        },
+        "height": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Block height."
+        },
+        "hash": {
+          "type": "string",
+          "description": "Block hash."
+        }
+      },
+      "description": "Represents a reference to a specific block."
+    },
+    "v1BoundedBytes": {
+      "type": "object",
+      "description": "Represents a bounded bytes for Plutus data in Cardano.\n\nDefine the fields of BoundedBytes based on your original Rust code"
+    },
+    "v1Certificate": {
+      "type": "object",
+      "properties": {
+        "stakeRegistration": {
+          "$ref": "#/definitions/v1StakeCredential",
+          "description": "Stake registration certificate."
+        },
+        "stakeDeregistration": {
+          "$ref": "#/definitions/v1StakeCredential",
+          "description": "Stake deregistration certificate."
+        },
+        "stakeDelegation": {
+          "$ref": "#/definitions/v1StakeDelegationCert",
+          "description": "Stake delegation certificate."
+        },
+        "poolRegistration": {
+          "$ref": "#/definitions/v1PoolRegistrationCert",
+          "description": "Pool registration certificate."
+        },
+        "poolRetirement": {
+          "$ref": "#/definitions/v1PoolRetirementCert",
+          "description": "Pool retirement certificate."
+        },
+        "genesisKeyDelegation": {
+          "$ref": "#/definitions/v1GenesisKeyDelegationCert",
+          "description": "Genesis key delegation certificate."
+        },
+        "moveInstantaneousRewardsCert": {
+          "$ref": "#/definitions/v1MoveInstantaneousRewardCert",
+          "description": "Move instantaneous rewards certificate."
+        }
+      },
+      "description": "Represents a certificate in Cardano."
+    },
+    "v1Collateral": {
+      "type": "object",
+      "properties": {
+        "collateral": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TxInput"
+          },
+          "description": "Collateral inputs for the transaction."
+        },
+        "collateralReturn": {
+          "$ref": "#/definitions/v1TxOutput",
+          "description": "Collateral return in case of script failure."
+        },
+        "totalCollateral": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Total amount of collateral."
+        }
+      },
+      "description": "Represents the collateral information for a transaction."
+    },
+    "v1Constr": {
+      "type": "object",
+      "description": "Represents a constructor for Plutus data in Cardano.\n\nDefine the fields of Constr based on your original Rust code"
+    },
+    "v1DumpHistoryResponse": {
+      "type": "object",
+      "properties": {
+        "block": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Block"
+          },
+          "description": "List of blocks in the history."
+        },
+        "nextToken": {
+          "$ref": "#/definitions/v1BlockRef",
+          "description": "Next token for pagination."
+        }
+      },
+      "description": "Response containing the dumped block history."
+    },
+    "v1FetchBlockResponse": {
+      "type": "object",
+      "properties": {
+        "block": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Block"
+          },
+          "description": "List of fetched blocks."
+        }
+      },
+      "description": "Response containing the fetched blocks."
+    },
+    "v1FollowTipResponse": {
+      "type": "object",
+      "properties": {
+        "apply": {
+          "$ref": "#/definitions/v1Block",
+          "description": "Apply this block."
+        },
+        "undo": {
+          "$ref": "#/definitions/v1Block",
+          "description": "Undo this block."
+        },
+        "reset": {
+          "$ref": "#/definitions/v1BlockRef",
+          "description": "Reset to this block reference."
+        }
+      },
+      "description": "Response containing the action to perform while following the tip."
+    },
+    "v1GenesisKeyDelegationCert": {
+      "type": "object",
+      "properties": {
+        "genesisHash": {
+          "type": "string",
+          "format": "byte",
+          "description": "Genesis hash."
+        },
+        "genesisDelegateHash": {
+          "type": "string",
+          "format": "byte",
+          "description": "Genesis delegate hash."
+        },
+        "vrfKeyhash": {
+          "type": "string",
+          "format": "byte",
+          "description": "VRF key hash."
+        }
+      },
+      "description": "Represents a genesis key delegation certificate in Cardano."
+    },
+    "v1Metadata": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "value": {
+          "$ref": "#/definitions/v1Metadatum"
         }
       }
     },
-    "v1StreamBlocksResponse": {
-      "type": "object"
+    "v1Metadatum": {
+      "type": "object",
+      "properties": {
+        "Int": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Bytes": {
+          "type": "string",
+          "format": "byte"
+        },
+        "Text": {
+          "type": "string"
+        },
+        "Array": {
+          "$ref": "#/definitions/v1MetadatumArray"
+        },
+        "Map": {
+          "$ref": "#/definitions/v1MetadatumMap"
+        }
+      }
+    },
+    "v1MetadatumArray": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Metadatum"
+          }
+        }
+      }
+    },
+    "v1MetadatumMap": {
+      "type": "object",
+      "properties": {
+        "pairs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1MetadatumPair"
+          }
+        }
+      }
+    },
+    "v1MetadatumPair": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "$ref": "#/definitions/v1Metadatum"
+        },
+        "value": {
+          "$ref": "#/definitions/v1Metadatum"
+        }
+      }
+    },
+    "v1MoveInstantaneousRewardCert": {
+      "type": "object",
+      "description": "Represents a move instantaneous reward certificate in Cardano.\n\nDefine the fields of MoveInstantaneousReward based on your original Rust code"
+    },
+    "v1Multiasset": {
+      "type": "object",
+      "properties": {
+        "policyId": {
+          "type": "string",
+          "format": "byte",
+          "description": "Policy ID governing the custom assets."
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Asset"
+          },
+          "description": "List of custom assets."
+        }
+      },
+      "description": "Represents a multi-asset group in the Cardano blockchain."
+    },
+    "v1NativeScript": {
+      "type": "object",
+      "properties": {
+        "scriptPubkey": {
+          "type": "string",
+          "format": "byte",
+          "description": "Script based on an address key hash."
+        },
+        "scriptAll": {
+          "$ref": "#/definitions/v1NativeScriptList",
+          "description": "Script that requires all nested scripts to be satisfied."
+        },
+        "scriptAny": {
+          "$ref": "#/definitions/v1NativeScriptList",
+          "description": "Script that requires any of the nested scripts to be satisfied."
+        },
+        "scriptNOfK": {
+          "$ref": "#/definitions/v1ScriptNOfK",
+          "description": "Script that requires k out of n nested scripts to be satisfied."
+        },
+        "invalidBefore": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Slot number before which the script is invalid."
+        },
+        "invalidHereafter": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Slot number after which the script is invalid."
+        }
+      },
+      "description": "Represents a native script in Cardano."
+    },
+    "v1NativeScriptList": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1NativeScript"
+          },
+          "description": "List of native scripts."
+        }
+      },
+      "description": "Represents a list of native scripts."
+    },
+    "v1PlutusData": {
+      "type": "object",
+      "properties": {
+        "Constr": {
+          "$ref": "#/definitions/v1Constr",
+          "description": "Constructor."
+        },
+        "Map": {
+          "$ref": "#/definitions/v1PlutusDataMap",
+          "description": "Map of Plutus data."
+        },
+        "BigInt": {
+          "$ref": "#/definitions/v1BigInt",
+          "description": "Big integer."
+        },
+        "BoundedBytes": {
+          "$ref": "#/definitions/v1BoundedBytes",
+          "description": "Bounded bytes."
+        },
+        "Array": {
+          "$ref": "#/definitions/v1PlutusDataArray",
+          "description": "Array of Plutus data."
+        }
+      },
+      "description": "Represents a Plutus data item in Cardano."
+    },
+    "v1PlutusDataArray": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PlutusData"
+          },
+          "description": "List of Plutus data items."
+        }
+      },
+      "description": "Represents an array of Plutus data in Cardano."
+    },
+    "v1PlutusDataMap": {
+      "type": "object",
+      "properties": {
+        "pairs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PlutusDataPair"
+          },
+          "description": "List of key-value pairs."
+        }
+      },
+      "description": "Represents a map of Plutus data in Cardano."
+    },
+    "v1PlutusDataPair": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "$ref": "#/definitions/v1PlutusData",
+          "description": "Key of the pair."
+        },
+        "value": {
+          "$ref": "#/definitions/v1PlutusData",
+          "description": "Value of the pair."
+        }
+      },
+      "description": "Represents a key-value pair for Plutus data in Cardano."
+    },
+    "v1PoolMetadata": {
+      "type": "object",
+      "description": "Represents pool metadata in Cardano.\n\nDefine the fields of PoolMetadata based on your original Rust code"
+    },
+    "v1PoolRegistrationCert": {
+      "type": "object",
+      "properties": {
+        "operator": {
+          "type": "string",
+          "format": "byte",
+          "description": "Operator key hash."
+        },
+        "vrfKeyhash": {
+          "type": "string",
+          "format": "byte",
+          "description": "VRF key hash."
+        },
+        "pledge": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Pledge amount."
+        },
+        "cost": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Pool cost."
+        },
+        "margin": {
+          "$ref": "#/definitions/v1UnitInterval",
+          "description": "Pool margin."
+        },
+        "rewardAccount": {
+          "type": "string",
+          "format": "byte",
+          "description": "Reward account."
+        },
+        "poolOwners": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          },
+          "description": "List of pool owner key hashes."
+        },
+        "relays": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Relay"
+          },
+          "description": "List of relays."
+        },
+        "poolMetadata": {
+          "$ref": "#/definitions/v1PoolMetadata",
+          "description": "Pool metadata."
+        }
+      },
+      "description": "Represents a pool registration certificate in Cardano."
+    },
+    "v1PoolRetirementCert": {
+      "type": "object",
+      "properties": {
+        "poolKeyhash": {
+          "type": "string",
+          "format": "byte",
+          "description": "Pool key hash."
+        },
+        "epoch": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Retirement epoch."
+        }
+      },
+      "description": "Represents a pool retirement certificate in Cardano."
+    },
+    "v1Purpose": {
+      "type": "string",
+      "enum": [
+        "NO_PURPOSE",
+        "SPEND",
+        "MINT",
+        "CERT",
+        "REWARD"
+      ],
+      "default": "NO_PURPOSE",
+      "description": "Purpose of the redeemer in a transaction."
+    },
+    "v1Redeemer": {
+      "type": "object",
+      "properties": {
+        "purpose": {
+          "$ref": "#/definitions/v1Purpose",
+          "description": "Purpose of the redeemer."
+        },
+        "datum": {
+          "$ref": "#/definitions/v1PlutusData",
+          "description": "Plutus data associated with the redeemer."
+        }
+      },
+      "description": "Redeemer information for a Plutus script."
+    },
+    "v1Relay": {
+      "type": "object",
+      "description": "Represents a relay in Cardano.\n\nDefine the fields of Relay based on your original Rust code"
+    },
+    "v1Script": {
+      "type": "object",
+      "properties": {
+        "Native": {
+          "$ref": "#/definitions/v1NativeScript",
+          "description": "Native script."
+        },
+        "PlutusV1": {
+          "type": "string",
+          "format": "byte",
+          "description": "Plutus V1 script."
+        },
+        "PlutusV2": {
+          "type": "string",
+          "format": "byte",
+          "description": "Plutus V2 script."
+        }
+      },
+      "description": "Represents a script in Cardano."
+    },
+    "v1ScriptNOfK": {
+      "type": "object",
+      "properties": {
+        "k": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The number of required satisfied scripts."
+        },
+        "scripts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1NativeScript"
+          },
+          "description": "List of native scripts."
+        }
+      },
+      "description": "Represents a \"k out of n\" native script."
+    },
+    "v1StakeCredential": {
+      "type": "object",
+      "properties": {
+        "addrKeyHash": {
+          "type": "string",
+          "format": "byte",
+          "description": "Address key hash."
+        },
+        "scriptHash": {
+          "type": "string",
+          "format": "byte",
+          "description": "Script hash."
+        }
+      },
+      "description": "Represents a stake credential in Cardano."
+    },
+    "v1StakeDelegationCert": {
+      "type": "object",
+      "properties": {
+        "stakeCredential": {
+          "$ref": "#/definitions/v1StakeCredential",
+          "description": "Stake credential."
+        },
+        "poolKeyhash": {
+          "type": "string",
+          "format": "byte",
+          "description": "Pool key hash."
+        }
+      },
+      "description": "Represents a stake delegation certificate in Cardano."
+    },
+    "v1Tx": {
+      "type": "object",
+      "properties": {
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TxInput"
+          },
+          "title": "List of transaction inputs"
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TxOutput"
+          },
+          "title": "List of transaction outputs"
+        },
+        "certificates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Certificate"
+          },
+          "title": "List of certificates"
+        },
+        "withdrawals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Withdrawal"
+          },
+          "title": "List of withdrawals"
+        },
+        "mint": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Multiasset"
+          },
+          "title": "List of minted custom assets"
+        },
+        "referenceInputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TxInput"
+          },
+          "title": "List of reference inputs"
+        },
+        "witnesses": {
+          "$ref": "#/definitions/v1WitnessSet",
+          "title": "Witnesses that validte the transaction"
+        },
+        "collateral": {
+          "$ref": "#/definitions/v1Collateral",
+          "title": "Collateral details in case of failed transaction"
+        },
+        "fee": {
+          "type": "string",
+          "format": "uint64",
+          "title": "Transaction fee in ADA"
+        },
+        "validity": {
+          "$ref": "#/definitions/v1TxValidity",
+          "title": "Validity interval of the transaction"
+        },
+        "successful": {
+          "type": "boolean",
+          "title": "Flag indicating whether the transaction was successful"
+        },
+        "auxiliary": {
+          "$ref": "#/definitions/v1AuxData",
+          "title": "Auxiliary data not directly tied to the validation process"
+        }
+      },
+      "description": "Represents a transaction in the Cardano blockchain."
+    },
+    "v1TxInput": {
+      "type": "object",
+      "properties": {
+        "txHash": {
+          "type": "string",
+          "format": "byte",
+          "description": "Hash of the previous transaction."
+        },
+        "outputIndex": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Index of the output in the previous transaction."
+        },
+        "asOutput": {
+          "$ref": "#/definitions/v1TxOutput",
+          "title": "Content of the input represented as output of the related transaction"
+        }
+      },
+      "description": "Represents a transaction input in the Cardano blockchain."
+    },
+    "v1TxOutput": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "format": "byte",
+          "description": "Address receiving the output."
+        },
+        "coin": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Amount of ADA in the output."
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Multiasset"
+          },
+          "description": "Additional native (non-ADA) assets in the output."
+        },
+        "datum": {
+          "$ref": "#/definitions/v1PlutusData",
+          "description": "Plutus data associated with the output."
+        },
+        "datumHash": {
+          "type": "string",
+          "format": "byte",
+          "description": "Hash of the Plutus data."
+        },
+        "script": {
+          "$ref": "#/definitions/v1Script",
+          "description": "Script associated with the output."
+        },
+        "redeemer": {
+          "$ref": "#/definitions/v1Redeemer",
+          "description": "Redeemer for the Plutus script."
+        }
+      },
+      "description": "Represents a transaction output in the Cardano blockchain."
+    },
+    "v1TxValidity": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Start of the validity interval."
+        },
+        "ttl": {
+          "type": "string",
+          "format": "uint64",
+          "description": "End of the validity interval (TTL: Time to Live)."
+        }
+      },
+      "description": "Represents the validity interval of a transaction."
+    },
+    "v1UnitInterval": {
+      "type": "object",
+      "description": "Represents a unit interval in Cardano.\n\nDefine the fields of UnitInterval based on your original Rust code"
+    },
+    "v1VKeyWitness": {
+      "type": "object",
+      "properties": {
+        "vkey": {
+          "type": "string",
+          "format": "byte",
+          "description": "Verification key."
+        },
+        "signature": {
+          "type": "string",
+          "format": "byte",
+          "description": "Signature generated using the associated private key."
+        }
+      },
+      "description": "Represents a VKey witness used to sign a transaction."
+    },
+    "v1Withdrawal": {
+      "type": "object",
+      "properties": {
+        "rewardAccount": {
+          "type": "string",
+          "format": "byte",
+          "description": "Address of the reward account."
+        },
+        "coin": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Amount of ADA withdrawn."
+        }
+      },
+      "description": "Represents a withdrawal from a reward account."
+    },
+    "v1WitnessSet": {
+      "type": "object",
+      "properties": {
+        "vkeywitness": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1VKeyWitness"
+          },
+          "description": "List of VKey witnesses."
+        },
+        "script": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Script"
+          },
+          "description": "List of scripts."
+        },
+        "plutusDatums": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PlutusData"
+          },
+          "description": "List of Plutus data elements associated with the transaction."
+        }
+      },
+      "title": "Represents a set of witnesses that validate a transaction"
     }
   }
 }

@@ -4,7 +4,8 @@ pub mod chain_sync_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    ///
+    /** Service definition for syncing chain data.
+*/
     #[derive(Debug, Clone)]
     pub struct ChainSyncServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -70,11 +71,51 @@ pub mod chain_sync_service_client {
             self
         }
         ///
-        pub async fn stream_blocks(
+        pub async fn fetch_block(
             &mut self,
-            request: impl tonic::IntoRequest<super::StreamBlocksRequest>,
+            request: impl tonic::IntoRequest<super::FetchBlockRequest>,
+        ) -> Result<tonic::Response<super::FetchBlockResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/utxorpc.sync.v1.ChainSyncService/FetchBlock",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        ///
+        pub async fn dump_history(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DumpHistoryRequest>,
+        ) -> Result<tonic::Response<super::DumpHistoryResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/utxorpc.sync.v1.ChainSyncService/DumpHistory",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        ///
+        pub async fn follow_tip(
+            &mut self,
+            request: impl tonic::IntoRequest<super::FollowTipRequest>,
         ) -> Result<
-            tonic::Response<tonic::codec::Streaming<super::StreamBlocksResponse>>,
+            tonic::Response<tonic::codec::Streaming<super::FollowTipResponse>>,
             tonic::Status,
         > {
             self.inner
@@ -88,29 +129,9 @@ pub mod chain_sync_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.sync.v1.ChainSyncService/StreamBlocks",
+                "/utxorpc.sync.v1.ChainSyncService/FollowTip",
             );
             self.inner.server_streaming(request.into_request(), path, codec).await
-        }
-        ///
-        pub async fn fetch_blocks(
-            &mut self,
-            request: impl tonic::IntoRequest<super::FetchBlocksRequest>,
-        ) -> Result<tonic::Response<super::FetchBlocksResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.sync.v1.ChainSyncService/FetchBlocks",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
         }
     }
 }
@@ -121,24 +142,30 @@ pub mod chain_sync_service_server {
     /// Generated trait containing gRPC methods that should be implemented for use with ChainSyncServiceServer.
     #[async_trait]
     pub trait ChainSyncService: Send + Sync + 'static {
-        /// Server streaming response type for the StreamBlocks method.
-        type StreamBlocksStream: futures_core::Stream<
-                Item = Result<super::StreamBlocksResponse, tonic::Status>,
+        ///
+        async fn fetch_block(
+            &self,
+            request: tonic::Request<super::FetchBlockRequest>,
+        ) -> Result<tonic::Response<super::FetchBlockResponse>, tonic::Status>;
+        ///
+        async fn dump_history(
+            &self,
+            request: tonic::Request<super::DumpHistoryRequest>,
+        ) -> Result<tonic::Response<super::DumpHistoryResponse>, tonic::Status>;
+        /// Server streaming response type for the FollowTip method.
+        type FollowTipStream: futures_core::Stream<
+                Item = Result<super::FollowTipResponse, tonic::Status>,
             >
             + Send
             + 'static;
         ///
-        async fn stream_blocks(
+        async fn follow_tip(
             &self,
-            request: tonic::Request<super::StreamBlocksRequest>,
-        ) -> Result<tonic::Response<Self::StreamBlocksStream>, tonic::Status>;
-        ///
-        async fn fetch_blocks(
-            &self,
-            request: tonic::Request<super::FetchBlocksRequest>,
-        ) -> Result<tonic::Response<super::FetchBlocksResponse>, tonic::Status>;
+            request: tonic::Request<super::FollowTipRequest>,
+        ) -> Result<tonic::Response<Self::FollowTipStream>, tonic::Status>;
     }
-    ///
+    /** Service definition for syncing chain data.
+*/
     #[derive(Debug)]
     pub struct ChainSyncServiceServer<T: ChainSyncService> {
         inner: _Inner<T>,
@@ -198,67 +225,24 @@ pub mod chain_sync_service_server {
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             let inner = self.inner.clone();
             match req.uri().path() {
-                "/utxorpc.sync.v1.ChainSyncService/StreamBlocks" => {
+                "/utxorpc.sync.v1.ChainSyncService/FetchBlock" => {
                     #[allow(non_camel_case_types)]
-                    struct StreamBlocksSvc<T: ChainSyncService>(pub Arc<T>);
+                    struct FetchBlockSvc<T: ChainSyncService>(pub Arc<T>);
                     impl<
                         T: ChainSyncService,
-                    > tonic::server::ServerStreamingService<super::StreamBlocksRequest>
-                    for StreamBlocksSvc<T> {
-                        type Response = super::StreamBlocksResponse;
-                        type ResponseStream = T::StreamBlocksStream;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::ResponseStream>,
-                            tonic::Status,
-                        >;
-                        fn call(
-                            &mut self,
-                            request: tonic::Request<super::StreamBlocksRequest>,
-                        ) -> Self::Future {
-                            let inner = self.0.clone();
-                            let fut = async move {
-                                (*inner).stream_blocks(request).await
-                            };
-                            Box::pin(fut)
-                        }
-                    }
-                    let accept_compression_encodings = self.accept_compression_encodings;
-                    let send_compression_encodings = self.send_compression_encodings;
-                    let inner = self.inner.clone();
-                    let fut = async move {
-                        let inner = inner.0;
-                        let method = StreamBlocksSvc(inner);
-                        let codec = tonic::codec::ProstCodec::default();
-                        let mut grpc = tonic::server::Grpc::new(codec)
-                            .apply_compression_config(
-                                accept_compression_encodings,
-                                send_compression_encodings,
-                            );
-                        let res = grpc.server_streaming(method, req).await;
-                        Ok(res)
-                    };
-                    Box::pin(fut)
-                }
-                "/utxorpc.sync.v1.ChainSyncService/FetchBlocks" => {
-                    #[allow(non_camel_case_types)]
-                    struct FetchBlocksSvc<T: ChainSyncService>(pub Arc<T>);
-                    impl<
-                        T: ChainSyncService,
-                    > tonic::server::UnaryService<super::FetchBlocksRequest>
-                    for FetchBlocksSvc<T> {
-                        type Response = super::FetchBlocksResponse;
+                    > tonic::server::UnaryService<super::FetchBlockRequest>
+                    for FetchBlockSvc<T> {
+                        type Response = super::FetchBlockResponse;
                         type Future = BoxFuture<
                             tonic::Response<Self::Response>,
                             tonic::Status,
                         >;
                         fn call(
                             &mut self,
-                            request: tonic::Request<super::FetchBlocksRequest>,
+                            request: tonic::Request<super::FetchBlockRequest>,
                         ) -> Self::Future {
                             let inner = self.0.clone();
-                            let fut = async move {
-                                (*inner).fetch_blocks(request).await
-                            };
+                            let fut = async move { (*inner).fetch_block(request).await };
                             Box::pin(fut)
                         }
                     }
@@ -267,7 +251,7 @@ pub mod chain_sync_service_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let inner = inner.0;
-                        let method = FetchBlocksSvc(inner);
+                        let method = FetchBlockSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(
@@ -275,6 +259,85 @@ pub mod chain_sync_service_server {
                                 send_compression_encodings,
                             );
                         let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/utxorpc.sync.v1.ChainSyncService/DumpHistory" => {
+                    #[allow(non_camel_case_types)]
+                    struct DumpHistorySvc<T: ChainSyncService>(pub Arc<T>);
+                    impl<
+                        T: ChainSyncService,
+                    > tonic::server::UnaryService<super::DumpHistoryRequest>
+                    for DumpHistorySvc<T> {
+                        type Response = super::DumpHistoryResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::DumpHistoryRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move {
+                                (*inner).dump_history(request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = DumpHistorySvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/utxorpc.sync.v1.ChainSyncService/FollowTip" => {
+                    #[allow(non_camel_case_types)]
+                    struct FollowTipSvc<T: ChainSyncService>(pub Arc<T>);
+                    impl<
+                        T: ChainSyncService,
+                    > tonic::server::ServerStreamingService<super::FollowTipRequest>
+                    for FollowTipSvc<T> {
+                        type Response = super::FollowTipResponse;
+                        type ResponseStream = T::FollowTipStream;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::ResponseStream>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::FollowTipRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).follow_tip(request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = FollowTipSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.server_streaming(method, req).await;
                         Ok(res)
                     };
                     Box::pin(fut)
