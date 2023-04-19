@@ -45,6 +45,15 @@
         }
       }
     },
+    "v1AnyChainTx": {
+      "type": "object",
+      "properties": {
+        "cardano": {
+          "$ref": "#/definitions/v1Tx",
+          "description": "A Cardano transaction."
+        }
+      }
+    },
     "v1Asset": {
       "type": "object",
       "properties": {
@@ -113,7 +122,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/v1Tx"
+            "$ref": "#/definitions/v1AnyChainTx"
           },
           "description": "List of transactions."
         }
@@ -311,21 +320,21 @@
     "v1Metadatum": {
       "type": "object",
       "properties": {
-        "Int": {
+        "int": {
           "type": "string",
           "format": "int64"
         },
-        "Bytes": {
+        "bytes": {
           "type": "string",
           "format": "byte"
         },
-        "Text": {
+        "text": {
           "type": "string"
         },
-        "Array": {
+        "array": {
           "$ref": "#/definitions/v1MetadatumArray"
         },
-        "Map": {
+        "map": {
           "$ref": "#/definitions/v1MetadatumMap"
         }
       }
@@ -438,23 +447,23 @@
     "v1PlutusData": {
       "type": "object",
       "properties": {
-        "Constr": {
+        "constr": {
           "$ref": "#/definitions/v1Constr",
           "description": "Constructor."
         },
-        "Map": {
+        "map": {
           "$ref": "#/definitions/v1PlutusDataMap",
           "description": "Map of Plutus data."
         },
-        "BigInt": {
+        "bigInt": {
           "$ref": "#/definitions/v1BigInt",
           "description": "Big integer."
         },
-        "BoundedBytes": {
+        "boundedBytes": {
           "$ref": "#/definitions/v1BoundedBytes",
           "description": "Bounded bytes."
         },
-        "Array": {
+        "array": {
           "$ref": "#/definitions/v1PlutusDataArray",
           "description": "Array of Plutus data."
         }
@@ -581,13 +590,13 @@
     "v1Purpose": {
       "type": "string",
       "enum": [
-        "NO_PURPOSE",
-        "SPEND",
-        "MINT",
-        "CERT",
-        "REWARD"
+        "PURPOSE_UNSPECIFIED",
+        "PURPOSE_SPEND",
+        "PURPOSE_MINT",
+        "PURPOSE_CERT",
+        "PURPOSE_REWARD"
       ],
-      "default": "NO_PURPOSE",
+      "default": "PURPOSE_UNSPECIFIED",
       "description": "Purpose of the redeemer in a transaction."
     },
     "v1Redeemer": {
@@ -611,16 +620,16 @@
     "v1Script": {
       "type": "object",
       "properties": {
-        "Native": {
+        "native": {
           "$ref": "#/definitions/v1NativeScript",
           "description": "Native script."
         },
-        "PlutusV1": {
+        "plutusV1": {
           "type": "string",
           "format": "byte",
           "description": "Plutus V1 script."
         },
-        "PlutusV2": {
+        "plutusV2": {
           "type": "string",
           "format": "byte",
           "description": "Plutus V2 script."

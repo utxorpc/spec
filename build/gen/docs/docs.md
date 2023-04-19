@@ -4,6 +4,7 @@
 ## Table of Contents
 
 - [utxorpc/build/v1/build.proto](#utxorpc_build_v1_build-proto)
+    - [AnyChainUtxo](#utxorpc-state-v1-AnyChainUtxo)
     - [ChainParam](#utxorpc-state-v1-ChainParam)
     - [ChainPoint](#utxorpc-state-v1-ChainPoint)
     - [GetChainParamRequest](#utxorpc-state-v1-GetChainParamRequest)
@@ -28,6 +29,21 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## utxorpc/build/v1/build.proto
+
+
+
+<a name="utxorpc-state-v1-AnyChainUtxo"></a>
+
+### AnyChainUtxo
+An evenlope that holds an UTxO from any of compatible chains
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| cardano | [utxorpc.cardano.v1.TxOutput](#utxorpc-cardano-v1-TxOutput) |  |  |
+
+
+
 
 
 
@@ -143,7 +159,7 @@ Response containing the UTxOs associated with the requested addresses.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| items | [utxorpc.ledger.v1.TxOutput](#utxorpc-ledger-v1-TxOutput) | repeated | List of UTxOs. |
+| items | [AnyChainUtxo](#utxorpc-state-v1-AnyChainUtxo) | repeated | List of UTxOs. |
 | next_token | [string](#string) |  | Token for pagination. |
 
 
@@ -175,7 +191,7 @@ Response containing the UTxOs associated with the requested references.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| items | [utxorpc.ledger.v1.TxOutput](#utxorpc-ledger-v1-TxOutput) | repeated | List of UTxOs. |
+| items | [AnyChainUtxo](#utxorpc-state-v1-AnyChainUtxo) | repeated | List of UTxOs. |
 | next_token | [string](#string) |  | Token for pagination. |
 
 
