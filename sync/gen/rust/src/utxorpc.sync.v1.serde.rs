@@ -133,8 +133,14 @@ impl serde::Serialize for BlockBody {
         S: serde::Serializer,
     {
         use serde::ser::SerializeStruct;
-        let len = 0;
-        let struct_ser = serializer.serialize_struct("utxorpc.sync.v1.BlockBody", len)?;
+        let mut len = 0;
+        if !self.tx.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.sync.v1.BlockBody", len)?;
+        if !self.tx.is_empty() {
+            struct_ser.serialize_field("tx", &self.tx)?;
+        }
         struct_ser.end()
     }
 }
@@ -145,10 +151,12 @@ impl<'de> serde::Deserialize<'de> for BlockBody {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "tx",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Tx,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -169,7 +177,10 @@ impl<'de> serde::Deserialize<'de> for BlockBody {
                     where
                         E: serde::de::Error,
                     {
-                            Err(serde::de::Error::unknown_field(value, FIELDS))
+                        match value {
+                            "tx" => Ok(GeneratedField::Tx),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
                     }
                 }
                 deserializer.deserialize_identifier(GeneratedVisitor)
@@ -187,10 +198,19 @@ impl<'de> serde::Deserialize<'de> for BlockBody {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                while map.next_key::<GeneratedField>()?.is_some() {
-                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
+                let mut tx__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Tx => {
+                            if tx__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("tx"));
+                            }
+                            tx__ = Some(map.next_value()?);
+                        }
+                    }
                 }
                 Ok(BlockBody {
+                    tx: tx__.unwrap_or_default(),
                 })
             }
         }
@@ -326,7 +346,7 @@ impl<'de> serde::Deserialize<'de> for BlockHeader {
         deserializer.deserialize_struct("utxorpc.sync.v1.BlockHeader", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for FetchBlocksRequest {
+impl serde::Serialize for BlockRef {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -343,7 +363,7 @@ impl serde::Serialize for FetchBlocksRequest {
         if !self.hash.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("utxorpc.sync.v1.FetchBlocksRequest", len)?;
+        let mut struct_ser = serializer.serialize_struct("utxorpc.sync.v1.BlockRef", len)?;
         if self.slot != 0 {
             struct_ser.serialize_field("slot", ToString::to_string(&self.slot).as_str())?;
         }
@@ -356,7 +376,7 @@ impl serde::Serialize for FetchBlocksRequest {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for FetchBlocksRequest {
+impl<'de> serde::Deserialize<'de> for BlockRef {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -406,13 +426,13 @@ impl<'de> serde::Deserialize<'de> for FetchBlocksRequest {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = FetchBlocksRequest;
+            type Value = BlockRef;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.sync.v1.FetchBlocksRequest")
+                formatter.write_str("struct utxorpc.sync.v1.BlockRef")
             }
 
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<FetchBlocksRequest, V::Error>
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<BlockRef, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -445,88 +465,17 @@ impl<'de> serde::Deserialize<'de> for FetchBlocksRequest {
                         }
                     }
                 }
-                Ok(FetchBlocksRequest {
+                Ok(BlockRef {
                     slot: slot__.unwrap_or_default(),
                     height: height__.unwrap_or_default(),
                     hash: hash__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("utxorpc.sync.v1.FetchBlocksRequest", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("utxorpc.sync.v1.BlockRef", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for FetchBlocksResponse {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let len = 0;
-        let struct_ser = serializer.serialize_struct("utxorpc.sync.v1.FetchBlocksResponse", len)?;
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for FetchBlocksResponse {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                            Err(serde::de::Error::unknown_field(value, FIELDS))
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = FetchBlocksResponse;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.sync.v1.FetchBlocksResponse")
-            }
-
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<FetchBlocksResponse, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                while map.next_key::<GeneratedField>()?.is_some() {
-                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
-                }
-                Ok(FetchBlocksResponse {
-                })
-            }
-        }
-        deserializer.deserialize_struct("utxorpc.sync.v1.FetchBlocksResponse", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for Intersection {
+impl serde::Serialize for DumpHistoryRequest {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -534,29 +483,48 @@ impl serde::Serialize for Intersection {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.era != 0 {
+        if self.start_token.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("utxorpc.sync.v1.Intersection", len)?;
-        if self.era != 0 {
-            struct_ser.serialize_field("era", &self.era)?;
+        if self.max_items != 0 {
+            len += 1;
+        }
+        if self.field_mask.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.sync.v1.DumpHistoryRequest", len)?;
+        if let Some(v) = self.start_token.as_ref() {
+            struct_ser.serialize_field("startToken", v)?;
+        }
+        if self.max_items != 0 {
+            struct_ser.serialize_field("maxItems", &self.max_items)?;
+        }
+        if let Some(v) = self.field_mask.as_ref() {
+            struct_ser.serialize_field("fieldMask", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for Intersection {
+impl<'de> serde::Deserialize<'de> for DumpHistoryRequest {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "era",
+            "start_token",
+            "startToken",
+            "max_items",
+            "maxItems",
+            "field_mask",
+            "fieldMask",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Era,
+            StartToken,
+            MaxItems,
+            FieldMask,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -578,7 +546,9 @@ impl<'de> serde::Deserialize<'de> for Intersection {
                         E: serde::de::Error,
                     {
                         match value {
-                            "era" => Ok(GeneratedField::Era),
+                            "startToken" | "start_token" => Ok(GeneratedField::StartToken),
+                            "maxItems" | "max_items" => Ok(GeneratedField::MaxItems),
+                            "fieldMask" | "field_mask" => Ok(GeneratedField::FieldMask),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -588,38 +558,54 @@ impl<'de> serde::Deserialize<'de> for Intersection {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = Intersection;
+            type Value = DumpHistoryRequest;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.sync.v1.Intersection")
+                formatter.write_str("struct utxorpc.sync.v1.DumpHistoryRequest")
             }
 
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<Intersection, V::Error>
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<DumpHistoryRequest, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut era__ = None;
+                let mut start_token__ = None;
+                let mut max_items__ = None;
+                let mut field_mask__ = None;
                 while let Some(k) = map.next_key()? {
                     match k {
-                        GeneratedField::Era => {
-                            if era__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("era"));
+                        GeneratedField::StartToken => {
+                            if start_token__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("startToken"));
                             }
-                            era__ = 
+                            start_token__ = map.next_value()?;
+                        }
+                        GeneratedField::MaxItems => {
+                            if max_items__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("maxItems"));
+                            }
+                            max_items__ = 
                                 Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
                             ;
                         }
+                        GeneratedField::FieldMask => {
+                            if field_mask__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fieldMask"));
+                            }
+                            field_mask__ = map.next_value()?;
+                        }
                     }
                 }
-                Ok(Intersection {
-                    era: era__.unwrap_or_default(),
+                Ok(DumpHistoryRequest {
+                    start_token: start_token__,
+                    max_items: max_items__.unwrap_or_default(),
+                    field_mask: field_mask__,
                 })
             }
         }
-        deserializer.deserialize_struct("utxorpc.sync.v1.Intersection", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("utxorpc.sync.v1.DumpHistoryRequest", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for StreamBlocksRequest {
+impl serde::Serialize for DumpHistoryResponse {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -627,17 +613,326 @@ impl serde::Serialize for StreamBlocksRequest {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.intersect.is_some() {
+        if !self.block.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("utxorpc.sync.v1.StreamBlocksRequest", len)?;
-        if let Some(v) = self.intersect.as_ref() {
-            struct_ser.serialize_field("intersect", v)?;
+        if self.next_token.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.sync.v1.DumpHistoryResponse", len)?;
+        if !self.block.is_empty() {
+            struct_ser.serialize_field("block", &self.block)?;
+        }
+        if let Some(v) = self.next_token.as_ref() {
+            struct_ser.serialize_field("nextToken", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for StreamBlocksRequest {
+impl<'de> serde::Deserialize<'de> for DumpHistoryResponse {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "block",
+            "next_token",
+            "nextToken",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Block,
+            NextToken,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "block" => Ok(GeneratedField::Block),
+                            "nextToken" | "next_token" => Ok(GeneratedField::NextToken),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = DumpHistoryResponse;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.sync.v1.DumpHistoryResponse")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<DumpHistoryResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut block__ = None;
+                let mut next_token__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Block => {
+                            if block__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("block"));
+                            }
+                            block__ = Some(map.next_value()?);
+                        }
+                        GeneratedField::NextToken => {
+                            if next_token__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("nextToken"));
+                            }
+                            next_token__ = map.next_value()?;
+                        }
+                    }
+                }
+                Ok(DumpHistoryResponse {
+                    block: block__.unwrap_or_default(),
+                    next_token: next_token__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.sync.v1.DumpHistoryResponse", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for FetchBlockRequest {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.r#ref.is_empty() {
+            len += 1;
+        }
+        if self.field_mask.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.sync.v1.FetchBlockRequest", len)?;
+        if !self.r#ref.is_empty() {
+            struct_ser.serialize_field("ref", &self.r#ref)?;
+        }
+        if let Some(v) = self.field_mask.as_ref() {
+            struct_ser.serialize_field("fieldMask", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for FetchBlockRequest {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "ref",
+            "field_mask",
+            "fieldMask",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Ref,
+            FieldMask,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "ref" => Ok(GeneratedField::Ref),
+                            "fieldMask" | "field_mask" => Ok(GeneratedField::FieldMask),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = FetchBlockRequest;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.sync.v1.FetchBlockRequest")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<FetchBlockRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut r#ref__ = None;
+                let mut field_mask__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Ref => {
+                            if r#ref__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("ref"));
+                            }
+                            r#ref__ = Some(map.next_value()?);
+                        }
+                        GeneratedField::FieldMask => {
+                            if field_mask__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fieldMask"));
+                            }
+                            field_mask__ = map.next_value()?;
+                        }
+                    }
+                }
+                Ok(FetchBlockRequest {
+                    r#ref: r#ref__.unwrap_or_default(),
+                    field_mask: field_mask__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.sync.v1.FetchBlockRequest", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for FetchBlockResponse {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.block.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.sync.v1.FetchBlockResponse", len)?;
+        if !self.block.is_empty() {
+            struct_ser.serialize_field("block", &self.block)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for FetchBlockResponse {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "block",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Block,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "block" => Ok(GeneratedField::Block),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = FetchBlockResponse;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.sync.v1.FetchBlockResponse")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<FetchBlockResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut block__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Block => {
+                            if block__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("block"));
+                            }
+                            block__ = Some(map.next_value()?);
+                        }
+                    }
+                }
+                Ok(FetchBlockResponse {
+                    block: block__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.sync.v1.FetchBlockResponse", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for FollowTipRequest {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.intersect.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.sync.v1.FollowTipRequest", len)?;
+        if !self.intersect.is_empty() {
+            struct_ser.serialize_field("intersect", &self.intersect)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for FollowTipRequest {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -681,13 +976,13 @@ impl<'de> serde::Deserialize<'de> for StreamBlocksRequest {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = StreamBlocksRequest;
+            type Value = FollowTipRequest;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.sync.v1.StreamBlocksRequest")
+                formatter.write_str("struct utxorpc.sync.v1.FollowTipRequest")
             }
 
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<StreamBlocksRequest, V::Error>
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<FollowTipRequest, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -698,41 +993,63 @@ impl<'de> serde::Deserialize<'de> for StreamBlocksRequest {
                             if intersect__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("intersect"));
                             }
-                            intersect__ = map.next_value()?;
+                            intersect__ = Some(map.next_value()?);
                         }
                     }
                 }
-                Ok(StreamBlocksRequest {
-                    intersect: intersect__,
+                Ok(FollowTipRequest {
+                    intersect: intersect__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("utxorpc.sync.v1.StreamBlocksRequest", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("utxorpc.sync.v1.FollowTipRequest", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for StreamBlocksResponse {
+impl serde::Serialize for FollowTipResponse {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
     {
         use serde::ser::SerializeStruct;
-        let len = 0;
-        let struct_ser = serializer.serialize_struct("utxorpc.sync.v1.StreamBlocksResponse", len)?;
+        let mut len = 0;
+        if self.action.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.sync.v1.FollowTipResponse", len)?;
+        if let Some(v) = self.action.as_ref() {
+            match v {
+                follow_tip_response::Action::Apply(v) => {
+                    struct_ser.serialize_field("apply", v)?;
+                }
+                follow_tip_response::Action::Undo(v) => {
+                    struct_ser.serialize_field("undo", v)?;
+                }
+                follow_tip_response::Action::Reset(v) => {
+                    struct_ser.serialize_field("reset", v)?;
+                }
+            }
+        }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for StreamBlocksResponse {
+impl<'de> serde::Deserialize<'de> for FollowTipResponse {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "apply",
+            "undo",
+            "reset",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Apply,
+            Undo,
+            Reset,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -753,7 +1070,12 @@ impl<'de> serde::Deserialize<'de> for StreamBlocksResponse {
                     where
                         E: serde::de::Error,
                     {
-                            Err(serde::de::Error::unknown_field(value, FIELDS))
+                        match value {
+                            "apply" => Ok(GeneratedField::Apply),
+                            "undo" => Ok(GeneratedField::Undo),
+                            "reset" => Ok(GeneratedField::Reset),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
                     }
                 }
                 deserializer.deserialize_identifier(GeneratedVisitor)
@@ -761,23 +1083,47 @@ impl<'de> serde::Deserialize<'de> for StreamBlocksResponse {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = StreamBlocksResponse;
+            type Value = FollowTipResponse;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.sync.v1.StreamBlocksResponse")
+                formatter.write_str("struct utxorpc.sync.v1.FollowTipResponse")
             }
 
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<StreamBlocksResponse, V::Error>
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<FollowTipResponse, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                while map.next_key::<GeneratedField>()?.is_some() {
-                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
+                let mut action__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Apply => {
+                            if action__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("apply"));
+                            }
+                            action__ = map.next_value::<::std::option::Option<_>>()?.map(follow_tip_response::Action::Apply)
+;
+                        }
+                        GeneratedField::Undo => {
+                            if action__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("undo"));
+                            }
+                            action__ = map.next_value::<::std::option::Option<_>>()?.map(follow_tip_response::Action::Undo)
+;
+                        }
+                        GeneratedField::Reset => {
+                            if action__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reset"));
+                            }
+                            action__ = map.next_value::<::std::option::Option<_>>()?.map(follow_tip_response::Action::Reset)
+;
+                        }
+                    }
                 }
-                Ok(StreamBlocksResponse {
+                Ok(FollowTipResponse {
+                    action: action__,
                 })
             }
         }
-        deserializer.deserialize_struct("utxorpc.sync.v1.StreamBlocksResponse", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("utxorpc.sync.v1.FollowTipResponse", FIELDS, GeneratedVisitor)
     }
 }
