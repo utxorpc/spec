@@ -2,30 +2,65 @@ syntax = "proto3";
 
 package utxorpc.watch.v1;
 
-message TxEvent {
+import "google/protobuf/field_mask.proto";
+import "utxorpc/cardano/v1/cardano.proto";
 
+// Predicate to match transactions based on addresses.
+message AddressPredicate {
+  bytes match_source = 1; // Match transactions with the specified source address.
+  bytes match_target = 2; // Match transactions with the specified target address.
+  bytes match_any = 3; // Match transactions with the specified address as either source or target.
 }
 
-message WaitForTxRequest {
-    uint32 max_depth = 1;
-    string pattern = 2; 
+// Predicate to match transactions based on assets.
+message AssetPredicate {
+  bytes match_policy = 1; // Match transactions with the specified asset policy.
+  bytes match_name = 2; // Match transactions with the specified asset name.
 }
 
-message WaitForTxResponse {
-    TxEvent item = 1;
+// Predicate to match transactions based on UTXOs.
+message UtxoPredicate {
+  bytes match_hash = 1; // Match transactions with the specified UTXO hash.
+  uint32 match_index = 2; // Match transactions with the specified UTXO index.
 }
 
-message FollowTxsRequest {
-    uint32 min_depth = 1;
-    uint32 max_depth = 2;
-    string pattern = 3; 
+// Predicate to match transactions based on datums.
+message DatumPredicate {
+  bytes match_hash = 1; // Match transactions with the specified datum hash.
 }
 
-message FollowTxsResponse {
-    TxEvent item = 1;
+// Predicate to match transactions based on any of the specified types.
+message AnyPredicate {
+  oneof type {
+    AddressPredicate address = 1; // Address-based predicate.
+    AssetPredicate asset = 2; // Asset-based predicate.
+    UtxoPredicate utxo = 3; // UTXO-based predicate.
+    DatumPredicate datum = 4; // Datum-based predicate.
+  }
 }
 
-service ChainWatchService {
-    rpc WaitForTx(WaitForTxRequest) returns (WaitForTxResponse);
-    rpc FollowTxs(FollowTxsRequest) returns (stream FollowTxsResponse);
+// Request to watch transactions based on a set of predicates.
+message WatchTxRequest {
+  repeated AnyPredicate predicate = 1; // List of predicates to filter transactions.
+  google.protobuf.FieldMask field_mask = 2; // Field mask to selectively return fields.
+}
+
+// Represents a transaction from any supported blockchain.
+message AnyChainTx {
+  oneof chain {
+    utxorpc.cardano.v1.Tx cardano = 1; // A Cardano transaction.
+  }
+}
+
+// Response containing the matching transactions.
+message WatchTxResponse {
+  oneof action {
+    AnyChainTx apply = 1; // Apply this transaction.
+    AnyChainTx undo = 2; // Undo this transaction.
+  }
+}
+
+// Service definition for watching transactions based on predicates.
+service TxWatchService {
+  rpc WatchTx(WatchTxRequest) returns (stream WatchTxResponse); // Stream transactions matching the specified predicates.
 }
