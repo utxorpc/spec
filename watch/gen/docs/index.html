@@ -179,30 +179,42 @@
             <ul>
               
                 <li>
-                  <a href="#utxorpc.watch.v1.FollowTxsRequest"><span class="badge">M</span>FollowTxsRequest</a>
+                  <a href="#utxorpc.watch.v1.AddressPredicate"><span class="badge">M</span>AddressPredicate</a>
                 </li>
               
                 <li>
-                  <a href="#utxorpc.watch.v1.FollowTxsResponse"><span class="badge">M</span>FollowTxsResponse</a>
+                  <a href="#utxorpc.watch.v1.AnyChainTx"><span class="badge">M</span>AnyChainTx</a>
                 </li>
               
                 <li>
-                  <a href="#utxorpc.watch.v1.TxEvent"><span class="badge">M</span>TxEvent</a>
+                  <a href="#utxorpc.watch.v1.AnyPredicate"><span class="badge">M</span>AnyPredicate</a>
                 </li>
               
                 <li>
-                  <a href="#utxorpc.watch.v1.WaitForTxRequest"><span class="badge">M</span>WaitForTxRequest</a>
+                  <a href="#utxorpc.watch.v1.AssetPredicate"><span class="badge">M</span>AssetPredicate</a>
                 </li>
               
                 <li>
-                  <a href="#utxorpc.watch.v1.WaitForTxResponse"><span class="badge">M</span>WaitForTxResponse</a>
+                  <a href="#utxorpc.watch.v1.DatumPredicate"><span class="badge">M</span>DatumPredicate</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.watch.v1.UtxoPredicate"><span class="badge">M</span>UtxoPredicate</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.watch.v1.WatchTxRequest"><span class="badge">M</span>WatchTxRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#utxorpc.watch.v1.WatchTxResponse"><span class="badge">M</span>WatchTxResponse</a>
                 </li>
               
               
               
               
                 <li>
-                  <a href="#utxorpc.watch.v1.ChainWatchService"><span class="badge">S</span>ChainWatchService</a>
+                  <a href="#utxorpc.watch.v1.TxWatchService"><span class="badge">S</span>TxWatchService</a>
                 </li>
               
             </ul>
@@ -220,7 +232,7 @@
       <p></p>
 
       
-        <h3 id="utxorpc.watch.v1.FollowTxsRequest">FollowTxsRequest</h3>
+        <h3 id="utxorpc.watch.v1.AddressPredicate">AddressPredicate</h3>
         <p></p>
 
         
@@ -231,26 +243,181 @@
             <tbody>
               
                 <tr>
-                  <td>min_depth</td>
+                  <td>match_source</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>match_target</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>match_any</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.watch.v1.AnyChainTx">AnyChainTx</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cardano</td>
+                  <td><a href="#utxorpc.cardano.v1.Tx">utxorpc.cardano.v1.Tx</a></td>
+                  <td></td>
+                  <td><p>A Cardano transaction. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.watch.v1.AnyPredicate">AnyPredicate</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>address</td>
+                  <td><a href="#utxorpc.watch.v1.AddressPredicate">AddressPredicate</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>asset</td>
+                  <td><a href="#utxorpc.watch.v1.AssetPredicate">AssetPredicate</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>utxo</td>
+                  <td><a href="#utxorpc.watch.v1.UtxoPredicate">UtxoPredicate</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>datum</td>
+                  <td><a href="#utxorpc.watch.v1.DatumPredicate">DatumPredicate</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.watch.v1.AssetPredicate">AssetPredicate</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>match_policy</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>match_name</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.watch.v1.DatumPredicate">DatumPredicate</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>match_hash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="utxorpc.watch.v1.UtxoPredicate">UtxoPredicate</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>match_hash</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>match_index</td>
                   <td><a href="#uint32">uint32</a></td>
                   <td></td>
                   <td><p> </p></td>
                 </tr>
               
-                <tr>
-                  <td>max_depth</td>
-                  <td><a href="#uint32">uint32</a></td>
-                  <td></td>
-                  <td><p> </p></td>
-                </tr>
-              
-                <tr>
-                  <td>pattern</td>
-                  <td><a href="#string">string</a></td>
-                  <td></td>
-                  <td><p> </p></td>
-                </tr>
-              
             </tbody>
           </table>
 
@@ -258,7 +425,7 @@
 
         
       
-        <h3 id="utxorpc.watch.v1.FollowTxsResponse">FollowTxsResponse</h3>
+        <h3 id="utxorpc.watch.v1.WatchTxRequest">WatchTxRequest</h3>
         <p></p>
 
         
@@ -269,10 +436,17 @@
             <tbody>
               
                 <tr>
-                  <td>item</td>
-                  <td><a href="#utxorpc.watch.v1.TxEvent">TxEvent</a></td>
-                  <td></td>
+                  <td>predicate</td>
+                  <td><a href="#utxorpc.watch.v1.AnyPredicate">AnyPredicate</a></td>
+                  <td>repeated</td>
                   <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>field_mask</td>
+                  <td><a href="#google.protobuf.FieldMask">google.protobuf.FieldMask</a></td>
+                  <td></td>
+                  <td><p>Field mask to selectively return fields. </p></td>
                 </tr>
               
             </tbody>
@@ -282,45 +456,7 @@
 
         
       
-        <h3 id="utxorpc.watch.v1.TxEvent">TxEvent</h3>
-        <p></p>
-
-        
-
-        
-      
-        <h3 id="utxorpc.watch.v1.WaitForTxRequest">WaitForTxRequest</h3>
-        <p></p>
-
-        
-          <table class="field-table">
-            <thead>
-              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
-            </thead>
-            <tbody>
-              
-                <tr>
-                  <td>max_depth</td>
-                  <td><a href="#uint32">uint32</a></td>
-                  <td></td>
-                  <td><p> </p></td>
-                </tr>
-              
-                <tr>
-                  <td>pattern</td>
-                  <td><a href="#string">string</a></td>
-                  <td></td>
-                  <td><p> </p></td>
-                </tr>
-              
-            </tbody>
-          </table>
-
-          
-
-        
-      
-        <h3 id="utxorpc.watch.v1.WaitForTxResponse">WaitForTxResponse</h3>
+        <h3 id="utxorpc.watch.v1.WatchTxResponse">WatchTxResponse</h3>
         <p></p>
 
         
@@ -331,8 +467,15 @@
             <tbody>
               
                 <tr>
-                  <td>item</td>
-                  <td><a href="#utxorpc.watch.v1.TxEvent">TxEvent</a></td>
+                  <td>apply</td>
+                  <td><a href="#utxorpc.watch.v1.AnyChainTx">AnyChainTx</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>undo</td>
+                  <td><a href="#utxorpc.watch.v1.AnyChainTx">AnyChainTx</a></td>
                   <td></td>
                   <td><p> </p></td>
                 </tr>
@@ -350,7 +493,7 @@
       
 
       
-        <h3 id="utxorpc.watch.v1.ChainWatchService">ChainWatchService</h3>
+        <h3 id="utxorpc.watch.v1.TxWatchService">TxWatchService</h3>
         <p></p>
         <table class="enum-table">
           <thead>
@@ -359,16 +502,9 @@
           <tbody>
             
               <tr>
-                <td>WaitForTx</td>
-                <td><a href="#utxorpc.watch.v1.WaitForTxRequest">WaitForTxRequest</a></td>
-                <td><a href="#utxorpc.watch.v1.WaitForTxResponse">WaitForTxResponse</a></td>
-                <td><p></p></td>
-              </tr>
-            
-              <tr>
-                <td>FollowTxs</td>
-                <td><a href="#utxorpc.watch.v1.FollowTxsRequest">FollowTxsRequest</a></td>
-                <td><a href="#utxorpc.watch.v1.FollowTxsResponse">FollowTxsResponse</a> stream</td>
+                <td>WatchTx</td>
+                <td><a href="#utxorpc.watch.v1.WatchTxRequest">WatchTxRequest</a></td>
+                <td><a href="#utxorpc.watch.v1.WatchTxResponse">WatchTxResponse</a> stream</td>
                 <td><p></p></td>
               </tr>
             
