@@ -1,6 +1,6 @@
 version: v1
 directories:
-  - ledger/proto
   - build/proto
   - watch/proto
   - sync/proto
+  - cardano/proto

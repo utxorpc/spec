@@ -5,7 +5,7 @@ syntax = "proto3";
 package utxorpc.state.v1;
 
 import "google/protobuf/field_mask.proto";
-import "utxorpc/ledger/v1/tx.proto";
+import "utxorpc/cardano/v1/cardano.proto";
 
 // Represents a specific point in the blockchain.
 message ChainPoint {
@@ -44,9 +44,16 @@ message GetUtxoByAddressRequest {
   ChainPoint acquire_point = 2; // Point in the chain to query from.
 }
 
+// An evenlope that holds an UTxO from any of compatible chains
+message AnyChainUtxo {
+  oneof chain {
+    utxorpc.cardano.v1.TxOutput cardano = 1;
+  }
+}
+
 // Response containing the UTxOs associated with the requested addresses.
 message GetUtxoByAddressResponse {
-  repeated utxorpc.ledger.v1.TxOutput items = 1; // List of UTxOs.
+  repeated AnyChainUtxo items = 1; // List of UTxOs.
   string next_token = 2; // Token for pagination.
 }
 
@@ -64,7 +71,7 @@ message GetUtxoByRefRequest {
 
 // Response containing the UTxOs associated with the requested references.
 message GetUtxoByRefResponse {
-  repeated utxorpc.ledger.v1.TxOutput items = 1; // List of UTxOs.
+  repeated AnyChainUtxo items = 1; // List of UTxOs.
   string next_token = 2; // Token for pagination.
 }
 

@@ -4,6 +4,7 @@
 ## Table of Contents
 
 - [utxorpc/sync/v1/sync.proto](#utxorpc_sync_v1_sync-proto)
+    - [AnyChainTx](#utxorpc-sync-v1-AnyChainTx)
     - [Block](#utxorpc-sync-v1-Block)
     - [BlockBody](#utxorpc-sync-v1-BlockBody)
     - [BlockHeader](#utxorpc-sync-v1-BlockHeader)
@@ -25,6 +26,21 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## utxorpc/sync/v1/sync.proto
+
+
+
+<a name="utxorpc-sync-v1-AnyChainTx"></a>
+
+### AnyChainTx
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| cardano | [utxorpc.cardano.v1.Tx](#utxorpc-cardano-v1-Tx) |  | A Cardano transaction. |
+
+
+
 
 
 
@@ -53,7 +69,7 @@ Contains the transaction data for a block.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| tx | [utxorpc.ledger.v1.Tx](#utxorpc-ledger-v1-Tx) | repeated | List of transactions. |
+| tx | [AnyChainTx](#utxorpc-sync-v1-AnyChainTx) | repeated | List of transactions. |
 
 
 
