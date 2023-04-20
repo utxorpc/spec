@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package utxorpc.submit.v1;
+
+// Represents a transaction from any supported blockchain.
+message AnyChainTx {
+  oneof type {
+    bytes raw = 1; // Raw transaction data.
+  }
+}
+
+// Request to submit transactions to the blockchain.
+message SubmitRequest {
+  repeated AnyChainTx tx = 1; // List of transactions to submit.
+}
+
+// Response containing references to the submitted transactions.
+message SubmitResponse {
+  repeated bytes ref = 1; // List of transaction references.
+}
+
+// Enum representing the various stages of a transaction's lifecycle.
+enum Stage {
+  STAGE_UNSPECIFIED = 0; // Unspecified stage.
+  STAGE_ACKNOWLEDGED = 1; // Transaction has been acknowledged by the node.
+  STAGE_MEMPOOL = 2; // Transaction is in the mempool.
+  STAGE_NETWORK = 3; // Transaction has been propagated across the network.
+  STAGE_CONFIRMED = 4; // Transaction has been confirmed on the blockchain.
+}
+
+// Request to check the status of submitted transactions.
+message CheckRequest {
+  repeated bytes ref = 1; // List of transaction references to check.
+}
+
+// Response containing the stage of the submitted transactions.
+message CheckResponse {
+  repeated Stage stage = 1; // List of stages corresponding to the transaction references.
+}
+
+// Request to wait for transactions to reach a certain stage.
+message WaitForRequest {
+  repeated bytes ref = 1; // List of transaction references to wait for.
+}
+
+// Response containing the transaction reference and stage once it has been reached.
+message WaitForResponse {
+  bytes ref = 1; // Transaction reference.
+  Stage stage = 2; // Stage reached by the transaction.
+}
+
+// Service definition for submitting transactions and checking their status.
+service SubmitService {
+  rpc Submit(SubmitRequest) returns (SubmitResponse); // Submit transactions to the blockchain.
+  rpc Check(CheckRequest) returns (CheckResponse); // Check the status of submitted transactions.
+  rpc WaitFor(WaitForRequest) returns (stream WaitForResponse); // Wait for transactions to reach a certain stage and stream the updates.
+}
