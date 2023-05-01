@@ -28,7 +28,6 @@ plugins:
     strategy: all
     opt:
       - gen_crate=gen/rust/Cargo.toml
-      - include_file=src/proto.rs
       - no_features
       
   - plugin: tonic
