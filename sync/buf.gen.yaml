@@ -19,7 +19,7 @@ plugins:
       - compile_well_known_types
       - file_descriptor_set
       - extern_path=.google.protobuf=::pbjson_types
-      - extern_path=.utxorpc.ledger.v1=::utxorpc-ledger::v1 
+      - extern_path=.utxorpc.ledger.v1=::utxorpc-ledger::v1
   - plugin: prost-serde
     out: gen/rust/src
 
@@ -28,7 +28,6 @@ plugins:
     strategy: all
     opt:
       - gen_crate=gen/rust/Cargo.toml
-      - include_file=src/proto.rs
       - no_features
       
   - plugin: tonic
