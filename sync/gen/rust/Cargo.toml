@@ -1,5 +1,5 @@
 [package]
-name = "utxorpc-sync"
+name = "utxorpc-spec-sync"
 version = "0.1.0"
 edition = "2021"
 
