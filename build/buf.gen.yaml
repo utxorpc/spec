@@ -19,7 +19,7 @@ plugins:
       - compile_well_known_types
       - file_descriptor_set
       - extern_path=.google.protobuf=::pbjson_types 
-      - extern_path=.utxorpc.ledger.v1=::utxorpc-ledger::v1 
+      - extern_path=.utxorpc.cardano.v1=::utxorpc-spec-cardano::utxorpc::cardano::v1
   - plugin: prost-serde
     out: gen/rust/src
 
