@@ -77,7 +77,7 @@ pub mod any_chain_utxo {
 #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Chain {
         #[prost(message, tag="1")]
-        Cardano(super::super::super::cardano::v1::TxOutput),
+        Cardano(::utxorpc_spec_cardano::utxorpc::cardano::v1::TxOutput),
     }
 }
 /// Response containing the UTxOs associated with the requested addresses.

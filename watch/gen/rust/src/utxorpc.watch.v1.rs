@@ -94,7 +94,7 @@ pub mod any_chain_tx {
     pub enum Chain {
         /// A Cardano transaction.
         #[prost(message, tag="1")]
-        Cardano(super::super::super::cardano::v1::Tx),
+        Cardano(::utxorpc_spec_cardano::utxorpc::cardano::v1::Tx),
     }
 }
 /// Response containing the matching transactions.
