@@ -4,7 +4,7 @@
 //
 // Source: utxorpc/build/v1/build.proto
 
-package statev1connect
+package buildv1connect
 
 import (
 	context "context"
@@ -24,7 +24,7 @@ const _ = connect_go.IsAtLeastVersion0_1_0
 
 const (
 	// LedgerStateServiceName is the fully-qualified name of the LedgerStateService service.
-	LedgerStateServiceName = "utxorpc.state.v1.LedgerStateService"
+	LedgerStateServiceName = "utxorpc.build.v1.LedgerStateService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -37,22 +37,22 @@ const (
 const (
 	// LedgerStateServiceGetChainTipProcedure is the fully-qualified name of the LedgerStateService's
 	// GetChainTip RPC.
-	LedgerStateServiceGetChainTipProcedure = "/utxorpc.state.v1.LedgerStateService/GetChainTip"
+	LedgerStateServiceGetChainTipProcedure = "/utxorpc.build.v1.LedgerStateService/GetChainTip"
 	// LedgerStateServiceGetChainParamProcedure is the fully-qualified name of the LedgerStateService's
 	// GetChainParam RPC.
-	LedgerStateServiceGetChainParamProcedure = "/utxorpc.state.v1.LedgerStateService/GetChainParam"
+	LedgerStateServiceGetChainParamProcedure = "/utxorpc.build.v1.LedgerStateService/GetChainParam"
 	// LedgerStateServiceGetUtxoByAddressProcedure is the fully-qualified name of the
 	// LedgerStateService's GetUtxoByAddress RPC.
-	LedgerStateServiceGetUtxoByAddressProcedure = "/utxorpc.state.v1.LedgerStateService/GetUtxoByAddress"
+	LedgerStateServiceGetUtxoByAddressProcedure = "/utxorpc.build.v1.LedgerStateService/GetUtxoByAddress"
 	// LedgerStateServiceGetUtxoByRefProcedure is the fully-qualified name of the LedgerStateService's
 	// GetUtxoByRef RPC.
-	LedgerStateServiceGetUtxoByRefProcedure = "/utxorpc.state.v1.LedgerStateService/GetUtxoByRef"
+	LedgerStateServiceGetUtxoByRefProcedure = "/utxorpc.build.v1.LedgerStateService/GetUtxoByRef"
 	// LedgerStateServiceHoldUtxoProcedure is the fully-qualified name of the LedgerStateService's
 	// HoldUtxo RPC.
-	LedgerStateServiceHoldUtxoProcedure = "/utxorpc.state.v1.LedgerStateService/HoldUtxo"
+	LedgerStateServiceHoldUtxoProcedure = "/utxorpc.build.v1.LedgerStateService/HoldUtxo"
 )
 
-// LedgerStateServiceClient is a client for the utxorpc.state.v1.LedgerStateService service.
+// LedgerStateServiceClient is a client for the utxorpc.build.v1.LedgerStateService service.
 type LedgerStateServiceClient interface {
 	GetChainTip(context.Context, *connect_go.Request[v1.GetChainTipRequest]) (*connect_go.Response[v1.GetChainTipResponse], error)
 	GetChainParam(context.Context, *connect_go.Request[v1.GetChainParamRequest]) (*connect_go.Response[v1.GetChainParamResponse], error)
@@ -61,7 +61,7 @@ type LedgerStateServiceClient interface {
 	HoldUtxo(context.Context, *connect_go.Request[v1.HoldUtxoRequest]) (*connect_go.ServerStreamForClient[v1.HoldUtxoResponse], error)
 }
 
-// NewLedgerStateServiceClient constructs a client for the utxorpc.state.v1.LedgerStateService
+// NewLedgerStateServiceClient constructs a client for the utxorpc.build.v1.LedgerStateService
 // service. By default, it uses the Connect protocol with the binary Protobuf Codec, asks for
 // gzipped responses, and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply
 // the connect.WithGRPC() or connect.WithGRPCWeb() options.
@@ -108,32 +108,32 @@ type ledgerStateServiceClient struct {
 	holdUtxo         *connect_go.Client[v1.HoldUtxoRequest, v1.HoldUtxoResponse]
 }
 
-// GetChainTip calls utxorpc.state.v1.LedgerStateService.GetChainTip.
+// GetChainTip calls utxorpc.build.v1.LedgerStateService.GetChainTip.
 func (c *ledgerStateServiceClient) GetChainTip(ctx context.Context, req *connect_go.Request[v1.GetChainTipRequest]) (*connect_go.Response[v1.GetChainTipResponse], error) {
 	return c.getChainTip.CallUnary(ctx, req)
 }
 
-// GetChainParam calls utxorpc.state.v1.LedgerStateService.GetChainParam.
+// GetChainParam calls utxorpc.build.v1.LedgerStateService.GetChainParam.
 func (c *ledgerStateServiceClient) GetChainParam(ctx context.Context, req *connect_go.Request[v1.GetChainParamRequest]) (*connect_go.Response[v1.GetChainParamResponse], error) {
 	return c.getChainParam.CallUnary(ctx, req)
 }
 
-// GetUtxoByAddress calls utxorpc.state.v1.LedgerStateService.GetUtxoByAddress.
+// GetUtxoByAddress calls utxorpc.build.v1.LedgerStateService.GetUtxoByAddress.
 func (c *ledgerStateServiceClient) GetUtxoByAddress(ctx context.Context, req *connect_go.Request[v1.GetUtxoByAddressRequest]) (*connect_go.Response[v1.GetUtxoByAddressResponse], error) {
 	return c.getUtxoByAddress.CallUnary(ctx, req)
 }
 
-// GetUtxoByRef calls utxorpc.state.v1.LedgerStateService.GetUtxoByRef.
+// GetUtxoByRef calls utxorpc.build.v1.LedgerStateService.GetUtxoByRef.
 func (c *ledgerStateServiceClient) GetUtxoByRef(ctx context.Context, req *connect_go.Request[v1.GetUtxoByRefRequest]) (*connect_go.Response[v1.GetUtxoByRefResponse], error) {
 	return c.getUtxoByRef.CallUnary(ctx, req)
 }
 
-// HoldUtxo calls utxorpc.state.v1.LedgerStateService.HoldUtxo.
+// HoldUtxo calls utxorpc.build.v1.LedgerStateService.HoldUtxo.
 func (c *ledgerStateServiceClient) HoldUtxo(ctx context.Context, req *connect_go.Request[v1.HoldUtxoRequest]) (*connect_go.ServerStreamForClient[v1.HoldUtxoResponse], error) {
 	return c.holdUtxo.CallServerStream(ctx, req)
 }
 
-// LedgerStateServiceHandler is an implementation of the utxorpc.state.v1.LedgerStateService
+// LedgerStateServiceHandler is an implementation of the utxorpc.build.v1.LedgerStateService
 // service.
 type LedgerStateServiceHandler interface {
 	GetChainTip(context.Context, *connect_go.Request[v1.GetChainTipRequest]) (*connect_go.Response[v1.GetChainTipResponse], error)
@@ -175,28 +175,28 @@ func NewLedgerStateServiceHandler(svc LedgerStateServiceHandler, opts ...connect
 		svc.HoldUtxo,
 		opts...,
 	))
-	return "/utxorpc.state.v1.LedgerStateService/", mux
+	return "/utxorpc.build.v1.LedgerStateService/", mux
 }
 
 // UnimplementedLedgerStateServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedLedgerStateServiceHandler struct{}
 
 func (UnimplementedLedgerStateServiceHandler) GetChainTip(context.Context, *connect_go.Request[v1.GetChainTipRequest]) (*connect_go.Response[v1.GetChainTipResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.state.v1.LedgerStateService.GetChainTip is not implemented"))
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.build.v1.LedgerStateService.GetChainTip is not implemented"))
 }
 
 func (UnimplementedLedgerStateServiceHandler) GetChainParam(context.Context, *connect_go.Request[v1.GetChainParamRequest]) (*connect_go.Response[v1.GetChainParamResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.state.v1.LedgerStateService.GetChainParam is not implemented"))
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.build.v1.LedgerStateService.GetChainParam is not implemented"))
 }
 
 func (UnimplementedLedgerStateServiceHandler) GetUtxoByAddress(context.Context, *connect_go.Request[v1.GetUtxoByAddressRequest]) (*connect_go.Response[v1.GetUtxoByAddressResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.state.v1.LedgerStateService.GetUtxoByAddress is not implemented"))
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.build.v1.LedgerStateService.GetUtxoByAddress is not implemented"))
 }
 
 func (UnimplementedLedgerStateServiceHandler) GetUtxoByRef(context.Context, *connect_go.Request[v1.GetUtxoByRefRequest]) (*connect_go.Response[v1.GetUtxoByRefResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.state.v1.LedgerStateService.GetUtxoByRef is not implemented"))
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.build.v1.LedgerStateService.GetUtxoByRef is not implemented"))
 }
 
 func (UnimplementedLedgerStateServiceHandler) HoldUtxo(context.Context, *connect_go.Request[v1.HoldUtxoRequest], *connect_go.ServerStream[v1.HoldUtxoResponse]) error {
-	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.state.v1.LedgerStateService.HoldUtxo is not implemented"))
+	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.build.v1.LedgerStateService.HoldUtxo is not implemented"))
 }
