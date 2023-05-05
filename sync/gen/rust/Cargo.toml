@@ -2,6 +2,13 @@
 name = "utxorpc-spec-sync"
 version = "1.0.0-alpha.0"
 edition = "2021"
+description = "Auto-generated structs for the Sync module of the UTxO RPC spec"
+repository = "https://github.com/utxorpc/spec"
+homepage = "https://github.com/utxorpc/spec"
+documentation = "https://docs.rs/utxorpc-spec-sync"
+license = "Apache-2.0"
+readme = "README.md"
+authors = ["Santiago Carmuega <santiago@carmuega.me>"]
 
 [dependencies]
 bytes = "^1.4"
