@@ -4,10 +4,7 @@
 ## Table of Contents
 
 - [utxorpc/sync/v1/sync.proto](#utxorpc_sync_v1_sync-proto)
-    - [AnyChainTx](#utxorpc-sync-v1-AnyChainTx)
-    - [Block](#utxorpc-sync-v1-Block)
-    - [BlockBody](#utxorpc-sync-v1-BlockBody)
-    - [BlockHeader](#utxorpc-sync-v1-BlockHeader)
+    - [AnyChainBlock](#utxorpc-sync-v1-AnyChainBlock)
     - [BlockRef](#utxorpc-sync-v1-BlockRef)
     - [DumpHistoryRequest](#utxorpc-sync-v1-DumpHistoryRequest)
     - [DumpHistoryResponse](#utxorpc-sync-v1-DumpHistoryResponse)
@@ -29,64 +26,16 @@
 
 
 
-<a name="utxorpc-sync-v1-AnyChainTx"></a>
+<a name="utxorpc-sync-v1-AnyChainBlock"></a>
 
-### AnyChainTx
+### AnyChainBlock
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| cardano | [utxorpc.cardano.v1.Tx](#utxorpc-cardano-v1-Tx) |  | A Cardano transaction. |
-
-
-
-
-
-
-<a name="utxorpc-sync-v1-Block"></a>
-
-### Block
-Represents a complete block, including header and body.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| header | [BlockHeader](#utxorpc-sync-v1-BlockHeader) |  | Block header. |
-| body | [BlockBody](#utxorpc-sync-v1-BlockBody) |  | Block body. |
-| cbor | [bytes](#bytes) |  | CBOR-encoded block data. |
-
-
-
-
-
-
-<a name="utxorpc-sync-v1-BlockBody"></a>
-
-### BlockBody
-Contains the transaction data for a block.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| tx | [AnyChainTx](#utxorpc-sync-v1-AnyChainTx) | repeated | List of transactions. |
-
-
-
-
-
-
-<a name="utxorpc-sync-v1-BlockHeader"></a>
-
-### BlockHeader
-Contains the header information for a block.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| slot | [uint64](#uint64) |  | Slot number. |
-| height | [uint64](#uint64) |  | Block height. |
-| hash | [string](#string) |  | Block hash. |
+| raw | [bytes](#bytes) |  | Original bytes for a raw block |
+| cardano | [utxorpc.cardano.v1.Block](#utxorpc-cardano-v1-Block) |  | A parsed Cardano block. |
 
 
 
@@ -96,14 +45,13 @@ Contains the header information for a block.
 <a name="utxorpc-sync-v1-BlockRef"></a>
 
 ### BlockRef
-Represents a reference to a specific block.
+Represents a reference to a specific block
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| slot | [uint64](#uint64) |  | Slot number. |
-| height | [uint64](#uint64) |  | Block height. |
-| hash | [string](#string) |  | Block hash. |
+| index | [uint64](#uint64) |  | Height or slot number (depending on the blockchain) |
+| hash | [bytes](#bytes) |  | Hash of the content of the block |
 
 
 
@@ -135,7 +83,7 @@ Response containing the dumped block history.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| block | [Block](#utxorpc-sync-v1-Block) | repeated | List of blocks in the history. |
+| block | [AnyChainBlock](#utxorpc-sync-v1-AnyChainBlock) | repeated | List of blocks in the history. |
 | next_token | [BlockRef](#utxorpc-sync-v1-BlockRef) |  | Next token for pagination. |
 
 
@@ -167,7 +115,7 @@ Response containing the fetched blocks.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| block | [Block](#utxorpc-sync-v1-Block) | repeated | List of fetched blocks. |
+| block | [AnyChainBlock](#utxorpc-sync-v1-AnyChainBlock) | repeated | List of fetched blocks. |
 
 
 
@@ -197,8 +145,8 @@ Response containing the action to perform while following the tip.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| apply | [Block](#utxorpc-sync-v1-Block) |  | Apply this block. |
-| undo | [Block](#utxorpc-sync-v1-Block) |  | Undo this block. |
+| apply | [AnyChainBlock](#utxorpc-sync-v1-AnyChainBlock) |  | Apply this block. |
+| undo | [AnyChainBlock](#utxorpc-sync-v1-AnyChainBlock) |  | Undo this block. |
 | reset | [BlockRef](#utxorpc-sync-v1-BlockRef) |  | Reset to this block reference. |
 
 

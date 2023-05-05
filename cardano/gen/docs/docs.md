@@ -7,6 +7,9 @@
     - [Asset](#utxorpc-cardano-v1-Asset)
     - [AuxData](#utxorpc-cardano-v1-AuxData)
     - [BigInt](#utxorpc-cardano-v1-BigInt)
+    - [Block](#utxorpc-cardano-v1-Block)
+    - [BlockBody](#utxorpc-cardano-v1-BlockBody)
+    - [BlockHeader](#utxorpc-cardano-v1-BlockHeader)
     - [BoundedBytes](#utxorpc-cardano-v1-BoundedBytes)
     - [Certificate](#utxorpc-cardano-v1-Certificate)
     - [Collateral](#utxorpc-cardano-v1-Collateral)
@@ -94,6 +97,53 @@ Auxiliary data not directly tied to the validation process
 Represents a big integer for Plutus data in Cardano.
 
 Define the fields of BigInt based on your original Rust code
+
+
+
+
+
+
+<a name="utxorpc-cardano-v1-Block"></a>
+
+### Block
+Represents a complete block, including header and body.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [BlockHeader](#utxorpc-cardano-v1-BlockHeader) |  | Block header. |
+| body | [BlockBody](#utxorpc-cardano-v1-BlockBody) |  | Block body. |
+
+
+
+
+
+
+<a name="utxorpc-cardano-v1-BlockBody"></a>
+
+### BlockBody
+Contains the transaction data for a block.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| tx | [Tx](#utxorpc-cardano-v1-Tx) | repeated | List of transactions. |
+
+
+
+
+
+
+<a name="utxorpc-cardano-v1-BlockHeader"></a>
+
+### BlockHeader
+Contains the header information for a block.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| slot | [uint64](#uint64) |  | Slot number. |
+| hash | [bytes](#bytes) |  | Block hash. |
 
 
 

@@ -5,36 +5,17 @@ package utxorpc.sync.v1;
 import "google/protobuf/field_mask.proto";
 import "utxorpc/cardano/v1/cardano.proto";
 
-// Represents a reference to a specific block.
+// Represents a reference to a specific block
 message BlockRef {
-  uint64 slot = 1; // Slot number.
-  uint64 height = 2; // Block height.
-  string hash = 3; // Block hash.
+  uint64 index = 1; // Height or slot number (depending on the blockchain)
+  bytes hash = 2; // Hash of the content of the block
 }
 
-// Contains the header information for a block.
-message BlockHeader {
-  uint64 slot = 1; // Slot number.
-  uint64 height = 2; // Block height.
-  string hash = 3; // Block hash.
-}
-
-message AnyChainTx {
+message AnyChainBlock {
   oneof chain {
-    utxorpc.cardano.v1.Tx cardano = 1; // A Cardano transaction.
+    bytes raw = 1; // Original bytes for a raw block
+    utxorpc.cardano.v1.Block cardano = 2; // A parsed Cardano block.
   }
-}
-
-// Contains the transaction data for a block.
-message BlockBody {
-  repeated AnyChainTx tx = 1; // List of transactions.
-}
-
-// Represents a complete block, including header and body.
-message Block {
-  BlockHeader header = 1; // Block header.
-  BlockBody body = 2; // Block body.
-  bytes cbor = 3; // CBOR-encoded block data.
 }
 
 // Request to fetch a block by its reference.
@@ -45,7 +26,7 @@ message FetchBlockRequest {
 
 // Response containing the fetched blocks.
 message FetchBlockResponse {
-  repeated Block block = 1; // List of fetched blocks.
+  repeated AnyChainBlock block = 1; // List of fetched blocks.
 }
 
 // Request to dump the block history.
@@ -57,7 +38,7 @@ message DumpHistoryRequest {
 
 // Response containing the dumped block history.
 message DumpHistoryResponse {
-  repeated Block block = 1; // List of blocks in the history.
+  repeated AnyChainBlock block = 1; // List of blocks in the history.
   BlockRef next_token = 2; // Next token for pagination.
 }
 
@@ -69,8 +50,8 @@ message FollowTipRequest {
 // Response containing the action to perform while following the tip.
 message FollowTipResponse {
   oneof action {
-    Block apply = 1; // Apply this block.
-    Block undo = 2; // Undo this block.
+    AnyChainBlock apply = 1; // Apply this block.
+    AnyChainBlock undo = 2; // Undo this block.
     BlockRef reset = 3; // Reset to this block reference.
   }
 }

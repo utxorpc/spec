@@ -95,6 +95,23 @@ message Tx {
   AuxData auxiliary = 12; // Auxiliary data not directly tied to the validation process
 }
 
+// Contains the header information for a block.
+message BlockHeader {
+  uint64 slot = 1; // Slot number.
+  bytes hash = 2; // Block hash.
+}
+
+// Contains the transaction data for a block.
+message BlockBody {
+  repeated Tx tx = 1; // List of transactions.
+}
+
+// Represents a complete block, including header and body.
+message Block {
+  BlockHeader header = 1; // Block header.
+  BlockBody body = 2; // Block body.
+}
+
 // Represents a VKey witness used to sign a transaction.
 message VKeyWitness {
   bytes vkey = 1; // Verification key.
