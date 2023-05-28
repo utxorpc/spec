@@ -22,6 +22,7 @@ message TxInput {
   bytes tx_hash = 1; // Hash of the previous transaction.
   uint32 output_index = 2; // Index of the output in the previous transaction.
   TxOutput as_output = 3; // Content of the input represented as output of the related transaction
+  Redeemer redeemer = 4; // Redeemer for the Plutus script.
 }
 
 // Represents a transaction output in the Cardano blockchain.
@@ -32,7 +33,6 @@ message TxOutput {
   PlutusData datum = 4; // Plutus data associated with the output.
   bytes datum_hash = 5; // Hash of the Plutus data.
   Script script = 6; // Script associated with the output.
-  Redeemer redeemer = 7; // Redeemer for the Plutus script.
 }
 
 // Represents a custom asset in the Cardano blockchain.
