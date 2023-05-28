@@ -619,6 +619,7 @@ Represents a transaction input in the Cardano blockchain.
 | tx_hash | [bytes](#bytes) |  | Hash of the previous transaction. |
 | output_index | [uint32](#uint32) |  | Index of the output in the previous transaction. |
 | as_output | [TxOutput](#utxorpc-cardano-v1-TxOutput) |  | Content of the input represented as output of the related transaction |
+| redeemer | [Redeemer](#utxorpc-cardano-v1-Redeemer) |  | Redeemer for the Plutus script. |
 
 
 
@@ -639,7 +640,6 @@ Represents a transaction output in the Cardano blockchain.
 | datum | [PlutusData](#utxorpc-cardano-v1-PlutusData) |  | Plutus data associated with the output. |
 | datum_hash | [bytes](#bytes) |  | Hash of the Plutus data. |
 | script | [Script](#utxorpc-cardano-v1-Script) |  | Script associated with the output. |
-| redeemer | [Redeemer](#utxorpc-cardano-v1-Redeemer) |  | Redeemer for the Plutus script. |
 
 
 

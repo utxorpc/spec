@@ -4051,6 +4051,9 @@ impl serde::Serialize for TxInput {
         if self.as_output.is_some() {
             len += 1;
         }
+        if self.redeemer.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.TxInput", len)?;
         if !self.tx_hash.is_empty() {
             struct_ser.serialize_field("txHash", pbjson::private::base64::encode(&self.tx_hash).as_str())?;
@@ -4060,6 +4063,9 @@ impl serde::Serialize for TxInput {
         }
         if let Some(v) = self.as_output.as_ref() {
             struct_ser.serialize_field("asOutput", v)?;
+        }
+        if let Some(v) = self.redeemer.as_ref() {
+            struct_ser.serialize_field("redeemer", v)?;
         }
         struct_ser.end()
     }
@@ -4077,6 +4083,7 @@ impl<'de> serde::Deserialize<'de> for TxInput {
             "outputIndex",
             "as_output",
             "asOutput",
+            "redeemer",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -4084,6 +4091,7 @@ impl<'de> serde::Deserialize<'de> for TxInput {
             TxHash,
             OutputIndex,
             AsOutput,
+            Redeemer,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4108,6 +4116,7 @@ impl<'de> serde::Deserialize<'de> for TxInput {
                             "txHash" | "tx_hash" => Ok(GeneratedField::TxHash),
                             "outputIndex" | "output_index" => Ok(GeneratedField::OutputIndex),
                             "asOutput" | "as_output" => Ok(GeneratedField::AsOutput),
+                            "redeemer" => Ok(GeneratedField::Redeemer),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -4130,6 +4139,7 @@ impl<'de> serde::Deserialize<'de> for TxInput {
                 let mut tx_hash__ = None;
                 let mut output_index__ = None;
                 let mut as_output__ = None;
+                let mut redeemer__ = None;
                 while let Some(k) = map.next_key()? {
                     match k {
                         GeneratedField::TxHash => {
@@ -4154,12 +4164,19 @@ impl<'de> serde::Deserialize<'de> for TxInput {
                             }
                             as_output__ = map.next_value()?;
                         }
+                        GeneratedField::Redeemer => {
+                            if redeemer__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("redeemer"));
+                            }
+                            redeemer__ = map.next_value()?;
+                        }
                     }
                 }
                 Ok(TxInput {
                     tx_hash: tx_hash__.unwrap_or_default(),
                     output_index: output_index__.unwrap_or_default(),
                     as_output: as_output__,
+                    redeemer: redeemer__,
                 })
             }
         }
@@ -4192,9 +4209,6 @@ impl serde::Serialize for TxOutput {
         if self.script.is_some() {
             len += 1;
         }
-        if self.redeemer.is_some() {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.TxOutput", len)?;
         if !self.address.is_empty() {
             struct_ser.serialize_field("address", pbjson::private::base64::encode(&self.address).as_str())?;
@@ -4214,9 +4228,6 @@ impl serde::Serialize for TxOutput {
         if let Some(v) = self.script.as_ref() {
             struct_ser.serialize_field("script", v)?;
         }
-        if let Some(v) = self.redeemer.as_ref() {
-            struct_ser.serialize_field("redeemer", v)?;
-        }
         struct_ser.end()
     }
 }
@@ -4234,7 +4245,6 @@ impl<'de> serde::Deserialize<'de> for TxOutput {
             "datum_hash",
             "datumHash",
             "script",
-            "redeemer",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -4245,7 +4255,6 @@ impl<'de> serde::Deserialize<'de> for TxOutput {
             Datum,
             DatumHash,
             Script,
-            Redeemer,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4273,7 +4282,6 @@ impl<'de> serde::Deserialize<'de> for TxOutput {
                             "datum" => Ok(GeneratedField::Datum),
                             "datumHash" | "datum_hash" => Ok(GeneratedField::DatumHash),
                             "script" => Ok(GeneratedField::Script),
-                            "redeemer" => Ok(GeneratedField::Redeemer),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -4299,7 +4307,6 @@ impl<'de> serde::Deserialize<'de> for TxOutput {
                 let mut datum__ = None;
                 let mut datum_hash__ = None;
                 let mut script__ = None;
-                let mut redeemer__ = None;
                 while let Some(k) = map.next_key()? {
                     match k {
                         GeneratedField::Address => {
@@ -4344,12 +4351,6 @@ impl<'de> serde::Deserialize<'de> for TxOutput {
                             }
                             script__ = map.next_value()?;
                         }
-                        GeneratedField::Redeemer => {
-                            if redeemer__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("redeemer"));
-                            }
-                            redeemer__ = map.next_value()?;
-                        }
                     }
                 }
                 Ok(TxOutput {
@@ -4359,7 +4360,6 @@ impl<'de> serde::Deserialize<'de> for TxOutput {
                     datum: datum__,
                     datum_hash: datum_hash__.unwrap_or_default(),
                     script: script__,
-                    redeemer: redeemer__,
                 })
             }
         }
