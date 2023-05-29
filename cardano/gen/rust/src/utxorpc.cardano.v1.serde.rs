@@ -704,8 +704,8 @@ impl serde::Serialize for Certificate {
                 certificate::Certificate::GenesisKeyDelegation(v) => {
                     struct_ser.serialize_field("genesisKeyDelegation", v)?;
                 }
-                certificate::Certificate::MoveInstantaneousRewardsCert(v) => {
-                    struct_ser.serialize_field("moveInstantaneousRewardsCert", v)?;
+                certificate::Certificate::MirCert(v) => {
+                    struct_ser.serialize_field("mirCert", v)?;
                 }
             }
         }
@@ -731,8 +731,8 @@ impl<'de> serde::Deserialize<'de> for Certificate {
             "poolRetirement",
             "genesis_key_delegation",
             "genesisKeyDelegation",
-            "move_instantaneous_rewards_cert",
-            "moveInstantaneousRewardsCert",
+            "mir_cert",
+            "mirCert",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -743,7 +743,7 @@ impl<'de> serde::Deserialize<'de> for Certificate {
             PoolRegistration,
             PoolRetirement,
             GenesisKeyDelegation,
-            MoveInstantaneousRewardsCert,
+            MirCert,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -771,7 +771,7 @@ impl<'de> serde::Deserialize<'de> for Certificate {
                             "poolRegistration" | "pool_registration" => Ok(GeneratedField::PoolRegistration),
                             "poolRetirement" | "pool_retirement" => Ok(GeneratedField::PoolRetirement),
                             "genesisKeyDelegation" | "genesis_key_delegation" => Ok(GeneratedField::GenesisKeyDelegation),
-                            "moveInstantaneousRewardsCert" | "move_instantaneous_rewards_cert" => Ok(GeneratedField::MoveInstantaneousRewardsCert),
+                            "mirCert" | "mir_cert" => Ok(GeneratedField::MirCert),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -836,11 +836,11 @@ impl<'de> serde::Deserialize<'de> for Certificate {
                             certificate__ = map.next_value::<::std::option::Option<_>>()?.map(certificate::Certificate::GenesisKeyDelegation)
 ;
                         }
-                        GeneratedField::MoveInstantaneousRewardsCert => {
+                        GeneratedField::MirCert => {
                             if certificate__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("moveInstantaneousRewardsCert"));
+                                return Err(serde::de::Error::duplicate_field("mirCert"));
                             }
-                            certificate__ = map.next_value::<::std::option::Option<_>>()?.map(certificate::Certificate::MoveInstantaneousRewardsCert)
+                            certificate__ = map.next_value::<::std::option::Option<_>>()?.map(certificate::Certificate::MirCert)
 ;
                         }
                     }
@@ -989,8 +989,26 @@ impl serde::Serialize for Constr {
         S: serde::Serializer,
     {
         use serde::ser::SerializeStruct;
-        let len = 0;
-        let struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.Constr", len)?;
+        let mut len = 0;
+        if self.tag != 0 {
+            len += 1;
+        }
+        if self.any_constructor != 0 {
+            len += 1;
+        }
+        if !self.fields.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.Constr", len)?;
+        if self.tag != 0 {
+            struct_ser.serialize_field("tag", &self.tag)?;
+        }
+        if self.any_constructor != 0 {
+            struct_ser.serialize_field("anyConstructor", ToString::to_string(&self.any_constructor).as_str())?;
+        }
+        if !self.fields.is_empty() {
+            struct_ser.serialize_field("fields", &self.fields)?;
+        }
         struct_ser.end()
     }
 }
@@ -1001,10 +1019,17 @@ impl<'de> serde::Deserialize<'de> for Constr {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "tag",
+            "any_constructor",
+            "anyConstructor",
+            "fields",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Tag,
+            AnyConstructor,
+            Fields,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1025,7 +1050,12 @@ impl<'de> serde::Deserialize<'de> for Constr {
                     where
                         E: serde::de::Error,
                     {
-                            Err(serde::de::Error::unknown_field(value, FIELDS))
+                        match value {
+                            "tag" => Ok(GeneratedField::Tag),
+                            "anyConstructor" | "any_constructor" => Ok(GeneratedField::AnyConstructor),
+                            "fields" => Ok(GeneratedField::Fields),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
                     }
                 }
                 deserializer.deserialize_identifier(GeneratedVisitor)
@@ -1043,14 +1073,155 @@ impl<'de> serde::Deserialize<'de> for Constr {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                while map.next_key::<GeneratedField>()?.is_some() {
-                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
+                let mut tag__ = None;
+                let mut any_constructor__ = None;
+                let mut fields__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Tag => {
+                            if tag__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("tag"));
+                            }
+                            tag__ = 
+                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::AnyConstructor => {
+                            if any_constructor__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("anyConstructor"));
+                            }
+                            any_constructor__ = 
+                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Fields => {
+                            if fields__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fields"));
+                            }
+                            fields__ = Some(map.next_value()?);
+                        }
+                    }
                 }
                 Ok(Constr {
+                    tag: tag__.unwrap_or_default(),
+                    any_constructor: any_constructor__.unwrap_or_default(),
+                    fields: fields__.unwrap_or_default(),
                 })
             }
         }
         deserializer.deserialize_struct("utxorpc.cardano.v1.Constr", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for Fraction {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.numerator != 0 {
+            len += 1;
+        }
+        if self.denominator != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.Fraction", len)?;
+        if self.numerator != 0 {
+            struct_ser.serialize_field("numerator", &self.numerator)?;
+        }
+        if self.denominator != 0 {
+            struct_ser.serialize_field("denominator", &self.denominator)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for Fraction {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "numerator",
+            "denominator",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Numerator,
+            Denominator,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "numerator" => Ok(GeneratedField::Numerator),
+                            "denominator" => Ok(GeneratedField::Denominator),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = Fraction;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.cardano.v1.Fraction")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<Fraction, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut numerator__ = None;
+                let mut denominator__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Numerator => {
+                            if numerator__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("numerator"));
+                            }
+                            numerator__ = 
+                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Denominator => {
+                            if denominator__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("denominator"));
+                            }
+                            denominator__ = 
+                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(Fraction {
+                    numerator: numerator__.unwrap_or_default(),
+                    denominator: denominator__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.cardano.v1.Fraction", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for GenesisKeyDelegationCert {
@@ -1732,29 +1903,56 @@ impl<'de> serde::Deserialize<'de> for MetadatumPair {
         deserializer.deserialize_struct("utxorpc.cardano.v1.MetadatumPair", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for MoveInstantaneousRewardCert {
+impl serde::Serialize for MirCert {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
     {
         use serde::ser::SerializeStruct;
-        let len = 0;
-        let struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.MoveInstantaneousRewardCert", len)?;
+        let mut len = 0;
+        if self.from != 0 {
+            len += 1;
+        }
+        if !self.to.is_empty() {
+            len += 1;
+        }
+        if self.other_pot != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.MirCert", len)?;
+        if self.from != 0 {
+            let v = MirSource::from_i32(self.from)
+                .ok_or_else(|| serde::ser::Error::custom(format!("Invalid variant {}", self.from)))?;
+            struct_ser.serialize_field("from", &v)?;
+        }
+        if !self.to.is_empty() {
+            struct_ser.serialize_field("to", &self.to)?;
+        }
+        if self.other_pot != 0 {
+            struct_ser.serialize_field("otherPot", ToString::to_string(&self.other_pot).as_str())?;
+        }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for MoveInstantaneousRewardCert {
+impl<'de> serde::Deserialize<'de> for MirCert {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "from",
+            "to",
+            "other_pot",
+            "otherPot",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            From,
+            To,
+            OtherPot,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1775,7 +1973,12 @@ impl<'de> serde::Deserialize<'de> for MoveInstantaneousRewardCert {
                     where
                         E: serde::de::Error,
                     {
-                            Err(serde::de::Error::unknown_field(value, FIELDS))
+                        match value {
+                            "from" => Ok(GeneratedField::From),
+                            "to" => Ok(GeneratedField::To),
+                            "otherPot" | "other_pot" => Ok(GeneratedField::OtherPot),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
                     }
                 }
                 deserializer.deserialize_identifier(GeneratedVisitor)
@@ -1783,24 +1986,239 @@ impl<'de> serde::Deserialize<'de> for MoveInstantaneousRewardCert {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MoveInstantaneousRewardCert;
+            type Value = MirCert;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.cardano.v1.MoveInstantaneousRewardCert")
+                formatter.write_str("struct utxorpc.cardano.v1.MirCert")
             }
 
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<MoveInstantaneousRewardCert, V::Error>
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<MirCert, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                while map.next_key::<GeneratedField>()?.is_some() {
-                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
+                let mut from__ = None;
+                let mut to__ = None;
+                let mut other_pot__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::From => {
+                            if from__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("from"));
+                            }
+                            from__ = Some(map.next_value::<MirSource>()? as i32);
+                        }
+                        GeneratedField::To => {
+                            if to__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("to"));
+                            }
+                            to__ = Some(map.next_value()?);
+                        }
+                        GeneratedField::OtherPot => {
+                            if other_pot__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("otherPot"));
+                            }
+                            other_pot__ = 
+                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
                 }
-                Ok(MoveInstantaneousRewardCert {
+                Ok(MirCert {
+                    from: from__.unwrap_or_default(),
+                    to: to__.unwrap_or_default(),
+                    other_pot: other_pot__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("utxorpc.cardano.v1.MoveInstantaneousRewardCert", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("utxorpc.cardano.v1.MirCert", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for MirSource {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "MIR_SOURCE_UNSPECIFIED",
+            Self::Reserves => "MIR_SOURCE_RESERVES",
+            Self::Treasury => "MIR_SOURCE_TREASURY",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for MirSource {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "MIR_SOURCE_UNSPECIFIED",
+            "MIR_SOURCE_RESERVES",
+            "MIR_SOURCE_TREASURY",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = MirSource;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                use std::convert::TryFrom;
+                i32::try_from(v)
+                    .ok()
+                    .and_then(MirSource::from_i32)
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                use std::convert::TryFrom;
+                i32::try_from(v)
+                    .ok()
+                    .and_then(MirSource::from_i32)
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "MIR_SOURCE_UNSPECIFIED" => Ok(MirSource::Unspecified),
+                    "MIR_SOURCE_RESERVES" => Ok(MirSource::Reserves),
+                    "MIR_SOURCE_TREASURY" => Ok(MirSource::Treasury),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for MirTarget {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.stake_credential.is_some() {
+            len += 1;
+        }
+        if self.delta_coin != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.MirTarget", len)?;
+        if let Some(v) = self.stake_credential.as_ref() {
+            struct_ser.serialize_field("stakeCredential", v)?;
+        }
+        if self.delta_coin != 0 {
+            struct_ser.serialize_field("deltaCoin", ToString::to_string(&self.delta_coin).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for MirTarget {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "stake_credential",
+            "stakeCredential",
+            "delta_coin",
+            "deltaCoin",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            StakeCredential,
+            DeltaCoin,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "stakeCredential" | "stake_credential" => Ok(GeneratedField::StakeCredential),
+                            "deltaCoin" | "delta_coin" => Ok(GeneratedField::DeltaCoin),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = MirTarget;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.cardano.v1.MirTarget")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<MirTarget, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut stake_credential__ = None;
+                let mut delta_coin__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::StakeCredential => {
+                            if stake_credential__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stakeCredential"));
+                            }
+                            stake_credential__ = map.next_value()?;
+                        }
+                        GeneratedField::DeltaCoin => {
+                            if delta_coin__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("deltaCoin"));
+                            }
+                            delta_coin__ = 
+                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(MirTarget {
+                    stake_credential: stake_credential__,
+                    delta_coin: delta_coin__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.cardano.v1.MirTarget", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for Multiasset {
@@ -2616,8 +3034,20 @@ impl serde::Serialize for PoolMetadata {
         S: serde::Serializer,
     {
         use serde::ser::SerializeStruct;
-        let len = 0;
-        let struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.PoolMetadata", len)?;
+        let mut len = 0;
+        if !self.url.is_empty() {
+            len += 1;
+        }
+        if !self.hash.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.PoolMetadata", len)?;
+        if !self.url.is_empty() {
+            struct_ser.serialize_field("url", &self.url)?;
+        }
+        if !self.hash.is_empty() {
+            struct_ser.serialize_field("hash", pbjson::private::base64::encode(&self.hash).as_str())?;
+        }
         struct_ser.end()
     }
 }
@@ -2628,10 +3058,14 @@ impl<'de> serde::Deserialize<'de> for PoolMetadata {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "url",
+            "hash",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Url,
+            Hash,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2652,7 +3086,11 @@ impl<'de> serde::Deserialize<'de> for PoolMetadata {
                     where
                         E: serde::de::Error,
                     {
-                            Err(serde::de::Error::unknown_field(value, FIELDS))
+                        match value {
+                            "url" => Ok(GeneratedField::Url),
+                            "hash" => Ok(GeneratedField::Hash),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
                     }
                 }
                 deserializer.deserialize_identifier(GeneratedVisitor)
@@ -2670,10 +3108,29 @@ impl<'de> serde::Deserialize<'de> for PoolMetadata {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                while map.next_key::<GeneratedField>()?.is_some() {
-                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
+                let mut url__ = None;
+                let mut hash__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Url => {
+                            if url__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("url"));
+                            }
+                            url__ = Some(map.next_value()?);
+                        }
+                        GeneratedField::Hash => {
+                            if hash__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("hash"));
+                            }
+                            hash__ = 
+                                Some(map.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
                 }
                 Ok(PoolMetadata {
+                    url: url__.unwrap_or_default(),
+                    hash: hash__.unwrap_or_default(),
                 })
             }
         }
@@ -3037,88 +3494,6 @@ impl<'de> serde::Deserialize<'de> for PoolRetirementCert {
         deserializer.deserialize_struct("utxorpc.cardano.v1.PoolRetirementCert", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for Purpose {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let variant = match self {
-            Self::Unspecified => "PURPOSE_UNSPECIFIED",
-            Self::Spend => "PURPOSE_SPEND",
-            Self::Mint => "PURPOSE_MINT",
-            Self::Cert => "PURPOSE_CERT",
-            Self::Reward => "PURPOSE_REWARD",
-        };
-        serializer.serialize_str(variant)
-    }
-}
-impl<'de> serde::Deserialize<'de> for Purpose {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "PURPOSE_UNSPECIFIED",
-            "PURPOSE_SPEND",
-            "PURPOSE_MINT",
-            "PURPOSE_CERT",
-            "PURPOSE_REWARD",
-        ];
-
-        struct GeneratedVisitor;
-
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = Purpose;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(formatter, "expected one of: {:?}", &FIELDS)
-            }
-
-            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                use std::convert::TryFrom;
-                i32::try_from(v)
-                    .ok()
-                    .and_then(Purpose::from_i32)
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
-                    })
-            }
-
-            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                use std::convert::TryFrom;
-                i32::try_from(v)
-                    .ok()
-                    .and_then(Purpose::from_i32)
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
-                    })
-            }
-
-            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                match value {
-                    "PURPOSE_UNSPECIFIED" => Ok(Purpose::Unspecified),
-                    "PURPOSE_SPEND" => Ok(Purpose::Spend),
-                    "PURPOSE_MINT" => Ok(Purpose::Mint),
-                    "PURPOSE_CERT" => Ok(Purpose::Cert),
-                    "PURPOSE_REWARD" => Ok(Purpose::Reward),
-                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
-                }
-            }
-        }
-        deserializer.deserialize_any(GeneratedVisitor)
-    }
-}
 impl serde::Serialize for Redeemer {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -3135,7 +3510,7 @@ impl serde::Serialize for Redeemer {
         }
         let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.Redeemer", len)?;
         if self.purpose != 0 {
-            let v = Purpose::from_i32(self.purpose)
+            let v = RedeemerPurpose::from_i32(self.purpose)
                 .ok_or_else(|| serde::ser::Error::custom(format!("Invalid variant {}", self.purpose)))?;
             struct_ser.serialize_field("purpose", &v)?;
         }
@@ -3210,7 +3585,7 @@ impl<'de> serde::Deserialize<'de> for Redeemer {
                             if purpose__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("purpose"));
                             }
-                            purpose__ = Some(map.next_value::<Purpose>()? as i32);
+                            purpose__ = Some(map.next_value::<RedeemerPurpose>()? as i32);
                         }
                         GeneratedField::Datum => {
                             if datum__.is_some() {
@@ -3229,6 +3604,88 @@ impl<'de> serde::Deserialize<'de> for Redeemer {
         deserializer.deserialize_struct("utxorpc.cardano.v1.Redeemer", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for RedeemerPurpose {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "REDEEMER_PURPOSE_UNSPECIFIED",
+            Self::Spend => "REDEEMER_PURPOSE_SPEND",
+            Self::Mint => "REDEEMER_PURPOSE_MINT",
+            Self::Cert => "REDEEMER_PURPOSE_CERT",
+            Self::Reward => "REDEEMER_PURPOSE_REWARD",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for RedeemerPurpose {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "REDEEMER_PURPOSE_UNSPECIFIED",
+            "REDEEMER_PURPOSE_SPEND",
+            "REDEEMER_PURPOSE_MINT",
+            "REDEEMER_PURPOSE_CERT",
+            "REDEEMER_PURPOSE_REWARD",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = RedeemerPurpose;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                use std::convert::TryFrom;
+                i32::try_from(v)
+                    .ok()
+                    .and_then(RedeemerPurpose::from_i32)
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                use std::convert::TryFrom;
+                i32::try_from(v)
+                    .ok()
+                    .and_then(RedeemerPurpose::from_i32)
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "REDEEMER_PURPOSE_UNSPECIFIED" => Ok(RedeemerPurpose::Unspecified),
+                    "REDEEMER_PURPOSE_SPEND" => Ok(RedeemerPurpose::Spend),
+                    "REDEEMER_PURPOSE_MINT" => Ok(RedeemerPurpose::Mint),
+                    "REDEEMER_PURPOSE_CERT" => Ok(RedeemerPurpose::Cert),
+                    "REDEEMER_PURPOSE_REWARD" => Ok(RedeemerPurpose::Reward),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
 impl serde::Serialize for Relay {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -3236,8 +3693,32 @@ impl serde::Serialize for Relay {
         S: serde::Serializer,
     {
         use serde::ser::SerializeStruct;
-        let len = 0;
-        let struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.Relay", len)?;
+        let mut len = 0;
+        if !self.ip_v4.is_empty() {
+            len += 1;
+        }
+        if !self.ip_v6.is_empty() {
+            len += 1;
+        }
+        if !self.dns_name.is_empty() {
+            len += 1;
+        }
+        if self.port != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.Relay", len)?;
+        if !self.ip_v4.is_empty() {
+            struct_ser.serialize_field("ipV4", pbjson::private::base64::encode(&self.ip_v4).as_str())?;
+        }
+        if !self.ip_v6.is_empty() {
+            struct_ser.serialize_field("ipV6", pbjson::private::base64::encode(&self.ip_v6).as_str())?;
+        }
+        if !self.dns_name.is_empty() {
+            struct_ser.serialize_field("dnsName", &self.dns_name)?;
+        }
+        if self.port != 0 {
+            struct_ser.serialize_field("port", &self.port)?;
+        }
         struct_ser.end()
     }
 }
@@ -3248,10 +3729,21 @@ impl<'de> serde::Deserialize<'de> for Relay {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "ip_v4",
+            "ipV4",
+            "ip_v6",
+            "ipV6",
+            "dns_name",
+            "dnsName",
+            "port",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            IpV4,
+            IpV6,
+            DnsName,
+            Port,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -3272,7 +3764,13 @@ impl<'de> serde::Deserialize<'de> for Relay {
                     where
                         E: serde::de::Error,
                     {
-                            Err(serde::de::Error::unknown_field(value, FIELDS))
+                        match value {
+                            "ipV4" | "ip_v4" => Ok(GeneratedField::IpV4),
+                            "ipV6" | "ip_v6" => Ok(GeneratedField::IpV6),
+                            "dnsName" | "dns_name" => Ok(GeneratedField::DnsName),
+                            "port" => Ok(GeneratedField::Port),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
                     }
                 }
                 deserializer.deserialize_identifier(GeneratedVisitor)
@@ -3290,10 +3788,49 @@ impl<'de> serde::Deserialize<'de> for Relay {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                while map.next_key::<GeneratedField>()?.is_some() {
-                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
+                let mut ip_v4__ = None;
+                let mut ip_v6__ = None;
+                let mut dns_name__ = None;
+                let mut port__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::IpV4 => {
+                            if ip_v4__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("ipV4"));
+                            }
+                            ip_v4__ = 
+                                Some(map.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::IpV6 => {
+                            if ip_v6__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("ipV6"));
+                            }
+                            ip_v6__ = 
+                                Some(map.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::DnsName => {
+                            if dns_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("dnsName"));
+                            }
+                            dns_name__ = Some(map.next_value()?);
+                        }
+                        GeneratedField::Port => {
+                            if port__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("port"));
+                            }
+                            port__ = 
+                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
                 }
                 Ok(Relay {
+                    ip_v4: ip_v4__.unwrap_or_default(),
+                    ip_v6: ip_v6__.unwrap_or_default(),
+                    dns_name: dns_name__.unwrap_or_default(),
+                    port: port__.unwrap_or_default(),
                 })
             }
         }
@@ -4476,77 +5013,6 @@ impl<'de> serde::Deserialize<'de> for TxValidity {
             }
         }
         deserializer.deserialize_struct("utxorpc.cardano.v1.TxValidity", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for UnitInterval {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let len = 0;
-        let struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.UnitInterval", len)?;
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for UnitInterval {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                            Err(serde::de::Error::unknown_field(value, FIELDS))
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = UnitInterval;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.cardano.v1.UnitInterval")
-            }
-
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<UnitInterval, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                while map.next_key::<GeneratedField>()?.is_some() {
-                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
-                }
-                Ok(UnitInterval {
-                })
-            }
-        }
-        deserializer.deserialize_struct("utxorpc.cardano.v1.UnitInterval", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for VKeyWitness {

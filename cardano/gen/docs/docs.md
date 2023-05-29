@@ -14,13 +14,15 @@
     - [Certificate](#utxorpc-cardano-v1-Certificate)
     - [Collateral](#utxorpc-cardano-v1-Collateral)
     - [Constr](#utxorpc-cardano-v1-Constr)
+    - [Fraction](#utxorpc-cardano-v1-Fraction)
     - [GenesisKeyDelegationCert](#utxorpc-cardano-v1-GenesisKeyDelegationCert)
     - [Metadata](#utxorpc-cardano-v1-Metadata)
     - [Metadatum](#utxorpc-cardano-v1-Metadatum)
     - [MetadatumArray](#utxorpc-cardano-v1-MetadatumArray)
     - [MetadatumMap](#utxorpc-cardano-v1-MetadatumMap)
     - [MetadatumPair](#utxorpc-cardano-v1-MetadatumPair)
-    - [MoveInstantaneousRewardCert](#utxorpc-cardano-v1-MoveInstantaneousRewardCert)
+    - [MirCert](#utxorpc-cardano-v1-MirCert)
+    - [MirTarget](#utxorpc-cardano-v1-MirTarget)
     - [Multiasset](#utxorpc-cardano-v1-Multiasset)
     - [NativeScript](#utxorpc-cardano-v1-NativeScript)
     - [NativeScriptList](#utxorpc-cardano-v1-NativeScriptList)
@@ -41,12 +43,12 @@
     - [TxInput](#utxorpc-cardano-v1-TxInput)
     - [TxOutput](#utxorpc-cardano-v1-TxOutput)
     - [TxValidity](#utxorpc-cardano-v1-TxValidity)
-    - [UnitInterval](#utxorpc-cardano-v1-UnitInterval)
     - [VKeyWitness](#utxorpc-cardano-v1-VKeyWitness)
     - [Withdrawal](#utxorpc-cardano-v1-Withdrawal)
     - [WitnessSet](#utxorpc-cardano-v1-WitnessSet)
   
-    - [Purpose](#utxorpc-cardano-v1-Purpose)
+    - [MirSource](#utxorpc-cardano-v1-MirSource)
+    - [RedeemerPurpose](#utxorpc-cardano-v1-RedeemerPurpose)
   
 - [Scalar Value Types](#scalar-value-types)
 
@@ -176,7 +178,7 @@ Represents a certificate in Cardano.
 | pool_registration | [PoolRegistrationCert](#utxorpc-cardano-v1-PoolRegistrationCert) |  | Pool registration certificate. |
 | pool_retirement | [PoolRetirementCert](#utxorpc-cardano-v1-PoolRetirementCert) |  | Pool retirement certificate. |
 | genesis_key_delegation | [GenesisKeyDelegationCert](#utxorpc-cardano-v1-GenesisKeyDelegationCert) |  | Genesis key delegation certificate. |
-| move_instantaneous_rewards_cert | [MoveInstantaneousRewardCert](#utxorpc-cardano-v1-MoveInstantaneousRewardCert) |  | Move instantaneous rewards certificate. |
+| mir_cert | [MirCert](#utxorpc-cardano-v1-MirCert) |  | Move instantaneous rewards certificate. |
 
 
 
@@ -205,7 +207,28 @@ Represents the collateral information for a transaction.
 ### Constr
 Represents a constructor for Plutus data in Cardano.
 
-Define the fields of Constr based on your original Rust code
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| tag | [uint32](#uint32) |  |  |
+| any_constructor | [uint64](#uint64) |  |  |
+| fields | [PlutusData](#utxorpc-cardano-v1-PlutusData) | repeated |  |
+
+
+
+
+
+
+<a name="utxorpc-cardano-v1-Fraction"></a>
+
+### Fraction
+Represents a numeric fraction.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| numerator | [int32](#int32) |  |  |
+| denominator | [uint32](#uint32) |  |  |
 
 
 
@@ -310,12 +333,33 @@ Represents a genesis key delegation certificate in Cardano.
 
 
 
-<a name="utxorpc-cardano-v1-MoveInstantaneousRewardCert"></a>
+<a name="utxorpc-cardano-v1-MirCert"></a>
 
-### MoveInstantaneousRewardCert
+### MirCert
 Represents a move instantaneous reward certificate in Cardano.
 
-Define the fields of MoveInstantaneousReward based on your original Rust code
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| from | [MirSource](#utxorpc-cardano-v1-MirSource) |  |  |
+| to | [MirTarget](#utxorpc-cardano-v1-MirTarget) | repeated |  |
+| other_pot | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-cardano-v1-MirTarget"></a>
+
+### MirTarget
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_credential | [StakeCredential](#utxorpc-cardano-v1-StakeCredential) |  |  |
+| delta_coin | [int64](#int64) |  |  |
 
 
 
@@ -443,7 +487,11 @@ Represents a key-value pair for Plutus data in Cardano.
 ### PoolMetadata
 Represents pool metadata in Cardano.
 
-Define the fields of PoolMetadata based on your original Rust code
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| url | [string](#string) |  |  |
+| hash | [bytes](#bytes) |  |  |
 
 
 
@@ -462,7 +510,7 @@ Represents a pool registration certificate in Cardano.
 | vrf_keyhash | [bytes](#bytes) |  | VRF key hash. |
 | pledge | [uint64](#uint64) |  | Pledge amount. |
 | cost | [uint64](#uint64) |  | Pool cost. |
-| margin | [UnitInterval](#utxorpc-cardano-v1-UnitInterval) |  | Pool margin. |
+| margin | [Fraction](#utxorpc-cardano-v1-Fraction) |  | Pool margin. |
 | reward_account | [bytes](#bytes) |  | Reward account. |
 | pool_owners | [bytes](#bytes) | repeated | List of pool owner key hashes. |
 | relays | [Relay](#utxorpc-cardano-v1-Relay) | repeated | List of relays. |
@@ -497,7 +545,7 @@ Redeemer information for a Plutus script.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| purpose | [Purpose](#utxorpc-cardano-v1-Purpose) |  | Purpose of the redeemer. |
+| purpose | [RedeemerPurpose](#utxorpc-cardano-v1-RedeemerPurpose) |  | Purpose of the redeemer. |
 | datum | [PlutusData](#utxorpc-cardano-v1-PlutusData) |  | Plutus data associated with the redeemer. |
 
 
@@ -510,7 +558,13 @@ Redeemer information for a Plutus script.
 ### Relay
 Represents a relay in Cardano.
 
-Define the fields of Relay based on your original Rust code
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| ip_v4 | [bytes](#bytes) |  |  |
+| ip_v6 | [bytes](#bytes) |  |  |
+| dns_name | [string](#string) |  |  |
+| port | [uint32](#uint32) |  |  |
 
 
 
@@ -662,18 +716,6 @@ Represents the validity interval of a transaction.
 
 
 
-<a name="utxorpc-cardano-v1-UnitInterval"></a>
-
-### UnitInterval
-Represents a unit interval in Cardano.
-
-Define the fields of UnitInterval based on your original Rust code
-
-
-
-
-
-
 <a name="utxorpc-cardano-v1-VKeyWitness"></a>
 
 ### VKeyWitness
@@ -725,18 +767,31 @@ Represents a set of witnesses that validate a transaction
  
 
 
-<a name="utxorpc-cardano-v1-Purpose"></a>
+<a name="utxorpc-cardano-v1-MirSource"></a>
 
-### Purpose
+### MirSource
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| MIR_SOURCE_UNSPECIFIED | 0 |  |
+| MIR_SOURCE_RESERVES | 1 |  |
+| MIR_SOURCE_TREASURY | 2 |  |
+
+
+
+<a name="utxorpc-cardano-v1-RedeemerPurpose"></a>
+
+### RedeemerPurpose
 Purpose of the redeemer in a transaction.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| PURPOSE_UNSPECIFIED | 0 |  |
-| PURPOSE_SPEND | 1 |  |
-| PURPOSE_MINT | 2 |  |
-| PURPOSE_CERT | 3 |  |
-| PURPOSE_REWARD | 4 |  |
+| REDEEMER_PURPOSE_UNSPECIFIED | 0 |  |
+| REDEEMER_PURPOSE_SPEND | 1 |  |
+| REDEEMER_PURPOSE_MINT | 2 |  |
+| REDEEMER_PURPOSE_CERT | 3 |  |
+| REDEEMER_PURPOSE_REWARD | 4 |  |
 
 
  

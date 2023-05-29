@@ -3,17 +3,17 @@ syntax = "proto3";
 package utxorpc.cardano.v1;
 
 // Purpose of the redeemer in a transaction.
-enum Purpose {
-  PURPOSE_UNSPECIFIED = 0;
-  PURPOSE_SPEND = 1;
-  PURPOSE_MINT = 2;
-  PURPOSE_CERT = 3;
-  PURPOSE_REWARD = 4;
+enum RedeemerPurpose {
+  REDEEMER_PURPOSE_UNSPECIFIED = 0;
+  REDEEMER_PURPOSE_SPEND = 1;
+  REDEEMER_PURPOSE_MINT = 2;
+  REDEEMER_PURPOSE_CERT = 3;
+  REDEEMER_PURPOSE_REWARD = 4;
 }
 
 // Redeemer information for a Plutus script.
 message Redeemer {
-  Purpose purpose = 1; // Purpose of the redeemer.
+  RedeemerPurpose purpose = 1; // Purpose of the redeemer.
   PlutusData datum = 2; // Plutus data associated with the redeemer.
 }
 
@@ -143,7 +143,9 @@ message ScriptNOfK {
 
 // Represents a constructor for Plutus data in Cardano.
 message Constr {
-  // Define the fields of Constr based on your original Rust code
+  uint32 tag = 1;
+  uint64 any_constructor = 2;
+  repeated PlutusData fields = 3;
 }
 
 // Represents a big integer for Plutus data in Cardano.
@@ -228,19 +230,24 @@ message StakeCredential {
   }
 }
 
-// Represents a unit interval in Cardano.
-message UnitInterval {
-  // Define the fields of UnitInterval based on your original Rust code
+// Represents a numeric fraction.
+message Fraction {
+  int32 numerator = 1;
+  uint32 denominator = 2;
 }
 
 // Represents a relay in Cardano.
 message Relay {
-  // Define the fields of Relay based on your original Rust code
+  bytes ip_v4 = 1;
+  bytes ip_v6 = 2;
+  string dns_name = 3;
+  uint32 port = 4;
 }
 
 // Represents pool metadata in Cardano.
 message PoolMetadata {
-  // Define the fields of PoolMetadata based on your original Rust code
+  string url = 1;
+  bytes hash = 2;
 }
 
 // Represents a certificate in Cardano.
@@ -252,7 +259,7 @@ message Certificate {
     PoolRegistrationCert pool_registration = 4; // Pool registration certificate.
     PoolRetirementCert pool_retirement = 5; // Pool retirement certificate.
     GenesisKeyDelegationCert genesis_key_delegation = 6; // Genesis key delegation certificate.
-    MoveInstantaneousRewardCert move_instantaneous_rewards_cert = 7; // Move instantaneous rewards certificate.
+    MirCert mir_cert = 7; // Move instantaneous rewards certificate.
   }
 }
 
@@ -268,7 +275,7 @@ message PoolRegistrationCert {
   bytes vrf_keyhash = 2; // VRF key hash.
   uint64 pledge = 3; // Pledge amount.
   uint64 cost = 4; // Pool cost.
-  UnitInterval margin = 5; // Pool margin.
+  Fraction margin = 5; // Pool margin.
   bytes reward_account = 6; // Reward account.
   repeated bytes pool_owners = 7; // List of pool owner key hashes.
   repeated Relay relays = 8; // List of relays.
@@ -288,7 +295,20 @@ message GenesisKeyDelegationCert {
   bytes vrf_keyhash = 3; // VRF key hash.
 }
 
+enum MirSource {
+  MIR_SOURCE_UNSPECIFIED = 0;
+  MIR_SOURCE_RESERVES = 1;
+  MIR_SOURCE_TREASURY = 2;
+}
+
+message MirTarget {
+  StakeCredential stake_credential = 1;
+  int64 delta_coin = 2;
+}
+
 // Represents a move instantaneous reward certificate in Cardano.
-message MoveInstantaneousRewardCert {
-  // Define the fields of MoveInstantaneousReward based on your original Rust code
+message MirCert {
+  MirSource from = 1;
+  repeated MirTarget to = 2;
+  uint64 other_pot = 3;
 }
