@@ -1112,118 +1112,6 @@ impl<'de> serde::Deserialize<'de> for Constr {
         deserializer.deserialize_struct("utxorpc.cardano.v1.Constr", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for Fraction {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.numerator != 0 {
-            len += 1;
-        }
-        if self.denominator != 0 {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.Fraction", len)?;
-        if self.numerator != 0 {
-            struct_ser.serialize_field("numerator", &self.numerator)?;
-        }
-        if self.denominator != 0 {
-            struct_ser.serialize_field("denominator", &self.denominator)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for Fraction {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "numerator",
-            "denominator",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Numerator,
-            Denominator,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "numerator" => Ok(GeneratedField::Numerator),
-                            "denominator" => Ok(GeneratedField::Denominator),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = Fraction;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.cardano.v1.Fraction")
-            }
-
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<Fraction, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut numerator__ = None;
-                let mut denominator__ = None;
-                while let Some(k) = map.next_key()? {
-                    match k {
-                        GeneratedField::Numerator => {
-                            if numerator__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("numerator"));
-                            }
-                            numerator__ = 
-                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
-                        GeneratedField::Denominator => {
-                            if denominator__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("denominator"));
-                            }
-                            denominator__ = 
-                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(Fraction {
-                    numerator: numerator__.unwrap_or_default(),
-                    denominator: denominator__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("utxorpc.cardano.v1.Fraction", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for GenesisKeyDelegationCert {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -3492,6 +3380,118 @@ impl<'de> serde::Deserialize<'de> for PoolRetirementCert {
             }
         }
         deserializer.deserialize_struct("utxorpc.cardano.v1.PoolRetirementCert", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for RationalNumber {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.numerator != 0 {
+            len += 1;
+        }
+        if self.denominator != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.RationalNumber", len)?;
+        if self.numerator != 0 {
+            struct_ser.serialize_field("numerator", &self.numerator)?;
+        }
+        if self.denominator != 0 {
+            struct_ser.serialize_field("denominator", &self.denominator)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for RationalNumber {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "numerator",
+            "denominator",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Numerator,
+            Denominator,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "numerator" => Ok(GeneratedField::Numerator),
+                            "denominator" => Ok(GeneratedField::Denominator),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = RationalNumber;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.cardano.v1.RationalNumber")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<RationalNumber, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut numerator__ = None;
+                let mut denominator__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Numerator => {
+                            if numerator__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("numerator"));
+                            }
+                            numerator__ = 
+                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Denominator => {
+                            if denominator__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("denominator"));
+                            }
+                            denominator__ = 
+                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(RationalNumber {
+                    numerator: numerator__.unwrap_or_default(),
+                    denominator: denominator__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.cardano.v1.RationalNumber", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for Redeemer {

@@ -230,8 +230,8 @@ message StakeCredential {
   }
 }
 
-// Represents a numeric fraction.
-message Fraction {
+// Represents a rational number as a fraction.
+message RationalNumber {
   int32 numerator = 1;
   uint32 denominator = 2;
 }
@@ -275,7 +275,7 @@ message PoolRegistrationCert {
   bytes vrf_keyhash = 2; // VRF key hash.
   uint64 pledge = 3; // Pledge amount.
   uint64 cost = 4; // Pool cost.
-  Fraction margin = 5; // Pool margin.
+  RationalNumber margin = 5; // Pool margin.
   bytes reward_account = 6; // Reward account.
   repeated bytes pool_owners = 7; // List of pool owner key hashes.
   repeated Relay relays = 8; // List of relays.

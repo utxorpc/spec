@@ -14,7 +14,6 @@
     - [Certificate](#utxorpc-cardano-v1-Certificate)
     - [Collateral](#utxorpc-cardano-v1-Collateral)
     - [Constr](#utxorpc-cardano-v1-Constr)
-    - [Fraction](#utxorpc-cardano-v1-Fraction)
     - [GenesisKeyDelegationCert](#utxorpc-cardano-v1-GenesisKeyDelegationCert)
     - [Metadata](#utxorpc-cardano-v1-Metadata)
     - [Metadatum](#utxorpc-cardano-v1-Metadatum)
@@ -33,6 +32,7 @@
     - [PoolMetadata](#utxorpc-cardano-v1-PoolMetadata)
     - [PoolRegistrationCert](#utxorpc-cardano-v1-PoolRegistrationCert)
     - [PoolRetirementCert](#utxorpc-cardano-v1-PoolRetirementCert)
+    - [RationalNumber](#utxorpc-cardano-v1-RationalNumber)
     - [Redeemer](#utxorpc-cardano-v1-Redeemer)
     - [Relay](#utxorpc-cardano-v1-Relay)
     - [Script](#utxorpc-cardano-v1-Script)
@@ -213,22 +213,6 @@ Represents a constructor for Plutus data in Cardano.
 | tag | [uint32](#uint32) |  |  |
 | any_constructor | [uint64](#uint64) |  |  |
 | fields | [PlutusData](#utxorpc-cardano-v1-PlutusData) | repeated |  |
-
-
-
-
-
-
-<a name="utxorpc-cardano-v1-Fraction"></a>
-
-### Fraction
-Represents a numeric fraction.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| numerator | [int32](#int32) |  |  |
-| denominator | [uint32](#uint32) |  |  |
 
 
 
@@ -510,7 +494,7 @@ Represents a pool registration certificate in Cardano.
 | vrf_keyhash | [bytes](#bytes) |  | VRF key hash. |
 | pledge | [uint64](#uint64) |  | Pledge amount. |
 | cost | [uint64](#uint64) |  | Pool cost. |
-| margin | [Fraction](#utxorpc-cardano-v1-Fraction) |  | Pool margin. |
+| margin | [RationalNumber](#utxorpc-cardano-v1-RationalNumber) |  | Pool margin. |
 | reward_account | [bytes](#bytes) |  | Reward account. |
 | pool_owners | [bytes](#bytes) | repeated | List of pool owner key hashes. |
 | relays | [Relay](#utxorpc-cardano-v1-Relay) | repeated | List of relays. |
@@ -531,6 +515,22 @@ Represents a pool retirement certificate in Cardano.
 | ----- | ---- | ----- | ----------- |
 | pool_keyhash | [bytes](#bytes) |  | Pool key hash. |
 | epoch | [uint64](#uint64) |  | Retirement epoch. |
+
+
+
+
+
+
+<a name="utxorpc-cardano-v1-RationalNumber"></a>
+
+### RationalNumber
+Represents a rational number as a fraction.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| numerator | [int32](#int32) |  |  |
+| denominator | [uint32](#uint32) |  |  |
 
 
 
