@@ -10,7 +10,6 @@
     - [Block](#utxorpc-cardano-v1-Block)
     - [BlockBody](#utxorpc-cardano-v1-BlockBody)
     - [BlockHeader](#utxorpc-cardano-v1-BlockHeader)
-    - [BoundedBytes](#utxorpc-cardano-v1-BoundedBytes)
     - [Certificate](#utxorpc-cardano-v1-Certificate)
     - [Collateral](#utxorpc-cardano-v1-Collateral)
     - [Constr](#utxorpc-cardano-v1-Constr)
@@ -98,7 +97,12 @@ Auxiliary data not directly tied to the validation process
 ### BigInt
 Represents a big integer for Plutus data in Cardano.
 
-Define the fields of BigInt based on your original Rust code
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| int | [int64](#int64) |  |  |
+| big_u_int | [bytes](#bytes) |  |  |
+| big_n_int | [bytes](#bytes) |  |  |
 
 
 
@@ -146,18 +150,6 @@ Contains the header information for a block.
 | ----- | ---- | ----- | ----------- |
 | slot | [uint64](#uint64) |  | Slot number. |
 | hash | [bytes](#bytes) |  | Block hash. |
-
-
-
-
-
-
-<a name="utxorpc-cardano-v1-BoundedBytes"></a>
-
-### BoundedBytes
-Represents a bounded bytes for Plutus data in Cardano.
-
-Define the fields of BoundedBytes based on your original Rust code
 
 
 
@@ -412,7 +404,7 @@ Represents a Plutus data item in Cardano.
 | constr | [Constr](#utxorpc-cardano-v1-Constr) |  | Constructor. |
 | map | [PlutusDataMap](#utxorpc-cardano-v1-PlutusDataMap) |  | Map of Plutus data. |
 | big_int | [BigInt](#utxorpc-cardano-v1-BigInt) |  | Big integer. |
-| bounded_bytes | [BoundedBytes](#utxorpc-cardano-v1-BoundedBytes) |  | Bounded bytes. |
+| bounded_bytes | [bytes](#bytes) |  | Bounded bytes. |
 | array | [PlutusDataArray](#utxorpc-cardano-v1-PlutusDataArray) |  | Array of Plutus data. |
 
 
