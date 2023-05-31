@@ -150,12 +150,11 @@ message Constr {
 
 // Represents a big integer for Plutus data in Cardano.
 message BigInt {
-  // Define the fields of BigInt based on your original Rust code
-}
-
-// Represents a bounded bytes for Plutus data in Cardano.
-message BoundedBytes {
-  // Define the fields of BoundedBytes based on your original Rust code
+  oneof big_int {
+    int64 int = 1;
+    bytes big_u_int = 2;
+    bytes big_n_int = 3;
+  }
 }
 
 // Represents a key-value pair for Plutus data in Cardano.
@@ -170,7 +169,7 @@ message PlutusData {
     Constr constr = 1; // Constructor.
     PlutusDataMap map = 2; // Map of Plutus data.
     BigInt big_int = 3; // Big integer.
-    BoundedBytes bounded_bytes = 4; // Bounded bytes.
+    bytes bounded_bytes = 4; // Bounded bytes.
     PlutusDataArray array = 5; // Array of Plutus data.
   }
 }

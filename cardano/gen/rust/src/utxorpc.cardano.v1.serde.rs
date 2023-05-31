@@ -226,8 +226,24 @@ impl serde::Serialize for BigInt {
         S: serde::Serializer,
     {
         use serde::ser::SerializeStruct;
-        let len = 0;
-        let struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.BigInt", len)?;
+        let mut len = 0;
+        if self.big_int.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.BigInt", len)?;
+        if let Some(v) = self.big_int.as_ref() {
+            match v {
+                big_int::BigInt::Int(v) => {
+                    struct_ser.serialize_field("int", ToString::to_string(&v).as_str())?;
+                }
+                big_int::BigInt::BigUInt(v) => {
+                    struct_ser.serialize_field("bigUInt", pbjson::private::base64::encode(&v).as_str())?;
+                }
+                big_int::BigInt::BigNInt(v) => {
+                    struct_ser.serialize_field("bigNInt", pbjson::private::base64::encode(&v).as_str())?;
+                }
+            }
+        }
         struct_ser.end()
     }
 }
@@ -238,10 +254,18 @@ impl<'de> serde::Deserialize<'de> for BigInt {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "int",
+            "big_u_int",
+            "bigUInt",
+            "big_n_int",
+            "bigNInt",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Int,
+            BigUInt,
+            BigNInt,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -262,7 +286,12 @@ impl<'de> serde::Deserialize<'de> for BigInt {
                     where
                         E: serde::de::Error,
                     {
-                            Err(serde::de::Error::unknown_field(value, FIELDS))
+                        match value {
+                            "int" => Ok(GeneratedField::Int),
+                            "bigUInt" | "big_u_int" => Ok(GeneratedField::BigUInt),
+                            "bigNInt" | "big_n_int" => Ok(GeneratedField::BigNInt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
                     }
                 }
                 deserializer.deserialize_identifier(GeneratedVisitor)
@@ -280,10 +309,31 @@ impl<'de> serde::Deserialize<'de> for BigInt {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                while map.next_key::<GeneratedField>()?.is_some() {
-                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
+                let mut big_int__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Int => {
+                            if big_int__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("int"));
+                            }
+                            big_int__ = map.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| big_int::BigInt::Int(x.0));
+                        }
+                        GeneratedField::BigUInt => {
+                            if big_int__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("bigUInt"));
+                            }
+                            big_int__ = map.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| big_int::BigInt::BigUInt(x.0));
+                        }
+                        GeneratedField::BigNInt => {
+                            if big_int__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("bigNInt"));
+                            }
+                            big_int__ = map.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| big_int::BigInt::BigNInt(x.0));
+                        }
+                    }
                 }
                 Ok(BigInt {
+                    big_int: big_int__,
                 })
             }
         }
@@ -599,77 +649,6 @@ impl<'de> serde::Deserialize<'de> for BlockHeader {
             }
         }
         deserializer.deserialize_struct("utxorpc.cardano.v1.BlockHeader", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for BoundedBytes {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let len = 0;
-        let struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.BoundedBytes", len)?;
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for BoundedBytes {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                            Err(serde::de::Error::unknown_field(value, FIELDS))
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = BoundedBytes;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.cardano.v1.BoundedBytes")
-            }
-
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<BoundedBytes, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                while map.next_key::<GeneratedField>()?.is_some() {
-                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
-                }
-                Ok(BoundedBytes {
-                })
-            }
-        }
-        deserializer.deserialize_struct("utxorpc.cardano.v1.BoundedBytes", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for Certificate {
@@ -2499,7 +2478,7 @@ impl serde::Serialize for PlutusData {
                     struct_ser.serialize_field("bigInt", v)?;
                 }
                 plutus_data::PlutusData::BoundedBytes(v) => {
-                    struct_ser.serialize_field("boundedBytes", v)?;
+                    struct_ser.serialize_field("boundedBytes", pbjson::private::base64::encode(&v).as_str())?;
                 }
                 plutus_data::PlutusData::Array(v) => {
                     struct_ser.serialize_field("array", v)?;
@@ -2605,8 +2584,7 @@ impl<'de> serde::Deserialize<'de> for PlutusData {
                             if plutus_data__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("boundedBytes"));
                             }
-                            plutus_data__ = map.next_value::<::std::option::Option<_>>()?.map(plutus_data::PlutusData::BoundedBytes)
-;
+                            plutus_data__ = map.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| plutus_data::PlutusData::BoundedBytes(x.0));
                         }
                         GeneratedField::Array => {
                             if plutus_data__.is_some() {
