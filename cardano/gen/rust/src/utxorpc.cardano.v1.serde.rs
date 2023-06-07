@@ -10,15 +10,21 @@ impl serde::Serialize for Asset {
         if !self.name.is_empty() {
             len += 1;
         }
-        if self.quantity != 0 {
+        if self.output_coin != 0 {
+            len += 1;
+        }
+        if self.mint_coin != 0 {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.Asset", len)?;
         if !self.name.is_empty() {
             struct_ser.serialize_field("name", pbjson::private::base64::encode(&self.name).as_str())?;
         }
-        if self.quantity != 0 {
-            struct_ser.serialize_field("quantity", ToString::to_string(&self.quantity).as_str())?;
+        if self.output_coin != 0 {
+            struct_ser.serialize_field("outputCoin", ToString::to_string(&self.output_coin).as_str())?;
+        }
+        if self.mint_coin != 0 {
+            struct_ser.serialize_field("mintCoin", ToString::to_string(&self.mint_coin).as_str())?;
         }
         struct_ser.end()
     }
@@ -31,13 +37,17 @@ impl<'de> serde::Deserialize<'de> for Asset {
     {
         const FIELDS: &[&str] = &[
             "name",
-            "quantity",
+            "output_coin",
+            "outputCoin",
+            "mint_coin",
+            "mintCoin",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Name,
-            Quantity,
+            OutputCoin,
+            MintCoin,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -60,7 +70,8 @@ impl<'de> serde::Deserialize<'de> for Asset {
                     {
                         match value {
                             "name" => Ok(GeneratedField::Name),
-                            "quantity" => Ok(GeneratedField::Quantity),
+                            "outputCoin" | "output_coin" => Ok(GeneratedField::OutputCoin),
+                            "mintCoin" | "mint_coin" => Ok(GeneratedField::MintCoin),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -81,7 +92,8 @@ impl<'de> serde::Deserialize<'de> for Asset {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut name__ = None;
-                let mut quantity__ = None;
+                let mut output_coin__ = None;
+                let mut mint_coin__ = None;
                 while let Some(k) = map.next_key()? {
                     match k {
                         GeneratedField::Name => {
@@ -92,11 +104,19 @@ impl<'de> serde::Deserialize<'de> for Asset {
                                 Some(map.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
                             ;
                         }
-                        GeneratedField::Quantity => {
-                            if quantity__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("quantity"));
+                        GeneratedField::OutputCoin => {
+                            if output_coin__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("outputCoin"));
                             }
-                            quantity__ = 
+                            output_coin__ = 
+                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::MintCoin => {
+                            if mint_coin__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("mintCoin"));
+                            }
+                            mint_coin__ = 
                                 Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
                             ;
                         }
@@ -104,7 +124,8 @@ impl<'de> serde::Deserialize<'de> for Asset {
                 }
                 Ok(Asset {
                     name: name__.unwrap_or_default(),
-                    quantity: quantity__.unwrap_or_default(),
+                    output_coin: output_coin__.unwrap_or_default(),
+                    mint_coin: mint_coin__.unwrap_or_default(),
                 })
             }
         }

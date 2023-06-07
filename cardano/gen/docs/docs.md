@@ -69,7 +69,8 @@ Represents a custom asset in the Cardano blockchain.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | name | [bytes](#bytes) |  | Name of the custom asset. |
-| quantity | [uint64](#uint64) |  | Quantity of the custom asset. |
+| output_coin | [uint64](#uint64) |  | Quantity of the custom asset in case of an output. |
+| mint_coin | [int64](#int64) |  | Quantity of the custom asset in case of a mint. |
 
 
 
