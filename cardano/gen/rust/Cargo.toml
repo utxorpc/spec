@@ -1,6 +1,6 @@
 [package]
 name = "utxorpc-spec-cardano"
-version = "1.0.0-alpha.0"
+version = "1.0.0-alpha.1"
 edition = "2021"
 description = "Auto-generated structs for the Cardano module of the UTxO RPC spec"
 repository = "https://github.com/utxorpc/spec"
@@ -9,7 +9,6 @@ documentation = "https://docs.rs/utxorpc-spec-cardano"
 license = "Apache-2.0"
 readme = "README.md"
 authors = ["Santiago Carmuega <santiago@carmuega.me>"]
-
 
 [dependencies]
 bytes = "^1.4"
