@@ -1,0 +1,39 @@
+{
+  "name": "@utxorpc-web/cardano-spec",
+  "version": "1.0.0-alpha.0",
+  "description": "UTxO RPC auto-generated spec types & stubs for the Cardano module",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./utxorpc/cardano/v1/cardano_pb.js": "./lib/utxorpc/cardano/v1/cardano_pb.js"
+  },
+  "types": "./lib/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/utxorpc/spec.git"
+  },
+  "keywords": [
+    "utxorpc",
+    "cardano",
+    "blockchain"
+  ],
+  "author": "scarmuega",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/utxorpc/spec/issues"
+  },
+  "homepage": "https://github.com/utxorpc/spec#readme",
+  "devDependencies": {
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^1.2.1"
+  }
+}

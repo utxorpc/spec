@@ -20,6 +20,7 @@ plugins:
       - file_descriptor_set
       - extern_path=.google.protobuf=::pbjson_types
       - extern_path=.utxorpc.cardano.v1=::utxorpc-spec-cardano::utxorpc::cardano::v1
+
   - plugin: prost-serde
     out: gen/rust/src
 
@@ -35,6 +36,35 @@ plugins:
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
+
+  # official grpc-web gen
+
+  # - plugin: buf.build/grpc/web:v1.4.2
+  #   out: gen/web/src
+  #   opt:
+  #     - mode=grpcwebtext
+  #     - import_style=typescript
+  
+  # - plugin: buf.build/protocolbuffers/js
+  #   out: gen/web/src
+  #   opt:
+  #     - import_style=commonjs
+
+  # buf connect
+
+  - plugin: es
+    out: gen/web/src
+    opt:
+      - target=ts
+      - rewrite_imports=./utxorpc/cardano/v1/*_pb.js:@utxorpc/spec-cardano
+      - import_extension=.js
+
+  - plugin: connect-es
+    out: gen/web/src
+    opt:
+      - target=ts
+
+  # other
 
   - plugin: buf.build/grpc-ecosystem/openapiv2
     out: gen/openapi
