@@ -56,7 +56,7 @@ plugins:
     out: gen/web/src
     opt:
       - target=ts
-      - rewrite_imports=./utxorpc/cardano/v1/*_pb.js:@utxorpc/spec-cardano
+      - rewrite_imports=./utxorpc/cardano/v1/*_pb.js:@utxorpc-web/cardano-spec
       - import_extension=.js
 
   - plugin: connect-es
