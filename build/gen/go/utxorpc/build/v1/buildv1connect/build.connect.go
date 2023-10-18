@@ -149,33 +149,47 @@ type LedgerStateServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewLedgerStateServiceHandler(svc LedgerStateServiceHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
-	mux := http.NewServeMux()
-	mux.Handle(LedgerStateServiceGetChainTipProcedure, connect_go.NewUnaryHandler(
+	ledgerStateServiceGetChainTipHandler := connect_go.NewUnaryHandler(
 		LedgerStateServiceGetChainTipProcedure,
 		svc.GetChainTip,
 		opts...,
-	))
-	mux.Handle(LedgerStateServiceGetChainParamProcedure, connect_go.NewUnaryHandler(
+	)
+	ledgerStateServiceGetChainParamHandler := connect_go.NewUnaryHandler(
 		LedgerStateServiceGetChainParamProcedure,
 		svc.GetChainParam,
 		opts...,
-	))
-	mux.Handle(LedgerStateServiceGetUtxoByAddressProcedure, connect_go.NewUnaryHandler(
+	)
+	ledgerStateServiceGetUtxoByAddressHandler := connect_go.NewUnaryHandler(
 		LedgerStateServiceGetUtxoByAddressProcedure,
 		svc.GetUtxoByAddress,
 		opts...,
-	))
-	mux.Handle(LedgerStateServiceGetUtxoByRefProcedure, connect_go.NewUnaryHandler(
+	)
+	ledgerStateServiceGetUtxoByRefHandler := connect_go.NewUnaryHandler(
 		LedgerStateServiceGetUtxoByRefProcedure,
 		svc.GetUtxoByRef,
 		opts...,
-	))
-	mux.Handle(LedgerStateServiceHoldUtxoProcedure, connect_go.NewServerStreamHandler(
+	)
+	ledgerStateServiceHoldUtxoHandler := connect_go.NewServerStreamHandler(
 		LedgerStateServiceHoldUtxoProcedure,
 		svc.HoldUtxo,
 		opts...,
-	))
-	return "/utxorpc.build.v1.LedgerStateService/", mux
+	)
+	return "/utxorpc.build.v1.LedgerStateService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case LedgerStateServiceGetChainTipProcedure:
+			ledgerStateServiceGetChainTipHandler.ServeHTTP(w, r)
+		case LedgerStateServiceGetChainParamProcedure:
+			ledgerStateServiceGetChainParamHandler.ServeHTTP(w, r)
+		case LedgerStateServiceGetUtxoByAddressProcedure:
+			ledgerStateServiceGetUtxoByAddressHandler.ServeHTTP(w, r)
+		case LedgerStateServiceGetUtxoByRefProcedure:
+			ledgerStateServiceGetUtxoByRefHandler.ServeHTTP(w, r)
+		case LedgerStateServiceHoldUtxoProcedure:
+			ledgerStateServiceHoldUtxoHandler.ServeHTTP(w, r)
+		default:
+			http.NotFound(w, r)
+		}
+	})
 }
 
 // UnimplementedLedgerStateServiceHandler returns CodeUnimplemented from all methods.

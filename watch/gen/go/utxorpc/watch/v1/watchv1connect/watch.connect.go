@@ -81,13 +81,19 @@ type TxWatchServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewTxWatchServiceHandler(svc TxWatchServiceHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
-	mux := http.NewServeMux()
-	mux.Handle(TxWatchServiceWatchTxProcedure, connect_go.NewServerStreamHandler(
+	txWatchServiceWatchTxHandler := connect_go.NewServerStreamHandler(
 		TxWatchServiceWatchTxProcedure,
 		svc.WatchTx,
 		opts...,
-	))
-	return "/utxorpc.watch.v1.TxWatchService/", mux
+	)
+	return "/utxorpc.watch.v1.TxWatchService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case TxWatchServiceWatchTxProcedure:
+			txWatchServiceWatchTxHandler.ServeHTTP(w, r)
+		default:
+			http.NotFound(w, r)
+		}
+	})
 }
 
 // UnimplementedTxWatchServiceHandler returns CodeUnimplemented from all methods.

@@ -62,21 +62,36 @@
           "format": "byte",
           "description": "Name of the custom asset."
         },
-        "quantity": {
+        "outputCoin": {
           "type": "string",
           "format": "uint64",
-          "description": "Quantity of the custom asset."
+          "description": "Quantity of the custom asset in case of an output."
+        },
+        "mintCoin": {
+          "type": "string",
+          "format": "int64",
+          "description": "Quantity of the custom asset in case of a mint."
         }
       },
       "description": "Represents a custom asset in the Cardano blockchain."
     },
     "v1BigInt": {
       "type": "object",
-      "description": "Represents a big integer for Plutus data in Cardano.\n\nDefine the fields of BigInt based on your original Rust code"
-    },
-    "v1BoundedBytes": {
-      "type": "object",
-      "description": "Represents a bounded bytes for Plutus data in Cardano.\n\nDefine the fields of BoundedBytes based on your original Rust code"
+      "properties": {
+        "int": {
+          "type": "string",
+          "format": "int64"
+        },
+        "bigUInt": {
+          "type": "string",
+          "format": "byte"
+        },
+        "bigNInt": {
+          "type": "string",
+          "format": "byte"
+        }
+      },
+      "description": "Represents a big integer for Plutus data in Cardano."
     },
     "v1ChainParam": {
       "type": "object",
@@ -116,7 +131,24 @@
     },
     "v1Constr": {
       "type": "object",
-      "description": "Represents a constructor for Plutus data in Cardano.\n\nDefine the fields of Constr based on your original Rust code"
+      "properties": {
+        "tag": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "anyConstructor": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PlutusData"
+          }
+        }
+      },
+      "description": "Represents a constructor for Plutus data in Cardano."
     },
     "v1GetChainParamResponse": {
       "type": "object",
@@ -274,7 +306,8 @@
           "description": "Big integer."
         },
         "boundedBytes": {
-          "$ref": "#/definitions/v1BoundedBytes",
+          "type": "string",
+          "format": "byte",
           "description": "Bounded bytes."
         },
         "array": {
@@ -325,32 +358,6 @@
         }
       },
       "description": "Represents a key-value pair for Plutus data in Cardano."
-    },
-    "v1Purpose": {
-      "type": "string",
-      "enum": [
-        "PURPOSE_UNSPECIFIED",
-        "PURPOSE_SPEND",
-        "PURPOSE_MINT",
-        "PURPOSE_CERT",
-        "PURPOSE_REWARD"
-      ],
-      "default": "PURPOSE_UNSPECIFIED",
-      "description": "Purpose of the redeemer in a transaction."
-    },
-    "v1Redeemer": {
-      "type": "object",
-      "properties": {
-        "purpose": {
-          "$ref": "#/definitions/v1Purpose",
-          "description": "Purpose of the redeemer."
-        },
-        "datum": {
-          "$ref": "#/definitions/v1PlutusData",
-          "description": "Plutus data associated with the redeemer."
-        }
-      },
-      "description": "Redeemer information for a Plutus script."
     },
     "v1Script": {
       "type": "object",
@@ -424,10 +431,6 @@
         "script": {
           "$ref": "#/definitions/v1Script",
           "description": "Script associated with the output."
-        },
-        "redeemer": {
-          "$ref": "#/definitions/v1Redeemer",
-          "description": "Redeemer for the Plutus script."
         }
       },
       "description": "Represents a transaction output in the Cardano blockchain."

@@ -114,23 +114,33 @@ type ChainSyncServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewChainSyncServiceHandler(svc ChainSyncServiceHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
-	mux := http.NewServeMux()
-	mux.Handle(ChainSyncServiceFetchBlockProcedure, connect_go.NewUnaryHandler(
+	chainSyncServiceFetchBlockHandler := connect_go.NewUnaryHandler(
 		ChainSyncServiceFetchBlockProcedure,
 		svc.FetchBlock,
 		opts...,
-	))
-	mux.Handle(ChainSyncServiceDumpHistoryProcedure, connect_go.NewUnaryHandler(
+	)
+	chainSyncServiceDumpHistoryHandler := connect_go.NewUnaryHandler(
 		ChainSyncServiceDumpHistoryProcedure,
 		svc.DumpHistory,
 		opts...,
-	))
-	mux.Handle(ChainSyncServiceFollowTipProcedure, connect_go.NewServerStreamHandler(
+	)
+	chainSyncServiceFollowTipHandler := connect_go.NewServerStreamHandler(
 		ChainSyncServiceFollowTipProcedure,
 		svc.FollowTip,
 		opts...,
-	))
-	return "/utxorpc.sync.v1.ChainSyncService/", mux
+	)
+	return "/utxorpc.sync.v1.ChainSyncService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case ChainSyncServiceFetchBlockProcedure:
+			chainSyncServiceFetchBlockHandler.ServeHTTP(w, r)
+		case ChainSyncServiceDumpHistoryProcedure:
+			chainSyncServiceDumpHistoryHandler.ServeHTTP(w, r)
+		case ChainSyncServiceFollowTipProcedure:
+			chainSyncServiceFollowTipHandler.ServeHTTP(w, r)
+		default:
+			http.NotFound(w, r)
+		}
+	})
 }
 
 // UnimplementedChainSyncServiceHandler returns CodeUnimplemented from all methods.

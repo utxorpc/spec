@@ -111,23 +111,33 @@ type SubmitServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewSubmitServiceHandler(svc SubmitServiceHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
-	mux := http.NewServeMux()
-	mux.Handle(SubmitServiceSubmitProcedure, connect_go.NewUnaryHandler(
+	submitServiceSubmitHandler := connect_go.NewUnaryHandler(
 		SubmitServiceSubmitProcedure,
 		svc.Submit,
 		opts...,
-	))
-	mux.Handle(SubmitServiceCheckProcedure, connect_go.NewUnaryHandler(
+	)
+	submitServiceCheckHandler := connect_go.NewUnaryHandler(
 		SubmitServiceCheckProcedure,
 		svc.Check,
 		opts...,
-	))
-	mux.Handle(SubmitServiceWaitForProcedure, connect_go.NewServerStreamHandler(
+	)
+	submitServiceWaitForHandler := connect_go.NewServerStreamHandler(
 		SubmitServiceWaitForProcedure,
 		svc.WaitFor,
 		opts...,
-	))
-	return "/utxorpc.submit.v1.SubmitService/", mux
+	)
+	return "/utxorpc.submit.v1.SubmitService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case SubmitServiceSubmitProcedure:
+			submitServiceSubmitHandler.ServeHTTP(w, r)
+		case SubmitServiceCheckProcedure:
+			submitServiceCheckHandler.ServeHTTP(w, r)
+		case SubmitServiceWaitForProcedure:
+			submitServiceWaitForHandler.ServeHTTP(w, r)
+		default:
+			http.NotFound(w, r)
+		}
+	})
 }
 
 // UnimplementedSubmitServiceHandler returns CodeUnimplemented from all methods.
