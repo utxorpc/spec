@@ -67,10 +67,15 @@
           "format": "byte",
           "description": "Name of the custom asset."
         },
-        "quantity": {
+        "outputCoin": {
           "type": "string",
           "format": "uint64",
-          "description": "Quantity of the custom asset."
+          "description": "Quantity of the custom asset in case of an output."
+        },
+        "mintCoin": {
+          "type": "string",
+          "format": "int64",
+          "description": "Quantity of the custom asset in case of a mint."
         }
       },
       "description": "Represents a custom asset in the Cardano blockchain."
@@ -99,7 +104,21 @@
     },
     "v1BigInt": {
       "type": "object",
-      "description": "Represents a big integer for Plutus data in Cardano.\n\nDefine the fields of BigInt based on your original Rust code"
+      "properties": {
+        "int": {
+          "type": "string",
+          "format": "int64"
+        },
+        "bigUInt": {
+          "type": "string",
+          "format": "byte"
+        },
+        "bigNInt": {
+          "type": "string",
+          "format": "byte"
+        }
+      },
+      "description": "Represents a big integer for Plutus data in Cardano."
     },
     "v1Block": {
       "type": "object",
@@ -161,10 +180,6 @@
       },
       "title": "Represents a reference to a specific block"
     },
-    "v1BoundedBytes": {
-      "type": "object",
-      "description": "Represents a bounded bytes for Plutus data in Cardano.\n\nDefine the fields of BoundedBytes based on your original Rust code"
-    },
     "v1Certificate": {
       "type": "object",
       "properties": {
@@ -192,8 +207,8 @@
           "$ref": "#/definitions/v1GenesisKeyDelegationCert",
           "description": "Genesis key delegation certificate."
         },
-        "moveInstantaneousRewardsCert": {
-          "$ref": "#/definitions/v1MoveInstantaneousRewardCert",
+        "mirCert": {
+          "$ref": "#/definitions/v1MirCert",
           "description": "Move instantaneous rewards certificate."
         }
       },
@@ -224,7 +239,24 @@
     },
     "v1Constr": {
       "type": "object",
-      "description": "Represents a constructor for Plutus data in Cardano.\n\nDefine the fields of Constr based on your original Rust code"
+      "properties": {
+        "tag": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "anyConstructor": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PlutusData"
+          }
+        }
+      },
+      "description": "Represents a constructor for Plutus data in Cardano."
     },
     "v1DumpHistoryResponse": {
       "type": "object",
@@ -366,9 +398,46 @@
         }
       }
     },
-    "v1MoveInstantaneousRewardCert": {
+    "v1MirCert": {
       "type": "object",
-      "description": "Represents a move instantaneous reward certificate in Cardano.\n\nDefine the fields of MoveInstantaneousReward based on your original Rust code"
+      "properties": {
+        "from": {
+          "$ref": "#/definitions/v1MirSource"
+        },
+        "to": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1MirTarget"
+          }
+        },
+        "otherPot": {
+          "type": "string",
+          "format": "uint64"
+        }
+      },
+      "description": "Represents a move instantaneous reward certificate in Cardano."
+    },
+    "v1MirSource": {
+      "type": "string",
+      "enum": [
+        "MIR_SOURCE_UNSPECIFIED",
+        "MIR_SOURCE_RESERVES",
+        "MIR_SOURCE_TREASURY"
+      ],
+      "default": "MIR_SOURCE_UNSPECIFIED"
+    },
+    "v1MirTarget": {
+      "type": "object",
+      "properties": {
+        "stakeCredential": {
+          "$ref": "#/definitions/v1StakeCredential"
+        },
+        "deltaCoin": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
     },
     "v1Multiasset": {
       "type": "object",
@@ -452,7 +521,8 @@
           "description": "Big integer."
         },
         "boundedBytes": {
-          "$ref": "#/definitions/v1BoundedBytes",
+          "type": "string",
+          "format": "byte",
           "description": "Bounded bytes."
         },
         "array": {
@@ -506,7 +576,16 @@
     },
     "v1PoolMetadata": {
       "type": "object",
-      "description": "Represents pool metadata in Cardano.\n\nDefine the fields of PoolMetadata based on your original Rust code"
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string",
+          "format": "byte"
+        }
+      },
+      "description": "Represents pool metadata in Cardano."
     },
     "v1PoolRegistrationCert": {
       "type": "object",
@@ -532,7 +611,7 @@
           "description": "Pool cost."
         },
         "margin": {
-          "$ref": "#/definitions/v1UnitInterval",
+          "$ref": "#/definitions/v1RationalNumber",
           "description": "Pool margin."
         },
         "rewardAccount": {
@@ -579,23 +658,25 @@
       },
       "description": "Represents a pool retirement certificate in Cardano."
     },
-    "v1Purpose": {
-      "type": "string",
-      "enum": [
-        "PURPOSE_UNSPECIFIED",
-        "PURPOSE_SPEND",
-        "PURPOSE_MINT",
-        "PURPOSE_CERT",
-        "PURPOSE_REWARD"
-      ],
-      "default": "PURPOSE_UNSPECIFIED",
-      "description": "Purpose of the redeemer in a transaction."
+    "v1RationalNumber": {
+      "type": "object",
+      "properties": {
+        "numerator": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "denominator": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "description": "Represents a rational number as a fraction."
     },
     "v1Redeemer": {
       "type": "object",
       "properties": {
         "purpose": {
-          "$ref": "#/definitions/v1Purpose",
+          "$ref": "#/definitions/v1RedeemerPurpose",
           "description": "Purpose of the redeemer."
         },
         "datum": {
@@ -605,9 +686,38 @@
       },
       "description": "Redeemer information for a Plutus script."
     },
+    "v1RedeemerPurpose": {
+      "type": "string",
+      "enum": [
+        "REDEEMER_PURPOSE_UNSPECIFIED",
+        "REDEEMER_PURPOSE_SPEND",
+        "REDEEMER_PURPOSE_MINT",
+        "REDEEMER_PURPOSE_CERT",
+        "REDEEMER_PURPOSE_REWARD"
+      ],
+      "default": "REDEEMER_PURPOSE_UNSPECIFIED",
+      "description": "Purpose of the redeemer in a transaction."
+    },
     "v1Relay": {
       "type": "object",
-      "description": "Represents a relay in Cardano.\n\nDefine the fields of Relay based on your original Rust code"
+      "properties": {
+        "ipV4": {
+          "type": "string",
+          "format": "byte"
+        },
+        "ipV6": {
+          "type": "string",
+          "format": "byte"
+        },
+        "dnsName": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "description": "Represents a relay in Cardano."
     },
     "v1Script": {
       "type": "object",
@@ -774,6 +884,10 @@
         "asOutput": {
           "$ref": "#/definitions/v1TxOutput",
           "title": "Content of the input represented as output of the related transaction"
+        },
+        "redeemer": {
+          "$ref": "#/definitions/v1Redeemer",
+          "description": "Redeemer for the Plutus script."
         }
       },
       "description": "Represents a transaction input in the Cardano blockchain."
@@ -811,10 +925,6 @@
         "script": {
           "$ref": "#/definitions/v1Script",
           "description": "Script associated with the output."
-        },
-        "redeemer": {
-          "$ref": "#/definitions/v1Redeemer",
-          "description": "Redeemer for the Plutus script."
         }
       },
       "description": "Represents a transaction output in the Cardano blockchain."
@@ -834,10 +944,6 @@
         }
       },
       "description": "Represents the validity interval of a transaction."
-    },
-    "v1UnitInterval": {
-      "type": "object",
-      "description": "Represents a unit interval in Cardano.\n\nDefine the fields of UnitInterval based on your original Rust code"
     },
     "v1VKeyWitness": {
       "type": "object",
