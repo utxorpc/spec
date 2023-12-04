@@ -7,8 +7,8 @@ package syncv1connect
 import (
 	context "context"
 	errors "errors"
-	v1 "github.com/bufbuild/buf-tour/gen/utxorpc/sync/v1"
 	connect_go "github.com/bufbuild/connect-go"
+	v1 "github.com/utxorpc/spec/sync/gen/go/utxorpc/sync/v1"
 	http "net/http"
 	strings "strings"
 )
