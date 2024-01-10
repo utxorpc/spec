@@ -14,7 +14,7 @@ pub mod ledger_state_service_client {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
-            D: std::convert::TryInto<tonic::transport::Endpoint>,
+            D: TryInto<tonic::transport::Endpoint>,
             D::Error: Into<StdError>,
         {
             let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
@@ -70,11 +70,30 @@ pub mod ledger_state_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         ///
         pub async fn get_chain_tip(
             &mut self,
             request: impl tonic::IntoRequest<super::GetChainTipRequest>,
-        ) -> Result<tonic::Response<super::GetChainTipResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GetChainTipResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -88,13 +107,21 @@ pub mod ledger_state_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/utxorpc.build.v1.LedgerStateService/GetChainTip",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("utxorpc.build.v1.LedgerStateService", "GetChainTip"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         ///
         pub async fn get_chain_param(
             &mut self,
             request: impl tonic::IntoRequest<super::GetChainParamRequest>,
-        ) -> Result<tonic::Response<super::GetChainParamResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GetChainParamResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -108,13 +135,24 @@ pub mod ledger_state_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/utxorpc.build.v1.LedgerStateService/GetChainParam",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "utxorpc.build.v1.LedgerStateService",
+                        "GetChainParam",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         ///
         pub async fn get_utxo_by_address(
             &mut self,
             request: impl tonic::IntoRequest<super::GetUtxoByAddressRequest>,
-        ) -> Result<tonic::Response<super::GetUtxoByAddressResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GetUtxoByAddressResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -128,13 +166,24 @@ pub mod ledger_state_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/utxorpc.build.v1.LedgerStateService/GetUtxoByAddress",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "utxorpc.build.v1.LedgerStateService",
+                        "GetUtxoByAddress",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         ///
         pub async fn get_utxo_by_ref(
             &mut self,
             request: impl tonic::IntoRequest<super::GetUtxoByRefRequest>,
-        ) -> Result<tonic::Response<super::GetUtxoByRefResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GetUtxoByRefResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -148,13 +197,21 @@ pub mod ledger_state_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/utxorpc.build.v1.LedgerStateService/GetUtxoByRef",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "utxorpc.build.v1.LedgerStateService",
+                        "GetUtxoByRef",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         ///
         pub async fn hold_utxo(
             &mut self,
             request: impl tonic::IntoRequest<super::HoldUtxoRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<tonic::codec::Streaming<super::HoldUtxoResponse>>,
             tonic::Status,
         > {
@@ -171,7 +228,12 @@ pub mod ledger_state_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/utxorpc.build.v1.LedgerStateService/HoldUtxo",
             );
-            self.inner.server_streaming(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("utxorpc.build.v1.LedgerStateService", "HoldUtxo"),
+                );
+            self.inner.server_streaming(req, path, codec).await
         }
     }
 }
@@ -186,25 +248,37 @@ pub mod ledger_state_service_server {
         async fn get_chain_tip(
             &self,
             request: tonic::Request<super::GetChainTipRequest>,
-        ) -> Result<tonic::Response<super::GetChainTipResponse>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::GetChainTipResponse>,
+            tonic::Status,
+        >;
         ///
         async fn get_chain_param(
             &self,
             request: tonic::Request<super::GetChainParamRequest>,
-        ) -> Result<tonic::Response<super::GetChainParamResponse>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::GetChainParamResponse>,
+            tonic::Status,
+        >;
         ///
         async fn get_utxo_by_address(
             &self,
             request: tonic::Request<super::GetUtxoByAddressRequest>,
-        ) -> Result<tonic::Response<super::GetUtxoByAddressResponse>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::GetUtxoByAddressResponse>,
+            tonic::Status,
+        >;
         ///
         async fn get_utxo_by_ref(
             &self,
             request: tonic::Request<super::GetUtxoByRefRequest>,
-        ) -> Result<tonic::Response<super::GetUtxoByRefResponse>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::GetUtxoByRefResponse>,
+            tonic::Status,
+        >;
         /// Server streaming response type for the HoldUtxo method.
         type HoldUtxoStream: futures_core::Stream<
-                Item = Result<super::HoldUtxoResponse, tonic::Status>,
+                Item = std::result::Result<super::HoldUtxoResponse, tonic::Status>,
             >
             + Send
             + 'static;
@@ -212,7 +286,7 @@ pub mod ledger_state_service_server {
         async fn hold_utxo(
             &self,
             request: tonic::Request<super::HoldUtxoRequest>,
-        ) -> Result<tonic::Response<Self::HoldUtxoStream>, tonic::Status>;
+        ) -> std::result::Result<tonic::Response<Self::HoldUtxoStream>, tonic::Status>;
     }
     /** Service definition for querying the state of the ledger.
 */
@@ -221,6 +295,8 @@ pub mod ledger_state_service_server {
         inner: _Inner<T>,
         accept_compression_encodings: EnabledCompressionEncodings,
         send_compression_encodings: EnabledCompressionEncodings,
+        max_decoding_message_size: Option<usize>,
+        max_encoding_message_size: Option<usize>,
     }
     struct _Inner<T>(Arc<T>);
     impl<T: LedgerStateService> LedgerStateServiceServer<T> {
@@ -233,6 +309,8 @@ pub mod ledger_state_service_server {
                 inner,
                 accept_compression_encodings: Default::default(),
                 send_compression_encodings: Default::default(),
+                max_decoding_message_size: None,
+                max_encoding_message_size: None,
             }
         }
         pub fn with_interceptor<F>(
@@ -256,6 +334,22 @@ pub mod ledger_state_service_server {
             self.send_compression_encodings.enable(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.max_decoding_message_size = Some(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.max_encoding_message_size = Some(limit);
+            self
+        }
     }
     impl<T, B> tonic::codegen::Service<http::Request<B>> for LedgerStateServiceServer<T>
     where
@@ -269,7 +363,7 @@ pub mod ledger_state_service_server {
         fn poll_ready(
             &mut self,
             _cx: &mut Context<'_>,
-        ) -> Poll<Result<(), Self::Error>> {
+        ) -> Poll<std::result::Result<(), Self::Error>> {
             Poll::Ready(Ok(()))
         }
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
@@ -291,7 +385,7 @@ pub mod ledger_state_service_server {
                             &mut self,
                             request: tonic::Request<super::GetChainTipRequest>,
                         ) -> Self::Future {
-                            let inner = self.0.clone();
+                            let inner = Arc::clone(&self.0);
                             let fut = async move {
                                 (*inner).get_chain_tip(request).await
                             };
@@ -300,6 +394,8 @@ pub mod ledger_state_service_server {
                     }
                     let accept_compression_encodings = self.accept_compression_encodings;
                     let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
                     let inner = self.inner.clone();
                     let fut = async move {
                         let inner = inner.0;
@@ -309,6 +405,10 @@ pub mod ledger_state_service_server {
                             .apply_compression_config(
                                 accept_compression_encodings,
                                 send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
                             );
                         let res = grpc.unary(method, req).await;
                         Ok(res)
@@ -331,7 +431,7 @@ pub mod ledger_state_service_server {
                             &mut self,
                             request: tonic::Request<super::GetChainParamRequest>,
                         ) -> Self::Future {
-                            let inner = self.0.clone();
+                            let inner = Arc::clone(&self.0);
                             let fut = async move {
                                 (*inner).get_chain_param(request).await
                             };
@@ -340,6 +440,8 @@ pub mod ledger_state_service_server {
                     }
                     let accept_compression_encodings = self.accept_compression_encodings;
                     let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
                     let inner = self.inner.clone();
                     let fut = async move {
                         let inner = inner.0;
@@ -349,6 +451,10 @@ pub mod ledger_state_service_server {
                             .apply_compression_config(
                                 accept_compression_encodings,
                                 send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
                             );
                         let res = grpc.unary(method, req).await;
                         Ok(res)
@@ -371,7 +477,7 @@ pub mod ledger_state_service_server {
                             &mut self,
                             request: tonic::Request<super::GetUtxoByAddressRequest>,
                         ) -> Self::Future {
-                            let inner = self.0.clone();
+                            let inner = Arc::clone(&self.0);
                             let fut = async move {
                                 (*inner).get_utxo_by_address(request).await
                             };
@@ -380,6 +486,8 @@ pub mod ledger_state_service_server {
                     }
                     let accept_compression_encodings = self.accept_compression_encodings;
                     let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
                     let inner = self.inner.clone();
                     let fut = async move {
                         let inner = inner.0;
@@ -389,6 +497,10 @@ pub mod ledger_state_service_server {
                             .apply_compression_config(
                                 accept_compression_encodings,
                                 send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
                             );
                         let res = grpc.unary(method, req).await;
                         Ok(res)
@@ -411,7 +523,7 @@ pub mod ledger_state_service_server {
                             &mut self,
                             request: tonic::Request<super::GetUtxoByRefRequest>,
                         ) -> Self::Future {
-                            let inner = self.0.clone();
+                            let inner = Arc::clone(&self.0);
                             let fut = async move {
                                 (*inner).get_utxo_by_ref(request).await
                             };
@@ -420,6 +532,8 @@ pub mod ledger_state_service_server {
                     }
                     let accept_compression_encodings = self.accept_compression_encodings;
                     let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
                     let inner = self.inner.clone();
                     let fut = async move {
                         let inner = inner.0;
@@ -429,6 +543,10 @@ pub mod ledger_state_service_server {
                             .apply_compression_config(
                                 accept_compression_encodings,
                                 send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
                             );
                         let res = grpc.unary(method, req).await;
                         Ok(res)
@@ -452,13 +570,15 @@ pub mod ledger_state_service_server {
                             &mut self,
                             request: tonic::Request<super::HoldUtxoRequest>,
                         ) -> Self::Future {
-                            let inner = self.0.clone();
+                            let inner = Arc::clone(&self.0);
                             let fut = async move { (*inner).hold_utxo(request).await };
                             Box::pin(fut)
                         }
                     }
                     let accept_compression_encodings = self.accept_compression_encodings;
                     let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
                     let inner = self.inner.clone();
                     let fut = async move {
                         let inner = inner.0;
@@ -468,6 +588,10 @@ pub mod ledger_state_service_server {
                             .apply_compression_config(
                                 accept_compression_encodings,
                                 send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
                             );
                         let res = grpc.server_streaming(method, req).await;
                         Ok(res)
@@ -496,12 +620,14 @@ pub mod ledger_state_service_server {
                 inner,
                 accept_compression_encodings: self.accept_compression_encodings,
                 send_compression_encodings: self.send_compression_encodings,
+                max_decoding_message_size: self.max_decoding_message_size,
+                max_encoding_message_size: self.max_encoding_message_size,
             }
         }
     }
     impl<T: LedgerStateService> Clone for _Inner<T> {
         fn clone(&self) -> Self {
-            Self(self.0.clone())
+            Self(Arc::clone(&self.0))
         }
     }
     impl<T: std::fmt::Debug> std::fmt::Debug for _Inner<T> {
