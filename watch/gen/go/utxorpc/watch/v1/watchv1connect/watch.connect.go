@@ -33,13 +33,18 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// TxWatchServiceWatchTxProcedure is the fully-qualified name of the TxWatchService's WatchTx RPC.
-	TxWatchServiceWatchTxProcedure = "/utxorpc.watch.v1.TxWatchService/WatchTx"
+	// TxWatchServiceWatchChainTxProcedure is the fully-qualified name of the TxWatchService's
+	// WatchChainTx RPC.
+	TxWatchServiceWatchChainTxProcedure = "/utxorpc.watch.v1.TxWatchService/WatchChainTx"
+	// TxWatchServiceWatchMempoolTxProcedure is the fully-qualified name of the TxWatchService's
+	// WatchMempoolTx RPC.
+	TxWatchServiceWatchMempoolTxProcedure = "/utxorpc.watch.v1.TxWatchService/WatchMempoolTx"
 )
 
 // TxWatchServiceClient is a client for the utxorpc.watch.v1.TxWatchService service.
 type TxWatchServiceClient interface {
-	WatchTx(context.Context, *connect_go.Request[v1.WatchTxRequest]) (*connect_go.ServerStreamForClient[v1.WatchTxResponse], error)
+	WatchChainTx(context.Context, *connect_go.Request[v1.WatchChainTxRequest]) (*connect_go.ServerStreamForClient[v1.WatchChainTxResponse], error)
+	WatchMempoolTx(context.Context, *connect_go.Request[v1.WatchMempoolTxRequest]) (*connect_go.ServerStreamForClient[v1.WatchMempoolTxResponse], error)
 }
 
 // NewTxWatchServiceClient constructs a client for the utxorpc.watch.v1.TxWatchService service. By
@@ -52,9 +57,14 @@ type TxWatchServiceClient interface {
 func NewTxWatchServiceClient(httpClient connect_go.HTTPClient, baseURL string, opts ...connect_go.ClientOption) TxWatchServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &txWatchServiceClient{
-		watchTx: connect_go.NewClient[v1.WatchTxRequest, v1.WatchTxResponse](
+		watchChainTx: connect_go.NewClient[v1.WatchChainTxRequest, v1.WatchChainTxResponse](
 			httpClient,
-			baseURL+TxWatchServiceWatchTxProcedure,
+			baseURL+TxWatchServiceWatchChainTxProcedure,
+			opts...,
+		),
+		watchMempoolTx: connect_go.NewClient[v1.WatchMempoolTxRequest, v1.WatchMempoolTxResponse](
+			httpClient,
+			baseURL+TxWatchServiceWatchMempoolTxProcedure,
 			opts...,
 		),
 	}
@@ -62,17 +72,24 @@ func NewTxWatchServiceClient(httpClient connect_go.HTTPClient, baseURL string, o
 
 // txWatchServiceClient implements TxWatchServiceClient.
 type txWatchServiceClient struct {
-	watchTx *connect_go.Client[v1.WatchTxRequest, v1.WatchTxResponse]
+	watchChainTx   *connect_go.Client[v1.WatchChainTxRequest, v1.WatchChainTxResponse]
+	watchMempoolTx *connect_go.Client[v1.WatchMempoolTxRequest, v1.WatchMempoolTxResponse]
 }
 
-// WatchTx calls utxorpc.watch.v1.TxWatchService.WatchTx.
-func (c *txWatchServiceClient) WatchTx(ctx context.Context, req *connect_go.Request[v1.WatchTxRequest]) (*connect_go.ServerStreamForClient[v1.WatchTxResponse], error) {
-	return c.watchTx.CallServerStream(ctx, req)
+// WatchChainTx calls utxorpc.watch.v1.TxWatchService.WatchChainTx.
+func (c *txWatchServiceClient) WatchChainTx(ctx context.Context, req *connect_go.Request[v1.WatchChainTxRequest]) (*connect_go.ServerStreamForClient[v1.WatchChainTxResponse], error) {
+	return c.watchChainTx.CallServerStream(ctx, req)
+}
+
+// WatchMempoolTx calls utxorpc.watch.v1.TxWatchService.WatchMempoolTx.
+func (c *txWatchServiceClient) WatchMempoolTx(ctx context.Context, req *connect_go.Request[v1.WatchMempoolTxRequest]) (*connect_go.ServerStreamForClient[v1.WatchMempoolTxResponse], error) {
+	return c.watchMempoolTx.CallServerStream(ctx, req)
 }
 
 // TxWatchServiceHandler is an implementation of the utxorpc.watch.v1.TxWatchService service.
 type TxWatchServiceHandler interface {
-	WatchTx(context.Context, *connect_go.Request[v1.WatchTxRequest], *connect_go.ServerStream[v1.WatchTxResponse]) error
+	WatchChainTx(context.Context, *connect_go.Request[v1.WatchChainTxRequest], *connect_go.ServerStream[v1.WatchChainTxResponse]) error
+	WatchMempoolTx(context.Context, *connect_go.Request[v1.WatchMempoolTxRequest], *connect_go.ServerStream[v1.WatchMempoolTxResponse]) error
 }
 
 // NewTxWatchServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -81,15 +98,22 @@ type TxWatchServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewTxWatchServiceHandler(svc TxWatchServiceHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
-	txWatchServiceWatchTxHandler := connect_go.NewServerStreamHandler(
-		TxWatchServiceWatchTxProcedure,
-		svc.WatchTx,
+	txWatchServiceWatchChainTxHandler := connect_go.NewServerStreamHandler(
+		TxWatchServiceWatchChainTxProcedure,
+		svc.WatchChainTx,
+		opts...,
+	)
+	txWatchServiceWatchMempoolTxHandler := connect_go.NewServerStreamHandler(
+		TxWatchServiceWatchMempoolTxProcedure,
+		svc.WatchMempoolTx,
 		opts...,
 	)
 	return "/utxorpc.watch.v1.TxWatchService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
-		case TxWatchServiceWatchTxProcedure:
-			txWatchServiceWatchTxHandler.ServeHTTP(w, r)
+		case TxWatchServiceWatchChainTxProcedure:
+			txWatchServiceWatchChainTxHandler.ServeHTTP(w, r)
+		case TxWatchServiceWatchMempoolTxProcedure:
+			txWatchServiceWatchMempoolTxHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -99,6 +123,10 @@ func NewTxWatchServiceHandler(svc TxWatchServiceHandler, opts ...connect_go.Hand
 // UnimplementedTxWatchServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedTxWatchServiceHandler struct{}
 
-func (UnimplementedTxWatchServiceHandler) WatchTx(context.Context, *connect_go.Request[v1.WatchTxRequest], *connect_go.ServerStream[v1.WatchTxResponse]) error {
-	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.watch.v1.TxWatchService.WatchTx is not implemented"))
+func (UnimplementedTxWatchServiceHandler) WatchChainTx(context.Context, *connect_go.Request[v1.WatchChainTxRequest], *connect_go.ServerStream[v1.WatchChainTxResponse]) error {
+	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.watch.v1.TxWatchService.WatchChainTx is not implemented"))
+}
+
+func (UnimplementedTxWatchServiceHandler) WatchMempoolTx(context.Context, *connect_go.Request[v1.WatchMempoolTxRequest], *connect_go.ServerStream[v1.WatchMempoolTxResponse]) error {
+	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.watch.v1.TxWatchService.WatchMempoolTx is not implemented"))
 }

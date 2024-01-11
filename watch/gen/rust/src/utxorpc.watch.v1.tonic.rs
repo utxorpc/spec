@@ -71,11 +71,11 @@ pub mod tx_watch_service_client {
             self
         }
         ///
-        pub async fn watch_tx(
+        pub async fn watch_chain_tx(
             &mut self,
-            request: impl tonic::IntoRequest<super::WatchTxRequest>,
+            request: impl tonic::IntoRequest<super::WatchChainTxRequest>,
         ) -> Result<
-            tonic::Response<tonic::codec::Streaming<super::WatchTxResponse>>,
+            tonic::Response<tonic::codec::Streaming<super::WatchChainTxResponse>>,
             tonic::Status,
         > {
             self.inner
@@ -89,7 +89,30 @@ pub mod tx_watch_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.watch.v1.TxWatchService/WatchTx",
+                "/utxorpc.watch.v1.TxWatchService/WatchChainTx",
+            );
+            self.inner.server_streaming(request.into_request(), path, codec).await
+        }
+        ///
+        pub async fn watch_mempool_tx(
+            &mut self,
+            request: impl tonic::IntoRequest<super::WatchMempoolTxRequest>,
+        ) -> Result<
+            tonic::Response<tonic::codec::Streaming<super::WatchMempoolTxResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/utxorpc.watch.v1.TxWatchService/WatchMempoolTx",
             );
             self.inner.server_streaming(request.into_request(), path, codec).await
         }
@@ -102,17 +125,28 @@ pub mod tx_watch_service_server {
     /// Generated trait containing gRPC methods that should be implemented for use with TxWatchServiceServer.
     #[async_trait]
     pub trait TxWatchService: Send + Sync + 'static {
-        /// Server streaming response type for the WatchTx method.
-        type WatchTxStream: futures_core::Stream<
-                Item = Result<super::WatchTxResponse, tonic::Status>,
+        /// Server streaming response type for the WatchChainTx method.
+        type WatchChainTxStream: futures_core::Stream<
+                Item = Result<super::WatchChainTxResponse, tonic::Status>,
             >
             + Send
             + 'static;
         ///
-        async fn watch_tx(
+        async fn watch_chain_tx(
             &self,
-            request: tonic::Request<super::WatchTxRequest>,
-        ) -> Result<tonic::Response<Self::WatchTxStream>, tonic::Status>;
+            request: tonic::Request<super::WatchChainTxRequest>,
+        ) -> Result<tonic::Response<Self::WatchChainTxStream>, tonic::Status>;
+        /// Server streaming response type for the WatchMempoolTx method.
+        type WatchMempoolTxStream: futures_core::Stream<
+                Item = Result<super::WatchMempoolTxResponse, tonic::Status>,
+            >
+            + Send
+            + 'static;
+        ///
+        async fn watch_mempool_tx(
+            &self,
+            request: tonic::Request<super::WatchMempoolTxRequest>,
+        ) -> Result<tonic::Response<Self::WatchMempoolTxStream>, tonic::Status>;
     }
     /** Service definition for watching transactions based on predicates.
 */
@@ -175,25 +209,27 @@ pub mod tx_watch_service_server {
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             let inner = self.inner.clone();
             match req.uri().path() {
-                "/utxorpc.watch.v1.TxWatchService/WatchTx" => {
+                "/utxorpc.watch.v1.TxWatchService/WatchChainTx" => {
                     #[allow(non_camel_case_types)]
-                    struct WatchTxSvc<T: TxWatchService>(pub Arc<T>);
+                    struct WatchChainTxSvc<T: TxWatchService>(pub Arc<T>);
                     impl<
                         T: TxWatchService,
-                    > tonic::server::ServerStreamingService<super::WatchTxRequest>
-                    for WatchTxSvc<T> {
-                        type Response = super::WatchTxResponse;
-                        type ResponseStream = T::WatchTxStream;
+                    > tonic::server::ServerStreamingService<super::WatchChainTxRequest>
+                    for WatchChainTxSvc<T> {
+                        type Response = super::WatchChainTxResponse;
+                        type ResponseStream = T::WatchChainTxStream;
                         type Future = BoxFuture<
                             tonic::Response<Self::ResponseStream>,
                             tonic::Status,
                         >;
                         fn call(
                             &mut self,
-                            request: tonic::Request<super::WatchTxRequest>,
+                            request: tonic::Request<super::WatchChainTxRequest>,
                         ) -> Self::Future {
                             let inner = self.0.clone();
-                            let fut = async move { (*inner).watch_tx(request).await };
+                            let fut = async move {
+                                (*inner).watch_chain_tx(request).await
+                            };
                             Box::pin(fut)
                         }
                     }
@@ -202,7 +238,48 @@ pub mod tx_watch_service_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let inner = inner.0;
-                        let method = WatchTxSvc(inner);
+                        let method = WatchChainTxSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/utxorpc.watch.v1.TxWatchService/WatchMempoolTx" => {
+                    #[allow(non_camel_case_types)]
+                    struct WatchMempoolTxSvc<T: TxWatchService>(pub Arc<T>);
+                    impl<
+                        T: TxWatchService,
+                    > tonic::server::ServerStreamingService<super::WatchMempoolTxRequest>
+                    for WatchMempoolTxSvc<T> {
+                        type Response = super::WatchMempoolTxResponse;
+                        type ResponseStream = T::WatchMempoolTxStream;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::ResponseStream>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::WatchMempoolTxRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move {
+                                (*inner).watch_mempool_tx(request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = WatchMempoolTxSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(

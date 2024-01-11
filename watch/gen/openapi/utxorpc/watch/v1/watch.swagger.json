@@ -944,7 +944,7 @@
       },
       "description": "Represents a VKey witness used to sign a transaction."
     },
-    "v1WatchTxResponse": {
+    "v1WatchChainTxResponse": {
       "type": "object",
       "properties": {
         "apply": {
@@ -956,7 +956,17 @@
           "description": "Undo this transaction."
         }
       },
-      "description": "Response containing the matching transactions."
+      "description": "Response containing the matching chain transactions."
+    },
+    "v1WatchMempoolTxResponse": {
+      "type": "object",
+      "properties": {
+        "cardano": {
+          "$ref": "#/definitions/v1Tx",
+          "description": "A Cardano transaction."
+        }
+      },
+      "description": "Response from mempool containing the matching transactions."
     },
     "v1Withdrawal": {
       "type": "object",
