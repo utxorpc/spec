@@ -312,3 +312,40 @@ message MirCert {
   repeated MirTarget to = 2;
   uint64 other_pot = 3;
 }
+
+// PATTERN MATCHING
+// ================
+
+// Pattern of an address that can be used to evaluate matching predicates.
+message AddressPattern {
+  bytes byron_address = 1;
+  bytes payment_part = 2;
+  bytes delegation_part = 3;
+  bool payment_is_script = 4;
+  bool delegation_is_script = 5;
+}
+
+// Pattern of a native asset that can be used to evaluate matching predicates.
+message AssetPattern {
+  // TBD
+}
+
+// Pattern of a tx output that can be used to evaluate matching predicates.
+message OutputPattern {
+  // TBD
+}
+
+// Pattern of an datum that can be used to evaluate matching predicates.
+message DatumPattern {
+  // TBD
+}
+
+// Pattern of a Tx that can be used to evaluate matching predicates.
+message TxPattern {
+  oneof tx_pattern {
+    OutputPattern any_output = 1; // Match any output that exhibits this pattern.
+    AddressPattern any_address = 2; // Match any address (inputs, outputs, collateral, etc) that exhibits this pattern.
+    AssetPattern any_asset = 3; // Match any asset that exhibits this pattern.
+    DatumPattern any_datum = 4; // Match any datum that exhibits this pattern.
+  }
+}

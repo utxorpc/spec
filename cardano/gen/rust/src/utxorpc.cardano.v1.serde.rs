@@ -1,4 +1,174 @@
 // @generated
+impl serde::Serialize for AddressPattern {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.byron_address.is_empty() {
+            len += 1;
+        }
+        if !self.payment_part.is_empty() {
+            len += 1;
+        }
+        if !self.delegation_part.is_empty() {
+            len += 1;
+        }
+        if self.payment_is_script {
+            len += 1;
+        }
+        if self.delegation_is_script {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.AddressPattern", len)?;
+        if !self.byron_address.is_empty() {
+            struct_ser.serialize_field("byronAddress", pbjson::private::base64::encode(&self.byron_address).as_str())?;
+        }
+        if !self.payment_part.is_empty() {
+            struct_ser.serialize_field("paymentPart", pbjson::private::base64::encode(&self.payment_part).as_str())?;
+        }
+        if !self.delegation_part.is_empty() {
+            struct_ser.serialize_field("delegationPart", pbjson::private::base64::encode(&self.delegation_part).as_str())?;
+        }
+        if self.payment_is_script {
+            struct_ser.serialize_field("paymentIsScript", &self.payment_is_script)?;
+        }
+        if self.delegation_is_script {
+            struct_ser.serialize_field("delegationIsScript", &self.delegation_is_script)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AddressPattern {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "byron_address",
+            "byronAddress",
+            "payment_part",
+            "paymentPart",
+            "delegation_part",
+            "delegationPart",
+            "payment_is_script",
+            "paymentIsScript",
+            "delegation_is_script",
+            "delegationIsScript",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ByronAddress,
+            PaymentPart,
+            DelegationPart,
+            PaymentIsScript,
+            DelegationIsScript,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "byronAddress" | "byron_address" => Ok(GeneratedField::ByronAddress),
+                            "paymentPart" | "payment_part" => Ok(GeneratedField::PaymentPart),
+                            "delegationPart" | "delegation_part" => Ok(GeneratedField::DelegationPart),
+                            "paymentIsScript" | "payment_is_script" => Ok(GeneratedField::PaymentIsScript),
+                            "delegationIsScript" | "delegation_is_script" => Ok(GeneratedField::DelegationIsScript),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AddressPattern;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.cardano.v1.AddressPattern")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<AddressPattern, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut byron_address__ = None;
+                let mut payment_part__ = None;
+                let mut delegation_part__ = None;
+                let mut payment_is_script__ = None;
+                let mut delegation_is_script__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::ByronAddress => {
+                            if byron_address__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("byronAddress"));
+                            }
+                            byron_address__ = 
+                                Some(map.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::PaymentPart => {
+                            if payment_part__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("paymentPart"));
+                            }
+                            payment_part__ = 
+                                Some(map.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::DelegationPart => {
+                            if delegation_part__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("delegationPart"));
+                            }
+                            delegation_part__ = 
+                                Some(map.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::PaymentIsScript => {
+                            if payment_is_script__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("paymentIsScript"));
+                            }
+                            payment_is_script__ = Some(map.next_value()?);
+                        }
+                        GeneratedField::DelegationIsScript => {
+                            if delegation_is_script__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("delegationIsScript"));
+                            }
+                            delegation_is_script__ = Some(map.next_value()?);
+                        }
+                    }
+                }
+                Ok(AddressPattern {
+                    byron_address: byron_address__.unwrap_or_default(),
+                    payment_part: payment_part__.unwrap_or_default(),
+                    delegation_part: delegation_part__.unwrap_or_default(),
+                    payment_is_script: payment_is_script__.unwrap_or_default(),
+                    delegation_is_script: delegation_is_script__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.cardano.v1.AddressPattern", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for Asset {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -130,6 +300,77 @@ impl<'de> serde::Deserialize<'de> for Asset {
             }
         }
         deserializer.deserialize_struct("utxorpc.cardano.v1.Asset", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for AssetPattern {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let len = 0;
+        let struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.AssetPattern", len)?;
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AssetPattern {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                            Err(serde::de::Error::unknown_field(value, FIELDS))
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AssetPattern;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.cardano.v1.AssetPattern")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<AssetPattern, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                while map.next_key::<GeneratedField>()?.is_some() {
+                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
+                }
+                Ok(AssetPattern {
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.cardano.v1.AssetPattern", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for AuxData {
@@ -1110,6 +1351,77 @@ impl<'de> serde::Deserialize<'de> for Constr {
             }
         }
         deserializer.deserialize_struct("utxorpc.cardano.v1.Constr", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for DatumPattern {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let len = 0;
+        let struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.DatumPattern", len)?;
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for DatumPattern {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                            Err(serde::de::Error::unknown_field(value, FIELDS))
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = DatumPattern;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.cardano.v1.DatumPattern")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<DatumPattern, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                while map.next_key::<GeneratedField>()?.is_some() {
+                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
+                }
+                Ok(DatumPattern {
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.cardano.v1.DatumPattern", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for GenesisKeyDelegationCert {
@@ -2473,6 +2785,77 @@ impl<'de> serde::Deserialize<'de> for NativeScriptList {
             }
         }
         deserializer.deserialize_struct("utxorpc.cardano.v1.NativeScriptList", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for OutputPattern {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let len = 0;
+        let struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.OutputPattern", len)?;
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for OutputPattern {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                            Err(serde::de::Error::unknown_field(value, FIELDS))
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = OutputPattern;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.cardano.v1.OutputPattern")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<OutputPattern, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                while map.next_key::<GeneratedField>()?.is_some() {
+                    let _ = map.next_value::<serde::de::IgnoredAny>()?;
+                }
+                Ok(OutputPattern {
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.cardano.v1.OutputPattern", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for PlutusData {
@@ -4900,6 +5283,145 @@ impl<'de> serde::Deserialize<'de> for TxOutput {
             }
         }
         deserializer.deserialize_struct("utxorpc.cardano.v1.TxOutput", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TxPattern {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.tx_pattern.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.TxPattern", len)?;
+        if let Some(v) = self.tx_pattern.as_ref() {
+            match v {
+                tx_pattern::TxPattern::AnyOutput(v) => {
+                    struct_ser.serialize_field("anyOutput", v)?;
+                }
+                tx_pattern::TxPattern::AnyAddress(v) => {
+                    struct_ser.serialize_field("anyAddress", v)?;
+                }
+                tx_pattern::TxPattern::AnyAsset(v) => {
+                    struct_ser.serialize_field("anyAsset", v)?;
+                }
+                tx_pattern::TxPattern::AnyDatum(v) => {
+                    struct_ser.serialize_field("anyDatum", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TxPattern {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "any_output",
+            "anyOutput",
+            "any_address",
+            "anyAddress",
+            "any_asset",
+            "anyAsset",
+            "any_datum",
+            "anyDatum",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            AnyOutput,
+            AnyAddress,
+            AnyAsset,
+            AnyDatum,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "anyOutput" | "any_output" => Ok(GeneratedField::AnyOutput),
+                            "anyAddress" | "any_address" => Ok(GeneratedField::AnyAddress),
+                            "anyAsset" | "any_asset" => Ok(GeneratedField::AnyAsset),
+                            "anyDatum" | "any_datum" => Ok(GeneratedField::AnyDatum),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TxPattern;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.cardano.v1.TxPattern")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<TxPattern, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut tx_pattern__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::AnyOutput => {
+                            if tx_pattern__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("anyOutput"));
+                            }
+                            tx_pattern__ = map.next_value::<::std::option::Option<_>>()?.map(tx_pattern::TxPattern::AnyOutput)
+;
+                        }
+                        GeneratedField::AnyAddress => {
+                            if tx_pattern__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("anyAddress"));
+                            }
+                            tx_pattern__ = map.next_value::<::std::option::Option<_>>()?.map(tx_pattern::TxPattern::AnyAddress)
+;
+                        }
+                        GeneratedField::AnyAsset => {
+                            if tx_pattern__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("anyAsset"));
+                            }
+                            tx_pattern__ = map.next_value::<::std::option::Option<_>>()?.map(tx_pattern::TxPattern::AnyAsset)
+;
+                        }
+                        GeneratedField::AnyDatum => {
+                            if tx_pattern__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("anyDatum"));
+                            }
+                            tx_pattern__ = map.next_value::<::std::option::Option<_>>()?.map(tx_pattern::TxPattern::AnyDatum)
+;
+                        }
+                    }
+                }
+                Ok(TxPattern {
+                    tx_pattern: tx_pattern__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.cardano.v1.TxPattern", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for TxValidity {

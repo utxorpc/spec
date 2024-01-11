@@ -4,12 +4,9 @@
 ## Table of Contents
 
 - [utxorpc/watch/v1/watch.proto](#utxorpc_watch_v1_watch-proto)
-    - [AddressPredicate](#utxorpc-watch-v1-AddressPredicate)
     - [AnyChainTx](#utxorpc-watch-v1-AnyChainTx)
-    - [AnyPredicate](#utxorpc-watch-v1-AnyPredicate)
-    - [AssetPredicate](#utxorpc-watch-v1-AssetPredicate)
-    - [DatumPredicate](#utxorpc-watch-v1-DatumPredicate)
-    - [UtxoPredicate](#utxorpc-watch-v1-UtxoPredicate)
+    - [AnyChainTxPattern](#utxorpc-watch-v1-AnyChainTxPattern)
+    - [TxPredicate](#utxorpc-watch-v1-TxPredicate)
     - [WatchTxRequest](#utxorpc-watch-v1-WatchTxRequest)
     - [WatchTxResponse](#utxorpc-watch-v1-WatchTxResponse)
   
@@ -23,23 +20,6 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## utxorpc/watch/v1/watch.proto
-
-
-
-<a name="utxorpc-watch-v1-AddressPredicate"></a>
-
-### AddressPredicate
-Predicate to match transactions based on addresses.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| match_source | [bytes](#bytes) |  | Match transactions with the specified source address. |
-| match_target | [bytes](#bytes) |  | Match transactions with the specified target address. |
-| match_any | [bytes](#bytes) |  | Match transactions with the specified address as either source or target. |
-
-
-
 
 
 
@@ -58,65 +38,33 @@ Represents a transaction from any supported blockchain.
 
 
 
-<a name="utxorpc-watch-v1-AnyPredicate"></a>
+<a name="utxorpc-watch-v1-AnyChainTxPattern"></a>
 
-### AnyPredicate
-Predicate to match transactions based on any of the specified types.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| address | [AddressPredicate](#utxorpc-watch-v1-AddressPredicate) |  | Address-based predicate. |
-| asset | [AssetPredicate](#utxorpc-watch-v1-AssetPredicate) |  | Asset-based predicate. |
-| utxo | [UtxoPredicate](#utxorpc-watch-v1-UtxoPredicate) |  | UTXO-based predicate. |
-| datum | [DatumPredicate](#utxorpc-watch-v1-DatumPredicate) |  | Datum-based predicate. |
-
-
-
-
-
-
-<a name="utxorpc-watch-v1-AssetPredicate"></a>
-
-### AssetPredicate
-Predicate to match transactions based on assets.
+### AnyChainTxPattern
+Represents a tx pattern from any supported blockchain.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| match_policy | [bytes](#bytes) |  | Match transactions with the specified asset policy. |
-| match_name | [bytes](#bytes) |  | Match transactions with the specified asset name. |
+| cardano | [utxorpc.cardano.v1.TxPattern](#utxorpc-cardano-v1-TxPattern) |  | A Cardano tx pattern. |
 
 
 
 
 
 
-<a name="utxorpc-watch-v1-DatumPredicate"></a>
+<a name="utxorpc-watch-v1-TxPredicate"></a>
 
-### DatumPredicate
-Predicate to match transactions based on datums.
+### TxPredicate
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| match_hash | [bytes](#bytes) |  | Match transactions with the specified datum hash. |
-
-
-
-
-
-
-<a name="utxorpc-watch-v1-UtxoPredicate"></a>
-
-### UtxoPredicate
-Predicate to match transactions based on UTXOs.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| match_hash | [bytes](#bytes) |  | Match transactions with the specified UTXO hash. |
-| match_index | [uint32](#uint32) |  | Match transactions with the specified UTXO index. |
+| match | [AnyChainTxPattern](#utxorpc-watch-v1-AnyChainTxPattern) |  |  |
+| not | [TxPredicate](#utxorpc-watch-v1-TxPredicate) | repeated |  |
+| all_of | [TxPredicate](#utxorpc-watch-v1-TxPredicate) | repeated |  |
+| any_of | [TxPredicate](#utxorpc-watch-v1-TxPredicate) | repeated |  |
 
 
 
@@ -131,7 +79,7 @@ Request to watch transactions based on a set of predicates.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| predicate | [AnyPredicate](#utxorpc-watch-v1-AnyPredicate) | repeated | List of predicates to filter transactions. |
+| predicate | [TxPredicate](#utxorpc-watch-v1-TxPredicate) | repeated | List of predicates to filter transactions. |
 | field_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  | Field mask to selectively return fields. |
 
 
