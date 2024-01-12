@@ -5,7 +5,7 @@
 
 import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage } from "@bufbuild/protobuf";
 import { FieldMask, Message, proto3, protoInt64 } from "@bufbuild/protobuf";
-import { Block } from "@utxorpc-web/cardano-spec/utxorpc/cardano/v1/cardano_pb.js";
+import { Block } from "@utxorpc-web/cardano-spec";
 
 /**
  * Represents a reference to a specific block
