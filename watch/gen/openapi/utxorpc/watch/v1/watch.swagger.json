@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "TxWatchService"
+      "name": "WatchService"
     }
   ],
   "consumes": [
@@ -887,30 +887,35 @@
       "type": "object",
       "properties": {
         "match": {
-          "$ref": "#/definitions/v1AnyChainTxPattern"
+          "$ref": "#/definitions/v1AnyChainTxPattern",
+          "description": "Predicate is true if tx exhibits pattern."
         },
         "not": {
           "type": "array",
           "items": {
             "type": "object",
             "$ref": "#/definitions/v1TxPredicate"
-          }
+          },
+          "description": "Predicate is true if tx doesn't exhibit pattern."
         },
         "allOf": {
           "type": "array",
           "items": {
             "type": "object",
             "$ref": "#/definitions/v1TxPredicate"
-          }
+          },
+          "description": "Predicate is true if tx exhibits all of the patterns."
         },
         "anyOf": {
           "type": "array",
           "items": {
             "type": "object",
             "$ref": "#/definitions/v1TxPredicate"
-          }
+          },
+          "description": "Predicate is true if tx exhibits any of the patterns."
         }
-      }
+      },
+      "title": "Represents a simple tx predicate that can composed to create more complext ones"
     },
     "v1TxValidity": {
       "type": "object",
@@ -944,7 +949,7 @@
       },
       "description": "Represents a VKey witness used to sign a transaction."
     },
-    "v1WatchChainTxResponse": {
+    "v1WatchTxResponse": {
       "type": "object",
       "properties": {
         "apply": {
@@ -957,16 +962,6 @@
         }
       },
       "description": "Response containing the matching chain transactions."
-    },
-    "v1WatchMempoolTxResponse": {
-      "type": "object",
-      "properties": {
-        "cardano": {
-          "$ref": "#/definitions/v1Tx",
-          "description": "A Cardano transaction."
-        }
-      },
-      "description": "Response from mempool containing the matching transactions."
     },
     "v1Withdrawal": {
       "type": "object",

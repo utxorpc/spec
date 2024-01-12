@@ -5,12 +5,17 @@
 
 - [utxorpc/submit/v1/submit.proto](#utxorpc_submit_v1_submit-proto)
     - [AnyChainTx](#utxorpc-submit-v1-AnyChainTx)
-    - [CheckRequest](#utxorpc-submit-v1-CheckRequest)
-    - [CheckResponse](#utxorpc-submit-v1-CheckResponse)
-    - [SubmitRequest](#utxorpc-submit-v1-SubmitRequest)
-    - [SubmitResponse](#utxorpc-submit-v1-SubmitResponse)
-    - [WaitForRequest](#utxorpc-submit-v1-WaitForRequest)
-    - [WaitForResponse](#utxorpc-submit-v1-WaitForResponse)
+    - [AnyChainTxPattern](#utxorpc-submit-v1-AnyChainTxPattern)
+    - [ReadMempoolRequest](#utxorpc-submit-v1-ReadMempoolRequest)
+    - [ReadMempoolResponse](#utxorpc-submit-v1-ReadMempoolResponse)
+    - [SubmitTxRequest](#utxorpc-submit-v1-SubmitTxRequest)
+    - [SubmitTxResponse](#utxorpc-submit-v1-SubmitTxResponse)
+    - [TxInMempool](#utxorpc-submit-v1-TxInMempool)
+    - [TxPredicate](#utxorpc-submit-v1-TxPredicate)
+    - [WaitForTxRequest](#utxorpc-submit-v1-WaitForTxRequest)
+    - [WaitForTxResponse](#utxorpc-submit-v1-WaitForTxResponse)
+    - [WatchMempoolRequest](#utxorpc-submit-v1-WatchMempoolRequest)
+    - [WatchMempoolResponse](#utxorpc-submit-v1-WatchMempoolResponse)
   
     - [Stage](#utxorpc-submit-v1-Stage)
   
@@ -42,24 +47,39 @@ Represents a transaction from any supported blockchain.
 
 
 
-<a name="utxorpc-submit-v1-CheckRequest"></a>
+<a name="utxorpc-submit-v1-AnyChainTxPattern"></a>
 
-### CheckRequest
+### AnyChainTxPattern
+Represents a tx pattern from any supported blockchain.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| cardano | [utxorpc.cardano.v1.TxPattern](#utxorpc-cardano-v1-TxPattern) |  | A Cardano tx pattern. |
+
+
+
+
+
+
+<a name="utxorpc-submit-v1-ReadMempoolRequest"></a>
+
+### ReadMempoolRequest
 Request to check the status of submitted transactions.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ref | [bytes](#bytes) | repeated | List of transaction references to check. |
+| txs | [TxInMempool](#utxorpc-submit-v1-TxInMempool) | repeated | List of transaction currently on the mempool. |
 
 
 
 
 
 
-<a name="utxorpc-submit-v1-CheckResponse"></a>
+<a name="utxorpc-submit-v1-ReadMempoolResponse"></a>
 
-### CheckResponse
+### ReadMempoolResponse
 Response containing the stage of the submitted transactions.
 
 
@@ -72,9 +92,9 @@ Response containing the stage of the submitted transactions.
 
 
 
-<a name="utxorpc-submit-v1-SubmitRequest"></a>
+<a name="utxorpc-submit-v1-SubmitTxRequest"></a>
 
-### SubmitRequest
+### SubmitTxRequest
 Request to submit transactions to the blockchain.
 
 
@@ -87,9 +107,9 @@ Request to submit transactions to the blockchain.
 
 
 
-<a name="utxorpc-submit-v1-SubmitResponse"></a>
+<a name="utxorpc-submit-v1-SubmitTxResponse"></a>
 
-### SubmitResponse
+### SubmitTxResponse
 Response containing references to the submitted transactions.
 
 
@@ -102,9 +122,43 @@ Response containing references to the submitted transactions.
 
 
 
-<a name="utxorpc-submit-v1-WaitForRequest"></a>
+<a name="utxorpc-submit-v1-TxInMempool"></a>
 
-### WaitForRequest
+### TxInMempool
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| tx | [AnyChainTx](#utxorpc-submit-v1-AnyChainTx) |  | The contents of the tx |
+| stage | [Stage](#utxorpc-submit-v1-Stage) |  | The current stage of the tx |
+
+
+
+
+
+
+<a name="utxorpc-submit-v1-TxPredicate"></a>
+
+### TxPredicate
+Represents a simple tx predicate that can composed to create more complext ones
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| match | [AnyChainTxPattern](#utxorpc-submit-v1-AnyChainTxPattern) |  | Predicate is true if tx exhibits pattern. |
+| not | [TxPredicate](#utxorpc-submit-v1-TxPredicate) | repeated | Predicate is true if tx doesn&#39;t exhibit pattern. |
+| all_of | [TxPredicate](#utxorpc-submit-v1-TxPredicate) | repeated | Predicate is true if tx exhibits all of the patterns. |
+| any_of | [TxPredicate](#utxorpc-submit-v1-TxPredicate) | repeated | Predicate is true if tx exhibits any of the patterns. |
+
+
+
+
+
+
+<a name="utxorpc-submit-v1-WaitForTxRequest"></a>
+
+### WaitForTxRequest
 Request to wait for transactions to reach a certain stage.
 
 
@@ -117,9 +171,9 @@ Request to wait for transactions to reach a certain stage.
 
 
 
-<a name="utxorpc-submit-v1-WaitForResponse"></a>
+<a name="utxorpc-submit-v1-WaitForTxResponse"></a>
 
-### WaitForResponse
+### WaitForTxResponse
 Response containing the transaction reference and stage once it has been reached.
 
 
@@ -127,6 +181,37 @@ Response containing the transaction reference and stage once it has been reached
 | ----- | ---- | ----- | ----------- |
 | ref | [bytes](#bytes) |  | Transaction reference. |
 | stage | [Stage](#utxorpc-submit-v1-Stage) |  | Stage reached by the transaction. |
+
+
+
+
+
+
+<a name="utxorpc-submit-v1-WatchMempoolRequest"></a>
+
+### WatchMempoolRequest
+Request to watch changes of specific mempool txs.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| predicate | [TxPredicate](#utxorpc-submit-v1-TxPredicate) |  | A predicate to filter transactions by. |
+| field_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  | Field mask to selectively return fields. |
+
+
+
+
+
+
+<a name="utxorpc-submit-v1-WatchMempoolResponse"></a>
+
+### WatchMempoolResponse
+Response that represents a change in a mempool tx.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| tx | [TxInMempool](#utxorpc-submit-v1-TxInMempool) |  | The content and stage of the tx that has changed |
 
 
 
@@ -161,9 +246,10 @@ Service definition for submitting transactions and checking their status.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Submit | [SubmitRequest](#utxorpc-submit-v1-SubmitRequest) | [SubmitResponse](#utxorpc-submit-v1-SubmitResponse) | Submit transactions to the blockchain. |
-| Check | [CheckRequest](#utxorpc-submit-v1-CheckRequest) | [CheckResponse](#utxorpc-submit-v1-CheckResponse) | Check the status of submitted transactions. |
-| WaitFor | [WaitForRequest](#utxorpc-submit-v1-WaitForRequest) | [WaitForResponse](#utxorpc-submit-v1-WaitForResponse) stream | Wait for transactions to reach a certain stage and stream the updates. |
+| SubmitTx | [SubmitTxRequest](#utxorpc-submit-v1-SubmitTxRequest) | [SubmitTxResponse](#utxorpc-submit-v1-SubmitTxResponse) | Submit transactions to the blockchain. |
+| WaitForTx | [WaitForTxRequest](#utxorpc-submit-v1-WaitForTxRequest) | [WaitForTxResponse](#utxorpc-submit-v1-WaitForTxResponse) stream | Wait for transactions to reach a certain stage and stream the updates. |
+| ReadMempool | [ReadMempoolRequest](#utxorpc-submit-v1-ReadMempoolRequest) | [ReadMempoolResponse](#utxorpc-submit-v1-ReadMempoolResponse) | Returns a point-in-time snapshot of the mempool. |
+| WatchMempool | [WatchMempoolRequest](#utxorpc-submit-v1-WatchMempoolRequest) | [WatchMempoolResponse](#utxorpc-submit-v1-WatchMempoolResponse) stream | Stream transactions from the mempool matching the specified predicates. |
 
  
 

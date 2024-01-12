@@ -7,12 +7,10 @@
     - [AnyChainTx](#utxorpc-watch-v1-AnyChainTx)
     - [AnyChainTxPattern](#utxorpc-watch-v1-AnyChainTxPattern)
     - [TxPredicate](#utxorpc-watch-v1-TxPredicate)
-    - [WatchChainTxRequest](#utxorpc-watch-v1-WatchChainTxRequest)
-    - [WatchChainTxResponse](#utxorpc-watch-v1-WatchChainTxResponse)
-    - [WatchMempoolTxRequest](#utxorpc-watch-v1-WatchMempoolTxRequest)
-    - [WatchMempoolTxResponse](#utxorpc-watch-v1-WatchMempoolTxResponse)
+    - [WatchTxRequest](#utxorpc-watch-v1-WatchTxRequest)
+    - [WatchTxResponse](#utxorpc-watch-v1-WatchTxResponse)
   
-    - [TxWatchService](#utxorpc-watch-v1-TxWatchService)
+    - [WatchService](#utxorpc-watch-v1-WatchService)
   
 - [Scalar Value Types](#scalar-value-types)
 
@@ -58,24 +56,24 @@ Represents a tx pattern from any supported blockchain.
 <a name="utxorpc-watch-v1-TxPredicate"></a>
 
 ### TxPredicate
-
+Represents a simple tx predicate that can composed to create more complext ones
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| match | [AnyChainTxPattern](#utxorpc-watch-v1-AnyChainTxPattern) |  |  |
-| not | [TxPredicate](#utxorpc-watch-v1-TxPredicate) | repeated |  |
-| all_of | [TxPredicate](#utxorpc-watch-v1-TxPredicate) | repeated |  |
-| any_of | [TxPredicate](#utxorpc-watch-v1-TxPredicate) | repeated |  |
+| match | [AnyChainTxPattern](#utxorpc-watch-v1-AnyChainTxPattern) |  | Predicate is true if tx exhibits pattern. |
+| not | [TxPredicate](#utxorpc-watch-v1-TxPredicate) | repeated | Predicate is true if tx doesn&#39;t exhibit pattern. |
+| all_of | [TxPredicate](#utxorpc-watch-v1-TxPredicate) | repeated | Predicate is true if tx exhibits all of the patterns. |
+| any_of | [TxPredicate](#utxorpc-watch-v1-TxPredicate) | repeated | Predicate is true if tx exhibits any of the patterns. |
 
 
 
 
 
 
-<a name="utxorpc-watch-v1-WatchChainTxRequest"></a>
+<a name="utxorpc-watch-v1-WatchTxRequest"></a>
 
-### WatchChainTxRequest
+### WatchTxRequest
 Request to watch transactions from the chain based on a set of predicates.
 
 
@@ -89,9 +87,9 @@ Request to watch transactions from the chain based on a set of predicates.
 
 
 
-<a name="utxorpc-watch-v1-WatchChainTxResponse"></a>
+<a name="utxorpc-watch-v1-WatchTxResponse"></a>
 
-### WatchChainTxResponse
+### WatchTxResponse
 Response containing the matching chain transactions.
 
 
@@ -104,37 +102,6 @@ Response containing the matching chain transactions.
 
 
 
-
-<a name="utxorpc-watch-v1-WatchMempoolTxRequest"></a>
-
-### WatchMempoolTxRequest
-Request to watch transactions based on a set of predicates.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| predicate | [TxPredicate](#utxorpc-watch-v1-TxPredicate) |  | A predicate to filter transactions by. |
-| field_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  | Field mask to selectively return fields. |
-
-
-
-
-
-
-<a name="utxorpc-watch-v1-WatchMempoolTxResponse"></a>
-
-### WatchMempoolTxResponse
-Response from mempool containing the matching transactions.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| cardano | [utxorpc.cardano.v1.Tx](#utxorpc-cardano-v1-Tx) |  | A Cardano transaction. |
-
-
-
-
-
  
 
  
@@ -142,15 +109,14 @@ Response from mempool containing the matching transactions.
  
 
 
-<a name="utxorpc-watch-v1-TxWatchService"></a>
+<a name="utxorpc-watch-v1-WatchService"></a>
 
-### TxWatchService
+### WatchService
 Service definition for watching transactions based on predicates.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| WatchChainTx | [WatchChainTxRequest](#utxorpc-watch-v1-WatchChainTxRequest) | [WatchChainTxResponse](#utxorpc-watch-v1-WatchChainTxResponse) stream | Stream transactions from the chain matching the specified predicates. |
-| WatchMempoolTx | [WatchMempoolTxRequest](#utxorpc-watch-v1-WatchMempoolTxRequest) | [WatchMempoolTxResponse](#utxorpc-watch-v1-WatchMempoolTxResponse) stream | Stream transactions from the mempool matching the specified predicates. |
+| WatchTx | [WatchTxRequest](#utxorpc-watch-v1-WatchTxRequest) | [WatchTxResponse](#utxorpc-watch-v1-WatchTxResponse) stream | Stream transactions from the chain matching the specified predicates. |
 
  
 
