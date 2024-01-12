@@ -33,19 +33,24 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// SubmitServiceSubmitProcedure is the fully-qualified name of the SubmitService's Submit RPC.
-	SubmitServiceSubmitProcedure = "/utxorpc.submit.v1.SubmitService/Submit"
-	// SubmitServiceCheckProcedure is the fully-qualified name of the SubmitService's Check RPC.
-	SubmitServiceCheckProcedure = "/utxorpc.submit.v1.SubmitService/Check"
-	// SubmitServiceWaitForProcedure is the fully-qualified name of the SubmitService's WaitFor RPC.
-	SubmitServiceWaitForProcedure = "/utxorpc.submit.v1.SubmitService/WaitFor"
+	// SubmitServiceSubmitTxProcedure is the fully-qualified name of the SubmitService's SubmitTx RPC.
+	SubmitServiceSubmitTxProcedure = "/utxorpc.submit.v1.SubmitService/SubmitTx"
+	// SubmitServiceWaitForTxProcedure is the fully-qualified name of the SubmitService's WaitForTx RPC.
+	SubmitServiceWaitForTxProcedure = "/utxorpc.submit.v1.SubmitService/WaitForTx"
+	// SubmitServiceReadMempoolProcedure is the fully-qualified name of the SubmitService's ReadMempool
+	// RPC.
+	SubmitServiceReadMempoolProcedure = "/utxorpc.submit.v1.SubmitService/ReadMempool"
+	// SubmitServiceWatchMempoolProcedure is the fully-qualified name of the SubmitService's
+	// WatchMempool RPC.
+	SubmitServiceWatchMempoolProcedure = "/utxorpc.submit.v1.SubmitService/WatchMempool"
 )
 
 // SubmitServiceClient is a client for the utxorpc.submit.v1.SubmitService service.
 type SubmitServiceClient interface {
-	Submit(context.Context, *connect_go.Request[v1.SubmitRequest]) (*connect_go.Response[v1.SubmitResponse], error)
-	Check(context.Context, *connect_go.Request[v1.CheckRequest]) (*connect_go.Response[v1.CheckResponse], error)
-	WaitFor(context.Context, *connect_go.Request[v1.WaitForRequest]) (*connect_go.ServerStreamForClient[v1.WaitForResponse], error)
+	SubmitTx(context.Context, *connect_go.Request[v1.SubmitTxRequest]) (*connect_go.Response[v1.SubmitTxResponse], error)
+	WaitForTx(context.Context, *connect_go.Request[v1.WaitForTxRequest]) (*connect_go.ServerStreamForClient[v1.WaitForTxResponse], error)
+	ReadMempool(context.Context, *connect_go.Request[v1.ReadMempoolRequest]) (*connect_go.Response[v1.ReadMempoolResponse], error)
+	WatchMempool(context.Context, *connect_go.Request[v1.WatchMempoolRequest]) (*connect_go.ServerStreamForClient[v1.WatchMempoolResponse], error)
 }
 
 // NewSubmitServiceClient constructs a client for the utxorpc.submit.v1.SubmitService service. By
@@ -58,19 +63,24 @@ type SubmitServiceClient interface {
 func NewSubmitServiceClient(httpClient connect_go.HTTPClient, baseURL string, opts ...connect_go.ClientOption) SubmitServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &submitServiceClient{
-		submit: connect_go.NewClient[v1.SubmitRequest, v1.SubmitResponse](
+		submitTx: connect_go.NewClient[v1.SubmitTxRequest, v1.SubmitTxResponse](
 			httpClient,
-			baseURL+SubmitServiceSubmitProcedure,
+			baseURL+SubmitServiceSubmitTxProcedure,
 			opts...,
 		),
-		check: connect_go.NewClient[v1.CheckRequest, v1.CheckResponse](
+		waitForTx: connect_go.NewClient[v1.WaitForTxRequest, v1.WaitForTxResponse](
 			httpClient,
-			baseURL+SubmitServiceCheckProcedure,
+			baseURL+SubmitServiceWaitForTxProcedure,
 			opts...,
 		),
-		waitFor: connect_go.NewClient[v1.WaitForRequest, v1.WaitForResponse](
+		readMempool: connect_go.NewClient[v1.ReadMempoolRequest, v1.ReadMempoolResponse](
 			httpClient,
-			baseURL+SubmitServiceWaitForProcedure,
+			baseURL+SubmitServiceReadMempoolProcedure,
+			opts...,
+		),
+		watchMempool: connect_go.NewClient[v1.WatchMempoolRequest, v1.WatchMempoolResponse](
+			httpClient,
+			baseURL+SubmitServiceWatchMempoolProcedure,
 			opts...,
 		),
 	}
@@ -78,31 +88,38 @@ func NewSubmitServiceClient(httpClient connect_go.HTTPClient, baseURL string, op
 
 // submitServiceClient implements SubmitServiceClient.
 type submitServiceClient struct {
-	submit  *connect_go.Client[v1.SubmitRequest, v1.SubmitResponse]
-	check   *connect_go.Client[v1.CheckRequest, v1.CheckResponse]
-	waitFor *connect_go.Client[v1.WaitForRequest, v1.WaitForResponse]
+	submitTx     *connect_go.Client[v1.SubmitTxRequest, v1.SubmitTxResponse]
+	waitForTx    *connect_go.Client[v1.WaitForTxRequest, v1.WaitForTxResponse]
+	readMempool  *connect_go.Client[v1.ReadMempoolRequest, v1.ReadMempoolResponse]
+	watchMempool *connect_go.Client[v1.WatchMempoolRequest, v1.WatchMempoolResponse]
 }
 
-// Submit calls utxorpc.submit.v1.SubmitService.Submit.
-func (c *submitServiceClient) Submit(ctx context.Context, req *connect_go.Request[v1.SubmitRequest]) (*connect_go.Response[v1.SubmitResponse], error) {
-	return c.submit.CallUnary(ctx, req)
+// SubmitTx calls utxorpc.submit.v1.SubmitService.SubmitTx.
+func (c *submitServiceClient) SubmitTx(ctx context.Context, req *connect_go.Request[v1.SubmitTxRequest]) (*connect_go.Response[v1.SubmitTxResponse], error) {
+	return c.submitTx.CallUnary(ctx, req)
 }
 
-// Check calls utxorpc.submit.v1.SubmitService.Check.
-func (c *submitServiceClient) Check(ctx context.Context, req *connect_go.Request[v1.CheckRequest]) (*connect_go.Response[v1.CheckResponse], error) {
-	return c.check.CallUnary(ctx, req)
+// WaitForTx calls utxorpc.submit.v1.SubmitService.WaitForTx.
+func (c *submitServiceClient) WaitForTx(ctx context.Context, req *connect_go.Request[v1.WaitForTxRequest]) (*connect_go.ServerStreamForClient[v1.WaitForTxResponse], error) {
+	return c.waitForTx.CallServerStream(ctx, req)
 }
 
-// WaitFor calls utxorpc.submit.v1.SubmitService.WaitFor.
-func (c *submitServiceClient) WaitFor(ctx context.Context, req *connect_go.Request[v1.WaitForRequest]) (*connect_go.ServerStreamForClient[v1.WaitForResponse], error) {
-	return c.waitFor.CallServerStream(ctx, req)
+// ReadMempool calls utxorpc.submit.v1.SubmitService.ReadMempool.
+func (c *submitServiceClient) ReadMempool(ctx context.Context, req *connect_go.Request[v1.ReadMempoolRequest]) (*connect_go.Response[v1.ReadMempoolResponse], error) {
+	return c.readMempool.CallUnary(ctx, req)
+}
+
+// WatchMempool calls utxorpc.submit.v1.SubmitService.WatchMempool.
+func (c *submitServiceClient) WatchMempool(ctx context.Context, req *connect_go.Request[v1.WatchMempoolRequest]) (*connect_go.ServerStreamForClient[v1.WatchMempoolResponse], error) {
+	return c.watchMempool.CallServerStream(ctx, req)
 }
 
 // SubmitServiceHandler is an implementation of the utxorpc.submit.v1.SubmitService service.
 type SubmitServiceHandler interface {
-	Submit(context.Context, *connect_go.Request[v1.SubmitRequest]) (*connect_go.Response[v1.SubmitResponse], error)
-	Check(context.Context, *connect_go.Request[v1.CheckRequest]) (*connect_go.Response[v1.CheckResponse], error)
-	WaitFor(context.Context, *connect_go.Request[v1.WaitForRequest], *connect_go.ServerStream[v1.WaitForResponse]) error
+	SubmitTx(context.Context, *connect_go.Request[v1.SubmitTxRequest]) (*connect_go.Response[v1.SubmitTxResponse], error)
+	WaitForTx(context.Context, *connect_go.Request[v1.WaitForTxRequest], *connect_go.ServerStream[v1.WaitForTxResponse]) error
+	ReadMempool(context.Context, *connect_go.Request[v1.ReadMempoolRequest]) (*connect_go.Response[v1.ReadMempoolResponse], error)
+	WatchMempool(context.Context, *connect_go.Request[v1.WatchMempoolRequest], *connect_go.ServerStream[v1.WatchMempoolResponse]) error
 }
 
 // NewSubmitServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -111,29 +128,36 @@ type SubmitServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewSubmitServiceHandler(svc SubmitServiceHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
-	submitServiceSubmitHandler := connect_go.NewUnaryHandler(
-		SubmitServiceSubmitProcedure,
-		svc.Submit,
+	submitServiceSubmitTxHandler := connect_go.NewUnaryHandler(
+		SubmitServiceSubmitTxProcedure,
+		svc.SubmitTx,
 		opts...,
 	)
-	submitServiceCheckHandler := connect_go.NewUnaryHandler(
-		SubmitServiceCheckProcedure,
-		svc.Check,
+	submitServiceWaitForTxHandler := connect_go.NewServerStreamHandler(
+		SubmitServiceWaitForTxProcedure,
+		svc.WaitForTx,
 		opts...,
 	)
-	submitServiceWaitForHandler := connect_go.NewServerStreamHandler(
-		SubmitServiceWaitForProcedure,
-		svc.WaitFor,
+	submitServiceReadMempoolHandler := connect_go.NewUnaryHandler(
+		SubmitServiceReadMempoolProcedure,
+		svc.ReadMempool,
+		opts...,
+	)
+	submitServiceWatchMempoolHandler := connect_go.NewServerStreamHandler(
+		SubmitServiceWatchMempoolProcedure,
+		svc.WatchMempool,
 		opts...,
 	)
 	return "/utxorpc.submit.v1.SubmitService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
-		case SubmitServiceSubmitProcedure:
-			submitServiceSubmitHandler.ServeHTTP(w, r)
-		case SubmitServiceCheckProcedure:
-			submitServiceCheckHandler.ServeHTTP(w, r)
-		case SubmitServiceWaitForProcedure:
-			submitServiceWaitForHandler.ServeHTTP(w, r)
+		case SubmitServiceSubmitTxProcedure:
+			submitServiceSubmitTxHandler.ServeHTTP(w, r)
+		case SubmitServiceWaitForTxProcedure:
+			submitServiceWaitForTxHandler.ServeHTTP(w, r)
+		case SubmitServiceReadMempoolProcedure:
+			submitServiceReadMempoolHandler.ServeHTTP(w, r)
+		case SubmitServiceWatchMempoolProcedure:
+			submitServiceWatchMempoolHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -143,14 +167,18 @@ func NewSubmitServiceHandler(svc SubmitServiceHandler, opts ...connect_go.Handle
 // UnimplementedSubmitServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedSubmitServiceHandler struct{}
 
-func (UnimplementedSubmitServiceHandler) Submit(context.Context, *connect_go.Request[v1.SubmitRequest]) (*connect_go.Response[v1.SubmitResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.submit.v1.SubmitService.Submit is not implemented"))
+func (UnimplementedSubmitServiceHandler) SubmitTx(context.Context, *connect_go.Request[v1.SubmitTxRequest]) (*connect_go.Response[v1.SubmitTxResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.submit.v1.SubmitService.SubmitTx is not implemented"))
 }
 
-func (UnimplementedSubmitServiceHandler) Check(context.Context, *connect_go.Request[v1.CheckRequest]) (*connect_go.Response[v1.CheckResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.submit.v1.SubmitService.Check is not implemented"))
+func (UnimplementedSubmitServiceHandler) WaitForTx(context.Context, *connect_go.Request[v1.WaitForTxRequest], *connect_go.ServerStream[v1.WaitForTxResponse]) error {
+	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.submit.v1.SubmitService.WaitForTx is not implemented"))
 }
 
-func (UnimplementedSubmitServiceHandler) WaitFor(context.Context, *connect_go.Request[v1.WaitForRequest], *connect_go.ServerStream[v1.WaitForResponse]) error {
-	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.submit.v1.SubmitService.WaitFor is not implemented"))
+func (UnimplementedSubmitServiceHandler) ReadMempool(context.Context, *connect_go.Request[v1.ReadMempoolRequest]) (*connect_go.Response[v1.ReadMempoolResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.submit.v1.SubmitService.ReadMempool is not implemented"))
+}
+
+func (UnimplementedSubmitServiceHandler) WatchMempool(context.Context, *connect_go.Request[v1.WatchMempoolRequest], *connect_go.ServerStream[v1.WatchMempoolResponse]) error {
+	return connect_go.NewError(connect_go.CodeUnimplemented, errors.New("utxorpc.submit.v1.SubmitService.WatchMempool is not implemented"))
 }

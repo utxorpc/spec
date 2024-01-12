@@ -29,103 +29,49 @@ import qualified Data.ProtoLens.Runtime.Data.Vector.Unboxed as Data.Vector.Unbox
 import qualified Data.ProtoLens.Runtime.Text.Read as Text.Read
 import qualified Proto.Google.Protobuf.FieldMask
 import qualified Proto.Utxorpc.Cardano.V1.Cardano
-address ::
+allOf ::
   forall f s a.
-  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "address" a) =>
+  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "allOf" a) =>
   Lens.Family2.LensLike' f s a
-address = Data.ProtoLens.Field.field @"address"
+allOf = Data.ProtoLens.Field.field @"allOf"
+anyOf ::
+  forall f s a.
+  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "anyOf" a) =>
+  Lens.Family2.LensLike' f s a
+anyOf = Data.ProtoLens.Field.field @"anyOf"
 apply ::
   forall f s a.
   (Prelude.Functor f, Data.ProtoLens.Field.HasField s "apply" a) =>
   Lens.Family2.LensLike' f s a
 apply = Data.ProtoLens.Field.field @"apply"
-asset ::
-  forall f s a.
-  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "asset" a) =>
-  Lens.Family2.LensLike' f s a
-asset = Data.ProtoLens.Field.field @"asset"
 cardano ::
   forall f s a.
   (Prelude.Functor f, Data.ProtoLens.Field.HasField s "cardano" a) =>
   Lens.Family2.LensLike' f s a
 cardano = Data.ProtoLens.Field.field @"cardano"
-datum ::
-  forall f s a.
-  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "datum" a) =>
-  Lens.Family2.LensLike' f s a
-datum = Data.ProtoLens.Field.field @"datum"
 fieldMask ::
   forall f s a.
   (Prelude.Functor f,
    Data.ProtoLens.Field.HasField s "fieldMask" a) =>
   Lens.Family2.LensLike' f s a
 fieldMask = Data.ProtoLens.Field.field @"fieldMask"
-matchAny ::
+match ::
   forall f s a.
-  (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "matchAny" a) =>
+  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "match" a) =>
   Lens.Family2.LensLike' f s a
-matchAny = Data.ProtoLens.Field.field @"matchAny"
-matchHash ::
-  forall f s a.
-  (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "matchHash" a) =>
-  Lens.Family2.LensLike' f s a
-matchHash = Data.ProtoLens.Field.field @"matchHash"
-matchIndex ::
-  forall f s a.
-  (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "matchIndex" a) =>
-  Lens.Family2.LensLike' f s a
-matchIndex = Data.ProtoLens.Field.field @"matchIndex"
-matchName ::
-  forall f s a.
-  (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "matchName" a) =>
-  Lens.Family2.LensLike' f s a
-matchName = Data.ProtoLens.Field.field @"matchName"
-matchPolicy ::
-  forall f s a.
-  (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "matchPolicy" a) =>
-  Lens.Family2.LensLike' f s a
-matchPolicy = Data.ProtoLens.Field.field @"matchPolicy"
-matchSource ::
-  forall f s a.
-  (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "matchSource" a) =>
-  Lens.Family2.LensLike' f s a
-matchSource = Data.ProtoLens.Field.field @"matchSource"
-matchTarget ::
-  forall f s a.
-  (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "matchTarget" a) =>
-  Lens.Family2.LensLike' f s a
-matchTarget = Data.ProtoLens.Field.field @"matchTarget"
+match = Data.ProtoLens.Field.field @"match"
 maybe'action ::
   forall f s a.
   (Prelude.Functor f,
    Data.ProtoLens.Field.HasField s "maybe'action" a) =>
   Lens.Family2.LensLike' f s a
 maybe'action = Data.ProtoLens.Field.field @"maybe'action"
-maybe'address ::
-  forall f s a.
-  (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "maybe'address" a) =>
-  Lens.Family2.LensLike' f s a
-maybe'address = Data.ProtoLens.Field.field @"maybe'address"
 maybe'apply ::
   forall f s a.
   (Prelude.Functor f,
    Data.ProtoLens.Field.HasField s "maybe'apply" a) =>
   Lens.Family2.LensLike' f s a
 maybe'apply = Data.ProtoLens.Field.field @"maybe'apply"
-maybe'asset ::
-  forall f s a.
-  (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "maybe'asset" a) =>
-  Lens.Family2.LensLike' f s a
-maybe'asset = Data.ProtoLens.Field.field @"maybe'asset"
 maybe'cardano ::
   forall f s a.
   (Prelude.Functor f,
@@ -138,36 +84,35 @@ maybe'chain ::
    Data.ProtoLens.Field.HasField s "maybe'chain" a) =>
   Lens.Family2.LensLike' f s a
 maybe'chain = Data.ProtoLens.Field.field @"maybe'chain"
-maybe'datum ::
-  forall f s a.
-  (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "maybe'datum" a) =>
-  Lens.Family2.LensLike' f s a
-maybe'datum = Data.ProtoLens.Field.field @"maybe'datum"
 maybe'fieldMask ::
   forall f s a.
   (Prelude.Functor f,
    Data.ProtoLens.Field.HasField s "maybe'fieldMask" a) =>
   Lens.Family2.LensLike' f s a
 maybe'fieldMask = Data.ProtoLens.Field.field @"maybe'fieldMask"
-maybe'type' ::
+maybe'match ::
   forall f s a.
   (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "maybe'type'" a) =>
+   Data.ProtoLens.Field.HasField s "maybe'match" a) =>
   Lens.Family2.LensLike' f s a
-maybe'type' = Data.ProtoLens.Field.field @"maybe'type'"
+maybe'match = Data.ProtoLens.Field.field @"maybe'match"
+maybe'predicate ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "maybe'predicate" a) =>
+  Lens.Family2.LensLike' f s a
+maybe'predicate = Data.ProtoLens.Field.field @"maybe'predicate"
 maybe'undo ::
   forall f s a.
   (Prelude.Functor f,
    Data.ProtoLens.Field.HasField s "maybe'undo" a) =>
   Lens.Family2.LensLike' f s a
 maybe'undo = Data.ProtoLens.Field.field @"maybe'undo"
-maybe'utxo ::
+not ::
   forall f s a.
-  (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "maybe'utxo" a) =>
+  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "not" a) =>
   Lens.Family2.LensLike' f s a
-maybe'utxo = Data.ProtoLens.Field.field @"maybe'utxo"
+not = Data.ProtoLens.Field.field @"not"
 predicate ::
   forall f s a.
   (Prelude.Functor f,
@@ -179,14 +124,20 @@ undo ::
   (Prelude.Functor f, Data.ProtoLens.Field.HasField s "undo" a) =>
   Lens.Family2.LensLike' f s a
 undo = Data.ProtoLens.Field.field @"undo"
-utxo ::
-  forall f s a.
-  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "utxo" a) =>
-  Lens.Family2.LensLike' f s a
-utxo = Data.ProtoLens.Field.field @"utxo"
-vec'predicate ::
+vec'allOf ::
   forall f s a.
   (Prelude.Functor f,
-   Data.ProtoLens.Field.HasField s "vec'predicate" a) =>
+   Data.ProtoLens.Field.HasField s "vec'allOf" a) =>
   Lens.Family2.LensLike' f s a
-vec'predicate = Data.ProtoLens.Field.field @"vec'predicate"
+vec'allOf = Data.ProtoLens.Field.field @"vec'allOf"
+vec'anyOf ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "vec'anyOf" a) =>
+  Lens.Family2.LensLike' f s a
+vec'anyOf = Data.ProtoLens.Field.field @"vec'anyOf"
+vec'not ::
+  forall f s a.
+  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "vec'not" a) =>
+  Lens.Family2.LensLike' f s a
+vec'not = Data.ProtoLens.Field.field @"vec'not"

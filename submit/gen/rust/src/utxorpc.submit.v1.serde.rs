@@ -94,7 +94,7 @@ impl<'de> serde::Deserialize<'de> for AnyChainTx {
         deserializer.deserialize_struct("utxorpc.submit.v1.AnyChainTx", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for CheckRequest {
+impl serde::Serialize for AnyChainTxPattern {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -102,29 +102,33 @@ impl serde::Serialize for CheckRequest {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.r#ref.is_empty() {
+        if self.chain.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.CheckRequest", len)?;
-        if !self.r#ref.is_empty() {
-            struct_ser.serialize_field("ref", &self.r#ref.iter().map(pbjson::private::base64::encode).collect::<Vec<_>>())?;
+        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.AnyChainTxPattern", len)?;
+        if let Some(v) = self.chain.as_ref() {
+            match v {
+                any_chain_tx_pattern::Chain::Cardano(v) => {
+                    struct_ser.serialize_field("cardano", v)?;
+                }
+            }
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for CheckRequest {
+impl<'de> serde::Deserialize<'de> for AnyChainTxPattern {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "ref",
+            "cardano",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Ref,
+            Cardano,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -146,7 +150,7 @@ impl<'de> serde::Deserialize<'de> for CheckRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "ref" => Ok(GeneratedField::Ref),
+                            "cardano" => Ok(GeneratedField::Cardano),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -156,39 +160,128 @@ impl<'de> serde::Deserialize<'de> for CheckRequest {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CheckRequest;
+            type Value = AnyChainTxPattern;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.submit.v1.CheckRequest")
+                formatter.write_str("struct utxorpc.submit.v1.AnyChainTxPattern")
             }
 
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<CheckRequest, V::Error>
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<AnyChainTxPattern, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut r#ref__ = None;
+                let mut chain__ = None;
                 while let Some(k) = map.next_key()? {
                     match k {
-                        GeneratedField::Ref => {
-                            if r#ref__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("ref"));
+                        GeneratedField::Cardano => {
+                            if chain__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("cardano"));
                             }
-                            r#ref__ = 
-                                Some(map.next_value::<Vec<::pbjson::private::BytesDeserialize<_>>>()?
-                                    .into_iter().map(|x| x.0).collect())
-                            ;
+                            chain__ = map.next_value::<::std::option::Option<_>>()?.map(any_chain_tx_pattern::Chain::Cardano)
+;
                         }
                     }
                 }
-                Ok(CheckRequest {
-                    r#ref: r#ref__.unwrap_or_default(),
+                Ok(AnyChainTxPattern {
+                    chain: chain__,
                 })
             }
         }
-        deserializer.deserialize_struct("utxorpc.submit.v1.CheckRequest", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("utxorpc.submit.v1.AnyChainTxPattern", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for CheckResponse {
+impl serde::Serialize for ReadMempoolRequest {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.txs.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.ReadMempoolRequest", len)?;
+        if !self.txs.is_empty() {
+            struct_ser.serialize_field("txs", &self.txs)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ReadMempoolRequest {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "txs",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Txs,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "txs" => Ok(GeneratedField::Txs),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ReadMempoolRequest;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.submit.v1.ReadMempoolRequest")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<ReadMempoolRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut txs__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Txs => {
+                            if txs__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("txs"));
+                            }
+                            txs__ = Some(map.next_value()?);
+                        }
+                    }
+                }
+                Ok(ReadMempoolRequest {
+                    txs: txs__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.submit.v1.ReadMempoolRequest", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ReadMempoolResponse {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -199,7 +292,7 @@ impl serde::Serialize for CheckResponse {
         if !self.stage.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.CheckResponse", len)?;
+        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.ReadMempoolResponse", len)?;
         if !self.stage.is_empty() {
             let v = self.stage.iter().cloned().map(|v| {
                 Stage::from_i32(v)
@@ -210,7 +303,7 @@ impl serde::Serialize for CheckResponse {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for CheckResponse {
+impl<'de> serde::Deserialize<'de> for ReadMempoolResponse {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -254,13 +347,13 @@ impl<'de> serde::Deserialize<'de> for CheckResponse {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CheckResponse;
+            type Value = ReadMempoolResponse;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.submit.v1.CheckResponse")
+                formatter.write_str("struct utxorpc.submit.v1.ReadMempoolResponse")
             }
 
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<CheckResponse, V::Error>
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<ReadMempoolResponse, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -275,12 +368,12 @@ impl<'de> serde::Deserialize<'de> for CheckResponse {
                         }
                     }
                 }
-                Ok(CheckResponse {
+                Ok(ReadMempoolResponse {
                     stage: stage__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("utxorpc.submit.v1.CheckResponse", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("utxorpc.submit.v1.ReadMempoolResponse", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for Stage {
@@ -365,7 +458,7 @@ impl<'de> serde::Deserialize<'de> for Stage {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
-impl serde::Serialize for SubmitRequest {
+impl serde::Serialize for SubmitTxRequest {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -376,14 +469,14 @@ impl serde::Serialize for SubmitRequest {
         if !self.tx.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.SubmitRequest", len)?;
+        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.SubmitTxRequest", len)?;
         if !self.tx.is_empty() {
             struct_ser.serialize_field("tx", &self.tx)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for SubmitRequest {
+impl<'de> serde::Deserialize<'de> for SubmitTxRequest {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -427,13 +520,13 @@ impl<'de> serde::Deserialize<'de> for SubmitRequest {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SubmitRequest;
+            type Value = SubmitTxRequest;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.submit.v1.SubmitRequest")
+                formatter.write_str("struct utxorpc.submit.v1.SubmitTxRequest")
             }
 
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<SubmitRequest, V::Error>
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<SubmitTxRequest, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -448,15 +541,15 @@ impl<'de> serde::Deserialize<'de> for SubmitRequest {
                         }
                     }
                 }
-                Ok(SubmitRequest {
+                Ok(SubmitTxRequest {
                     tx: tx__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("utxorpc.submit.v1.SubmitRequest", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("utxorpc.submit.v1.SubmitTxRequest", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for SubmitResponse {
+impl serde::Serialize for SubmitTxResponse {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -467,14 +560,14 @@ impl serde::Serialize for SubmitResponse {
         if !self.r#ref.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.SubmitResponse", len)?;
+        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.SubmitTxResponse", len)?;
         if !self.r#ref.is_empty() {
             struct_ser.serialize_field("ref", &self.r#ref.iter().map(pbjson::private::base64::encode).collect::<Vec<_>>())?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for SubmitResponse {
+impl<'de> serde::Deserialize<'de> for SubmitTxResponse {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -518,13 +611,13 @@ impl<'de> serde::Deserialize<'de> for SubmitResponse {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SubmitResponse;
+            type Value = SubmitTxResponse;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.submit.v1.SubmitResponse")
+                formatter.write_str("struct utxorpc.submit.v1.SubmitTxResponse")
             }
 
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<SubmitResponse, V::Error>
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<SubmitTxResponse, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -542,15 +635,269 @@ impl<'de> serde::Deserialize<'de> for SubmitResponse {
                         }
                     }
                 }
-                Ok(SubmitResponse {
+                Ok(SubmitTxResponse {
                     r#ref: r#ref__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("utxorpc.submit.v1.SubmitResponse", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("utxorpc.submit.v1.SubmitTxResponse", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for WaitForRequest {
+impl serde::Serialize for TxInMempool {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.tx.is_some() {
+            len += 1;
+        }
+        if self.stage != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.TxInMempool", len)?;
+        if let Some(v) = self.tx.as_ref() {
+            struct_ser.serialize_field("tx", v)?;
+        }
+        if self.stage != 0 {
+            let v = Stage::from_i32(self.stage)
+                .ok_or_else(|| serde::ser::Error::custom(format!("Invalid variant {}", self.stage)))?;
+            struct_ser.serialize_field("stage", &v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TxInMempool {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "tx",
+            "stage",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Tx,
+            Stage,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "tx" => Ok(GeneratedField::Tx),
+                            "stage" => Ok(GeneratedField::Stage),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TxInMempool;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.submit.v1.TxInMempool")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<TxInMempool, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut tx__ = None;
+                let mut stage__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Tx => {
+                            if tx__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("tx"));
+                            }
+                            tx__ = map.next_value()?;
+                        }
+                        GeneratedField::Stage => {
+                            if stage__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stage"));
+                            }
+                            stage__ = Some(map.next_value::<Stage>()? as i32);
+                        }
+                    }
+                }
+                Ok(TxInMempool {
+                    tx: tx__,
+                    stage: stage__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.submit.v1.TxInMempool", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TxPredicate {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.r#match.is_some() {
+            len += 1;
+        }
+        if !self.not.is_empty() {
+            len += 1;
+        }
+        if !self.all_of.is_empty() {
+            len += 1;
+        }
+        if !self.any_of.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.TxPredicate", len)?;
+        if let Some(v) = self.r#match.as_ref() {
+            struct_ser.serialize_field("match", v)?;
+        }
+        if !self.not.is_empty() {
+            struct_ser.serialize_field("not", &self.not)?;
+        }
+        if !self.all_of.is_empty() {
+            struct_ser.serialize_field("allOf", &self.all_of)?;
+        }
+        if !self.any_of.is_empty() {
+            struct_ser.serialize_field("anyOf", &self.any_of)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TxPredicate {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "match",
+            "not",
+            "all_of",
+            "allOf",
+            "any_of",
+            "anyOf",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Match,
+            Not,
+            AllOf,
+            AnyOf,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "match" => Ok(GeneratedField::Match),
+                            "not" => Ok(GeneratedField::Not),
+                            "allOf" | "all_of" => Ok(GeneratedField::AllOf),
+                            "anyOf" | "any_of" => Ok(GeneratedField::AnyOf),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TxPredicate;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.submit.v1.TxPredicate")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<TxPredicate, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut r#match__ = None;
+                let mut not__ = None;
+                let mut all_of__ = None;
+                let mut any_of__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Match => {
+                            if r#match__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("match"));
+                            }
+                            r#match__ = map.next_value()?;
+                        }
+                        GeneratedField::Not => {
+                            if not__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("not"));
+                            }
+                            not__ = Some(map.next_value()?);
+                        }
+                        GeneratedField::AllOf => {
+                            if all_of__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("allOf"));
+                            }
+                            all_of__ = Some(map.next_value()?);
+                        }
+                        GeneratedField::AnyOf => {
+                            if any_of__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("anyOf"));
+                            }
+                            any_of__ = Some(map.next_value()?);
+                        }
+                    }
+                }
+                Ok(TxPredicate {
+                    r#match: r#match__,
+                    not: not__.unwrap_or_default(),
+                    all_of: all_of__.unwrap_or_default(),
+                    any_of: any_of__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.submit.v1.TxPredicate", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WaitForTxRequest {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -561,14 +908,14 @@ impl serde::Serialize for WaitForRequest {
         if !self.r#ref.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.WaitForRequest", len)?;
+        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.WaitForTxRequest", len)?;
         if !self.r#ref.is_empty() {
             struct_ser.serialize_field("ref", &self.r#ref.iter().map(pbjson::private::base64::encode).collect::<Vec<_>>())?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for WaitForRequest {
+impl<'de> serde::Deserialize<'de> for WaitForTxRequest {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -612,13 +959,13 @@ impl<'de> serde::Deserialize<'de> for WaitForRequest {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = WaitForRequest;
+            type Value = WaitForTxRequest;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.submit.v1.WaitForRequest")
+                formatter.write_str("struct utxorpc.submit.v1.WaitForTxRequest")
             }
 
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<WaitForRequest, V::Error>
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<WaitForTxRequest, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -636,15 +983,15 @@ impl<'de> serde::Deserialize<'de> for WaitForRequest {
                         }
                     }
                 }
-                Ok(WaitForRequest {
+                Ok(WaitForTxRequest {
                     r#ref: r#ref__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("utxorpc.submit.v1.WaitForRequest", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("utxorpc.submit.v1.WaitForTxRequest", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for WaitForResponse {
+impl serde::Serialize for WaitForTxResponse {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -658,7 +1005,7 @@ impl serde::Serialize for WaitForResponse {
         if self.stage != 0 {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.WaitForResponse", len)?;
+        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.WaitForTxResponse", len)?;
         if !self.r#ref.is_empty() {
             struct_ser.serialize_field("ref", pbjson::private::base64::encode(&self.r#ref).as_str())?;
         }
@@ -670,7 +1017,7 @@ impl serde::Serialize for WaitForResponse {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for WaitForResponse {
+impl<'de> serde::Deserialize<'de> for WaitForTxResponse {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -717,13 +1064,13 @@ impl<'de> serde::Deserialize<'de> for WaitForResponse {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = WaitForResponse;
+            type Value = WaitForTxResponse;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct utxorpc.submit.v1.WaitForResponse")
+                formatter.write_str("struct utxorpc.submit.v1.WaitForTxResponse")
             }
 
-            fn visit_map<V>(self, mut map: V) -> std::result::Result<WaitForResponse, V::Error>
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<WaitForTxResponse, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -747,12 +1094,212 @@ impl<'de> serde::Deserialize<'de> for WaitForResponse {
                         }
                     }
                 }
-                Ok(WaitForResponse {
+                Ok(WaitForTxResponse {
                     r#ref: r#ref__.unwrap_or_default(),
                     stage: stage__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("utxorpc.submit.v1.WaitForResponse", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("utxorpc.submit.v1.WaitForTxResponse", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WatchMempoolRequest {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.predicate.is_some() {
+            len += 1;
+        }
+        if self.field_mask.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.WatchMempoolRequest", len)?;
+        if let Some(v) = self.predicate.as_ref() {
+            struct_ser.serialize_field("predicate", v)?;
+        }
+        if let Some(v) = self.field_mask.as_ref() {
+            struct_ser.serialize_field("fieldMask", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WatchMempoolRequest {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "predicate",
+            "field_mask",
+            "fieldMask",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Predicate,
+            FieldMask,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "predicate" => Ok(GeneratedField::Predicate),
+                            "fieldMask" | "field_mask" => Ok(GeneratedField::FieldMask),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WatchMempoolRequest;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.submit.v1.WatchMempoolRequest")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<WatchMempoolRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut predicate__ = None;
+                let mut field_mask__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Predicate => {
+                            if predicate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("predicate"));
+                            }
+                            predicate__ = map.next_value()?;
+                        }
+                        GeneratedField::FieldMask => {
+                            if field_mask__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fieldMask"));
+                            }
+                            field_mask__ = map.next_value()?;
+                        }
+                    }
+                }
+                Ok(WatchMempoolRequest {
+                    predicate: predicate__,
+                    field_mask: field_mask__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.submit.v1.WatchMempoolRequest", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WatchMempoolResponse {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.tx.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("utxorpc.submit.v1.WatchMempoolResponse", len)?;
+        if let Some(v) = self.tx.as_ref() {
+            struct_ser.serialize_field("tx", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WatchMempoolResponse {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "tx",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Tx,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "tx" => Ok(GeneratedField::Tx),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WatchMempoolResponse;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct utxorpc.submit.v1.WatchMempoolResponse")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> std::result::Result<WatchMempoolResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut tx__ = None;
+                while let Some(k) = map.next_key()? {
+                    match k {
+                        GeneratedField::Tx => {
+                            if tx__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("tx"));
+                            }
+                            tx__ = map.next_value()?;
+                        }
+                    }
+                }
+                Ok(WatchMempoolResponse {
+                    tx: tx__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("utxorpc.submit.v1.WatchMempoolResponse", FIELDS, GeneratedVisitor)
     }
 }

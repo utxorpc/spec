@@ -38,12 +38,36 @@ address ::
   (Prelude.Functor f, Data.ProtoLens.Field.HasField s "address" a) =>
   Lens.Family2.LensLike' f s a
 address = Data.ProtoLens.Field.field @"address"
+anyAddress ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "anyAddress" a) =>
+  Lens.Family2.LensLike' f s a
+anyAddress = Data.ProtoLens.Field.field @"anyAddress"
+anyAsset ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "anyAsset" a) =>
+  Lens.Family2.LensLike' f s a
+anyAsset = Data.ProtoLens.Field.field @"anyAsset"
 anyConstructor ::
   forall f s a.
   (Prelude.Functor f,
    Data.ProtoLens.Field.HasField s "anyConstructor" a) =>
   Lens.Family2.LensLike' f s a
 anyConstructor = Data.ProtoLens.Field.field @"anyConstructor"
+anyDatum ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "anyDatum" a) =>
+  Lens.Family2.LensLike' f s a
+anyDatum = Data.ProtoLens.Field.field @"anyDatum"
+anyOutput ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "anyOutput" a) =>
+  Lens.Family2.LensLike' f s a
+anyOutput = Data.ProtoLens.Field.field @"anyOutput"
 array ::
   forall f s a.
   (Prelude.Functor f, Data.ProtoLens.Field.HasField s "array" a) =>
@@ -92,6 +116,12 @@ boundedBytes ::
    Data.ProtoLens.Field.HasField s "boundedBytes" a) =>
   Lens.Family2.LensLike' f s a
 boundedBytes = Data.ProtoLens.Field.field @"boundedBytes"
+byronAddress ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "byronAddress" a) =>
+  Lens.Family2.LensLike' f s a
+byronAddress = Data.ProtoLens.Field.field @"byronAddress"
 bytes ::
   forall f s a.
   (Prelude.Functor f, Data.ProtoLens.Field.HasField s "bytes" a) =>
@@ -141,6 +171,19 @@ datumHash ::
    Data.ProtoLens.Field.HasField s "datumHash" a) =>
   Lens.Family2.LensLike' f s a
 datumHash = Data.ProtoLens.Field.field @"datumHash"
+delegationIsScript ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "delegationIsScript" a) =>
+  Lens.Family2.LensLike' f s a
+delegationIsScript
+  = Data.ProtoLens.Field.field @"delegationIsScript"
+delegationPart ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "delegationPart" a) =>
+  Lens.Family2.LensLike' f s a
+delegationPart = Data.ProtoLens.Field.field @"delegationPart"
 deltaCoin ::
   forall f s a.
   (Prelude.Functor f,
@@ -276,6 +319,30 @@ maybe'addrKeyHash ::
    Data.ProtoLens.Field.HasField s "maybe'addrKeyHash" a) =>
   Lens.Family2.LensLike' f s a
 maybe'addrKeyHash = Data.ProtoLens.Field.field @"maybe'addrKeyHash"
+maybe'anyAddress ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "maybe'anyAddress" a) =>
+  Lens.Family2.LensLike' f s a
+maybe'anyAddress = Data.ProtoLens.Field.field @"maybe'anyAddress"
+maybe'anyAsset ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "maybe'anyAsset" a) =>
+  Lens.Family2.LensLike' f s a
+maybe'anyAsset = Data.ProtoLens.Field.field @"maybe'anyAsset"
+maybe'anyDatum ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "maybe'anyDatum" a) =>
+  Lens.Family2.LensLike' f s a
+maybe'anyDatum = Data.ProtoLens.Field.field @"maybe'anyDatum"
+maybe'anyOutput ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "maybe'anyOutput" a) =>
+  Lens.Family2.LensLike' f s a
+maybe'anyOutput = Data.ProtoLens.Field.field @"maybe'anyOutput"
 maybe'array ::
   forall f s a.
   (Prelude.Functor f,
@@ -554,6 +621,12 @@ maybe'text ::
    Data.ProtoLens.Field.HasField s "maybe'text" a) =>
   Lens.Family2.LensLike' f s a
 maybe'text = Data.ProtoLens.Field.field @"maybe'text"
+maybe'txPattern ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "maybe'txPattern" a) =>
+  Lens.Family2.LensLike' f s a
+maybe'txPattern = Data.ProtoLens.Field.field @"maybe'txPattern"
 maybe'validity ::
   forall f s a.
   (Prelude.Functor f,
@@ -644,6 +717,18 @@ pairs ::
   (Prelude.Functor f, Data.ProtoLens.Field.HasField s "pairs" a) =>
   Lens.Family2.LensLike' f s a
 pairs = Data.ProtoLens.Field.field @"pairs"
+paymentIsScript ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "paymentIsScript" a) =>
+  Lens.Family2.LensLike' f s a
+paymentIsScript = Data.ProtoLens.Field.field @"paymentIsScript"
+paymentPart ::
+  forall f s a.
+  (Prelude.Functor f,
+   Data.ProtoLens.Field.HasField s "paymentPart" a) =>
+  Lens.Family2.LensLike' f s a
+paymentPart = Data.ProtoLens.Field.field @"paymentPart"
 pledge ::
   forall f s a.
   (Prelude.Functor f, Data.ProtoLens.Field.HasField s "pledge" a) =>

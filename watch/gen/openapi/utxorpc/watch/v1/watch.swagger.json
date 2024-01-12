@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "TxWatchService"
+      "name": "WatchService"
     }
   ],
   "consumes": [
@@ -45,26 +45,29 @@
         }
       }
     },
-    "v1AddressPredicate": {
+    "v1AddressPattern": {
       "type": "object",
       "properties": {
-        "matchSource": {
+        "byronAddress": {
           "type": "string",
-          "format": "byte",
-          "description": "Match transactions with the specified source address."
+          "format": "byte"
         },
-        "matchTarget": {
+        "paymentPart": {
           "type": "string",
-          "format": "byte",
-          "description": "Match transactions with the specified target address."
+          "format": "byte"
         },
-        "matchAny": {
+        "delegationPart": {
           "type": "string",
-          "format": "byte",
-          "description": "Match transactions with the specified address as either source or target."
+          "format": "byte"
+        },
+        "paymentIsScript": {
+          "type": "boolean"
+        },
+        "delegationIsScript": {
+          "type": "boolean"
         }
       },
-      "description": "Predicate to match transactions based on addresses."
+      "description": "Pattern of an address that can be used to evaluate matching predicates."
     },
     "v1AnyChainTx": {
       "type": "object",
@@ -76,27 +79,15 @@
       },
       "description": "Represents a transaction from any supported blockchain."
     },
-    "v1AnyPredicate": {
+    "v1AnyChainTxPattern": {
       "type": "object",
       "properties": {
-        "address": {
-          "$ref": "#/definitions/v1AddressPredicate",
-          "description": "Address-based predicate."
-        },
-        "asset": {
-          "$ref": "#/definitions/v1AssetPredicate",
-          "description": "Asset-based predicate."
-        },
-        "utxo": {
-          "$ref": "#/definitions/v1UtxoPredicate",
-          "description": "UTXO-based predicate."
-        },
-        "datum": {
-          "$ref": "#/definitions/v1DatumPredicate",
-          "description": "Datum-based predicate."
+        "cardano": {
+          "$ref": "#/definitions/v1TxPattern",
+          "description": "A Cardano tx pattern."
         }
       },
-      "description": "Predicate to match transactions based on any of the specified types."
+      "description": "Represents a tx pattern from any supported blockchain."
     },
     "v1Asset": {
       "type": "object",
@@ -119,21 +110,9 @@
       },
       "description": "Represents a custom asset in the Cardano blockchain."
     },
-    "v1AssetPredicate": {
+    "v1AssetPattern": {
       "type": "object",
-      "properties": {
-        "matchPolicy": {
-          "type": "string",
-          "format": "byte",
-          "description": "Match transactions with the specified asset policy."
-        },
-        "matchName": {
-          "type": "string",
-          "format": "byte",
-          "description": "Match transactions with the specified asset name."
-        }
-      },
-      "description": "Predicate to match transactions based on assets."
+      "description": "Pattern of a native asset that can be used to evaluate matching predicates.\n\nTBD"
     },
     "v1AuxData": {
       "type": "object",
@@ -253,16 +232,9 @@
       },
       "description": "Represents a constructor for Plutus data in Cardano."
     },
-    "v1DatumPredicate": {
+    "v1DatumPattern": {
       "type": "object",
-      "properties": {
-        "matchHash": {
-          "type": "string",
-          "format": "byte",
-          "description": "Match transactions with the specified datum hash."
-        }
-      },
-      "description": "Predicate to match transactions based on datums."
+      "description": "Pattern of an datum that can be used to evaluate matching predicates.\n\nTBD"
     },
     "v1GenesisKeyDelegationCert": {
       "type": "object",
@@ -460,6 +432,10 @@
         }
       },
       "description": "Represents a list of native scripts."
+    },
+    "v1OutputPattern": {
+      "type": "object",
+      "description": "Pattern of a tx output that can be used to evaluate matching predicates.\n\nTBD"
     },
     "v1PlutusData": {
       "type": "object",
@@ -885,6 +861,62 @@
       },
       "description": "Represents a transaction output in the Cardano blockchain."
     },
+    "v1TxPattern": {
+      "type": "object",
+      "properties": {
+        "anyOutput": {
+          "$ref": "#/definitions/v1OutputPattern",
+          "description": "Match any output that exhibits this pattern."
+        },
+        "anyAddress": {
+          "$ref": "#/definitions/v1AddressPattern",
+          "description": "Match any address (inputs, outputs, collateral, etc) that exhibits this pattern."
+        },
+        "anyAsset": {
+          "$ref": "#/definitions/v1AssetPattern",
+          "description": "Match any asset that exhibits this pattern."
+        },
+        "anyDatum": {
+          "$ref": "#/definitions/v1DatumPattern",
+          "description": "Match any datum that exhibits this pattern."
+        }
+      },
+      "description": "Pattern of a Tx that can be used to evaluate matching predicates."
+    },
+    "v1TxPredicate": {
+      "type": "object",
+      "properties": {
+        "match": {
+          "$ref": "#/definitions/v1AnyChainTxPattern",
+          "description": "Predicate is true if tx exhibits pattern."
+        },
+        "not": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TxPredicate"
+          },
+          "description": "Predicate is true if tx doesn't exhibit pattern."
+        },
+        "allOf": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TxPredicate"
+          },
+          "description": "Predicate is true if tx exhibits all of the patterns."
+        },
+        "anyOf": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TxPredicate"
+          },
+          "description": "Predicate is true if tx exhibits any of the patterns."
+        }
+      },
+      "title": "Represents a simple tx predicate that can composed to create more complext ones"
+    },
     "v1TxValidity": {
       "type": "object",
       "properties": {
@@ -900,22 +932,6 @@
         }
       },
       "description": "Represents the validity interval of a transaction."
-    },
-    "v1UtxoPredicate": {
-      "type": "object",
-      "properties": {
-        "matchHash": {
-          "type": "string",
-          "format": "byte",
-          "description": "Match transactions with the specified UTXO hash."
-        },
-        "matchIndex": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Match transactions with the specified UTXO index."
-        }
-      },
-      "description": "Predicate to match transactions based on UTXOs."
     },
     "v1VKeyWitness": {
       "type": "object",
@@ -945,7 +961,7 @@
           "description": "Undo this transaction."
         }
       },
-      "description": "Response containing the matching transactions."
+      "description": "Response containing the matching chain transactions."
     },
     "v1Withdrawal": {
       "type": "object",

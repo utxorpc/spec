@@ -14,7 +14,7 @@ pub mod submit_service_client {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
-            D: TryInto<tonic::transport::Endpoint>,
+            D: std::convert::TryInto<tonic::transport::Endpoint>,
             D::Error: Into<StdError>,
         {
             let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
@@ -70,27 +70,11 @@ pub mod submit_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Limits the maximum size of a decoded message.
         ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        ///
-        pub async fn submit(
+        pub async fn submit_tx(
             &mut self,
-            request: impl tonic::IntoRequest<super::SubmitRequest>,
-        ) -> std::result::Result<tonic::Response<super::SubmitResponse>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::SubmitTxRequest>,
+        ) -> Result<tonic::Response<super::SubmitTxResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -102,42 +86,16 @@ pub mod submit_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.submit.v1.SubmitService/Submit",
+                "/utxorpc.submit.v1.SubmitService/SubmitTx",
             );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("utxorpc.submit.v1.SubmitService", "Submit"));
-            self.inner.unary(req, path, codec).await
+            self.inner.unary(request.into_request(), path, codec).await
         }
         ///
-        pub async fn check(
+        pub async fn wait_for_tx(
             &mut self,
-            request: impl tonic::IntoRequest<super::CheckRequest>,
-        ) -> std::result::Result<tonic::Response<super::CheckResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.submit.v1.SubmitService/Check",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("utxorpc.submit.v1.SubmitService", "Check"));
-            self.inner.unary(req, path, codec).await
-        }
-        ///
-        pub async fn wait_for(
-            &mut self,
-            request: impl tonic::IntoRequest<super::WaitForRequest>,
-        ) -> std::result::Result<
-            tonic::Response<tonic::codec::Streaming<super::WaitForResponse>>,
+            request: impl tonic::IntoRequest<super::WaitForTxRequest>,
+        ) -> Result<
+            tonic::Response<tonic::codec::Streaming<super::WaitForTxResponse>>,
             tonic::Status,
         > {
             self.inner
@@ -151,12 +109,52 @@ pub mod submit_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/utxorpc.submit.v1.SubmitService/WaitFor",
+                "/utxorpc.submit.v1.SubmitService/WaitForTx",
             );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("utxorpc.submit.v1.SubmitService", "WaitFor"));
-            self.inner.server_streaming(req, path, codec).await
+            self.inner.server_streaming(request.into_request(), path, codec).await
+        }
+        ///
+        pub async fn read_mempool(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ReadMempoolRequest>,
+        ) -> Result<tonic::Response<super::ReadMempoolResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/utxorpc.submit.v1.SubmitService/ReadMempool",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        ///
+        pub async fn watch_mempool(
+            &mut self,
+            request: impl tonic::IntoRequest<super::WatchMempoolRequest>,
+        ) -> Result<
+            tonic::Response<tonic::codec::Streaming<super::WatchMempoolResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/utxorpc.submit.v1.SubmitService/WatchMempool",
+            );
+            self.inner.server_streaming(request.into_request(), path, codec).await
         }
     }
 }
@@ -168,26 +166,37 @@ pub mod submit_service_server {
     #[async_trait]
     pub trait SubmitService: Send + Sync + 'static {
         ///
-        async fn submit(
+        async fn submit_tx(
             &self,
-            request: tonic::Request<super::SubmitRequest>,
-        ) -> std::result::Result<tonic::Response<super::SubmitResponse>, tonic::Status>;
-        ///
-        async fn check(
-            &self,
-            request: tonic::Request<super::CheckRequest>,
-        ) -> std::result::Result<tonic::Response<super::CheckResponse>, tonic::Status>;
-        /// Server streaming response type for the WaitFor method.
-        type WaitForStream: futures_core::Stream<
-                Item = std::result::Result<super::WaitForResponse, tonic::Status>,
+            request: tonic::Request<super::SubmitTxRequest>,
+        ) -> Result<tonic::Response<super::SubmitTxResponse>, tonic::Status>;
+        /// Server streaming response type for the WaitForTx method.
+        type WaitForTxStream: futures_core::Stream<
+                Item = Result<super::WaitForTxResponse, tonic::Status>,
             >
             + Send
             + 'static;
         ///
-        async fn wait_for(
+        async fn wait_for_tx(
             &self,
-            request: tonic::Request<super::WaitForRequest>,
-        ) -> std::result::Result<tonic::Response<Self::WaitForStream>, tonic::Status>;
+            request: tonic::Request<super::WaitForTxRequest>,
+        ) -> Result<tonic::Response<Self::WaitForTxStream>, tonic::Status>;
+        ///
+        async fn read_mempool(
+            &self,
+            request: tonic::Request<super::ReadMempoolRequest>,
+        ) -> Result<tonic::Response<super::ReadMempoolResponse>, tonic::Status>;
+        /// Server streaming response type for the WatchMempool method.
+        type WatchMempoolStream: futures_core::Stream<
+                Item = Result<super::WatchMempoolResponse, tonic::Status>,
+            >
+            + Send
+            + 'static;
+        ///
+        async fn watch_mempool(
+            &self,
+            request: tonic::Request<super::WatchMempoolRequest>,
+        ) -> Result<tonic::Response<Self::WatchMempoolStream>, tonic::Status>;
     }
     /** Service definition for submitting transactions and checking their status.
 */
@@ -196,8 +205,6 @@ pub mod submit_service_server {
         inner: _Inner<T>,
         accept_compression_encodings: EnabledCompressionEncodings,
         send_compression_encodings: EnabledCompressionEncodings,
-        max_decoding_message_size: Option<usize>,
-        max_encoding_message_size: Option<usize>,
     }
     struct _Inner<T>(Arc<T>);
     impl<T: SubmitService> SubmitServiceServer<T> {
@@ -210,8 +217,6 @@ pub mod submit_service_server {
                 inner,
                 accept_compression_encodings: Default::default(),
                 send_compression_encodings: Default::default(),
-                max_decoding_message_size: None,
-                max_encoding_message_size: None,
             }
         }
         pub fn with_interceptor<F>(
@@ -235,22 +240,6 @@ pub mod submit_service_server {
             self.send_compression_encodings.enable(encoding);
             self
         }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.max_decoding_message_size = Some(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.max_encoding_message_size = Some(limit);
-            self
-        }
     }
     impl<T, B> tonic::codegen::Service<http::Request<B>> for SubmitServiceServer<T>
     where
@@ -264,138 +253,164 @@ pub mod submit_service_server {
         fn poll_ready(
             &mut self,
             _cx: &mut Context<'_>,
-        ) -> Poll<std::result::Result<(), Self::Error>> {
+        ) -> Poll<Result<(), Self::Error>> {
             Poll::Ready(Ok(()))
         }
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             let inner = self.inner.clone();
             match req.uri().path() {
-                "/utxorpc.submit.v1.SubmitService/Submit" => {
+                "/utxorpc.submit.v1.SubmitService/SubmitTx" => {
                     #[allow(non_camel_case_types)]
-                    struct SubmitSvc<T: SubmitService>(pub Arc<T>);
+                    struct SubmitTxSvc<T: SubmitService>(pub Arc<T>);
                     impl<
                         T: SubmitService,
-                    > tonic::server::UnaryService<super::SubmitRequest>
-                    for SubmitSvc<T> {
-                        type Response = super::SubmitResponse;
+                    > tonic::server::UnaryService<super::SubmitTxRequest>
+                    for SubmitTxSvc<T> {
+                        type Response = super::SubmitTxResponse;
                         type Future = BoxFuture<
                             tonic::Response<Self::Response>,
                             tonic::Status,
                         >;
                         fn call(
                             &mut self,
-                            request: tonic::Request<super::SubmitRequest>,
+                            request: tonic::Request<super::SubmitTxRequest>,
                         ) -> Self::Future {
-                            let inner = Arc::clone(&self.0);
-                            let fut = async move { (*inner).submit(request).await };
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).submit_tx(request).await };
                             Box::pin(fut)
                         }
                     }
                     let accept_compression_encodings = self.accept_compression_encodings;
                     let send_compression_encodings = self.send_compression_encodings;
-                    let max_decoding_message_size = self.max_decoding_message_size;
-                    let max_encoding_message_size = self.max_encoding_message_size;
                     let inner = self.inner.clone();
                     let fut = async move {
                         let inner = inner.0;
-                        let method = SubmitSvc(inner);
+                        let method = SubmitTxSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(
                                 accept_compression_encodings,
                                 send_compression_encodings,
-                            )
-                            .apply_max_message_size_config(
-                                max_decoding_message_size,
-                                max_encoding_message_size,
                             );
                         let res = grpc.unary(method, req).await;
                         Ok(res)
                     };
                     Box::pin(fut)
                 }
-                "/utxorpc.submit.v1.SubmitService/Check" => {
+                "/utxorpc.submit.v1.SubmitService/WaitForTx" => {
                     #[allow(non_camel_case_types)]
-                    struct CheckSvc<T: SubmitService>(pub Arc<T>);
+                    struct WaitForTxSvc<T: SubmitService>(pub Arc<T>);
                     impl<
                         T: SubmitService,
-                    > tonic::server::UnaryService<super::CheckRequest> for CheckSvc<T> {
-                        type Response = super::CheckResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
-                        fn call(
-                            &mut self,
-                            request: tonic::Request<super::CheckRequest>,
-                        ) -> Self::Future {
-                            let inner = Arc::clone(&self.0);
-                            let fut = async move { (*inner).check(request).await };
-                            Box::pin(fut)
-                        }
-                    }
-                    let accept_compression_encodings = self.accept_compression_encodings;
-                    let send_compression_encodings = self.send_compression_encodings;
-                    let max_decoding_message_size = self.max_decoding_message_size;
-                    let max_encoding_message_size = self.max_encoding_message_size;
-                    let inner = self.inner.clone();
-                    let fut = async move {
-                        let inner = inner.0;
-                        let method = CheckSvc(inner);
-                        let codec = tonic::codec::ProstCodec::default();
-                        let mut grpc = tonic::server::Grpc::new(codec)
-                            .apply_compression_config(
-                                accept_compression_encodings,
-                                send_compression_encodings,
-                            )
-                            .apply_max_message_size_config(
-                                max_decoding_message_size,
-                                max_encoding_message_size,
-                            );
-                        let res = grpc.unary(method, req).await;
-                        Ok(res)
-                    };
-                    Box::pin(fut)
-                }
-                "/utxorpc.submit.v1.SubmitService/WaitFor" => {
-                    #[allow(non_camel_case_types)]
-                    struct WaitForSvc<T: SubmitService>(pub Arc<T>);
-                    impl<
-                        T: SubmitService,
-                    > tonic::server::ServerStreamingService<super::WaitForRequest>
-                    for WaitForSvc<T> {
-                        type Response = super::WaitForResponse;
-                        type ResponseStream = T::WaitForStream;
+                    > tonic::server::ServerStreamingService<super::WaitForTxRequest>
+                    for WaitForTxSvc<T> {
+                        type Response = super::WaitForTxResponse;
+                        type ResponseStream = T::WaitForTxStream;
                         type Future = BoxFuture<
                             tonic::Response<Self::ResponseStream>,
                             tonic::Status,
                         >;
                         fn call(
                             &mut self,
-                            request: tonic::Request<super::WaitForRequest>,
+                            request: tonic::Request<super::WaitForTxRequest>,
                         ) -> Self::Future {
-                            let inner = Arc::clone(&self.0);
-                            let fut = async move { (*inner).wait_for(request).await };
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).wait_for_tx(request).await };
                             Box::pin(fut)
                         }
                     }
                     let accept_compression_encodings = self.accept_compression_encodings;
                     let send_compression_encodings = self.send_compression_encodings;
-                    let max_decoding_message_size = self.max_decoding_message_size;
-                    let max_encoding_message_size = self.max_encoding_message_size;
                     let inner = self.inner.clone();
                     let fut = async move {
                         let inner = inner.0;
-                        let method = WaitForSvc(inner);
+                        let method = WaitForTxSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(
                                 accept_compression_encodings,
                                 send_compression_encodings,
-                            )
-                            .apply_max_message_size_config(
-                                max_decoding_message_size,
-                                max_encoding_message_size,
+                            );
+                        let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/utxorpc.submit.v1.SubmitService/ReadMempool" => {
+                    #[allow(non_camel_case_types)]
+                    struct ReadMempoolSvc<T: SubmitService>(pub Arc<T>);
+                    impl<
+                        T: SubmitService,
+                    > tonic::server::UnaryService<super::ReadMempoolRequest>
+                    for ReadMempoolSvc<T> {
+                        type Response = super::ReadMempoolResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ReadMempoolRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move {
+                                (*inner).read_mempool(request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ReadMempoolSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/utxorpc.submit.v1.SubmitService/WatchMempool" => {
+                    #[allow(non_camel_case_types)]
+                    struct WatchMempoolSvc<T: SubmitService>(pub Arc<T>);
+                    impl<
+                        T: SubmitService,
+                    > tonic::server::ServerStreamingService<super::WatchMempoolRequest>
+                    for WatchMempoolSvc<T> {
+                        type Response = super::WatchMempoolResponse;
+                        type ResponseStream = T::WatchMempoolStream;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::ResponseStream>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::WatchMempoolRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move {
+                                (*inner).watch_mempool(request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = WatchMempoolSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
                             );
                         let res = grpc.server_streaming(method, req).await;
                         Ok(res)
@@ -424,14 +439,12 @@ pub mod submit_service_server {
                 inner,
                 accept_compression_encodings: self.accept_compression_encodings,
                 send_compression_encodings: self.send_compression_encodings,
-                max_decoding_message_size: self.max_decoding_message_size,
-                max_encoding_message_size: self.max_encoding_message_size,
             }
         }
     }
     impl<T: SubmitService> Clone for _Inner<T> {
         fn clone(&self) -> Self {
-            Self(Arc::clone(&self.0))
+            Self(self.0.clone())
         }
     }
     impl<T: std::fmt::Debug> std::fmt::Debug for _Inner<T> {

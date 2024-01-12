@@ -4,34 +4,37 @@
 {-# OPTIONS_GHC -Wno-duplicate-exports#-}
 {-# OPTIONS_GHC -Wno-dodgy-exports#-}
 module Proto.Utxorpc.Cardano.V1.Cardano (
-        Asset(), AuxData(), BigInt(), BigInt'BigInt(..), _BigInt'Int,
-        _BigInt'BigUInt, _BigInt'BigNInt, Block(), BlockBody(),
-        BlockHeader(), Certificate(), Certificate'Certificate(..),
-        _Certificate'StakeRegistration, _Certificate'StakeDeregistration,
-        _Certificate'StakeDelegation, _Certificate'PoolRegistration,
-        _Certificate'PoolRetirement, _Certificate'GenesisKeyDelegation,
-        _Certificate'MirCert, Collateral(), Constr(),
-        GenesisKeyDelegationCert(), Metadata(), Metadatum(),
-        Metadatum'Metadatum(..), _Metadatum'Int, _Metadatum'Bytes,
-        _Metadatum'Text, _Metadatum'Array, _Metadatum'Map,
-        MetadatumArray(), MetadatumMap(), MetadatumPair(), MirCert(),
-        MirSource(..), MirSource(), MirSource'UnrecognizedValue,
+        AddressPattern(), Asset(), AssetPattern(), AuxData(), BigInt(),
+        BigInt'BigInt(..), _BigInt'Int, _BigInt'BigUInt, _BigInt'BigNInt,
+        Block(), BlockBody(), BlockHeader(), Certificate(),
+        Certificate'Certificate(..), _Certificate'StakeRegistration,
+        _Certificate'StakeDeregistration, _Certificate'StakeDelegation,
+        _Certificate'PoolRegistration, _Certificate'PoolRetirement,
+        _Certificate'GenesisKeyDelegation, _Certificate'MirCert,
+        Collateral(), Constr(), DatumPattern(), GenesisKeyDelegationCert(),
+        Metadata(), Metadatum(), Metadatum'Metadatum(..), _Metadatum'Int,
+        _Metadatum'Bytes, _Metadatum'Text, _Metadatum'Array,
+        _Metadatum'Map, MetadatumArray(), MetadatumMap(), MetadatumPair(),
+        MirCert(), MirSource(..), MirSource(), MirSource'UnrecognizedValue,
         MirTarget(), Multiasset(), NativeScript(),
         NativeScript'NativeScript(..), _NativeScript'ScriptPubkey,
         _NativeScript'ScriptAll, _NativeScript'ScriptAny,
         _NativeScript'ScriptNOfK, _NativeScript'InvalidBefore,
-        _NativeScript'InvalidHereafter, NativeScriptList(), PlutusData(),
-        PlutusData'PlutusData(..), _PlutusData'Constr, _PlutusData'Map,
-        _PlutusData'BigInt, _PlutusData'BoundedBytes, _PlutusData'Array,
-        PlutusDataArray(), PlutusDataMap(), PlutusDataPair(),
-        PoolMetadata(), PoolRegistrationCert(), PoolRetirementCert(),
-        RationalNumber(), Redeemer(), RedeemerPurpose(..),
-        RedeemerPurpose(), RedeemerPurpose'UnrecognizedValue, Relay(),
-        Script(), Script'Script(..), _Script'Native, _Script'PlutusV1,
+        _NativeScript'InvalidHereafter, NativeScriptList(),
+        OutputPattern(), PlutusData(), PlutusData'PlutusData(..),
+        _PlutusData'Constr, _PlutusData'Map, _PlutusData'BigInt,
+        _PlutusData'BoundedBytes, _PlutusData'Array, PlutusDataArray(),
+        PlutusDataMap(), PlutusDataPair(), PoolMetadata(),
+        PoolRegistrationCert(), PoolRetirementCert(), RationalNumber(),
+        Redeemer(), RedeemerPurpose(..), RedeemerPurpose(),
+        RedeemerPurpose'UnrecognizedValue, Relay(), Script(),
+        Script'Script(..), _Script'Native, _Script'PlutusV1,
         _Script'PlutusV2, ScriptNOfK(), StakeCredential(),
         StakeCredential'StakeCredential(..), _StakeCredential'AddrKeyHash,
         _StakeCredential'ScriptHash, StakeDelegationCert(), Tx(),
-        TxInput(), TxOutput(), TxValidity(), VKeyWitness(), Withdrawal(),
+        TxInput(), TxOutput(), TxPattern(), TxPattern'TxPattern(..),
+        _TxPattern'AnyOutput, _TxPattern'AnyAddress, _TxPattern'AnyAsset,
+        _TxPattern'AnyDatum, TxValidity(), VKeyWitness(), Withdrawal(),
         WitnessSet()
     ) where
 import qualified Data.ProtoLens.Runtime.Control.DeepSeq as Control.DeepSeq
@@ -59,6 +62,309 @@ import qualified Data.ProtoLens.Runtime.Data.Vector as Data.Vector
 import qualified Data.ProtoLens.Runtime.Data.Vector.Generic as Data.Vector.Generic
 import qualified Data.ProtoLens.Runtime.Data.Vector.Unboxed as Data.Vector.Unboxed
 import qualified Data.ProtoLens.Runtime.Text.Read as Text.Read
+{- | Fields :
+     
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.byronAddress' @:: Lens' AddressPattern Data.ByteString.ByteString@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.paymentPart' @:: Lens' AddressPattern Data.ByteString.ByteString@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.delegationPart' @:: Lens' AddressPattern Data.ByteString.ByteString@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.paymentIsScript' @:: Lens' AddressPattern Prelude.Bool@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.delegationIsScript' @:: Lens' AddressPattern Prelude.Bool@ -}
+data AddressPattern
+  = AddressPattern'_constructor {_AddressPattern'byronAddress :: !Data.ByteString.ByteString,
+                                 _AddressPattern'paymentPart :: !Data.ByteString.ByteString,
+                                 _AddressPattern'delegationPart :: !Data.ByteString.ByteString,
+                                 _AddressPattern'paymentIsScript :: !Prelude.Bool,
+                                 _AddressPattern'delegationIsScript :: !Prelude.Bool,
+                                 _AddressPattern'_unknownFields :: !Data.ProtoLens.FieldSet}
+  deriving stock (Prelude.Eq, Prelude.Ord)
+instance Prelude.Show AddressPattern where
+  showsPrec _ __x __s
+    = Prelude.showChar
+        '{'
+        (Prelude.showString
+           (Data.ProtoLens.showMessageShort __x) (Prelude.showChar '}' __s))
+instance Data.ProtoLens.Field.HasField AddressPattern "byronAddress" Data.ByteString.ByteString where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _AddressPattern'byronAddress
+           (\ x__ y__ -> x__ {_AddressPattern'byronAddress = y__}))
+        Prelude.id
+instance Data.ProtoLens.Field.HasField AddressPattern "paymentPart" Data.ByteString.ByteString where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _AddressPattern'paymentPart
+           (\ x__ y__ -> x__ {_AddressPattern'paymentPart = y__}))
+        Prelude.id
+instance Data.ProtoLens.Field.HasField AddressPattern "delegationPart" Data.ByteString.ByteString where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _AddressPattern'delegationPart
+           (\ x__ y__ -> x__ {_AddressPattern'delegationPart = y__}))
+        Prelude.id
+instance Data.ProtoLens.Field.HasField AddressPattern "paymentIsScript" Prelude.Bool where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _AddressPattern'paymentIsScript
+           (\ x__ y__ -> x__ {_AddressPattern'paymentIsScript = y__}))
+        Prelude.id
+instance Data.ProtoLens.Field.HasField AddressPattern "delegationIsScript" Prelude.Bool where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _AddressPattern'delegationIsScript
+           (\ x__ y__ -> x__ {_AddressPattern'delegationIsScript = y__}))
+        Prelude.id
+instance Data.ProtoLens.Message AddressPattern where
+  messageName _ = Data.Text.pack "utxorpc.cardano.v1.AddressPattern"
+  packedMessageDescriptor _
+    = "\n\
+      \\SOAddressPattern\DC2#\n\
+      \\rbyron_address\CAN\SOH \SOH(\fR\fbyronAddress\DC2!\n\
+      \\fpayment_part\CAN\STX \SOH(\fR\vpaymentPart\DC2'\n\
+      \\SIdelegation_part\CAN\ETX \SOH(\fR\SOdelegationPart\DC2*\n\
+      \\DC1payment_is_script\CAN\EOT \SOH(\bR\SIpaymentIsScript\DC20\n\
+      \\DC4delegation_is_script\CAN\ENQ \SOH(\bR\DC2delegationIsScript"
+  packedFileDescriptor _ = packedFileDescriptor
+  fieldsByTag
+    = let
+        byronAddress__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "byron_address"
+              (Data.ProtoLens.ScalarField Data.ProtoLens.BytesField ::
+                 Data.ProtoLens.FieldTypeDescriptor Data.ByteString.ByteString)
+              (Data.ProtoLens.PlainField
+                 Data.ProtoLens.Optional
+                 (Data.ProtoLens.Field.field @"byronAddress")) ::
+              Data.ProtoLens.FieldDescriptor AddressPattern
+        paymentPart__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "payment_part"
+              (Data.ProtoLens.ScalarField Data.ProtoLens.BytesField ::
+                 Data.ProtoLens.FieldTypeDescriptor Data.ByteString.ByteString)
+              (Data.ProtoLens.PlainField
+                 Data.ProtoLens.Optional
+                 (Data.ProtoLens.Field.field @"paymentPart")) ::
+              Data.ProtoLens.FieldDescriptor AddressPattern
+        delegationPart__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "delegation_part"
+              (Data.ProtoLens.ScalarField Data.ProtoLens.BytesField ::
+                 Data.ProtoLens.FieldTypeDescriptor Data.ByteString.ByteString)
+              (Data.ProtoLens.PlainField
+                 Data.ProtoLens.Optional
+                 (Data.ProtoLens.Field.field @"delegationPart")) ::
+              Data.ProtoLens.FieldDescriptor AddressPattern
+        paymentIsScript__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "payment_is_script"
+              (Data.ProtoLens.ScalarField Data.ProtoLens.BoolField ::
+                 Data.ProtoLens.FieldTypeDescriptor Prelude.Bool)
+              (Data.ProtoLens.PlainField
+                 Data.ProtoLens.Optional
+                 (Data.ProtoLens.Field.field @"paymentIsScript")) ::
+              Data.ProtoLens.FieldDescriptor AddressPattern
+        delegationIsScript__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "delegation_is_script"
+              (Data.ProtoLens.ScalarField Data.ProtoLens.BoolField ::
+                 Data.ProtoLens.FieldTypeDescriptor Prelude.Bool)
+              (Data.ProtoLens.PlainField
+                 Data.ProtoLens.Optional
+                 (Data.ProtoLens.Field.field @"delegationIsScript")) ::
+              Data.ProtoLens.FieldDescriptor AddressPattern
+      in
+        Data.Map.fromList
+          [(Data.ProtoLens.Tag 1, byronAddress__field_descriptor),
+           (Data.ProtoLens.Tag 2, paymentPart__field_descriptor),
+           (Data.ProtoLens.Tag 3, delegationPart__field_descriptor),
+           (Data.ProtoLens.Tag 4, paymentIsScript__field_descriptor),
+           (Data.ProtoLens.Tag 5, delegationIsScript__field_descriptor)]
+  unknownFields
+    = Lens.Family2.Unchecked.lens
+        _AddressPattern'_unknownFields
+        (\ x__ y__ -> x__ {_AddressPattern'_unknownFields = y__})
+  defMessage
+    = AddressPattern'_constructor
+        {_AddressPattern'byronAddress = Data.ProtoLens.fieldDefault,
+         _AddressPattern'paymentPart = Data.ProtoLens.fieldDefault,
+         _AddressPattern'delegationPart = Data.ProtoLens.fieldDefault,
+         _AddressPattern'paymentIsScript = Data.ProtoLens.fieldDefault,
+         _AddressPattern'delegationIsScript = Data.ProtoLens.fieldDefault,
+         _AddressPattern'_unknownFields = []}
+  parseMessage
+    = let
+        loop ::
+          AddressPattern
+          -> Data.ProtoLens.Encoding.Bytes.Parser AddressPattern
+        loop x
+          = do end <- Data.ProtoLens.Encoding.Bytes.atEnd
+               if end then
+                   do (let missing = []
+                       in
+                         if Prelude.null missing then
+                             Prelude.return ()
+                         else
+                             Prelude.fail
+                               ((Prelude.++)
+                                  "Missing required fields: "
+                                  (Prelude.show (missing :: [Prelude.String]))))
+                      Prelude.return
+                        (Lens.Family2.over
+                           Data.ProtoLens.unknownFields (\ !t -> Prelude.reverse t) x)
+               else
+                   do tag <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                      case tag of
+                        10
+                          -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                       (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                                           Data.ProtoLens.Encoding.Bytes.getBytes
+                                             (Prelude.fromIntegral len))
+                                       "byron_address"
+                                loop
+                                  (Lens.Family2.set
+                                     (Data.ProtoLens.Field.field @"byronAddress") y x)
+                        18
+                          -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                       (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                                           Data.ProtoLens.Encoding.Bytes.getBytes
+                                             (Prelude.fromIntegral len))
+                                       "payment_part"
+                                loop
+                                  (Lens.Family2.set (Data.ProtoLens.Field.field @"paymentPart") y x)
+                        26
+                          -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                       (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                                           Data.ProtoLens.Encoding.Bytes.getBytes
+                                             (Prelude.fromIntegral len))
+                                       "delegation_part"
+                                loop
+                                  (Lens.Family2.set
+                                     (Data.ProtoLens.Field.field @"delegationPart") y x)
+                        32
+                          -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                       (Prelude.fmap
+                                          ((Prelude./=) 0) Data.ProtoLens.Encoding.Bytes.getVarInt)
+                                       "payment_is_script"
+                                loop
+                                  (Lens.Family2.set
+                                     (Data.ProtoLens.Field.field @"paymentIsScript") y x)
+                        40
+                          -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                       (Prelude.fmap
+                                          ((Prelude./=) 0) Data.ProtoLens.Encoding.Bytes.getVarInt)
+                                       "delegation_is_script"
+                                loop
+                                  (Lens.Family2.set
+                                     (Data.ProtoLens.Field.field @"delegationIsScript") y x)
+                        wire
+                          -> do !y <- Data.ProtoLens.Encoding.Wire.parseTaggedValueFromWire
+                                        wire
+                                loop
+                                  (Lens.Family2.over
+                                     Data.ProtoLens.unknownFields (\ !t -> (:) y t) x)
+      in
+        (Data.ProtoLens.Encoding.Bytes.<?>)
+          (do loop Data.ProtoLens.defMessage) "AddressPattern"
+  buildMessage
+    = \ _x
+        -> (Data.Monoid.<>)
+             (let
+                _v
+                  = Lens.Family2.view (Data.ProtoLens.Field.field @"byronAddress") _x
+              in
+                if (Prelude.==) _v Data.ProtoLens.fieldDefault then
+                    Data.Monoid.mempty
+                else
+                    (Data.Monoid.<>)
+                      (Data.ProtoLens.Encoding.Bytes.putVarInt 10)
+                      ((\ bs
+                          -> (Data.Monoid.<>)
+                               (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                  (Prelude.fromIntegral (Data.ByteString.length bs)))
+                               (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                         _v))
+             ((Data.Monoid.<>)
+                (let
+                   _v
+                     = Lens.Family2.view (Data.ProtoLens.Field.field @"paymentPart") _x
+                 in
+                   if (Prelude.==) _v Data.ProtoLens.fieldDefault then
+                       Data.Monoid.mempty
+                   else
+                       (Data.Monoid.<>)
+                         (Data.ProtoLens.Encoding.Bytes.putVarInt 18)
+                         ((\ bs
+                             -> (Data.Monoid.<>)
+                                  (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                     (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                  (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                            _v))
+                ((Data.Monoid.<>)
+                   (let
+                      _v
+                        = Lens.Family2.view
+                            (Data.ProtoLens.Field.field @"delegationPart") _x
+                    in
+                      if (Prelude.==) _v Data.ProtoLens.fieldDefault then
+                          Data.Monoid.mempty
+                      else
+                          (Data.Monoid.<>)
+                            (Data.ProtoLens.Encoding.Bytes.putVarInt 26)
+                            ((\ bs
+                                -> (Data.Monoid.<>)
+                                     (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                        (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                     (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                               _v))
+                   ((Data.Monoid.<>)
+                      (let
+                         _v
+                           = Lens.Family2.view
+                               (Data.ProtoLens.Field.field @"paymentIsScript") _x
+                       in
+                         if (Prelude.==) _v Data.ProtoLens.fieldDefault then
+                             Data.Monoid.mempty
+                         else
+                             (Data.Monoid.<>)
+                               (Data.ProtoLens.Encoding.Bytes.putVarInt 32)
+                               ((Prelude..)
+                                  Data.ProtoLens.Encoding.Bytes.putVarInt
+                                  (\ b -> if b then 1 else 0) _v))
+                      ((Data.Monoid.<>)
+                         (let
+                            _v
+                              = Lens.Family2.view
+                                  (Data.ProtoLens.Field.field @"delegationIsScript") _x
+                          in
+                            if (Prelude.==) _v Data.ProtoLens.fieldDefault then
+                                Data.Monoid.mempty
+                            else
+                                (Data.Monoid.<>)
+                                  (Data.ProtoLens.Encoding.Bytes.putVarInt 40)
+                                  ((Prelude..)
+                                     Data.ProtoLens.Encoding.Bytes.putVarInt
+                                     (\ b -> if b then 1 else 0) _v))
+                         (Data.ProtoLens.Encoding.Wire.buildFieldSet
+                            (Lens.Family2.view Data.ProtoLens.unknownFields _x))))))
+instance Control.DeepSeq.NFData AddressPattern where
+  rnf
+    = \ x__
+        -> Control.DeepSeq.deepseq
+             (_AddressPattern'_unknownFields x__)
+             (Control.DeepSeq.deepseq
+                (_AddressPattern'byronAddress x__)
+                (Control.DeepSeq.deepseq
+                   (_AddressPattern'paymentPart x__)
+                   (Control.DeepSeq.deepseq
+                      (_AddressPattern'delegationPart x__)
+                      (Control.DeepSeq.deepseq
+                         (_AddressPattern'paymentIsScript x__)
+                         (Control.DeepSeq.deepseq
+                            (_AddressPattern'delegationIsScript x__) ())))))
 {- | Fields :
      
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.name' @:: Lens' Asset Data.ByteString.ByteString@
@@ -247,6 +553,69 @@ instance Control.DeepSeq.NFData Asset where
                 (Control.DeepSeq.deepseq
                    (_Asset'outputCoin x__)
                    (Control.DeepSeq.deepseq (_Asset'mintCoin x__) ())))
+{- | Fields :
+      -}
+data AssetPattern
+  = AssetPattern'_constructor {_AssetPattern'_unknownFields :: !Data.ProtoLens.FieldSet}
+  deriving stock (Prelude.Eq, Prelude.Ord)
+instance Prelude.Show AssetPattern where
+  showsPrec _ __x __s
+    = Prelude.showChar
+        '{'
+        (Prelude.showString
+           (Data.ProtoLens.showMessageShort __x) (Prelude.showChar '}' __s))
+instance Data.ProtoLens.Message AssetPattern where
+  messageName _ = Data.Text.pack "utxorpc.cardano.v1.AssetPattern"
+  packedMessageDescriptor _
+    = "\n\
+      \\fAssetPattern"
+  packedFileDescriptor _ = packedFileDescriptor
+  fieldsByTag = let in Data.Map.fromList []
+  unknownFields
+    = Lens.Family2.Unchecked.lens
+        _AssetPattern'_unknownFields
+        (\ x__ y__ -> x__ {_AssetPattern'_unknownFields = y__})
+  defMessage
+    = AssetPattern'_constructor {_AssetPattern'_unknownFields = []}
+  parseMessage
+    = let
+        loop ::
+          AssetPattern -> Data.ProtoLens.Encoding.Bytes.Parser AssetPattern
+        loop x
+          = do end <- Data.ProtoLens.Encoding.Bytes.atEnd
+               if end then
+                   do (let missing = []
+                       in
+                         if Prelude.null missing then
+                             Prelude.return ()
+                         else
+                             Prelude.fail
+                               ((Prelude.++)
+                                  "Missing required fields: "
+                                  (Prelude.show (missing :: [Prelude.String]))))
+                      Prelude.return
+                        (Lens.Family2.over
+                           Data.ProtoLens.unknownFields (\ !t -> Prelude.reverse t) x)
+               else
+                   do tag <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                      case tag of
+                        wire
+                          -> do !y <- Data.ProtoLens.Encoding.Wire.parseTaggedValueFromWire
+                                        wire
+                                loop
+                                  (Lens.Family2.over
+                                     Data.ProtoLens.unknownFields (\ !t -> (:) y t) x)
+      in
+        (Data.ProtoLens.Encoding.Bytes.<?>)
+          (do loop Data.ProtoLens.defMessage) "AssetPattern"
+  buildMessage
+    = \ _x
+        -> Data.ProtoLens.Encoding.Wire.buildFieldSet
+             (Lens.Family2.view Data.ProtoLens.unknownFields _x)
+instance Control.DeepSeq.NFData AssetPattern where
+  rnf
+    = \ x__
+        -> Control.DeepSeq.deepseq (_AssetPattern'_unknownFields x__) ()
 {- | Fields :
      
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.metadata' @:: Lens' AuxData [Metadata]@
@@ -2170,6 +2539,69 @@ instance Control.DeepSeq.NFData Constr where
                    (_Constr'anyConstructor x__)
                    (Control.DeepSeq.deepseq (_Constr'fields x__) ())))
 {- | Fields :
+      -}
+data DatumPattern
+  = DatumPattern'_constructor {_DatumPattern'_unknownFields :: !Data.ProtoLens.FieldSet}
+  deriving stock (Prelude.Eq, Prelude.Ord)
+instance Prelude.Show DatumPattern where
+  showsPrec _ __x __s
+    = Prelude.showChar
+        '{'
+        (Prelude.showString
+           (Data.ProtoLens.showMessageShort __x) (Prelude.showChar '}' __s))
+instance Data.ProtoLens.Message DatumPattern where
+  messageName _ = Data.Text.pack "utxorpc.cardano.v1.DatumPattern"
+  packedMessageDescriptor _
+    = "\n\
+      \\fDatumPattern"
+  packedFileDescriptor _ = packedFileDescriptor
+  fieldsByTag = let in Data.Map.fromList []
+  unknownFields
+    = Lens.Family2.Unchecked.lens
+        _DatumPattern'_unknownFields
+        (\ x__ y__ -> x__ {_DatumPattern'_unknownFields = y__})
+  defMessage
+    = DatumPattern'_constructor {_DatumPattern'_unknownFields = []}
+  parseMessage
+    = let
+        loop ::
+          DatumPattern -> Data.ProtoLens.Encoding.Bytes.Parser DatumPattern
+        loop x
+          = do end <- Data.ProtoLens.Encoding.Bytes.atEnd
+               if end then
+                   do (let missing = []
+                       in
+                         if Prelude.null missing then
+                             Prelude.return ()
+                         else
+                             Prelude.fail
+                               ((Prelude.++)
+                                  "Missing required fields: "
+                                  (Prelude.show (missing :: [Prelude.String]))))
+                      Prelude.return
+                        (Lens.Family2.over
+                           Data.ProtoLens.unknownFields (\ !t -> Prelude.reverse t) x)
+               else
+                   do tag <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                      case tag of
+                        wire
+                          -> do !y <- Data.ProtoLens.Encoding.Wire.parseTaggedValueFromWire
+                                        wire
+                                loop
+                                  (Lens.Family2.over
+                                     Data.ProtoLens.unknownFields (\ !t -> (:) y t) x)
+      in
+        (Data.ProtoLens.Encoding.Bytes.<?>)
+          (do loop Data.ProtoLens.defMessage) "DatumPattern"
+  buildMessage
+    = \ _x
+        -> Data.ProtoLens.Encoding.Wire.buildFieldSet
+             (Lens.Family2.view Data.ProtoLens.unknownFields _x)
+instance Control.DeepSeq.NFData DatumPattern where
+  rnf
+    = \ x__
+        -> Control.DeepSeq.deepseq (_DatumPattern'_unknownFields x__) ()
+{- | Fields :
      
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.genesisHash' @:: Lens' GenesisKeyDelegationCert Data.ByteString.ByteString@
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.genesisDelegateHash' @:: Lens' GenesisKeyDelegationCert Data.ByteString.ByteString@
@@ -2805,14 +3237,9 @@ instance Data.ProtoLens.Message Metadatum where
                                 loop (Lens.Family2.set (Data.ProtoLens.Field.field @"bytes") y x)
                         26
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
-                                       (do value <- do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
-                                                       Data.ProtoLens.Encoding.Bytes.getBytes
-                                                         (Prelude.fromIntegral len)
-                                           Data.ProtoLens.Encoding.Bytes.runEither
-                                             (case Data.Text.Encoding.decodeUtf8' value of
-                                                (Prelude.Left err)
-                                                  -> Prelude.Left (Prelude.show err)
-                                                (Prelude.Right r) -> Prelude.Right r))
+                                       (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                                           Data.ProtoLens.Encoding.Bytes.getText
+                                             (Prelude.fromIntegral len))
                                        "text"
                                 loop (Lens.Family2.set (Data.ProtoLens.Field.field @"text") y x)
                         34
@@ -4623,6 +5050,69 @@ instance Control.DeepSeq.NFData NativeScriptList where
              (_NativeScriptList'_unknownFields x__)
              (Control.DeepSeq.deepseq (_NativeScriptList'items x__) ())
 {- | Fields :
+      -}
+data OutputPattern
+  = OutputPattern'_constructor {_OutputPattern'_unknownFields :: !Data.ProtoLens.FieldSet}
+  deriving stock (Prelude.Eq, Prelude.Ord)
+instance Prelude.Show OutputPattern where
+  showsPrec _ __x __s
+    = Prelude.showChar
+        '{'
+        (Prelude.showString
+           (Data.ProtoLens.showMessageShort __x) (Prelude.showChar '}' __s))
+instance Data.ProtoLens.Message OutputPattern where
+  messageName _ = Data.Text.pack "utxorpc.cardano.v1.OutputPattern"
+  packedMessageDescriptor _
+    = "\n\
+      \\rOutputPattern"
+  packedFileDescriptor _ = packedFileDescriptor
+  fieldsByTag = let in Data.Map.fromList []
+  unknownFields
+    = Lens.Family2.Unchecked.lens
+        _OutputPattern'_unknownFields
+        (\ x__ y__ -> x__ {_OutputPattern'_unknownFields = y__})
+  defMessage
+    = OutputPattern'_constructor {_OutputPattern'_unknownFields = []}
+  parseMessage
+    = let
+        loop ::
+          OutputPattern -> Data.ProtoLens.Encoding.Bytes.Parser OutputPattern
+        loop x
+          = do end <- Data.ProtoLens.Encoding.Bytes.atEnd
+               if end then
+                   do (let missing = []
+                       in
+                         if Prelude.null missing then
+                             Prelude.return ()
+                         else
+                             Prelude.fail
+                               ((Prelude.++)
+                                  "Missing required fields: "
+                                  (Prelude.show (missing :: [Prelude.String]))))
+                      Prelude.return
+                        (Lens.Family2.over
+                           Data.ProtoLens.unknownFields (\ !t -> Prelude.reverse t) x)
+               else
+                   do tag <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                      case tag of
+                        wire
+                          -> do !y <- Data.ProtoLens.Encoding.Wire.parseTaggedValueFromWire
+                                        wire
+                                loop
+                                  (Lens.Family2.over
+                                     Data.ProtoLens.unknownFields (\ !t -> (:) y t) x)
+      in
+        (Data.ProtoLens.Encoding.Bytes.<?>)
+          (do loop Data.ProtoLens.defMessage) "OutputPattern"
+  buildMessage
+    = \ _x
+        -> Data.ProtoLens.Encoding.Wire.buildFieldSet
+             (Lens.Family2.view Data.ProtoLens.unknownFields _x)
+instance Control.DeepSeq.NFData OutputPattern where
+  rnf
+    = \ x__
+        -> Control.DeepSeq.deepseq (_OutputPattern'_unknownFields x__) ()
+{- | Fields :
      
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.maybe'plutusData' @:: Lens' PlutusData (Prelude.Maybe PlutusData'PlutusData)@
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.maybe'constr' @:: Lens' PlutusData (Prelude.Maybe Constr)@
@@ -5567,14 +6057,9 @@ instance Data.ProtoLens.Message PoolMetadata where
                       case tag of
                         10
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
-                                       (do value <- do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
-                                                       Data.ProtoLens.Encoding.Bytes.getBytes
-                                                         (Prelude.fromIntegral len)
-                                           Data.ProtoLens.Encoding.Bytes.runEither
-                                             (case Data.Text.Encoding.decodeUtf8' value of
-                                                (Prelude.Left err)
-                                                  -> Prelude.Left (Prelude.show err)
-                                                (Prelude.Right r) -> Prelude.Right r))
+                                       (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                                           Data.ProtoLens.Encoding.Bytes.getText
+                                             (Prelude.fromIntegral len))
                                        "url"
                                 loop (Lens.Family2.set (Data.ProtoLens.Field.field @"url") y x)
                         18
@@ -6861,14 +7346,9 @@ instance Data.ProtoLens.Message Relay where
                                 loop (Lens.Family2.set (Data.ProtoLens.Field.field @"ipV6") y x)
                         26
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
-                                       (do value <- do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
-                                                       Data.ProtoLens.Encoding.Bytes.getBytes
-                                                         (Prelude.fromIntegral len)
-                                           Data.ProtoLens.Encoding.Bytes.runEither
-                                             (case Data.Text.Encoding.decodeUtf8' value of
-                                                (Prelude.Left err)
-                                                  -> Prelude.Left (Prelude.show err)
-                                                (Prelude.Right r) -> Prelude.Right r))
+                                       (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                                           Data.ProtoLens.Encoding.Bytes.getText
+                                             (Prelude.fromIntegral len))
                                        "dns_name"
                                 loop (Lens.Family2.set (Data.ProtoLens.Field.field @"dnsName") y x)
                         32
@@ -9206,6 +9686,365 @@ instance Control.DeepSeq.NFData TxOutput where
                             (Control.DeepSeq.deepseq (_TxOutput'script x__) ()))))))
 {- | Fields :
      
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.maybe'txPattern' @:: Lens' TxPattern (Prelude.Maybe TxPattern'TxPattern)@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.maybe'anyOutput' @:: Lens' TxPattern (Prelude.Maybe OutputPattern)@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.anyOutput' @:: Lens' TxPattern OutputPattern@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.maybe'anyAddress' @:: Lens' TxPattern (Prelude.Maybe AddressPattern)@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.anyAddress' @:: Lens' TxPattern AddressPattern@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.maybe'anyAsset' @:: Lens' TxPattern (Prelude.Maybe AssetPattern)@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.anyAsset' @:: Lens' TxPattern AssetPattern@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.maybe'anyDatum' @:: Lens' TxPattern (Prelude.Maybe DatumPattern)@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.anyDatum' @:: Lens' TxPattern DatumPattern@ -}
+data TxPattern
+  = TxPattern'_constructor {_TxPattern'txPattern :: !(Prelude.Maybe TxPattern'TxPattern),
+                            _TxPattern'_unknownFields :: !Data.ProtoLens.FieldSet}
+  deriving stock (Prelude.Eq, Prelude.Ord)
+instance Prelude.Show TxPattern where
+  showsPrec _ __x __s
+    = Prelude.showChar
+        '{'
+        (Prelude.showString
+           (Data.ProtoLens.showMessageShort __x) (Prelude.showChar '}' __s))
+data TxPattern'TxPattern
+  = TxPattern'AnyOutput !OutputPattern |
+    TxPattern'AnyAddress !AddressPattern |
+    TxPattern'AnyAsset !AssetPattern |
+    TxPattern'AnyDatum !DatumPattern
+  deriving stock (Prelude.Show, Prelude.Eq, Prelude.Ord)
+instance Data.ProtoLens.Field.HasField TxPattern "maybe'txPattern" (Prelude.Maybe TxPattern'TxPattern) where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _TxPattern'txPattern
+           (\ x__ y__ -> x__ {_TxPattern'txPattern = y__}))
+        Prelude.id
+instance Data.ProtoLens.Field.HasField TxPattern "maybe'anyOutput" (Prelude.Maybe OutputPattern) where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _TxPattern'txPattern
+           (\ x__ y__ -> x__ {_TxPattern'txPattern = y__}))
+        (Lens.Family2.Unchecked.lens
+           (\ x__
+              -> case x__ of
+                   (Prelude.Just (TxPattern'AnyOutput x__val)) -> Prelude.Just x__val
+                   _otherwise -> Prelude.Nothing)
+           (\ _ y__ -> Prelude.fmap TxPattern'AnyOutput y__))
+instance Data.ProtoLens.Field.HasField TxPattern "anyOutput" OutputPattern where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _TxPattern'txPattern
+           (\ x__ y__ -> x__ {_TxPattern'txPattern = y__}))
+        ((Prelude..)
+           (Lens.Family2.Unchecked.lens
+              (\ x__
+                 -> case x__ of
+                      (Prelude.Just (TxPattern'AnyOutput x__val)) -> Prelude.Just x__val
+                      _otherwise -> Prelude.Nothing)
+              (\ _ y__ -> Prelude.fmap TxPattern'AnyOutput y__))
+           (Data.ProtoLens.maybeLens Data.ProtoLens.defMessage))
+instance Data.ProtoLens.Field.HasField TxPattern "maybe'anyAddress" (Prelude.Maybe AddressPattern) where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _TxPattern'txPattern
+           (\ x__ y__ -> x__ {_TxPattern'txPattern = y__}))
+        (Lens.Family2.Unchecked.lens
+           (\ x__
+              -> case x__ of
+                   (Prelude.Just (TxPattern'AnyAddress x__val)) -> Prelude.Just x__val
+                   _otherwise -> Prelude.Nothing)
+           (\ _ y__ -> Prelude.fmap TxPattern'AnyAddress y__))
+instance Data.ProtoLens.Field.HasField TxPattern "anyAddress" AddressPattern where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _TxPattern'txPattern
+           (\ x__ y__ -> x__ {_TxPattern'txPattern = y__}))
+        ((Prelude..)
+           (Lens.Family2.Unchecked.lens
+              (\ x__
+                 -> case x__ of
+                      (Prelude.Just (TxPattern'AnyAddress x__val)) -> Prelude.Just x__val
+                      _otherwise -> Prelude.Nothing)
+              (\ _ y__ -> Prelude.fmap TxPattern'AnyAddress y__))
+           (Data.ProtoLens.maybeLens Data.ProtoLens.defMessage))
+instance Data.ProtoLens.Field.HasField TxPattern "maybe'anyAsset" (Prelude.Maybe AssetPattern) where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _TxPattern'txPattern
+           (\ x__ y__ -> x__ {_TxPattern'txPattern = y__}))
+        (Lens.Family2.Unchecked.lens
+           (\ x__
+              -> case x__ of
+                   (Prelude.Just (TxPattern'AnyAsset x__val)) -> Prelude.Just x__val
+                   _otherwise -> Prelude.Nothing)
+           (\ _ y__ -> Prelude.fmap TxPattern'AnyAsset y__))
+instance Data.ProtoLens.Field.HasField TxPattern "anyAsset" AssetPattern where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _TxPattern'txPattern
+           (\ x__ y__ -> x__ {_TxPattern'txPattern = y__}))
+        ((Prelude..)
+           (Lens.Family2.Unchecked.lens
+              (\ x__
+                 -> case x__ of
+                      (Prelude.Just (TxPattern'AnyAsset x__val)) -> Prelude.Just x__val
+                      _otherwise -> Prelude.Nothing)
+              (\ _ y__ -> Prelude.fmap TxPattern'AnyAsset y__))
+           (Data.ProtoLens.maybeLens Data.ProtoLens.defMessage))
+instance Data.ProtoLens.Field.HasField TxPattern "maybe'anyDatum" (Prelude.Maybe DatumPattern) where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _TxPattern'txPattern
+           (\ x__ y__ -> x__ {_TxPattern'txPattern = y__}))
+        (Lens.Family2.Unchecked.lens
+           (\ x__
+              -> case x__ of
+                   (Prelude.Just (TxPattern'AnyDatum x__val)) -> Prelude.Just x__val
+                   _otherwise -> Prelude.Nothing)
+           (\ _ y__ -> Prelude.fmap TxPattern'AnyDatum y__))
+instance Data.ProtoLens.Field.HasField TxPattern "anyDatum" DatumPattern where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _TxPattern'txPattern
+           (\ x__ y__ -> x__ {_TxPattern'txPattern = y__}))
+        ((Prelude..)
+           (Lens.Family2.Unchecked.lens
+              (\ x__
+                 -> case x__ of
+                      (Prelude.Just (TxPattern'AnyDatum x__val)) -> Prelude.Just x__val
+                      _otherwise -> Prelude.Nothing)
+              (\ _ y__ -> Prelude.fmap TxPattern'AnyDatum y__))
+           (Data.ProtoLens.maybeLens Data.ProtoLens.defMessage))
+instance Data.ProtoLens.Message TxPattern where
+  messageName _ = Data.Text.pack "utxorpc.cardano.v1.TxPattern"
+  packedMessageDescriptor _
+    = "\n\
+      \\tTxPattern\DC2B\n\
+      \\n\
+      \any_output\CAN\SOH \SOH(\v2!.utxorpc.cardano.v1.OutputPatternH\NULR\tanyOutput\DC2E\n\
+      \\vany_address\CAN\STX \SOH(\v2\".utxorpc.cardano.v1.AddressPatternH\NULR\n\
+      \anyAddress\DC2?\n\
+      \\tany_asset\CAN\ETX \SOH(\v2 .utxorpc.cardano.v1.AssetPatternH\NULR\banyAsset\DC2?\n\
+      \\tany_datum\CAN\EOT \SOH(\v2 .utxorpc.cardano.v1.DatumPatternH\NULR\banyDatumB\f\n\
+      \\n\
+      \tx_pattern"
+  packedFileDescriptor _ = packedFileDescriptor
+  fieldsByTag
+    = let
+        anyOutput__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "any_output"
+              (Data.ProtoLens.MessageField Data.ProtoLens.MessageType ::
+                 Data.ProtoLens.FieldTypeDescriptor OutputPattern)
+              (Data.ProtoLens.OptionalField
+                 (Data.ProtoLens.Field.field @"maybe'anyOutput")) ::
+              Data.ProtoLens.FieldDescriptor TxPattern
+        anyAddress__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "any_address"
+              (Data.ProtoLens.MessageField Data.ProtoLens.MessageType ::
+                 Data.ProtoLens.FieldTypeDescriptor AddressPattern)
+              (Data.ProtoLens.OptionalField
+                 (Data.ProtoLens.Field.field @"maybe'anyAddress")) ::
+              Data.ProtoLens.FieldDescriptor TxPattern
+        anyAsset__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "any_asset"
+              (Data.ProtoLens.MessageField Data.ProtoLens.MessageType ::
+                 Data.ProtoLens.FieldTypeDescriptor AssetPattern)
+              (Data.ProtoLens.OptionalField
+                 (Data.ProtoLens.Field.field @"maybe'anyAsset")) ::
+              Data.ProtoLens.FieldDescriptor TxPattern
+        anyDatum__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "any_datum"
+              (Data.ProtoLens.MessageField Data.ProtoLens.MessageType ::
+                 Data.ProtoLens.FieldTypeDescriptor DatumPattern)
+              (Data.ProtoLens.OptionalField
+                 (Data.ProtoLens.Field.field @"maybe'anyDatum")) ::
+              Data.ProtoLens.FieldDescriptor TxPattern
+      in
+        Data.Map.fromList
+          [(Data.ProtoLens.Tag 1, anyOutput__field_descriptor),
+           (Data.ProtoLens.Tag 2, anyAddress__field_descriptor),
+           (Data.ProtoLens.Tag 3, anyAsset__field_descriptor),
+           (Data.ProtoLens.Tag 4, anyDatum__field_descriptor)]
+  unknownFields
+    = Lens.Family2.Unchecked.lens
+        _TxPattern'_unknownFields
+        (\ x__ y__ -> x__ {_TxPattern'_unknownFields = y__})
+  defMessage
+    = TxPattern'_constructor
+        {_TxPattern'txPattern = Prelude.Nothing,
+         _TxPattern'_unknownFields = []}
+  parseMessage
+    = let
+        loop :: TxPattern -> Data.ProtoLens.Encoding.Bytes.Parser TxPattern
+        loop x
+          = do end <- Data.ProtoLens.Encoding.Bytes.atEnd
+               if end then
+                   do (let missing = []
+                       in
+                         if Prelude.null missing then
+                             Prelude.return ()
+                         else
+                             Prelude.fail
+                               ((Prelude.++)
+                                  "Missing required fields: "
+                                  (Prelude.show (missing :: [Prelude.String]))))
+                      Prelude.return
+                        (Lens.Family2.over
+                           Data.ProtoLens.unknownFields (\ !t -> Prelude.reverse t) x)
+               else
+                   do tag <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                      case tag of
+                        10
+                          -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                       (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                                           Data.ProtoLens.Encoding.Bytes.isolate
+                                             (Prelude.fromIntegral len) Data.ProtoLens.parseMessage)
+                                       "any_output"
+                                loop
+                                  (Lens.Family2.set (Data.ProtoLens.Field.field @"anyOutput") y x)
+                        18
+                          -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                       (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                                           Data.ProtoLens.Encoding.Bytes.isolate
+                                             (Prelude.fromIntegral len) Data.ProtoLens.parseMessage)
+                                       "any_address"
+                                loop
+                                  (Lens.Family2.set (Data.ProtoLens.Field.field @"anyAddress") y x)
+                        26
+                          -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                       (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                                           Data.ProtoLens.Encoding.Bytes.isolate
+                                             (Prelude.fromIntegral len) Data.ProtoLens.parseMessage)
+                                       "any_asset"
+                                loop
+                                  (Lens.Family2.set (Data.ProtoLens.Field.field @"anyAsset") y x)
+                        34
+                          -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                       (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                                           Data.ProtoLens.Encoding.Bytes.isolate
+                                             (Prelude.fromIntegral len) Data.ProtoLens.parseMessage)
+                                       "any_datum"
+                                loop
+                                  (Lens.Family2.set (Data.ProtoLens.Field.field @"anyDatum") y x)
+                        wire
+                          -> do !y <- Data.ProtoLens.Encoding.Wire.parseTaggedValueFromWire
+                                        wire
+                                loop
+                                  (Lens.Family2.over
+                                     Data.ProtoLens.unknownFields (\ !t -> (:) y t) x)
+      in
+        (Data.ProtoLens.Encoding.Bytes.<?>)
+          (do loop Data.ProtoLens.defMessage) "TxPattern"
+  buildMessage
+    = \ _x
+        -> (Data.Monoid.<>)
+             (case
+                  Lens.Family2.view
+                    (Data.ProtoLens.Field.field @"maybe'txPattern") _x
+              of
+                Prelude.Nothing -> Data.Monoid.mempty
+                (Prelude.Just (TxPattern'AnyOutput v))
+                  -> (Data.Monoid.<>)
+                       (Data.ProtoLens.Encoding.Bytes.putVarInt 10)
+                       ((Prelude..)
+                          (\ bs
+                             -> (Data.Monoid.<>)
+                                  (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                     (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                  (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                          Data.ProtoLens.encodeMessage v)
+                (Prelude.Just (TxPattern'AnyAddress v))
+                  -> (Data.Monoid.<>)
+                       (Data.ProtoLens.Encoding.Bytes.putVarInt 18)
+                       ((Prelude..)
+                          (\ bs
+                             -> (Data.Monoid.<>)
+                                  (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                     (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                  (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                          Data.ProtoLens.encodeMessage v)
+                (Prelude.Just (TxPattern'AnyAsset v))
+                  -> (Data.Monoid.<>)
+                       (Data.ProtoLens.Encoding.Bytes.putVarInt 26)
+                       ((Prelude..)
+                          (\ bs
+                             -> (Data.Monoid.<>)
+                                  (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                     (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                  (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                          Data.ProtoLens.encodeMessage v)
+                (Prelude.Just (TxPattern'AnyDatum v))
+                  -> (Data.Monoid.<>)
+                       (Data.ProtoLens.Encoding.Bytes.putVarInt 34)
+                       ((Prelude..)
+                          (\ bs
+                             -> (Data.Monoid.<>)
+                                  (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                     (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                  (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                          Data.ProtoLens.encodeMessage v))
+             (Data.ProtoLens.Encoding.Wire.buildFieldSet
+                (Lens.Family2.view Data.ProtoLens.unknownFields _x))
+instance Control.DeepSeq.NFData TxPattern where
+  rnf
+    = \ x__
+        -> Control.DeepSeq.deepseq
+             (_TxPattern'_unknownFields x__)
+             (Control.DeepSeq.deepseq (_TxPattern'txPattern x__) ())
+instance Control.DeepSeq.NFData TxPattern'TxPattern where
+  rnf (TxPattern'AnyOutput x__) = Control.DeepSeq.rnf x__
+  rnf (TxPattern'AnyAddress x__) = Control.DeepSeq.rnf x__
+  rnf (TxPattern'AnyAsset x__) = Control.DeepSeq.rnf x__
+  rnf (TxPattern'AnyDatum x__) = Control.DeepSeq.rnf x__
+_TxPattern'AnyOutput ::
+  Data.ProtoLens.Prism.Prism' TxPattern'TxPattern OutputPattern
+_TxPattern'AnyOutput
+  = Data.ProtoLens.Prism.prism'
+      TxPattern'AnyOutput
+      (\ p__
+         -> case p__ of
+              (TxPattern'AnyOutput p__val) -> Prelude.Just p__val
+              _otherwise -> Prelude.Nothing)
+_TxPattern'AnyAddress ::
+  Data.ProtoLens.Prism.Prism' TxPattern'TxPattern AddressPattern
+_TxPattern'AnyAddress
+  = Data.ProtoLens.Prism.prism'
+      TxPattern'AnyAddress
+      (\ p__
+         -> case p__ of
+              (TxPattern'AnyAddress p__val) -> Prelude.Just p__val
+              _otherwise -> Prelude.Nothing)
+_TxPattern'AnyAsset ::
+  Data.ProtoLens.Prism.Prism' TxPattern'TxPattern AssetPattern
+_TxPattern'AnyAsset
+  = Data.ProtoLens.Prism.prism'
+      TxPattern'AnyAsset
+      (\ p__
+         -> case p__ of
+              (TxPattern'AnyAsset p__val) -> Prelude.Just p__val
+              _otherwise -> Prelude.Nothing)
+_TxPattern'AnyDatum ::
+  Data.ProtoLens.Prism.Prism' TxPattern'TxPattern DatumPattern
+_TxPattern'AnyDatum
+  = Data.ProtoLens.Prism.prism'
+      TxPattern'AnyDatum
+      (\ p__
+         -> case p__ of
+              (TxPattern'AnyDatum p__val) -> Prelude.Just p__val
+              _otherwise -> Prelude.Nothing)
+{- | Fields :
+     
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.start' @:: Lens' TxValidity Data.Word.Word64@
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.ttl' @:: Lens' TxValidity Data.Word.Word64@ -}
 data TxValidity
@@ -10113,7 +10952,25 @@ packedFileDescriptor
     \\aMirCert\DC21\n\
     \\EOTfrom\CAN\SOH \SOH(\SO2\GS.utxorpc.cardano.v1.MirSourceR\EOTfrom\DC2-\n\
     \\STXto\CAN\STX \ETX(\v2\GS.utxorpc.cardano.v1.MirTargetR\STXto\DC2\ESC\n\
-    \\tother_pot\CAN\ETX \SOH(\EOTR\botherPot*\162\SOH\n\
+    \\tother_pot\CAN\ETX \SOH(\EOTR\botherPot\"\223\SOH\n\
+    \\SOAddressPattern\DC2#\n\
+    \\rbyron_address\CAN\SOH \SOH(\fR\fbyronAddress\DC2!\n\
+    \\fpayment_part\CAN\STX \SOH(\fR\vpaymentPart\DC2'\n\
+    \\SIdelegation_part\CAN\ETX \SOH(\fR\SOdelegationPart\DC2*\n\
+    \\DC1payment_is_script\CAN\EOT \SOH(\bR\SIpaymentIsScript\DC20\n\
+    \\DC4delegation_is_script\CAN\ENQ \SOH(\bR\DC2delegationIsScript\"\SO\n\
+    \\fAssetPattern\"\SI\n\
+    \\rOutputPattern\"\SO\n\
+    \\fDatumPattern\"\166\STX\n\
+    \\tTxPattern\DC2B\n\
+    \\n\
+    \any_output\CAN\SOH \SOH(\v2!.utxorpc.cardano.v1.OutputPatternH\NULR\tanyOutput\DC2E\n\
+    \\vany_address\CAN\STX \SOH(\v2\".utxorpc.cardano.v1.AddressPatternH\NULR\n\
+    \anyAddress\DC2?\n\
+    \\tany_asset\CAN\ETX \SOH(\v2 .utxorpc.cardano.v1.AssetPatternH\NULR\banyAsset\DC2?\n\
+    \\tany_datum\CAN\EOT \SOH(\v2 .utxorpc.cardano.v1.DatumPatternH\NULR\banyDatumB\f\n\
+    \\n\
+    \tx_pattern*\162\SOH\n\
     \\SIRedeemerPurpose\DC2 \n\
     \\FSREDEEMER_PURPOSE_UNSPECIFIED\DLE\NUL\DC2\SUB\n\
     \\SYNREDEEMER_PURPOSE_SPEND\DLE\SOH\DC2\EM\n\
@@ -10124,8 +10981,8 @@ packedFileDescriptor
     \\SYNMIR_SOURCE_UNSPECIFIED\DLE\NUL\DC2\ETB\n\
     \\DC3MIR_SOURCE_RESERVES\DLE\SOH\DC2\ETB\n\
     \\DC3MIR_SOURCE_TREASURY\DLE\STXB\207\SOH\n\
-    \\SYNcom.utxorpc.cardano.v1B\fCardanoProtoP\SOHZ=github.com/bufbuild/buf-tour/gen/utxorpc/cardano/v1;cardanov1\162\STX\ETXUCX\170\STX\DC2Utxorpc.Cardano.V1\202\STX\DC2Utxorpc\\Cardano\\V1\226\STX\RSUtxorpc\\Cardano\\V1\\GPBMetadata\234\STX\DC4Utxorpc::Cardano::V1J\133n\n\
-    \\a\DC2\ENQ\NUL\NUL\185\STX\SOH\n\
+    \\SYNcom.utxorpc.cardano.v1B\fCardanoProtoP\SOHZ=github.com/bufbuild/buf-tour/gen/utxorpc/cardano/v1;cardanov1\162\STX\ETXUCX\170\STX\DC2Utxorpc.Cardano.V1\202\STX\DC2Utxorpc\\Cardano\\V1\226\STX\RSUtxorpc\\Cardano\\V1\\GPBMetadata\234\STX\DC4Utxorpc::Cardano::V1J\207x\n\
+    \\a\DC2\ENQ\NUL\NUL\222\STX\SOH\n\
     \\b\n\
     \\SOH\f\DC2\ETX\NUL\NUL\DC2\n\
     \\b\n\
@@ -11676,4 +12533,114 @@ packedFileDescriptor
     \\r\n\
     \\ENQ\EOT(\STX\STX\SOH\DC2\EOT\184\STX\t\DC2\n\
     \\r\n\
-    \\ENQ\EOT(\STX\STX\ETX\DC2\EOT\184\STX\NAK\SYNb\ACKproto3"
+    \\ENQ\EOT(\STX\STX\ETX\DC2\EOT\184\STX\NAK\SYN\n\
+    \}\n\
+    \\STX\EOT)\DC2\ACK\191\STX\NUL\197\STX\SOH\SUBI Pattern of an address that can be used to evaluate matching predicates.\n\
+    \2$ PATTERN MATCHING\n\
+    \ ================\n\
+    \\n\
+    \\v\n\
+    \\ETX\EOT)\SOH\DC2\EOT\191\STX\b\SYN\n\
+    \\f\n\
+    \\EOT\EOT)\STX\NUL\DC2\EOT\192\STX\STX\SUB\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\NUL\ENQ\DC2\EOT\192\STX\STX\a\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\NUL\SOH\DC2\EOT\192\STX\b\NAK\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\NUL\ETX\DC2\EOT\192\STX\CAN\EM\n\
+    \\f\n\
+    \\EOT\EOT)\STX\SOH\DC2\EOT\193\STX\STX\EM\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\SOH\ENQ\DC2\EOT\193\STX\STX\a\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\SOH\SOH\DC2\EOT\193\STX\b\DC4\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\SOH\ETX\DC2\EOT\193\STX\ETB\CAN\n\
+    \\f\n\
+    \\EOT\EOT)\STX\STX\DC2\EOT\194\STX\STX\FS\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\STX\ENQ\DC2\EOT\194\STX\STX\a\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\STX\SOH\DC2\EOT\194\STX\b\ETB\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\STX\ETX\DC2\EOT\194\STX\SUB\ESC\n\
+    \\f\n\
+    \\EOT\EOT)\STX\ETX\DC2\EOT\195\STX\STX\GS\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\ETX\ENQ\DC2\EOT\195\STX\STX\ACK\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\ETX\SOH\DC2\EOT\195\STX\a\CAN\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\ETX\ETX\DC2\EOT\195\STX\ESC\FS\n\
+    \\f\n\
+    \\EOT\EOT)\STX\EOT\DC2\EOT\196\STX\STX \n\
+    \\r\n\
+    \\ENQ\EOT)\STX\EOT\ENQ\DC2\EOT\196\STX\STX\ACK\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\EOT\SOH\DC2\EOT\196\STX\a\ESC\n\
+    \\r\n\
+    \\ENQ\EOT)\STX\EOT\ETX\DC2\EOT\196\STX\RS\US\n\
+    \b\n\
+    \\STX\EOT*\DC2\ACK\200\STX\NUL\202\STX\SOH\SUBM Pattern of a native asset that can be used to evaluate matching predicates.\n\
+    \\"\ENQ TBD\n\
+    \\n\
+    \\v\n\
+    \\ETX\EOT*\SOH\DC2\EOT\200\STX\b\DC4\n\
+    \_\n\
+    \\STX\EOT+\DC2\ACK\205\STX\NUL\207\STX\SOH\SUBJ Pattern of a tx output that can be used to evaluate matching predicates.\n\
+    \\"\ENQ TBD\n\
+    \\n\
+    \\v\n\
+    \\ETX\EOT+\SOH\DC2\EOT\205\STX\b\NAK\n\
+    \\\\n\
+    \\STX\EOT,\DC2\ACK\210\STX\NUL\212\STX\SOH\SUBG Pattern of an datum that can be used to evaluate matching predicates.\n\
+    \\"\ENQ TBD\n\
+    \\n\
+    \\v\n\
+    \\ETX\EOT,\SOH\DC2\EOT\210\STX\b\DC4\n\
+    \Q\n\
+    \\STX\EOT-\DC2\ACK\215\STX\NUL\222\STX\SOH\SUBC Pattern of a Tx that can be used to evaluate matching predicates.\n\
+    \\n\
+    \\v\n\
+    \\ETX\EOT-\SOH\DC2\EOT\215\STX\b\DC1\n\
+    \\SO\n\
+    \\EOT\EOT-\b\NUL\DC2\ACK\216\STX\STX\221\STX\ETX\n\
+    \\r\n\
+    \\ENQ\EOT-\b\NUL\SOH\DC2\EOT\216\STX\b\DC2\n\
+    \<\n\
+    \\EOT\EOT-\STX\NUL\DC2\EOT\217\STX\EOT!\". Match any output that exhibits this pattern.\n\
+    \\n\
+    \\r\n\
+    \\ENQ\EOT-\STX\NUL\ACK\DC2\EOT\217\STX\EOT\DC1\n\
+    \\r\n\
+    \\ENQ\EOT-\STX\NUL\SOH\DC2\EOT\217\STX\DC2\FS\n\
+    \\r\n\
+    \\ENQ\EOT-\STX\NUL\ETX\DC2\EOT\217\STX\US \n\
+    \`\n\
+    \\EOT\EOT-\STX\SOH\DC2\EOT\218\STX\EOT#\"R Match any address (inputs, outputs, collateral, etc) that exhibits this pattern.\n\
+    \\n\
+    \\r\n\
+    \\ENQ\EOT-\STX\SOH\ACK\DC2\EOT\218\STX\EOT\DC2\n\
+    \\r\n\
+    \\ENQ\EOT-\STX\SOH\SOH\DC2\EOT\218\STX\DC3\RS\n\
+    \\r\n\
+    \\ENQ\EOT-\STX\SOH\ETX\DC2\EOT\218\STX!\"\n\
+    \;\n\
+    \\EOT\EOT-\STX\STX\DC2\EOT\219\STX\EOT\US\"- Match any asset that exhibits this pattern.\n\
+    \\n\
+    \\r\n\
+    \\ENQ\EOT-\STX\STX\ACK\DC2\EOT\219\STX\EOT\DLE\n\
+    \\r\n\
+    \\ENQ\EOT-\STX\STX\SOH\DC2\EOT\219\STX\DC1\SUB\n\
+    \\r\n\
+    \\ENQ\EOT-\STX\STX\ETX\DC2\EOT\219\STX\GS\RS\n\
+    \;\n\
+    \\EOT\EOT-\STX\ETX\DC2\EOT\220\STX\EOT\US\"- Match any datum that exhibits this pattern.\n\
+    \\n\
+    \\r\n\
+    \\ENQ\EOT-\STX\ETX\ACK\DC2\EOT\220\STX\EOT\DLE\n\
+    \\r\n\
+    \\ENQ\EOT-\STX\ETX\SOH\DC2\EOT\220\STX\DC1\SUB\n\
+    \\r\n\
+    \\ENQ\EOT-\STX\ETX\ETX\DC2\EOT\220\STX\GS\RSb\ACKproto3"

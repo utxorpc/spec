@@ -45,6 +45,30 @@
         }
       }
     },
+    "v1AddressPattern": {
+      "type": "object",
+      "properties": {
+        "byronAddress": {
+          "type": "string",
+          "format": "byte"
+        },
+        "paymentPart": {
+          "type": "string",
+          "format": "byte"
+        },
+        "delegationPart": {
+          "type": "string",
+          "format": "byte"
+        },
+        "paymentIsScript": {
+          "type": "boolean"
+        },
+        "delegationIsScript": {
+          "type": "boolean"
+        }
+      },
+      "description": "Pattern of an address that can be used to evaluate matching predicates."
+    },
     "v1AnyChainTx": {
       "type": "object",
       "properties": {
@@ -56,7 +80,29 @@
       },
       "description": "Represents a transaction from any supported blockchain."
     },
-    "v1CheckResponse": {
+    "v1AnyChainTxPattern": {
+      "type": "object",
+      "properties": {
+        "cardano": {
+          "$ref": "#/definitions/v1TxPattern",
+          "description": "A Cardano tx pattern."
+        }
+      },
+      "description": "Represents a tx pattern from any supported blockchain."
+    },
+    "v1AssetPattern": {
+      "type": "object",
+      "description": "Pattern of a native asset that can be used to evaluate matching predicates.\n\nTBD"
+    },
+    "v1DatumPattern": {
+      "type": "object",
+      "description": "Pattern of an datum that can be used to evaluate matching predicates.\n\nTBD"
+    },
+    "v1OutputPattern": {
+      "type": "object",
+      "description": "Pattern of a tx output that can be used to evaluate matching predicates.\n\nTBD"
+    },
+    "v1ReadMempoolResponse": {
       "type": "object",
       "properties": {
         "stage": {
@@ -81,7 +127,7 @@
       "default": "STAGE_UNSPECIFIED",
       "description": "Enum representing the various stages of a transaction's lifecycle.\n\n - STAGE_UNSPECIFIED: Unspecified stage.\n - STAGE_ACKNOWLEDGED: Transaction has been acknowledged by the node.\n - STAGE_MEMPOOL: Transaction is in the mempool.\n - STAGE_NETWORK: Transaction has been propagated across the network.\n - STAGE_CONFIRMED: Transaction has been confirmed on the blockchain."
     },
-    "v1SubmitResponse": {
+    "v1SubmitTxResponse": {
       "type": "object",
       "properties": {
         "ref": {
@@ -95,7 +141,76 @@
       },
       "description": "Response containing references to the submitted transactions."
     },
-    "v1WaitForResponse": {
+    "v1TxInMempool": {
+      "type": "object",
+      "properties": {
+        "tx": {
+          "$ref": "#/definitions/v1AnyChainTx",
+          "title": "The contents of the tx"
+        },
+        "stage": {
+          "$ref": "#/definitions/v1Stage",
+          "title": "The current stage of the tx"
+        }
+      }
+    },
+    "v1TxPattern": {
+      "type": "object",
+      "properties": {
+        "anyOutput": {
+          "$ref": "#/definitions/v1OutputPattern",
+          "description": "Match any output that exhibits this pattern."
+        },
+        "anyAddress": {
+          "$ref": "#/definitions/v1AddressPattern",
+          "description": "Match any address (inputs, outputs, collateral, etc) that exhibits this pattern."
+        },
+        "anyAsset": {
+          "$ref": "#/definitions/v1AssetPattern",
+          "description": "Match any asset that exhibits this pattern."
+        },
+        "anyDatum": {
+          "$ref": "#/definitions/v1DatumPattern",
+          "description": "Match any datum that exhibits this pattern."
+        }
+      },
+      "description": "Pattern of a Tx that can be used to evaluate matching predicates."
+    },
+    "v1TxPredicate": {
+      "type": "object",
+      "properties": {
+        "match": {
+          "$ref": "#/definitions/v1AnyChainTxPattern",
+          "description": "Predicate is true if tx exhibits pattern."
+        },
+        "not": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TxPredicate"
+          },
+          "description": "Predicate is true if tx doesn't exhibit pattern."
+        },
+        "allOf": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TxPredicate"
+          },
+          "description": "Predicate is true if tx exhibits all of the patterns."
+        },
+        "anyOf": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TxPredicate"
+          },
+          "description": "Predicate is true if tx exhibits any of the patterns."
+        }
+      },
+      "title": "Represents a simple tx predicate that can composed to create more complext ones"
+    },
+    "v1WaitForTxResponse": {
       "type": "object",
       "properties": {
         "ref": {
@@ -109,6 +224,16 @@
         }
       },
       "description": "Response containing the transaction reference and stage once it has been reached."
+    },
+    "v1WatchMempoolResponse": {
+      "type": "object",
+      "properties": {
+        "tx": {
+          "$ref": "#/definitions/v1TxInMempool",
+          "title": "The content and stage of the tx that has changed"
+        }
+      },
+      "description": "Response that represents a change in a mempool tx."
     }
   }
 }

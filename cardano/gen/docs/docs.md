@@ -4,7 +4,9 @@
 ## Table of Contents
 
 - [utxorpc/cardano/v1/cardano.proto](#utxorpc_cardano_v1_cardano-proto)
+    - [AddressPattern](#utxorpc-cardano-v1-AddressPattern)
     - [Asset](#utxorpc-cardano-v1-Asset)
+    - [AssetPattern](#utxorpc-cardano-v1-AssetPattern)
     - [AuxData](#utxorpc-cardano-v1-AuxData)
     - [BigInt](#utxorpc-cardano-v1-BigInt)
     - [Block](#utxorpc-cardano-v1-Block)
@@ -13,6 +15,7 @@
     - [Certificate](#utxorpc-cardano-v1-Certificate)
     - [Collateral](#utxorpc-cardano-v1-Collateral)
     - [Constr](#utxorpc-cardano-v1-Constr)
+    - [DatumPattern](#utxorpc-cardano-v1-DatumPattern)
     - [GenesisKeyDelegationCert](#utxorpc-cardano-v1-GenesisKeyDelegationCert)
     - [Metadata](#utxorpc-cardano-v1-Metadata)
     - [Metadatum](#utxorpc-cardano-v1-Metadatum)
@@ -24,6 +27,7 @@
     - [Multiasset](#utxorpc-cardano-v1-Multiasset)
     - [NativeScript](#utxorpc-cardano-v1-NativeScript)
     - [NativeScriptList](#utxorpc-cardano-v1-NativeScriptList)
+    - [OutputPattern](#utxorpc-cardano-v1-OutputPattern)
     - [PlutusData](#utxorpc-cardano-v1-PlutusData)
     - [PlutusDataArray](#utxorpc-cardano-v1-PlutusDataArray)
     - [PlutusDataMap](#utxorpc-cardano-v1-PlutusDataMap)
@@ -41,6 +45,7 @@
     - [Tx](#utxorpc-cardano-v1-Tx)
     - [TxInput](#utxorpc-cardano-v1-TxInput)
     - [TxOutput](#utxorpc-cardano-v1-TxOutput)
+    - [TxPattern](#utxorpc-cardano-v1-TxPattern)
     - [TxValidity](#utxorpc-cardano-v1-TxValidity)
     - [VKeyWitness](#utxorpc-cardano-v1-VKeyWitness)
     - [Withdrawal](#utxorpc-cardano-v1-Withdrawal)
@@ -60,6 +65,25 @@
 
 
 
+<a name="utxorpc-cardano-v1-AddressPattern"></a>
+
+### AddressPattern
+Pattern of an address that can be used to evaluate matching predicates.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| byron_address | [bytes](#bytes) |  |  |
+| payment_part | [bytes](#bytes) |  |  |
+| delegation_part | [bytes](#bytes) |  |  |
+| payment_is_script | [bool](#bool) |  |  |
+| delegation_is_script | [bool](#bool) |  |  |
+
+
+
+
+
+
 <a name="utxorpc-cardano-v1-Asset"></a>
 
 ### Asset
@@ -71,6 +95,18 @@ Represents a custom asset in the Cardano blockchain.
 | name | [bytes](#bytes) |  | Name of the custom asset. |
 | output_coin | [uint64](#uint64) |  | Quantity of the custom asset in case of an output. |
 | mint_coin | [int64](#int64) |  | Quantity of the custom asset in case of a mint. |
+
+
+
+
+
+
+<a name="utxorpc-cardano-v1-AssetPattern"></a>
+
+### AssetPattern
+Pattern of a native asset that can be used to evaluate matching predicates.
+
+TBD
 
 
 
@@ -206,6 +242,18 @@ Represents a constructor for Plutus data in Cardano.
 | tag | [uint32](#uint32) |  |  |
 | any_constructor | [uint64](#uint64) |  |  |
 | fields | [PlutusData](#utxorpc-cardano-v1-PlutusData) | repeated |  |
+
+
+
+
+
+
+<a name="utxorpc-cardano-v1-DatumPattern"></a>
+
+### DatumPattern
+Pattern of an datum that can be used to evaluate matching predicates.
+
+TBD
 
 
 
@@ -388,6 +436,18 @@ Represents a list of native scripts.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | items | [NativeScript](#utxorpc-cardano-v1-NativeScript) | repeated | List of native scripts. |
+
+
+
+
+
+
+<a name="utxorpc-cardano-v1-OutputPattern"></a>
+
+### OutputPattern
+Pattern of a tx output that can be used to evaluate matching predicates.
+
+TBD
 
 
 
@@ -687,6 +747,24 @@ Represents a transaction output in the Cardano blockchain.
 | datum | [PlutusData](#utxorpc-cardano-v1-PlutusData) |  | Plutus data associated with the output. |
 | datum_hash | [bytes](#bytes) |  | Hash of the Plutus data. |
 | script | [Script](#utxorpc-cardano-v1-Script) |  | Script associated with the output. |
+
+
+
+
+
+
+<a name="utxorpc-cardano-v1-TxPattern"></a>
+
+### TxPattern
+Pattern of a Tx that can be used to evaluate matching predicates.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| any_output | [OutputPattern](#utxorpc-cardano-v1-OutputPattern) |  | Match any output that exhibits this pattern. |
+| any_address | [AddressPattern](#utxorpc-cardano-v1-AddressPattern) |  | Match any address (inputs, outputs, collateral, etc) that exhibits this pattern. |
+| any_asset | [AssetPattern](#utxorpc-cardano-v1-AssetPattern) |  | Match any asset that exhibits this pattern. |
+| any_datum | [DatumPattern](#utxorpc-cardano-v1-DatumPattern) |  | Match any datum that exhibits this pattern. |
 
 
 
