@@ -11,7 +11,7 @@
   "types": "./lib/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "build": "node ../../../scripts/web-sdk-build.cjs src/utxorpc/sync/v1 && tsc"
   },
   "engines": {
     "node": ">=16.0.0"
@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/utxorpc/spec#readme",
   "devDependencies": {
+    "@types/node": "^20.11.0",
     "typescript": "^5.1.3"
   },
   "dependencies": {
