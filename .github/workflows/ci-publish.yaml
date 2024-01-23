@@ -12,20 +12,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install buf
+      - name: Setup npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.11.0
+          cache: "npm"
+
+      - name: Setup Haskell
+        uses: haskell-actions/setup@v2
+
+      - name: Install Cargo
+        run: curl https://sh.rustup.rs -sSf | sh
+
+      - name: Install Buf
+        run: npm install @bufbuild/buf
+
+      - name: Install Protoc Plugins from Cargo
         run: |
-          BIN="." && \
-          VERSION="1.28.1" && \
-          curl -sSL \
-          "https://github.com/bufbuild/buf/releases/download/v${VERSION}/buf-$(uname -s)-$(uname -m)" \
-          -o "${BIN}/buf" && \
-          chmod +x "${BIN}/buf"
+          cargo install protoc-gen-prost
+          cargo install protoc-gen-crate
+          cargo install protoc-gen-tonic
+          cargo install protoc-gen-prost-serde
 
-      - name: List contents
-        run: ls .
+      - name: Install Protoc Plugins from npm
+        run: |
+          npm install @connectrpc/protoc-gen-connect-es
+          npm install @bufbuild/protoc-gen-es
 
-      # - name: Install Haskell plugin
-      #   run:
+      - name: Install Protoc Plugins from Hackage
+        run: cabal install proto-lens-protoc
 
       - name: Generate code
         run: |
