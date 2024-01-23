@@ -9,12 +9,13 @@ jobs:
   codegen:
     runs-on: ubuntu-latest
     steps:
-      # - name: Checkout
-      # uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup npm
         uses: actions/setup-node@v4
         with:
+          node-version: 20.11.0
           cache: "npm"
 
       - name: Add node_modules to PATH
