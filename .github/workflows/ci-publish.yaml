@@ -9,14 +9,16 @@ jobs:
   codegen:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.11.x
-          cache: npm
-
       - name: Install buf
-        run: npm install @bufbuild/buf
+        run: |
+          mkdir bin
+          PATH=$PATH:bin
+          BIN="bin" && \
+          VERSION="1.28.1" && \
+          curl -sSL \
+          "https://github.com/bufbuild/buf/releases/download/v${VERSION}/buf-$(uname -s)-$(uname -m)" \
+          -o "${BIN}/buf" && \
+          chmod +x "${BIN}/buf"
 
       - name: Checkout
         uses: actions/checkout@v4
