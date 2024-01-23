@@ -58,7 +58,7 @@ jobs:
         env:
           key: ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version }}-cabal-${{ steps.setup-hs.outputs.cabal-version}}
         with:
-          path: ${{ $HOME/.cabal/bin/ }}
+          path: ${{ ~/.cabal/bin/ }}
           key: ${{ env.key }}-proto-lens-protoc
 
       - name: Install Haskell plugin from Hackage
@@ -69,7 +69,7 @@ jobs:
         if: steps.cache-proto-lens-protoc.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          path: ${{ $HOME/.cabal/bin }}
+          path: ${{ ~/.cabal/bin }}
           key: ${{ steps.cache-proto-lens-protoc.outputs.cache-primary-key }}
 
       - name: Install Buf from npm
