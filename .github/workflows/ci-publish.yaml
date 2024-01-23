@@ -21,6 +21,9 @@ jobs:
           -o "${BIN}/buf" && \
           chmod +x "${BIN}/buf"
 
+      - name: List contents
+        run: ls .
+
       # - name: Install Haskell plugin
       #   run:
 
