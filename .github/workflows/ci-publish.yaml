@@ -18,29 +18,36 @@ jobs:
           node-version: 20.11.0
           cache: "npm"
 
-      - name: Setup Haskell
-        uses: haskell-actions/setup@v2
-
-      - name: Install Cargo
-        run: curl https://sh.rustup.rs -sSf | sh
-
-      - name: Install Buf
-        run: npm install @bufbuild/buf
-
-      - name: Install Protoc Plugins from Cargo
-        run: |
-          cargo install protoc-gen-prost
-          cargo install protoc-gen-crate
-          cargo install protoc-gen-tonic
-          cargo install protoc-gen-prost-serde
+      - name: Install Prost from Cargo
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: protoc-gen-prost
+      - name: Install protoc-gen-crate from Cargo
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: protoc-gen-crate
+      - name: Install Tonic from Cargo
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: protoc-gen-tonic
+      - name: Install Prost serde from Cargo
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: protoc-gen-prost-serde
 
       - name: Install Protoc Plugins from npm
         run: |
           npm install @connectrpc/protoc-gen-connect-es
           npm install @bufbuild/protoc-gen-es
 
-      - name: Install Protoc Plugins from Hackage
+      - name: Setup Haskell
+        uses: haskell-actions/setup@v2
+
+      - name: Install Haskell plugin from Hackage
         run: cabal install proto-lens-protoc
+
+      - name: Install Buf from npm
+        run: npm install @bufbuild/buf
 
       - name: Generate code
         run: |
