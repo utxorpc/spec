@@ -38,6 +38,8 @@ jobs:
 
       - name: Setup Haskell
         uses: haskell-actions/setup@v2
+        with:
+          ghc-version: 9.6.4
 
       - name: Install Haskell plugin from Hackage
         run: cabal install proto-lens-protoc
