@@ -24,6 +24,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: List contents again
+        run: ls .
+
       - name: Generate code
         run: |
           for DIR in build cardano submit sync watch; do
