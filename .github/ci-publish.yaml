@@ -1,0 +1,35 @@
+name: "Publish Artifacts"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  codegen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.11.x
+          cache: npm
+
+      - name: Install buf
+        run: npm install @bufbuild/buf
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate code
+        run: |
+          for DIR in build cardano submit sync watch; do
+            cd $DIR && buf generate proto
+            cd ..
+          done
+
+      - name: Upload Haskell Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: haskell-codegen
+          path: */gen/haskell
