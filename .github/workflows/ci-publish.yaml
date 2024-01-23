@@ -50,6 +50,7 @@ jobs:
       - name: Generate code
         run: |
           for DIR in build cardano submit sync watch; do
+            ls ..
             cd $DIR && ../buf generate proto
             cd ..
           done
