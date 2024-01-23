@@ -9,6 +9,9 @@ jobs:
   codegen:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Install buf
         run: |
           BIN="." && \
@@ -18,14 +21,8 @@ jobs:
           -o "${BIN}/buf" && \
           chmod +x "${BIN}/buf"
 
-      - name: List contents
-        run: ls .
-
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: List contents again
-        run: ls .
+      # - name: Install Haskell plugin
+      #   run:
 
       - name: Generate code
         run: |
