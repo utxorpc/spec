@@ -19,10 +19,7 @@ jobs:
           cache: "npm"
 
       - name: Add node_modules to PATH
-        run: echo "PATH=$PATH:$(pwd)/node_modules/.bin" >> "$GITHUB_ENV"
-
-      # - name: Show path
-      #   run: echo $PATH
+        run: echo "$(pwd)/node_modules/.bin" >> "$GITHUB_PATH"
 
       - name: Install Prost from Cargo
         uses: baptiste0928/cargo-install@v2
@@ -50,12 +47,30 @@ jobs:
           npm install @bufbuild/protoc-gen-es
 
       - name: Setup Haskell
+        id: setup-hs
         uses: haskell-actions/setup@v2
         with:
           ghc-version: 9.6.4
 
+      - name: Restore cached Haskell plugin
+        uses: actions/cache@v4
+        id: cache-proto-lens-protoc
+        env:
+          key: ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version }}-cabal-${{ steps.setup-hs.outputs.cabal-version}}
+        with:
+          path: ${{ $HOME/.cabal/bin/ }}
+          key: ${{ env.key }}-proto-lens-protoc
+
       - name: Install Haskell plugin from Hackage
+        if: steps.cache-proto-lens-protoc.outputs.cache-hit != 'true'
         run: cabal install proto-lens-protoc
+
+      - name: Cache Haskell plugin
+        if: steps.cache-proto-lens-protoc.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ $HOME/.cabal/bin }}
+          key: ${{ steps.cache-proto-lens-protoc.outputs.cache-primary-key }}
 
       - name: Install Buf from npm
         run: npm install @bufbuild/buf
