@@ -9,41 +9,43 @@ jobs:
   codegen:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      # - name: Checkout
+      # uses: actions/checkout@v4
 
       - name: Setup npm
         uses: actions/setup-node@v4
         with:
           node-version: 20.11.0
           cache: "npm"
-      - run: PATH=$PATH:$(pwd)/node_modules/.bin
 
-      - name: Install Prost from Cargo
-        uses: baptiste0928/cargo-install@v2
-        with:
-          crate: protoc-gen-prost
-      - name: Install Tonic from Cargo
-        uses: baptiste0928/cargo-install@v2
-        with:
-          crate: protoc-gen-tonic
-      - name: Install Prost serde from Cargo
-        uses: baptiste0928/cargo-install@v2
-        with:
-          crate: protoc-gen-prost-serde
+      - name: Add node_modules to PATH
+        run: PATH=$PATH:$(pwd)/node_modules/.bin
 
-      - name: Install Protoc Plugins from npm
-        run: |
-          npm install @connectrpc/protoc-gen-connect-es
-          npm install @bufbuild/protoc-gen-es
+      # - name: Install Prost from Cargo
+      #   uses: baptiste0928/cargo-install@v2
+      #   with:
+      #     crate: protoc-gen-prost
+      # - name: Install Tonic from Cargo
+      #   uses: baptiste0928/cargo-install@v2
+      #   with:
+      #     crate: protoc-gen-tonic
+      # - name: Install Prost serde from Cargo
+      #   uses: baptiste0928/cargo-install@v2
+      #   with:
+      #     crate: protoc-gen-prost-serde
 
-      - name: Setup Haskell
-        uses: haskell-actions/setup@v2
-        with:
-          ghc-version: 9.6.4
+      # - name: Install Protoc Plugins from npm
+      #   run: |
+      #     npm install @connectrpc/protoc-gen-connect-es
+      #     npm install @bufbuild/protoc-gen-es
 
-      - name: Install Haskell plugin from Hackage
-        run: cabal install proto-lens-protoc
+      # - name: Setup Haskell
+      #   uses: haskell-actions/setup@v2
+      #   with:
+      #     ghc-version: 9.6.4
+
+      # - name: Install Haskell plugin from Hackage
+      #   run: cabal install proto-lens-protoc
 
       - name: Install Buf from npm
         run: npm install @bufbuild/buf
