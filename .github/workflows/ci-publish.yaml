@@ -22,10 +22,6 @@ jobs:
         uses: baptiste0928/cargo-install@v2
         with:
           crate: protoc-gen-prost
-      - name: Install protoc-gen-crate from Cargo
-        uses: baptiste0928/cargo-install@v2
-        with:
-          crate: protoc-gen-crate
       - name: Install Tonic from Cargo
         uses: baptiste0928/cargo-install@v2
         with:
