@@ -95,18 +95,33 @@ jobs:
             cd ..
           done
 
+      - name: Get Package Version
+        id: package-version
+        run: |
+          VERSION=$(sed -nE '/^version:\s*([0-9]\.[0-9]+\.[0-9]+.*)$/s||\1|p' utxorpc.cabal)
+          echo VERSION=$VERSION >> "GITHUB_OUTPUT"
+
       - name: Build Haskell Library
+        id: build
+        env:
+          version: ${{ steps.package-version.outputs.VERSION }}
         run: |
           cabal build
           cabal sdist
+          echo "SDIST-LOCATION=$(pwd)/dist-newstyle/sdist/utxorpc-${{ env.version }}.tar.gz"
 
       - name: Upload Haskell Artifacts
         uses: actions/upload-artifact@v4
+        env:
+          version: ${{ steps.package-version.outputs.VERSION }}
+          location: ${{ steps.build.outputs.SDIST-LOCATION }}
         with:
-          name: haskell-${{github.ref_name}}
-          path: ./dist-newstyle/sdist/utxorpc-${{github.ref_name}}-0.1.0.0.tar.gz
+          name: haskell-${{ env.version }}
+          path: ${{ env.location }}
 
       - name: Make release
         uses: ncipollo/release-action@v1
+        env:
+          location: ${{ steps.build.outputs.SDIST-LOCATION }}
         with:
-          artifacts: ./dist-newstyle/sdist/utxorpc-${{github.ref_name}}-0.1.0.0.tar.gz
+          artifacts: ${{ env.location }}
