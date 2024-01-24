@@ -5,3 +5,4 @@ test with trailing slash
 test with running cabal install anyway
 Some text
 new feature
+Actually make a pr
