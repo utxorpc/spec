@@ -71,7 +71,7 @@ jobs:
         if: steps.cache-proto-lens-protoc.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          path: ~/.cabal/store
+          path: ~/.cabal/store/
           key: ${{ steps.cache-proto-lens-protoc.outputs.cache-primary-key }}
 
       - name: Install Buf from npm
