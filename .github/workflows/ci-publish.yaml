@@ -99,7 +99,23 @@ jobs:
         id: package-version
         run: |
           VERSION=$(sed -nE '/^version:\s*([0-9]\.[0-9]+\.[0-9]+.*)$/s||\1|p' utxorpc.cabal)
-          echo VERSION=$VERSION >> "GITHUB_OUTPUT"
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Configure build
+        run: |
+          cabal configure --enable-tests --enable-benchmarks --disable-documentation
+          cabal build all --dry-run
+
+      - name: Restore Cabal build cache
+        uses: actions/cache/restore@v4
+        id: cache-cabal-build
+        env:
+          key: ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version }}-cabal-${{ steps.setup-hs.outputs.cabal-version }}
+        with:
+          path: ${{ steps.setup-hs.outputs.cabal-store }}
+          key: ${{ env.key }}-plan-${{ hashFiles('**/plan.json') }}
+          restore-keys: |
+            ${{ env.key }}-plan-
 
       - name: Build Haskell Library
         id: build
@@ -108,7 +124,14 @@ jobs:
         run: |
           cabal build
           cabal sdist
-          echo "SDIST-LOCATION=$(pwd)/dist-newstyle/sdist/utxorpc-${{ env.version }}.tar.gz"
+          echo "SDIST-LOCATION=$(pwd)/dist-newstyle/sdist/utxorpc-${{ env.version }}.tar.gz" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Haskell plugin
+        if: steps.cache-cabal-build.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ steps.setup-hs.outputs.cabal-store }}
+          key: ${{ steps.cache-cabal-build.outputs.cache-primary-key }}
 
       - name: Upload Haskell Artifacts
         uses: actions/upload-artifact@v4
