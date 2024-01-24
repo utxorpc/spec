@@ -58,20 +58,19 @@ jobs:
         env:
           key: ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version }}-cabal-${{ steps.setup-hs.outputs.cabal-version }}
         with:
-          path: ~/.cabal/store/
+          path: ${{ steps.setup-hs.outputs.cabal-store }}
           key: ${{ env.key }}-proto-lens-protoc
           restore-keys: |
             ${{ env.key }}-proto-lens-protoc
 
       - name: Install Haskell plugin from Hackage
-        if: steps.cache-proto-lens-protoc.outputs.cache-hit != 'true'
         run: cabal install proto-lens-protoc
 
       - name: Cache Haskell plugin
         if: steps.cache-proto-lens-protoc.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          path: ~/.cabal/store/
+          path: ${{ steps.setup-hs.outputs.cabal-store }}
           key: ${{ steps.cache-proto-lens-protoc.outputs.cache-primary-key }}
 
       - name: Install Buf from npm
