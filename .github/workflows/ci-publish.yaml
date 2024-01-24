@@ -56,7 +56,7 @@ jobs:
         uses: actions/cache/restore@v4
         id: cache-proto-lens-protoc
         env:
-          key: ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version }}-cabal-${{ steps.setup-hs.outputs.cabal-version}}
+          key: ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version }}-cabal-${{ steps.setup-hs.outputs.cabal-version }}
         with:
           path: ~/.cabal/store/
           key: ${{ env.key }}-proto-lens-protoc
