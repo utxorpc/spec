@@ -4,3 +4,4 @@ another test
 test with trailing slash
 test with running cabal install anyway
 Some text
+new feature
