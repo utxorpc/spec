@@ -1,3 +1,4 @@
 text
 more text
 another test
+test with trailing slash
