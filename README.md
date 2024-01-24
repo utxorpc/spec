@@ -9,7 +9,7 @@ cargo install protoc-gen-prost
 ```
 
 ```sh
-cargo install protoc-gen-crate
+cargo install protoc-gen-prost-crate
 ```
 
 ```sh
