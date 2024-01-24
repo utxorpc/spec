@@ -19,7 +19,7 @@ jobs:
           unzip -o $PROTOC_ZIP -d . bin/protoc
           unzip -o $PROTOC_ZIP -d . 'include/*'
           rm -f $PROTOC_ZIP
-          echo "$(pwd)/bin" >> "$GITHUB_PATH""
+          echo "$(pwd)/bin" >> "$GITHUB_PATH"
 
       - name: Setup npm
         uses: actions/setup-node@v4
