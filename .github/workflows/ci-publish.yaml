@@ -86,8 +86,18 @@ jobs:
             cd ..
           done
 
+      - name: Build Haskell Library
+        run: |
+          cabal build
+          cabal sdist
+
       - name: Upload Haskell Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: haskell-codegen
-          path: ./*/gen/haskell
+          name: haskell-${{github.ref_name}}
+          path: ./dist-newstyle/sdist/utxorpc-${{github.ref_name}}-0.1.0.0.tar.gz
+
+      - name: Make release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ./dist-newstyle/sdist/utxorpc-${{github.ref_name}}-0.1.0.0.tar.gz

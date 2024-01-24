@@ -1,0 +1,42 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.36.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           utxorpc
+version:        0.1.0.0
+description:    Todo
+homepage:       https://github.com/utxorpc/spec#readme
+bug-reports:    https://github.com/utxorpc/spec/issues
+license:        Apache-2.0
+build-type:     Simple
+extra-source-files:
+    README.md
+
+library
+  exposed-modules:
+      Proto.Utxorpc.Build.V1.Build
+      Proto.Utxorpc.Cardano.V1.Cardano
+      Proto.Utxorpc.Submit.V1.Submit
+      Proto.Utxorpc.Sync.V1.Sync
+      Proto.Utxorpc.Watch.V1.Watch
+      Proto.Utxorpc.Build.V1.Build_Fields
+      Proto.Utxorpc.Cardano.V1.Cardano_Fields
+      Proto.Utxorpc.Submit.V1.Submit_Fields
+      Proto.Utxorpc.Sync.V1.Sync_Fields
+      Proto.Utxorpc.Watch.V1.Watch_Fields
+  other-modules:
+      Paths_utxorpc
+  hs-source-dirs:
+      build/gen/haskell
+      cardano/gen/haskell
+      submit/gen/haskell
+      sync/gen/haskell
+      watch/gen/haskell
+  build-depends:
+      base >=4.7 && <5
+    , proto-lens
+    , proto-lens-protobuf-types
+    , proto-lens-runtime
+  default-language: Haskell2010
