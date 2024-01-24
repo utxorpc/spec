@@ -12,6 +12,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install protoc
+        run: |
+          PROTOC_ZIP=protoc-3.14.0-linux-x86_64.zip
+          curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/$PROTOC_ZIP
+          unzip -o $PROTOC_ZIP -d . bin/protoc
+          unzip -o $PROTOC_ZIP -d . 'include/*'
+          rm -f $PROTOC_ZIP
+          echo "$(pwd)/bin" >> "$GITHUB_PATH""
+
       - name: Setup npm
         uses: actions/setup-node@v4
         with:

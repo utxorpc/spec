@@ -1,0 +1,7 @@
+packages: *.cabal
+
+source-repository-package
+  type: git
+  location: https://github.com/google/proto-lens.git
+  tag: 24048cb13c75c698c1900418f0c59e0b6d851ca8
+  subdir: proto-lens-protobuf-types
