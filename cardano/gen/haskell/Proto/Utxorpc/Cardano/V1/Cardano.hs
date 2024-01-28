@@ -1374,9 +1374,11 @@ instance Control.DeepSeq.NFData BlockBody where
 {- | Fields :
      
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.slot' @:: Lens' BlockHeader Data.Word.Word64@
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.height' @:: Lens' BlockHeader Data.Word.Word64@
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.hash' @:: Lens' BlockHeader Data.ByteString.ByteString@ -}
 data BlockHeader
   = BlockHeader'_constructor {_BlockHeader'slot :: !Data.Word.Word64,
+                              _BlockHeader'height :: !Data.Word.Word64,
                               _BlockHeader'hash :: !Data.ByteString.ByteString,
                               _BlockHeader'_unknownFields :: !Data.ProtoLens.FieldSet}
   deriving stock (Prelude.Eq, Prelude.Ord)
@@ -1392,6 +1394,12 @@ instance Data.ProtoLens.Field.HasField BlockHeader "slot" Data.Word.Word64 where
         (Lens.Family2.Unchecked.lens
            _BlockHeader'slot (\ x__ y__ -> x__ {_BlockHeader'slot = y__}))
         Prelude.id
+instance Data.ProtoLens.Field.HasField BlockHeader "height" Data.Word.Word64 where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _BlockHeader'height (\ x__ y__ -> x__ {_BlockHeader'height = y__}))
+        Prelude.id
 instance Data.ProtoLens.Field.HasField BlockHeader "hash" Data.ByteString.ByteString where
   fieldOf _
     = (Prelude..)
@@ -1403,8 +1411,9 @@ instance Data.ProtoLens.Message BlockHeader where
   packedMessageDescriptor _
     = "\n\
       \\vBlockHeader\DC2\DC2\n\
-      \\EOTslot\CAN\SOH \SOH(\EOTR\EOTslot\DC2\DC2\n\
-      \\EOThash\CAN\STX \SOH(\fR\EOThash"
+      \\EOTslot\CAN\SOH \SOH(\EOTR\EOTslot\DC2\SYN\n\
+      \\ACKheight\CAN\STX \SOH(\EOTR\ACKheight\DC2\DC2\n\
+      \\EOThash\CAN\ETX \SOH(\fR\EOThash"
   packedFileDescriptor _ = packedFileDescriptor
   fieldsByTag
     = let
@@ -1415,6 +1424,14 @@ instance Data.ProtoLens.Message BlockHeader where
                  Data.ProtoLens.FieldTypeDescriptor Data.Word.Word64)
               (Data.ProtoLens.PlainField
                  Data.ProtoLens.Optional (Data.ProtoLens.Field.field @"slot")) ::
+              Data.ProtoLens.FieldDescriptor BlockHeader
+        height__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "height"
+              (Data.ProtoLens.ScalarField Data.ProtoLens.UInt64Field ::
+                 Data.ProtoLens.FieldTypeDescriptor Data.Word.Word64)
+              (Data.ProtoLens.PlainField
+                 Data.ProtoLens.Optional (Data.ProtoLens.Field.field @"height")) ::
               Data.ProtoLens.FieldDescriptor BlockHeader
         hash__field_descriptor
           = Data.ProtoLens.FieldDescriptor
@@ -1427,7 +1444,8 @@ instance Data.ProtoLens.Message BlockHeader where
       in
         Data.Map.fromList
           [(Data.ProtoLens.Tag 1, slot__field_descriptor),
-           (Data.ProtoLens.Tag 2, hash__field_descriptor)]
+           (Data.ProtoLens.Tag 2, height__field_descriptor),
+           (Data.ProtoLens.Tag 3, hash__field_descriptor)]
   unknownFields
     = Lens.Family2.Unchecked.lens
         _BlockHeader'_unknownFields
@@ -1435,6 +1453,7 @@ instance Data.ProtoLens.Message BlockHeader where
   defMessage
     = BlockHeader'_constructor
         {_BlockHeader'slot = Data.ProtoLens.fieldDefault,
+         _BlockHeader'height = Data.ProtoLens.fieldDefault,
          _BlockHeader'hash = Data.ProtoLens.fieldDefault,
          _BlockHeader'_unknownFields = []}
   parseMessage
@@ -1462,7 +1481,11 @@ instance Data.ProtoLens.Message BlockHeader where
                         8 -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        Data.ProtoLens.Encoding.Bytes.getVarInt "slot"
                                 loop (Lens.Family2.set (Data.ProtoLens.Field.field @"slot") y x)
-                        18
+                        16
+                          -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                       Data.ProtoLens.Encoding.Bytes.getVarInt "height"
+                                loop (Lens.Family2.set (Data.ProtoLens.Field.field @"height") y x)
+                        26
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                            Data.ProtoLens.Encoding.Bytes.getBytes
@@ -1490,21 +1513,31 @@ instance Data.ProtoLens.Message BlockHeader where
                       (Data.ProtoLens.Encoding.Bytes.putVarInt 8)
                       (Data.ProtoLens.Encoding.Bytes.putVarInt _v))
              ((Data.Monoid.<>)
-                (let _v = Lens.Family2.view (Data.ProtoLens.Field.field @"hash") _x
+                (let
+                   _v = Lens.Family2.view (Data.ProtoLens.Field.field @"height") _x
                  in
                    if (Prelude.==) _v Data.ProtoLens.fieldDefault then
                        Data.Monoid.mempty
                    else
                        (Data.Monoid.<>)
-                         (Data.ProtoLens.Encoding.Bytes.putVarInt 18)
-                         ((\ bs
-                             -> (Data.Monoid.<>)
-                                  (Data.ProtoLens.Encoding.Bytes.putVarInt
-                                     (Prelude.fromIntegral (Data.ByteString.length bs)))
-                                  (Data.ProtoLens.Encoding.Bytes.putBytes bs))
-                            _v))
-                (Data.ProtoLens.Encoding.Wire.buildFieldSet
-                   (Lens.Family2.view Data.ProtoLens.unknownFields _x)))
+                         (Data.ProtoLens.Encoding.Bytes.putVarInt 16)
+                         (Data.ProtoLens.Encoding.Bytes.putVarInt _v))
+                ((Data.Monoid.<>)
+                   (let _v = Lens.Family2.view (Data.ProtoLens.Field.field @"hash") _x
+                    in
+                      if (Prelude.==) _v Data.ProtoLens.fieldDefault then
+                          Data.Monoid.mempty
+                      else
+                          (Data.Monoid.<>)
+                            (Data.ProtoLens.Encoding.Bytes.putVarInt 26)
+                            ((\ bs
+                                -> (Data.Monoid.<>)
+                                     (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                        (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                     (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                               _v))
+                   (Data.ProtoLens.Encoding.Wire.buildFieldSet
+                      (Lens.Family2.view Data.ProtoLens.unknownFields _x))))
 instance Control.DeepSeq.NFData BlockHeader where
   rnf
     = \ x__
@@ -1512,7 +1545,9 @@ instance Control.DeepSeq.NFData BlockHeader where
              (_BlockHeader'_unknownFields x__)
              (Control.DeepSeq.deepseq
                 (_BlockHeader'slot x__)
-                (Control.DeepSeq.deepseq (_BlockHeader'hash x__) ()))
+                (Control.DeepSeq.deepseq
+                   (_BlockHeader'height x__)
+                   (Control.DeepSeq.deepseq (_BlockHeader'hash x__) ())))
 {- | Fields :
      
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.maybe'certificate' @:: Lens' Certificate (Prelude.Maybe Certificate'Certificate)@
@@ -8286,6 +8321,7 @@ instance Control.DeepSeq.NFData StakeDelegationCert where
                    (_StakeDelegationCert'poolKeyhash x__) ()))
 {- | Fields :
      
+         * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.hash' @:: Lens' Tx Data.ByteString.ByteString@
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.inputs' @:: Lens' Tx [TxInput]@
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.vec'inputs' @:: Lens' Tx (Data.Vector.Vector TxInput)@
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.outputs' @:: Lens' Tx [TxOutput]@
@@ -8309,7 +8345,8 @@ instance Control.DeepSeq.NFData StakeDelegationCert where
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.auxiliary' @:: Lens' Tx AuxData@
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.maybe'auxiliary' @:: Lens' Tx (Prelude.Maybe AuxData)@ -}
 data Tx
-  = Tx'_constructor {_Tx'inputs :: !(Data.Vector.Vector TxInput),
+  = Tx'_constructor {_Tx'hash :: !Data.ByteString.ByteString,
+                     _Tx'inputs :: !(Data.Vector.Vector TxInput),
                      _Tx'outputs :: !(Data.Vector.Vector TxOutput),
                      _Tx'certificates :: !(Data.Vector.Vector Certificate),
                      _Tx'withdrawals :: !(Data.Vector.Vector Withdrawal),
@@ -8329,6 +8366,12 @@ instance Prelude.Show Tx where
         '{'
         (Prelude.showString
            (Data.ProtoLens.showMessageShort __x) (Prelude.showChar '}' __s))
+instance Data.ProtoLens.Field.HasField Tx "hash" Data.ByteString.ByteString where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _Tx'hash (\ x__ y__ -> x__ {_Tx'hash = y__}))
+        Prelude.id
 instance Data.ProtoLens.Field.HasField Tx "inputs" [TxInput] where
   fieldOf _
     = (Prelude..)
@@ -8477,27 +8520,36 @@ instance Data.ProtoLens.Message Tx where
   messageName _ = Data.Text.pack "utxorpc.cardano.v1.Tx"
   packedMessageDescriptor _
     = "\n\
-      \\STXTx\DC23\n\
-      \\ACKinputs\CAN\SOH \ETX(\v2\ESC.utxorpc.cardano.v1.TxInputR\ACKinputs\DC26\n\
-      \\aoutputs\CAN\STX \ETX(\v2\FS.utxorpc.cardano.v1.TxOutputR\aoutputs\DC2C\n\
-      \\fcertificates\CAN\ETX \ETX(\v2\US.utxorpc.cardano.v1.CertificateR\fcertificates\DC2@\n\
-      \\vwithdrawals\CAN\EOT \ETX(\v2\RS.utxorpc.cardano.v1.WithdrawalR\vwithdrawals\DC22\n\
-      \\EOTmint\CAN\ENQ \ETX(\v2\RS.utxorpc.cardano.v1.MultiassetR\EOTmint\DC2F\n\
-      \\DLEreference_inputs\CAN\ACK \ETX(\v2\ESC.utxorpc.cardano.v1.TxInputR\SIreferenceInputs\DC2<\n\
-      \\twitnesses\CAN\a \SOH(\v2\RS.utxorpc.cardano.v1.WitnessSetR\twitnesses\DC2>\n\
+      \\STXTx\DC2\DC2\n\
+      \\EOThash\CAN\SOH \SOH(\fR\EOThash\DC23\n\
+      \\ACKinputs\CAN\STX \ETX(\v2\ESC.utxorpc.cardano.v1.TxInputR\ACKinputs\DC26\n\
+      \\aoutputs\CAN\ETX \ETX(\v2\FS.utxorpc.cardano.v1.TxOutputR\aoutputs\DC2C\n\
+      \\fcertificates\CAN\EOT \ETX(\v2\US.utxorpc.cardano.v1.CertificateR\fcertificates\DC2@\n\
+      \\vwithdrawals\CAN\ENQ \ETX(\v2\RS.utxorpc.cardano.v1.WithdrawalR\vwithdrawals\DC22\n\
+      \\EOTmint\CAN\ACK \ETX(\v2\RS.utxorpc.cardano.v1.MultiassetR\EOTmint\DC2F\n\
+      \\DLEreference_inputs\CAN\a \ETX(\v2\ESC.utxorpc.cardano.v1.TxInputR\SIreferenceInputs\DC2<\n\
+      \\twitnesses\CAN\b \SOH(\v2\RS.utxorpc.cardano.v1.WitnessSetR\twitnesses\DC2>\n\
       \\n\
-      \collateral\CAN\b \SOH(\v2\RS.utxorpc.cardano.v1.CollateralR\n\
+      \collateral\CAN\t \SOH(\v2\RS.utxorpc.cardano.v1.CollateralR\n\
       \collateral\DC2\DLE\n\
-      \\ETXfee\CAN\t \SOH(\EOTR\ETXfee\DC2:\n\
-      \\bvalidity\CAN\n\
-      \ \SOH(\v2\RS.utxorpc.cardano.v1.TxValidityR\bvalidity\DC2\RS\n\
+      \\ETXfee\CAN\n\
+      \ \SOH(\EOTR\ETXfee\DC2:\n\
+      \\bvalidity\CAN\v \SOH(\v2\RS.utxorpc.cardano.v1.TxValidityR\bvalidity\DC2\RS\n\
       \\n\
-      \successful\CAN\v \SOH(\bR\n\
+      \successful\CAN\f \SOH(\bR\n\
       \successful\DC29\n\
-      \\tauxiliary\CAN\f \SOH(\v2\ESC.utxorpc.cardano.v1.AuxDataR\tauxiliary"
+      \\tauxiliary\CAN\r \SOH(\v2\ESC.utxorpc.cardano.v1.AuxDataR\tauxiliary"
   packedFileDescriptor _ = packedFileDescriptor
   fieldsByTag
     = let
+        hash__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "hash"
+              (Data.ProtoLens.ScalarField Data.ProtoLens.BytesField ::
+                 Data.ProtoLens.FieldTypeDescriptor Data.ByteString.ByteString)
+              (Data.ProtoLens.PlainField
+                 Data.ProtoLens.Optional (Data.ProtoLens.Field.field @"hash")) ::
+              Data.ProtoLens.FieldDescriptor Tx
         inputs__field_descriptor
           = Data.ProtoLens.FieldDescriptor
               "inputs"
@@ -8600,24 +8652,26 @@ instance Data.ProtoLens.Message Tx where
               Data.ProtoLens.FieldDescriptor Tx
       in
         Data.Map.fromList
-          [(Data.ProtoLens.Tag 1, inputs__field_descriptor),
-           (Data.ProtoLens.Tag 2, outputs__field_descriptor),
-           (Data.ProtoLens.Tag 3, certificates__field_descriptor),
-           (Data.ProtoLens.Tag 4, withdrawals__field_descriptor),
-           (Data.ProtoLens.Tag 5, mint__field_descriptor),
-           (Data.ProtoLens.Tag 6, referenceInputs__field_descriptor),
-           (Data.ProtoLens.Tag 7, witnesses__field_descriptor),
-           (Data.ProtoLens.Tag 8, collateral__field_descriptor),
-           (Data.ProtoLens.Tag 9, fee__field_descriptor),
-           (Data.ProtoLens.Tag 10, validity__field_descriptor),
-           (Data.ProtoLens.Tag 11, successful__field_descriptor),
-           (Data.ProtoLens.Tag 12, auxiliary__field_descriptor)]
+          [(Data.ProtoLens.Tag 1, hash__field_descriptor),
+           (Data.ProtoLens.Tag 2, inputs__field_descriptor),
+           (Data.ProtoLens.Tag 3, outputs__field_descriptor),
+           (Data.ProtoLens.Tag 4, certificates__field_descriptor),
+           (Data.ProtoLens.Tag 5, withdrawals__field_descriptor),
+           (Data.ProtoLens.Tag 6, mint__field_descriptor),
+           (Data.ProtoLens.Tag 7, referenceInputs__field_descriptor),
+           (Data.ProtoLens.Tag 8, witnesses__field_descriptor),
+           (Data.ProtoLens.Tag 9, collateral__field_descriptor),
+           (Data.ProtoLens.Tag 10, fee__field_descriptor),
+           (Data.ProtoLens.Tag 11, validity__field_descriptor),
+           (Data.ProtoLens.Tag 12, successful__field_descriptor),
+           (Data.ProtoLens.Tag 13, auxiliary__field_descriptor)]
   unknownFields
     = Lens.Family2.Unchecked.lens
         _Tx'_unknownFields (\ x__ y__ -> x__ {_Tx'_unknownFields = y__})
   defMessage
     = Tx'_constructor
-        {_Tx'inputs = Data.Vector.Generic.empty,
+        {_Tx'hash = Data.ProtoLens.fieldDefault,
+         _Tx'inputs = Data.Vector.Generic.empty,
          _Tx'outputs = Data.Vector.Generic.empty,
          _Tx'certificates = Data.Vector.Generic.empty,
          _Tx'withdrawals = Data.Vector.Generic.empty,
@@ -8697,6 +8751,16 @@ instance Data.ProtoLens.Message Tx where
                    do tag <- Data.ProtoLens.Encoding.Bytes.getVarInt
                       case tag of
                         10
+                          -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                       (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                                           Data.ProtoLens.Encoding.Bytes.getBytes
+                                             (Prelude.fromIntegral len))
+                                       "hash"
+                                loop
+                                  (Lens.Family2.set (Data.ProtoLens.Field.field @"hash") y x)
+                                  mutable'certificates mutable'inputs mutable'mint mutable'outputs
+                                  mutable'referenceInputs mutable'withdrawals
+                        18
                           -> do !y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                         (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                             Data.ProtoLens.Encoding.Bytes.isolate
@@ -8708,7 +8772,7 @@ instance Data.ProtoLens.Message Tx where
                                 loop
                                   x mutable'certificates v mutable'mint mutable'outputs
                                   mutable'referenceInputs mutable'withdrawals
-                        18
+                        26
                           -> do !y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                         (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                             Data.ProtoLens.Encoding.Bytes.isolate
@@ -8720,7 +8784,7 @@ instance Data.ProtoLens.Message Tx where
                                 loop
                                   x mutable'certificates mutable'inputs mutable'mint v
                                   mutable'referenceInputs mutable'withdrawals
-                        26
+                        34
                           -> do !y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                         (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                             Data.ProtoLens.Encoding.Bytes.isolate
@@ -8733,7 +8797,7 @@ instance Data.ProtoLens.Message Tx where
                                 loop
                                   x v mutable'inputs mutable'mint mutable'outputs
                                   mutable'referenceInputs mutable'withdrawals
-                        34
+                        42
                           -> do !y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                         (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                             Data.ProtoLens.Encoding.Bytes.isolate
@@ -8746,7 +8810,7 @@ instance Data.ProtoLens.Message Tx where
                                 loop
                                   x mutable'certificates mutable'inputs mutable'mint mutable'outputs
                                   mutable'referenceInputs v
-                        42
+                        50
                           -> do !y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                         (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                             Data.ProtoLens.Encoding.Bytes.isolate
@@ -8758,7 +8822,7 @@ instance Data.ProtoLens.Message Tx where
                                 loop
                                   x mutable'certificates mutable'inputs v mutable'outputs
                                   mutable'referenceInputs mutable'withdrawals
-                        50
+                        58
                           -> do !y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                         (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                             Data.ProtoLens.Encoding.Bytes.isolate
@@ -8771,7 +8835,7 @@ instance Data.ProtoLens.Message Tx where
                                 loop
                                   x mutable'certificates mutable'inputs mutable'mint mutable'outputs
                                   v mutable'withdrawals
-                        58
+                        66
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                            Data.ProtoLens.Encoding.Bytes.isolate
@@ -8781,7 +8845,7 @@ instance Data.ProtoLens.Message Tx where
                                   (Lens.Family2.set (Data.ProtoLens.Field.field @"witnesses") y x)
                                   mutable'certificates mutable'inputs mutable'mint mutable'outputs
                                   mutable'referenceInputs mutable'withdrawals
-                        66
+                        74
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                            Data.ProtoLens.Encoding.Bytes.isolate
@@ -8791,14 +8855,14 @@ instance Data.ProtoLens.Message Tx where
                                   (Lens.Family2.set (Data.ProtoLens.Field.field @"collateral") y x)
                                   mutable'certificates mutable'inputs mutable'mint mutable'outputs
                                   mutable'referenceInputs mutable'withdrawals
-                        72
+                        80
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        Data.ProtoLens.Encoding.Bytes.getVarInt "fee"
                                 loop
                                   (Lens.Family2.set (Data.ProtoLens.Field.field @"fee") y x)
                                   mutable'certificates mutable'inputs mutable'mint mutable'outputs
                                   mutable'referenceInputs mutable'withdrawals
-                        82
+                        90
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                            Data.ProtoLens.Encoding.Bytes.isolate
@@ -8808,7 +8872,7 @@ instance Data.ProtoLens.Message Tx where
                                   (Lens.Family2.set (Data.ProtoLens.Field.field @"validity") y x)
                                   mutable'certificates mutable'inputs mutable'mint mutable'outputs
                                   mutable'referenceInputs mutable'withdrawals
-                        88
+                        96
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (Prelude.fmap
                                           ((Prelude./=) 0) Data.ProtoLens.Encoding.Bytes.getVarInt)
@@ -8817,7 +8881,7 @@ instance Data.ProtoLens.Message Tx where
                                   (Lens.Family2.set (Data.ProtoLens.Field.field @"successful") y x)
                                   mutable'certificates mutable'inputs mutable'mint mutable'outputs
                                   mutable'referenceInputs mutable'withdrawals
-                        98
+                        106
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                            Data.ProtoLens.Encoding.Bytes.isolate
@@ -8857,18 +8921,19 @@ instance Data.ProtoLens.Message Tx where
   buildMessage
     = \ _x
         -> (Data.Monoid.<>)
-             (Data.ProtoLens.Encoding.Bytes.foldMapBuilder
-                (\ _v
-                   -> (Data.Monoid.<>)
-                        (Data.ProtoLens.Encoding.Bytes.putVarInt 10)
-                        ((Prelude..)
-                           (\ bs
-                              -> (Data.Monoid.<>)
-                                   (Data.ProtoLens.Encoding.Bytes.putVarInt
-                                      (Prelude.fromIntegral (Data.ByteString.length bs)))
-                                   (Data.ProtoLens.Encoding.Bytes.putBytes bs))
-                           Data.ProtoLens.encodeMessage _v))
-                (Lens.Family2.view (Data.ProtoLens.Field.field @"vec'inputs") _x))
+             (let _v = Lens.Family2.view (Data.ProtoLens.Field.field @"hash") _x
+              in
+                if (Prelude.==) _v Data.ProtoLens.fieldDefault then
+                    Data.Monoid.mempty
+                else
+                    (Data.Monoid.<>)
+                      (Data.ProtoLens.Encoding.Bytes.putVarInt 10)
+                      ((\ bs
+                          -> (Data.Monoid.<>)
+                               (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                  (Prelude.fromIntegral (Data.ByteString.length bs)))
+                               (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                         _v))
              ((Data.Monoid.<>)
                 (Data.ProtoLens.Encoding.Bytes.foldMapBuilder
                    (\ _v
@@ -8881,7 +8946,7 @@ instance Data.ProtoLens.Message Tx where
                                          (Prelude.fromIntegral (Data.ByteString.length bs)))
                                       (Data.ProtoLens.Encoding.Bytes.putBytes bs))
                               Data.ProtoLens.encodeMessage _v))
-                   (Lens.Family2.view (Data.ProtoLens.Field.field @"vec'outputs") _x))
+                   (Lens.Family2.view (Data.ProtoLens.Field.field @"vec'inputs") _x))
                 ((Data.Monoid.<>)
                    (Data.ProtoLens.Encoding.Bytes.foldMapBuilder
                       (\ _v
@@ -8894,8 +8959,7 @@ instance Data.ProtoLens.Message Tx where
                                             (Prelude.fromIntegral (Data.ByteString.length bs)))
                                          (Data.ProtoLens.Encoding.Bytes.putBytes bs))
                                  Data.ProtoLens.encodeMessage _v))
-                      (Lens.Family2.view
-                         (Data.ProtoLens.Field.field @"vec'certificates") _x))
+                      (Lens.Family2.view (Data.ProtoLens.Field.field @"vec'outputs") _x))
                    ((Data.Monoid.<>)
                       (Data.ProtoLens.Encoding.Bytes.foldMapBuilder
                          (\ _v
@@ -8909,7 +8973,7 @@ instance Data.ProtoLens.Message Tx where
                                             (Data.ProtoLens.Encoding.Bytes.putBytes bs))
                                     Data.ProtoLens.encodeMessage _v))
                          (Lens.Family2.view
-                            (Data.ProtoLens.Field.field @"vec'withdrawals") _x))
+                            (Data.ProtoLens.Field.field @"vec'certificates") _x))
                       ((Data.Monoid.<>)
                          (Data.ProtoLens.Encoding.Bytes.foldMapBuilder
                             (\ _v
@@ -8923,7 +8987,8 @@ instance Data.ProtoLens.Message Tx where
                                                      (Data.ByteString.length bs)))
                                                (Data.ProtoLens.Encoding.Bytes.putBytes bs))
                                        Data.ProtoLens.encodeMessage _v))
-                            (Lens.Family2.view (Data.ProtoLens.Field.field @"vec'mint") _x))
+                            (Lens.Family2.view
+                               (Data.ProtoLens.Field.field @"vec'withdrawals") _x))
                          ((Data.Monoid.<>)
                             (Data.ProtoLens.Encoding.Bytes.foldMapBuilder
                                (\ _v
@@ -8937,29 +9002,26 @@ instance Data.ProtoLens.Message Tx where
                                                         (Data.ByteString.length bs)))
                                                   (Data.ProtoLens.Encoding.Bytes.putBytes bs))
                                           Data.ProtoLens.encodeMessage _v))
-                               (Lens.Family2.view
-                                  (Data.ProtoLens.Field.field @"vec'referenceInputs") _x))
+                               (Lens.Family2.view (Data.ProtoLens.Field.field @"vec'mint") _x))
                             ((Data.Monoid.<>)
-                               (case
-                                    Lens.Family2.view
-                                      (Data.ProtoLens.Field.field @"maybe'witnesses") _x
-                                of
-                                  Prelude.Nothing -> Data.Monoid.mempty
-                                  (Prelude.Just _v)
-                                    -> (Data.Monoid.<>)
-                                         (Data.ProtoLens.Encoding.Bytes.putVarInt 58)
-                                         ((Prelude..)
-                                            (\ bs
-                                               -> (Data.Monoid.<>)
-                                                    (Data.ProtoLens.Encoding.Bytes.putVarInt
-                                                       (Prelude.fromIntegral
-                                                          (Data.ByteString.length bs)))
-                                                    (Data.ProtoLens.Encoding.Bytes.putBytes bs))
-                                            Data.ProtoLens.encodeMessage _v))
+                               (Data.ProtoLens.Encoding.Bytes.foldMapBuilder
+                                  (\ _v
+                                     -> (Data.Monoid.<>)
+                                          (Data.ProtoLens.Encoding.Bytes.putVarInt 58)
+                                          ((Prelude..)
+                                             (\ bs
+                                                -> (Data.Monoid.<>)
+                                                     (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                                        (Prelude.fromIntegral
+                                                           (Data.ByteString.length bs)))
+                                                     (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                                             Data.ProtoLens.encodeMessage _v))
+                                  (Lens.Family2.view
+                                     (Data.ProtoLens.Field.field @"vec'referenceInputs") _x))
                                ((Data.Monoid.<>)
                                   (case
                                        Lens.Family2.view
-                                         (Data.ProtoLens.Field.field @"maybe'collateral") _x
+                                         (Data.ProtoLens.Field.field @"maybe'witnesses") _x
                                    of
                                      Prelude.Nothing -> Data.Monoid.mempty
                                      (Prelude.Just _v)
@@ -8974,100 +9036,123 @@ instance Data.ProtoLens.Message Tx where
                                                        (Data.ProtoLens.Encoding.Bytes.putBytes bs))
                                                Data.ProtoLens.encodeMessage _v))
                                   ((Data.Monoid.<>)
-                                     (let
-                                        _v
-                                          = Lens.Family2.view (Data.ProtoLens.Field.field @"fee") _x
-                                      in
-                                        if (Prelude.==) _v Data.ProtoLens.fieldDefault then
-                                            Data.Monoid.mempty
-                                        else
-                                            (Data.Monoid.<>)
-                                              (Data.ProtoLens.Encoding.Bytes.putVarInt 72)
-                                              (Data.ProtoLens.Encoding.Bytes.putVarInt _v))
+                                     (case
+                                          Lens.Family2.view
+                                            (Data.ProtoLens.Field.field @"maybe'collateral") _x
+                                      of
+                                        Prelude.Nothing -> Data.Monoid.mempty
+                                        (Prelude.Just _v)
+                                          -> (Data.Monoid.<>)
+                                               (Data.ProtoLens.Encoding.Bytes.putVarInt 74)
+                                               ((Prelude..)
+                                                  (\ bs
+                                                     -> (Data.Monoid.<>)
+                                                          (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                                             (Prelude.fromIntegral
+                                                                (Data.ByteString.length bs)))
+                                                          (Data.ProtoLens.Encoding.Bytes.putBytes
+                                                             bs))
+                                                  Data.ProtoLens.encodeMessage _v))
                                      ((Data.Monoid.<>)
-                                        (case
-                                             Lens.Family2.view
-                                               (Data.ProtoLens.Field.field @"maybe'validity") _x
-                                         of
-                                           Prelude.Nothing -> Data.Monoid.mempty
-                                           (Prelude.Just _v)
-                                             -> (Data.Monoid.<>)
-                                                  (Data.ProtoLens.Encoding.Bytes.putVarInt 82)
-                                                  ((Prelude..)
-                                                     (\ bs
-                                                        -> (Data.Monoid.<>)
-                                                             (Data.ProtoLens.Encoding.Bytes.putVarInt
-                                                                (Prelude.fromIntegral
-                                                                   (Data.ByteString.length bs)))
-                                                             (Data.ProtoLens.Encoding.Bytes.putBytes
-                                                                bs))
-                                                     Data.ProtoLens.encodeMessage _v))
+                                        (let
+                                           _v
+                                             = Lens.Family2.view
+                                                 (Data.ProtoLens.Field.field @"fee") _x
+                                         in
+                                           if (Prelude.==) _v Data.ProtoLens.fieldDefault then
+                                               Data.Monoid.mempty
+                                           else
+                                               (Data.Monoid.<>)
+                                                 (Data.ProtoLens.Encoding.Bytes.putVarInt 80)
+                                                 (Data.ProtoLens.Encoding.Bytes.putVarInt _v))
                                         ((Data.Monoid.<>)
-                                           (let
-                                              _v
-                                                = Lens.Family2.view
-                                                    (Data.ProtoLens.Field.field @"successful") _x
-                                            in
-                                              if (Prelude.==) _v Data.ProtoLens.fieldDefault then
-                                                  Data.Monoid.mempty
-                                              else
-                                                  (Data.Monoid.<>)
-                                                    (Data.ProtoLens.Encoding.Bytes.putVarInt 88)
-                                                    ((Prelude..)
-                                                       Data.ProtoLens.Encoding.Bytes.putVarInt
-                                                       (\ b -> if b then 1 else 0) _v))
+                                           (case
+                                                Lens.Family2.view
+                                                  (Data.ProtoLens.Field.field @"maybe'validity") _x
+                                            of
+                                              Prelude.Nothing -> Data.Monoid.mempty
+                                              (Prelude.Just _v)
+                                                -> (Data.Monoid.<>)
+                                                     (Data.ProtoLens.Encoding.Bytes.putVarInt 90)
+                                                     ((Prelude..)
+                                                        (\ bs
+                                                           -> (Data.Monoid.<>)
+                                                                (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                                                   (Prelude.fromIntegral
+                                                                      (Data.ByteString.length bs)))
+                                                                (Data.ProtoLens.Encoding.Bytes.putBytes
+                                                                   bs))
+                                                        Data.ProtoLens.encodeMessage _v))
                                            ((Data.Monoid.<>)
-                                              (case
-                                                   Lens.Family2.view
-                                                     (Data.ProtoLens.Field.field @"maybe'auxiliary")
-                                                     _x
-                                               of
-                                                 Prelude.Nothing -> Data.Monoid.mempty
-                                                 (Prelude.Just _v)
-                                                   -> (Data.Monoid.<>)
-                                                        (Data.ProtoLens.Encoding.Bytes.putVarInt 98)
-                                                        ((Prelude..)
-                                                           (\ bs
-                                                              -> (Data.Monoid.<>)
-                                                                   (Data.ProtoLens.Encoding.Bytes.putVarInt
-                                                                      (Prelude.fromIntegral
-                                                                         (Data.ByteString.length
-                                                                            bs)))
-                                                                   (Data.ProtoLens.Encoding.Bytes.putBytes
-                                                                      bs))
-                                                           Data.ProtoLens.encodeMessage _v))
-                                              (Data.ProtoLens.Encoding.Wire.buildFieldSet
-                                                 (Lens.Family2.view
-                                                    Data.ProtoLens.unknownFields _x)))))))))))))
+                                              (let
+                                                 _v
+                                                   = Lens.Family2.view
+                                                       (Data.ProtoLens.Field.field @"successful") _x
+                                               in
+                                                 if (Prelude.==) _v Data.ProtoLens.fieldDefault then
+                                                     Data.Monoid.mempty
+                                                 else
+                                                     (Data.Monoid.<>)
+                                                       (Data.ProtoLens.Encoding.Bytes.putVarInt 96)
+                                                       ((Prelude..)
+                                                          Data.ProtoLens.Encoding.Bytes.putVarInt
+                                                          (\ b -> if b then 1 else 0) _v))
+                                              ((Data.Monoid.<>)
+                                                 (case
+                                                      Lens.Family2.view
+                                                        (Data.ProtoLens.Field.field
+                                                           @"maybe'auxiliary")
+                                                        _x
+                                                  of
+                                                    Prelude.Nothing -> Data.Monoid.mempty
+                                                    (Prelude.Just _v)
+                                                      -> (Data.Monoid.<>)
+                                                           (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                                              106)
+                                                           ((Prelude..)
+                                                              (\ bs
+                                                                 -> (Data.Monoid.<>)
+                                                                      (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                                                         (Prelude.fromIntegral
+                                                                            (Data.ByteString.length
+                                                                               bs)))
+                                                                      (Data.ProtoLens.Encoding.Bytes.putBytes
+                                                                         bs))
+                                                              Data.ProtoLens.encodeMessage _v))
+                                                 (Data.ProtoLens.Encoding.Wire.buildFieldSet
+                                                    (Lens.Family2.view
+                                                       Data.ProtoLens.unknownFields _x))))))))))))))
 instance Control.DeepSeq.NFData Tx where
   rnf
     = \ x__
         -> Control.DeepSeq.deepseq
              (_Tx'_unknownFields x__)
              (Control.DeepSeq.deepseq
-                (_Tx'inputs x__)
+                (_Tx'hash x__)
                 (Control.DeepSeq.deepseq
-                   (_Tx'outputs x__)
+                   (_Tx'inputs x__)
                    (Control.DeepSeq.deepseq
-                      (_Tx'certificates x__)
+                      (_Tx'outputs x__)
                       (Control.DeepSeq.deepseq
-                         (_Tx'withdrawals x__)
+                         (_Tx'certificates x__)
                          (Control.DeepSeq.deepseq
-                            (_Tx'mint x__)
+                            (_Tx'withdrawals x__)
                             (Control.DeepSeq.deepseq
-                               (_Tx'referenceInputs x__)
+                               (_Tx'mint x__)
                                (Control.DeepSeq.deepseq
-                                  (_Tx'witnesses x__)
+                                  (_Tx'referenceInputs x__)
                                   (Control.DeepSeq.deepseq
-                                     (_Tx'collateral x__)
+                                     (_Tx'witnesses x__)
                                      (Control.DeepSeq.deepseq
-                                        (_Tx'fee x__)
+                                        (_Tx'collateral x__)
                                         (Control.DeepSeq.deepseq
-                                           (_Tx'validity x__)
+                                           (_Tx'fee x__)
                                            (Control.DeepSeq.deepseq
-                                              (_Tx'successful x__)
+                                              (_Tx'validity x__)
                                               (Control.DeepSeq.deepseq
-                                                 (_Tx'auxiliary x__) ()))))))))))))
+                                                 (_Tx'successful x__)
+                                                 (Control.DeepSeq.deepseq
+                                                    (_Tx'auxiliary x__) ())))))))))))))
 {- | Fields :
      
          * 'Proto.Utxorpc.Cardano.V1.Cardano_Fields.txHash' @:: Lens' TxInput Data.ByteString.ByteString@
@@ -10804,28 +10889,30 @@ packedFileDescriptor
     \\rplutus_datums\CAN\ETX \ETX(\v2\RS.utxorpc.cardano.v1.PlutusDataR\fplutusDatums\"y\n\
     \\aAuxData\DC28\n\
     \\bmetadata\CAN\SOH \ETX(\v2\FS.utxorpc.cardano.v1.MetadataR\bmetadata\DC24\n\
-    \\ascripts\CAN\STX \ETX(\v2\SUB.utxorpc.cardano.v1.ScriptR\ascripts\"\155\ENQ\n\
-    \\STXTx\DC23\n\
-    \\ACKinputs\CAN\SOH \ETX(\v2\ESC.utxorpc.cardano.v1.TxInputR\ACKinputs\DC26\n\
-    \\aoutputs\CAN\STX \ETX(\v2\FS.utxorpc.cardano.v1.TxOutputR\aoutputs\DC2C\n\
-    \\fcertificates\CAN\ETX \ETX(\v2\US.utxorpc.cardano.v1.CertificateR\fcertificates\DC2@\n\
-    \\vwithdrawals\CAN\EOT \ETX(\v2\RS.utxorpc.cardano.v1.WithdrawalR\vwithdrawals\DC22\n\
-    \\EOTmint\CAN\ENQ \ETX(\v2\RS.utxorpc.cardano.v1.MultiassetR\EOTmint\DC2F\n\
-    \\DLEreference_inputs\CAN\ACK \ETX(\v2\ESC.utxorpc.cardano.v1.TxInputR\SIreferenceInputs\DC2<\n\
-    \\twitnesses\CAN\a \SOH(\v2\RS.utxorpc.cardano.v1.WitnessSetR\twitnesses\DC2>\n\
+    \\ascripts\CAN\STX \ETX(\v2\SUB.utxorpc.cardano.v1.ScriptR\ascripts\"\175\ENQ\n\
+    \\STXTx\DC2\DC2\n\
+    \\EOThash\CAN\SOH \SOH(\fR\EOThash\DC23\n\
+    \\ACKinputs\CAN\STX \ETX(\v2\ESC.utxorpc.cardano.v1.TxInputR\ACKinputs\DC26\n\
+    \\aoutputs\CAN\ETX \ETX(\v2\FS.utxorpc.cardano.v1.TxOutputR\aoutputs\DC2C\n\
+    \\fcertificates\CAN\EOT \ETX(\v2\US.utxorpc.cardano.v1.CertificateR\fcertificates\DC2@\n\
+    \\vwithdrawals\CAN\ENQ \ETX(\v2\RS.utxorpc.cardano.v1.WithdrawalR\vwithdrawals\DC22\n\
+    \\EOTmint\CAN\ACK \ETX(\v2\RS.utxorpc.cardano.v1.MultiassetR\EOTmint\DC2F\n\
+    \\DLEreference_inputs\CAN\a \ETX(\v2\ESC.utxorpc.cardano.v1.TxInputR\SIreferenceInputs\DC2<\n\
+    \\twitnesses\CAN\b \SOH(\v2\RS.utxorpc.cardano.v1.WitnessSetR\twitnesses\DC2>\n\
     \\n\
-    \collateral\CAN\b \SOH(\v2\RS.utxorpc.cardano.v1.CollateralR\n\
+    \collateral\CAN\t \SOH(\v2\RS.utxorpc.cardano.v1.CollateralR\n\
     \collateral\DC2\DLE\n\
-    \\ETXfee\CAN\t \SOH(\EOTR\ETXfee\DC2:\n\
-    \\bvalidity\CAN\n\
-    \ \SOH(\v2\RS.utxorpc.cardano.v1.TxValidityR\bvalidity\DC2\RS\n\
+    \\ETXfee\CAN\n\
+    \ \SOH(\EOTR\ETXfee\DC2:\n\
+    \\bvalidity\CAN\v \SOH(\v2\RS.utxorpc.cardano.v1.TxValidityR\bvalidity\DC2\RS\n\
     \\n\
-    \successful\CAN\v \SOH(\bR\n\
+    \successful\CAN\f \SOH(\bR\n\
     \successful\DC29\n\
-    \\tauxiliary\CAN\f \SOH(\v2\ESC.utxorpc.cardano.v1.AuxDataR\tauxiliary\"5\n\
+    \\tauxiliary\CAN\r \SOH(\v2\ESC.utxorpc.cardano.v1.AuxDataR\tauxiliary\"M\n\
     \\vBlockHeader\DC2\DC2\n\
-    \\EOTslot\CAN\SOH \SOH(\EOTR\EOTslot\DC2\DC2\n\
-    \\EOThash\CAN\STX \SOH(\fR\EOThash\"3\n\
+    \\EOTslot\CAN\SOH \SOH(\EOTR\EOTslot\DC2\SYN\n\
+    \\ACKheight\CAN\STX \SOH(\EOTR\ACKheight\DC2\DC2\n\
+    \\EOThash\CAN\ETX \SOH(\fR\EOThash\"3\n\
     \\tBlockBody\DC2&\n\
     \\STXtx\CAN\SOH \ETX(\v2\SYN.utxorpc.cardano.v1.TxR\STXtx\"s\n\
     \\ENQBlock\DC27\n\
@@ -10981,8 +11068,8 @@ packedFileDescriptor
     \\SYNMIR_SOURCE_UNSPECIFIED\DLE\NUL\DC2\ETB\n\
     \\DC3MIR_SOURCE_RESERVES\DLE\SOH\DC2\ETB\n\
     \\DC3MIR_SOURCE_TREASURY\DLE\STXB\207\SOH\n\
-    \\SYNcom.utxorpc.cardano.v1B\fCardanoProtoP\SOHZ=github.com/bufbuild/buf-tour/gen/utxorpc/cardano/v1;cardanov1\162\STX\ETXUCX\170\STX\DC2Utxorpc.Cardano.V1\202\STX\DC2Utxorpc\\Cardano\\V1\226\STX\RSUtxorpc\\Cardano\\V1\\GPBMetadata\234\STX\DC4Utxorpc::Cardano::V1J\207x\n\
-    \\a\DC2\ENQ\NUL\NUL\222\STX\SOH\n\
+    \\SYNcom.utxorpc.cardano.v1B\fCardanoProtoP\SOHZ=github.com/bufbuild/buf-tour/gen/utxorpc/cardano/v1;cardanov1\162\STX\ETXUCX\170\STX\DC2Utxorpc.Cardano.V1\202\STX\DC2Utxorpc\\Cardano\\V1\226\STX\RSUtxorpc\\Cardano\\V1\\GPBMetadata\234\STX\DC4Utxorpc::Cardano::V1J\241y\n\
+    \\a\DC2\ENQ\NUL\NUL\224\STX\SOH\n\
     \\b\n\
     \\SOH\f\DC2\ETX\NUL\NUL\DC2\n\
     \\b\n\
@@ -11376,33 +11463,29 @@ packedFileDescriptor
     \\ENQ\EOT\t\STX\SOH\ETX\DC2\ETXO\FS\GS\n\
     \A\n\
     \\STX\EOT\n\
-    \\DC2\EOTS\NUL`\SOH\SUB5 Represents a transaction in the Cardano blockchain.\n\
+    \\DC2\EOTS\NULa\SOH\SUB5 Represents a transaction in the Cardano blockchain.\n\
     \\n\
     \\n\
     \\n\
     \\ETX\EOT\n\
     \\SOH\DC2\ETXS\b\n\
     \\n\
+    \&\n\
+    \\EOT\EOT\n\
+    \\STX\NUL\DC2\ETXT\STX\DC1\"\EM Hash of the transaction\n\
+    \\n\
+    \\f\n\
+    \\ENQ\EOT\n\
+    \\STX\NUL\ENQ\DC2\ETXT\STX\a\n\
+    \\f\n\
+    \\ENQ\EOT\n\
+    \\STX\NUL\SOH\DC2\ETXT\b\f\n\
+    \\f\n\
+    \\ENQ\EOT\n\
+    \\STX\NUL\ETX\DC2\ETXT\SI\DLE\n\
     \)\n\
     \\EOT\EOT\n\
-    \\STX\NUL\DC2\ETXT\STX\RS\"\FS List of transaction inputs\n\
-    \\n\
-    \\f\n\
-    \\ENQ\EOT\n\
-    \\STX\NUL\EOT\DC2\ETXT\STX\n\
-    \\n\
-    \\f\n\
-    \\ENQ\EOT\n\
-    \\STX\NUL\ACK\DC2\ETXT\v\DC2\n\
-    \\f\n\
-    \\ENQ\EOT\n\
-    \\STX\NUL\SOH\DC2\ETXT\DC3\EM\n\
-    \\f\n\
-    \\ENQ\EOT\n\
-    \\STX\NUL\ETX\DC2\ETXT\FS\GS\n\
-    \*\n\
-    \\EOT\EOT\n\
-    \\STX\SOH\DC2\ETXU\STX \"\GS List of transaction outputs\n\
+    \\STX\SOH\DC2\ETXU\STX\RS\"\FS List of transaction inputs\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
@@ -11410,16 +11493,16 @@ packedFileDescriptor
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\SOH\ACK\DC2\ETXU\v\DC3\n\
+    \\STX\SOH\ACK\DC2\ETXU\v\DC2\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\SOH\SOH\DC2\ETXU\DC4\ESC\n\
+    \\STX\SOH\SOH\DC2\ETXU\DC3\EM\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\SOH\ETX\DC2\ETXU\RS\US\n\
-    \#\n\
+    \\STX\SOH\ETX\DC2\ETXU\FS\GS\n\
+    \*\n\
     \\EOT\EOT\n\
-    \\STX\STX\DC2\ETXV\STX(\"\SYN List of certificates\n\
+    \\STX\STX\DC2\ETXV\STX \"\GS List of transaction outputs\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
@@ -11427,16 +11510,16 @@ packedFileDescriptor
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\STX\ACK\DC2\ETXV\v\SYN\n\
+    \\STX\STX\ACK\DC2\ETXV\v\DC3\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\STX\SOH\DC2\ETXV\ETB#\n\
+    \\STX\STX\SOH\DC2\ETXV\DC4\ESC\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\STX\ETX\DC2\ETXV&'\n\
-    \\"\n\
+    \\STX\STX\ETX\DC2\ETXV\RS\US\n\
+    \#\n\
     \\EOT\EOT\n\
-    \\STX\ETX\DC2\ETXW\STX&\"\NAK List of withdrawals\n\
+    \\STX\ETX\DC2\ETXW\STX(\"\SYN List of certificates\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
@@ -11444,16 +11527,16 @@ packedFileDescriptor
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\ETX\ACK\DC2\ETXW\v\NAK\n\
+    \\STX\ETX\ACK\DC2\ETXW\v\SYN\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\ETX\SOH\DC2\ETXW\SYN!\n\
+    \\STX\ETX\SOH\DC2\ETXW\ETB#\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\ETX\ETX\DC2\ETXW$%\n\
-    \+\n\
+    \\STX\ETX\ETX\DC2\ETXW&'\n\
+    \\"\n\
     \\EOT\EOT\n\
-    \\STX\EOT\DC2\ETXX\STX\US\"\RS List of minted custom assets\n\
+    \\STX\EOT\DC2\ETXX\STX&\"\NAK List of withdrawals\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
@@ -11464,13 +11547,13 @@ packedFileDescriptor
     \\STX\EOT\ACK\DC2\ETXX\v\NAK\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\EOT\SOH\DC2\ETXX\SYN\SUB\n\
+    \\STX\EOT\SOH\DC2\ETXX\SYN!\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\EOT\ETX\DC2\ETXX\GS\RS\n\
-    \'\n\
+    \\STX\EOT\ETX\DC2\ETXX$%\n\
+    \+\n\
     \\EOT\EOT\n\
-    \\STX\ENQ\DC2\ETXY\STX(\"\SUB List of reference inputs\n\
+    \\STX\ENQ\DC2\ETXY\STX\US\"\RS List of minted custom assets\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
@@ -11478,1169 +11561,1195 @@ packedFileDescriptor
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\ENQ\ACK\DC2\ETXY\v\DC2\n\
+    \\STX\ENQ\ACK\DC2\ETXY\v\NAK\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\ENQ\SOH\DC2\ETXY\DC3#\n\
+    \\STX\ENQ\SOH\DC2\ETXY\SYN\SUB\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\ENQ\ETX\DC2\ETXY&'\n\
-    \5\n\
+    \\STX\ENQ\ETX\DC2\ETXY\GS\RS\n\
+    \'\n\
     \\EOT\EOT\n\
-    \\STX\ACK\DC2\ETXZ\STX\ESC\"( Witnesses that validte the transaction\n\
+    \\STX\ACK\DC2\ETXZ\STX(\"\SUB List of reference inputs\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\ACK\ACK\DC2\ETXZ\STX\f\n\
+    \\STX\ACK\EOT\DC2\ETXZ\STX\n\
+    \\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\ACK\SOH\DC2\ETXZ\r\SYN\n\
+    \\STX\ACK\ACK\DC2\ETXZ\v\DC2\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\ACK\ETX\DC2\ETXZ\EM\SUB\n\
-    \?\n\
+    \\STX\ACK\SOH\DC2\ETXZ\DC3#\n\
+    \\f\n\
+    \\ENQ\EOT\n\
+    \\STX\ACK\ETX\DC2\ETXZ&'\n\
+    \5\n\
     \\EOT\EOT\n\
-    \\STX\a\DC2\ETX[\STX\FS\"2 Collateral details in case of failed transaction\n\
+    \\STX\a\DC2\ETX[\STX\ESC\"( Witnesses that validte the transaction\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
     \\STX\a\ACK\DC2\ETX[\STX\f\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\a\SOH\DC2\ETX[\r\ETB\n\
+    \\STX\a\SOH\DC2\ETX[\r\SYN\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\a\ETX\DC2\ETX[\SUB\ESC\n\
+    \\STX\a\ETX\DC2\ETX[\EM\SUB\n\
+    \?\n\
+    \\EOT\EOT\n\
+    \\STX\b\DC2\ETX\\\STX\FS\"2 Collateral details in case of failed transaction\n\
+    \\n\
+    \\f\n\
+    \\ENQ\EOT\n\
+    \\STX\b\ACK\DC2\ETX\\\STX\f\n\
+    \\f\n\
+    \\ENQ\EOT\n\
+    \\STX\b\SOH\DC2\ETX\\\r\ETB\n\
+    \\f\n\
+    \\ENQ\EOT\n\
+    \\STX\b\ETX\DC2\ETX\\\SUB\ESC\n\
     \%\n\
     \\EOT\EOT\n\
-    \\STX\b\DC2\ETX\\\STX\DC1\"\CAN Transaction fee in ADA\n\
+    \\STX\t\DC2\ETX]\STX\DC2\"\CAN Transaction fee in ADA\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\b\ENQ\DC2\ETX\\\STX\b\n\
+    \\STX\t\ENQ\DC2\ETX]\STX\b\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\b\SOH\DC2\ETX\\\t\f\n\
+    \\STX\t\SOH\DC2\ETX]\t\f\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\b\ETX\DC2\ETX\\\SI\DLE\n\
+    \\STX\t\ETX\DC2\ETX]\SI\DC1\n\
     \3\n\
     \\EOT\EOT\n\
-    \\STX\t\DC2\ETX]\STX\ESC\"& Validity interval of the transaction\n\
+    \\STX\n\
+    \\DC2\ETX^\STX\ESC\"& Validity interval of the transaction\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\t\ACK\DC2\ETX]\STX\f\n\
+    \\STX\n\
+    \\ACK\DC2\ETX^\STX\f\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\t\SOH\DC2\ETX]\r\NAK\n\
+    \\STX\n\
+    \\SOH\DC2\ETX^\r\NAK\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\t\ETX\DC2\ETX]\CAN\SUB\n\
+    \\STX\n\
+    \\ETX\DC2\ETX^\CAN\SUB\n\
     \E\n\
     \\EOT\EOT\n\
-    \\STX\n\
-    \\DC2\ETX^\STX\ETB\"8 Flag indicating whether the transaction was successful\n\
+    \\STX\v\DC2\ETX_\STX\ETB\"8 Flag indicating whether the transaction was successful\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\n\
-    \\ENQ\DC2\ETX^\STX\ACK\n\
+    \\STX\v\ENQ\DC2\ETX_\STX\ACK\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\n\
-    \\SOH\DC2\ETX^\a\DC1\n\
+    \\STX\v\SOH\DC2\ETX_\a\DC1\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\n\
-    \\ETX\DC2\ETX^\DC4\SYN\n\
+    \\STX\v\ETX\DC2\ETX_\DC4\SYN\n\
     \I\n\
     \\EOT\EOT\n\
-    \\STX\v\DC2\ETX_\STX\EM\"< Auxiliary data not directly tied to the validation process\n\
+    \\STX\f\DC2\ETX`\STX\EM\"< Auxiliary data not directly tied to the validation process\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\v\ACK\DC2\ETX_\STX\t\n\
+    \\STX\f\ACK\DC2\ETX`\STX\t\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\v\SOH\DC2\ETX_\n\
+    \\STX\f\SOH\DC2\ETX`\n\
     \\DC3\n\
     \\f\n\
     \\ENQ\EOT\n\
-    \\STX\v\ETX\DC2\ETX_\SYN\CAN\n\
+    \\STX\f\ETX\DC2\ETX`\SYN\CAN\n\
     \:\n\
-    \\STX\EOT\v\DC2\EOTc\NULf\SOH\SUB. Contains the header information for a block.\n\
+    \\STX\EOT\v\DC2\EOTd\NULh\SOH\SUB. Contains the header information for a block.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\v\SOH\DC2\ETXc\b\DC3\n\
+    \\ETX\EOT\v\SOH\DC2\ETXd\b\DC3\n\
     \\ESC\n\
-    \\EOT\EOT\v\STX\NUL\DC2\ETXd\STX\DC2\"\SO Slot number.\n\
+    \\EOT\EOT\v\STX\NUL\DC2\ETXe\STX\DC2\"\SO Slot number.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\v\STX\NUL\ENQ\DC2\ETXd\STX\b\n\
+    \\ENQ\EOT\v\STX\NUL\ENQ\DC2\ETXe\STX\b\n\
     \\f\n\
-    \\ENQ\EOT\v\STX\NUL\SOH\DC2\ETXd\t\r\n\
+    \\ENQ\EOT\v\STX\NUL\SOH\DC2\ETXe\t\r\n\
     \\f\n\
-    \\ENQ\EOT\v\STX\NUL\ETX\DC2\ETXd\DLE\DC1\n\
+    \\ENQ\EOT\v\STX\NUL\ETX\DC2\ETXe\DLE\DC1\n\
+    \\FS\n\
+    \\EOT\EOT\v\STX\SOH\DC2\ETXf\STX\DC4\"\SI Block height.\n\
+    \\n\
+    \\f\n\
+    \\ENQ\EOT\v\STX\SOH\ENQ\DC2\ETXf\STX\b\n\
+    \\f\n\
+    \\ENQ\EOT\v\STX\SOH\SOH\DC2\ETXf\t\SI\n\
+    \\f\n\
+    \\ENQ\EOT\v\STX\SOH\ETX\DC2\ETXf\DC2\DC3\n\
     \\SUB\n\
-    \\EOT\EOT\v\STX\SOH\DC2\ETXe\STX\DC1\"\r Block hash.\n\
+    \\EOT\EOT\v\STX\STX\DC2\ETXg\STX\DC1\"\r Block hash.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\v\STX\SOH\ENQ\DC2\ETXe\STX\a\n\
+    \\ENQ\EOT\v\STX\STX\ENQ\DC2\ETXg\STX\a\n\
     \\f\n\
-    \\ENQ\EOT\v\STX\SOH\SOH\DC2\ETXe\b\f\n\
+    \\ENQ\EOT\v\STX\STX\SOH\DC2\ETXg\b\f\n\
     \\f\n\
-    \\ENQ\EOT\v\STX\SOH\ETX\DC2\ETXe\SI\DLE\n\
+    \\ENQ\EOT\v\STX\STX\ETX\DC2\ETXg\SI\DLE\n\
     \8\n\
-    \\STX\EOT\f\DC2\EOTi\NULk\SOH\SUB, Contains the transaction data for a block.\n\
+    \\STX\EOT\f\DC2\EOTk\NULm\SOH\SUB, Contains the transaction data for a block.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\f\SOH\DC2\ETXi\b\DC1\n\
+    \\ETX\EOT\f\SOH\DC2\ETXk\b\DC1\n\
     \$\n\
-    \\EOT\EOT\f\STX\NUL\DC2\ETXj\STX\NAK\"\ETB List of transactions.\n\
+    \\EOT\EOT\f\STX\NUL\DC2\ETXl\STX\NAK\"\ETB List of transactions.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\f\STX\NUL\EOT\DC2\ETXj\STX\n\
+    \\ENQ\EOT\f\STX\NUL\EOT\DC2\ETXl\STX\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\f\STX\NUL\ACK\DC2\ETXj\v\r\n\
+    \\ENQ\EOT\f\STX\NUL\ACK\DC2\ETXl\v\r\n\
     \\f\n\
-    \\ENQ\EOT\f\STX\NUL\SOH\DC2\ETXj\SO\DLE\n\
+    \\ENQ\EOT\f\STX\NUL\SOH\DC2\ETXl\SO\DLE\n\
     \\f\n\
-    \\ENQ\EOT\f\STX\NUL\ETX\DC2\ETXj\DC3\DC4\n\
+    \\ENQ\EOT\f\STX\NUL\ETX\DC2\ETXl\DC3\DC4\n\
     \E\n\
-    \\STX\EOT\r\DC2\EOTn\NULq\SOH\SUB9 Represents a complete block, including header and body.\n\
+    \\STX\EOT\r\DC2\EOTp\NULs\SOH\SUB9 Represents a complete block, including header and body.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\r\SOH\DC2\ETXn\b\r\n\
+    \\ETX\EOT\r\SOH\DC2\ETXp\b\r\n\
     \\FS\n\
-    \\EOT\EOT\r\STX\NUL\DC2\ETXo\STX\EM\"\SI Block header.\n\
+    \\EOT\EOT\r\STX\NUL\DC2\ETXq\STX\EM\"\SI Block header.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\r\STX\NUL\ACK\DC2\ETXo\STX\r\n\
+    \\ENQ\EOT\r\STX\NUL\ACK\DC2\ETXq\STX\r\n\
     \\f\n\
-    \\ENQ\EOT\r\STX\NUL\SOH\DC2\ETXo\SO\DC4\n\
+    \\ENQ\EOT\r\STX\NUL\SOH\DC2\ETXq\SO\DC4\n\
     \\f\n\
-    \\ENQ\EOT\r\STX\NUL\ETX\DC2\ETXo\ETB\CAN\n\
+    \\ENQ\EOT\r\STX\NUL\ETX\DC2\ETXq\ETB\CAN\n\
     \\SUB\n\
-    \\EOT\EOT\r\STX\SOH\DC2\ETXp\STX\NAK\"\r Block body.\n\
+    \\EOT\EOT\r\STX\SOH\DC2\ETXr\STX\NAK\"\r Block body.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\r\STX\SOH\ACK\DC2\ETXp\STX\v\n\
+    \\ENQ\EOT\r\STX\SOH\ACK\DC2\ETXr\STX\v\n\
     \\f\n\
-    \\ENQ\EOT\r\STX\SOH\SOH\DC2\ETXp\f\DLE\n\
+    \\ENQ\EOT\r\STX\SOH\SOH\DC2\ETXr\f\DLE\n\
     \\f\n\
-    \\ENQ\EOT\r\STX\SOH\ETX\DC2\ETXp\DC3\DC4\n\
+    \\ENQ\EOT\r\STX\SOH\ETX\DC2\ETXr\DC3\DC4\n\
     \C\n\
-    \\STX\EOT\SO\DC2\EOTt\NULw\SOH\SUB7 Represents a VKey witness used to sign a transaction.\n\
+    \\STX\EOT\SO\DC2\EOTv\NULy\SOH\SUB7 Represents a VKey witness used to sign a transaction.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\SO\SOH\DC2\ETXt\b\DC3\n\
+    \\ETX\EOT\SO\SOH\DC2\ETXv\b\DC3\n\
     \ \n\
-    \\EOT\EOT\SO\STX\NUL\DC2\ETXu\STX\DC1\"\DC3 Verification key.\n\
+    \\EOT\EOT\SO\STX\NUL\DC2\ETXw\STX\DC1\"\DC3 Verification key.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\SO\STX\NUL\ENQ\DC2\ETXu\STX\a\n\
+    \\ENQ\EOT\SO\STX\NUL\ENQ\DC2\ETXw\STX\a\n\
     \\f\n\
-    \\ENQ\EOT\SO\STX\NUL\SOH\DC2\ETXu\b\f\n\
+    \\ENQ\EOT\SO\STX\NUL\SOH\DC2\ETXw\b\f\n\
     \\f\n\
-    \\ENQ\EOT\SO\STX\NUL\ETX\DC2\ETXu\SI\DLE\n\
+    \\ENQ\EOT\SO\STX\NUL\ETX\DC2\ETXw\SI\DLE\n\
     \D\n\
-    \\EOT\EOT\SO\STX\SOH\DC2\ETXv\STX\SYN\"7 Signature generated using the associated private key.\n\
+    \\EOT\EOT\SO\STX\SOH\DC2\ETXx\STX\SYN\"7 Signature generated using the associated private key.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\SO\STX\SOH\ENQ\DC2\ETXv\STX\a\n\
+    \\ENQ\EOT\SO\STX\SOH\ENQ\DC2\ETXx\STX\a\n\
     \\f\n\
-    \\ENQ\EOT\SO\STX\SOH\SOH\DC2\ETXv\b\DC1\n\
+    \\ENQ\EOT\SO\STX\SOH\SOH\DC2\ETXx\b\DC1\n\
     \\f\n\
-    \\ENQ\EOT\SO\STX\SOH\ETX\DC2\ETXv\DC4\NAK\n\
+    \\ENQ\EOT\SO\STX\SOH\ETX\DC2\ETXx\DC4\NAK\n\
     \5\n\
-    \\STX\EOT\SI\DC2\ENQz\NUL\131\SOH\SOH\SUB( Represents a native script in Cardano.\n\
+    \\STX\EOT\SI\DC2\ENQ|\NUL\133\SOH\SOH\SUB( Represents a native script in Cardano.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\SI\SOH\DC2\ETXz\b\DC4\n\
+    \\ETX\EOT\SI\SOH\DC2\ETX|\b\DC4\n\
     \\r\n\
-    \\EOT\EOT\SI\b\NUL\DC2\ENQ{\STX\130\SOH\ETX\n\
+    \\EOT\EOT\SI\b\NUL\DC2\ENQ}\STX\132\SOH\ETX\n\
     \\f\n\
-    \\ENQ\EOT\SI\b\NUL\SOH\DC2\ETX{\b\NAK\n\
+    \\ENQ\EOT\SI\b\NUL\SOH\DC2\ETX}\b\NAK\n\
     \3\n\
-    \\EOT\EOT\SI\STX\NUL\DC2\ETX|\EOT\FS\"& Script based on an address key hash.\n\
+    \\EOT\EOT\SI\STX\NUL\DC2\ETX~\EOT\FS\"& Script based on an address key hash.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\SI\STX\NUL\ENQ\DC2\ETX|\EOT\t\n\
+    \\ENQ\EOT\SI\STX\NUL\ENQ\DC2\ETX~\EOT\t\n\
     \\f\n\
-    \\ENQ\EOT\SI\STX\NUL\SOH\DC2\ETX|\n\
+    \\ENQ\EOT\SI\STX\NUL\SOH\DC2\ETX~\n\
     \\ETB\n\
     \\f\n\
-    \\ENQ\EOT\SI\STX\NUL\ETX\DC2\ETX|\SUB\ESC\n\
+    \\ENQ\EOT\SI\STX\NUL\ETX\DC2\ETX~\SUB\ESC\n\
     \G\n\
-    \\EOT\EOT\SI\STX\SOH\DC2\ETX}\EOT$\": Script that requires all nested scripts to be satisfied.\n\
+    \\EOT\EOT\SI\STX\SOH\DC2\ETX\DEL\EOT$\": Script that requires all nested scripts to be satisfied.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\SI\STX\SOH\ACK\DC2\ETX}\EOT\DC4\n\
+    \\ENQ\EOT\SI\STX\SOH\ACK\DC2\ETX\DEL\EOT\DC4\n\
     \\f\n\
-    \\ENQ\EOT\SI\STX\SOH\SOH\DC2\ETX}\NAK\US\n\
+    \\ENQ\EOT\SI\STX\SOH\SOH\DC2\ETX\DEL\NAK\US\n\
     \\f\n\
-    \\ENQ\EOT\SI\STX\SOH\ETX\DC2\ETX}\"#\n\
-    \N\n\
-    \\EOT\EOT\SI\STX\STX\DC2\ETX~\EOT$\"A Script that requires any of the nested scripts to be satisfied.\n\
+    \\ENQ\EOT\SI\STX\SOH\ETX\DC2\ETX\DEL\"#\n\
+    \O\n\
+    \\EOT\EOT\SI\STX\STX\DC2\EOT\128\SOH\EOT$\"A Script that requires any of the nested scripts to be satisfied.\n\
     \\n\
-    \\f\n\
-    \\ENQ\EOT\SI\STX\STX\ACK\DC2\ETX~\EOT\DC4\n\
-    \\f\n\
-    \\ENQ\EOT\SI\STX\STX\SOH\DC2\ETX~\NAK\US\n\
-    \\f\n\
-    \\ENQ\EOT\SI\STX\STX\ETX\DC2\ETX~\"#\n\
-    \N\n\
-    \\EOT\EOT\SI\STX\ETX\DC2\ETX\DEL\EOT!\"A Script that requires k out of n nested scripts to be satisfied.\n\
+    \\r\n\
+    \\ENQ\EOT\SI\STX\STX\ACK\DC2\EOT\128\SOH\EOT\DC4\n\
+    \\r\n\
+    \\ENQ\EOT\SI\STX\STX\SOH\DC2\EOT\128\SOH\NAK\US\n\
+    \\r\n\
+    \\ENQ\EOT\SI\STX\STX\ETX\DC2\EOT\128\SOH\"#\n\
+    \O\n\
+    \\EOT\EOT\SI\STX\ETX\DC2\EOT\129\SOH\EOT!\"A Script that requires k out of n nested scripts to be satisfied.\n\
     \\n\
-    \\f\n\
-    \\ENQ\EOT\SI\STX\ETX\ACK\DC2\ETX\DEL\EOT\SO\n\
-    \\f\n\
-    \\ENQ\EOT\SI\STX\ETX\SOH\DC2\ETX\DEL\SI\FS\n\
-    \\f\n\
-    \\ENQ\EOT\SI\STX\ETX\ETX\DC2\ETX\DEL\US \n\
+    \\r\n\
+    \\ENQ\EOT\SI\STX\ETX\ACK\DC2\EOT\129\SOH\EOT\SO\n\
+    \\r\n\
+    \\ENQ\EOT\SI\STX\ETX\SOH\DC2\EOT\129\SOH\SI\FS\n\
+    \\r\n\
+    \\ENQ\EOT\SI\STX\ETX\ETX\DC2\EOT\129\SOH\US \n\
     \?\n\
-    \\EOT\EOT\SI\STX\EOT\DC2\EOT\128\SOH\EOT\RS\"1 Slot number before which the script is invalid.\n\
+    \\EOT\EOT\SI\STX\EOT\DC2\EOT\130\SOH\EOT\RS\"1 Slot number before which the script is invalid.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\SI\STX\EOT\ENQ\DC2\EOT\128\SOH\EOT\n\
+    \\ENQ\EOT\SI\STX\EOT\ENQ\DC2\EOT\130\SOH\EOT\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\SI\STX\EOT\SOH\DC2\EOT\128\SOH\v\EM\n\
+    \\ENQ\EOT\SI\STX\EOT\SOH\DC2\EOT\130\SOH\v\EM\n\
     \\r\n\
-    \\ENQ\EOT\SI\STX\EOT\ETX\DC2\EOT\128\SOH\FS\GS\n\
+    \\ENQ\EOT\SI\STX\EOT\ETX\DC2\EOT\130\SOH\FS\GS\n\
     \>\n\
-    \\EOT\EOT\SI\STX\ENQ\DC2\EOT\129\SOH\EOT!\"0 Slot number after which the script is invalid.\n\
+    \\EOT\EOT\SI\STX\ENQ\DC2\EOT\131\SOH\EOT!\"0 Slot number after which the script is invalid.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\SI\STX\ENQ\ENQ\DC2\EOT\129\SOH\EOT\n\
+    \\ENQ\EOT\SI\STX\ENQ\ENQ\DC2\EOT\131\SOH\EOT\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\SI\STX\ENQ\SOH\DC2\EOT\129\SOH\v\FS\n\
+    \\ENQ\EOT\SI\STX\ENQ\SOH\DC2\EOT\131\SOH\v\FS\n\
     \\r\n\
-    \\ENQ\EOT\SI\STX\ENQ\ETX\DC2\EOT\129\SOH\US \n\
+    \\ENQ\EOT\SI\STX\ENQ\ETX\DC2\EOT\131\SOH\US \n\
     \4\n\
-    \\STX\EOT\DLE\DC2\ACK\134\SOH\NUL\136\SOH\SOH\SUB& Represents a list of native scripts.\n\
+    \\STX\EOT\DLE\DC2\ACK\136\SOH\NUL\138\SOH\SOH\SUB& Represents a list of native scripts.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\DLE\SOH\DC2\EOT\134\SOH\b\CAN\n\
+    \\ETX\EOT\DLE\SOH\DC2\EOT\136\SOH\b\CAN\n\
     \'\n\
-    \\EOT\EOT\DLE\STX\NUL\DC2\EOT\135\SOH\STX\"\"\EM List of native scripts.\n\
+    \\EOT\EOT\DLE\STX\NUL\DC2\EOT\137\SOH\STX\"\"\EM List of native scripts.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\DLE\STX\NUL\EOT\DC2\EOT\135\SOH\STX\n\
+    \\ENQ\EOT\DLE\STX\NUL\EOT\DC2\EOT\137\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\DLE\STX\NUL\ACK\DC2\EOT\135\SOH\v\ETB\n\
+    \\ENQ\EOT\DLE\STX\NUL\ACK\DC2\EOT\137\SOH\v\ETB\n\
     \\r\n\
-    \\ENQ\EOT\DLE\STX\NUL\SOH\DC2\EOT\135\SOH\CAN\GS\n\
+    \\ENQ\EOT\DLE\STX\NUL\SOH\DC2\EOT\137\SOH\CAN\GS\n\
     \\r\n\
-    \\ENQ\EOT\DLE\STX\NUL\ETX\DC2\EOT\135\SOH !\n\
+    \\ENQ\EOT\DLE\STX\NUL\ETX\DC2\EOT\137\SOH !\n\
     \8\n\
-    \\STX\EOT\DC1\DC2\ACK\139\SOH\NUL\142\SOH\SOH\SUB* Represents a \"k out of n\" native script.\n\
+    \\STX\EOT\DC1\DC2\ACK\141\SOH\NUL\144\SOH\SOH\SUB* Represents a \"k out of n\" native script.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\DC1\SOH\DC2\EOT\139\SOH\b\DC2\n\
+    \\ETX\EOT\DC1\SOH\DC2\EOT\141\SOH\b\DC2\n\
     \9\n\
-    \\EOT\EOT\DC1\STX\NUL\DC2\EOT\140\SOH\STX\SI\"+ The number of required satisfied scripts.\n\
+    \\EOT\EOT\DC1\STX\NUL\DC2\EOT\142\SOH\STX\SI\"+ The number of required satisfied scripts.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\DC1\STX\NUL\ENQ\DC2\EOT\140\SOH\STX\b\n\
+    \\ENQ\EOT\DC1\STX\NUL\ENQ\DC2\EOT\142\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\DC1\STX\NUL\SOH\DC2\EOT\140\SOH\t\n\
+    \\ENQ\EOT\DC1\STX\NUL\SOH\DC2\EOT\142\SOH\t\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\DC1\STX\NUL\ETX\DC2\EOT\140\SOH\r\SO\n\
+    \\ENQ\EOT\DC1\STX\NUL\ETX\DC2\EOT\142\SOH\r\SO\n\
     \'\n\
-    \\EOT\EOT\DC1\STX\SOH\DC2\EOT\141\SOH\STX$\"\EM List of native scripts.\n\
+    \\EOT\EOT\DC1\STX\SOH\DC2\EOT\143\SOH\STX$\"\EM List of native scripts.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\DC1\STX\SOH\EOT\DC2\EOT\141\SOH\STX\n\
+    \\ENQ\EOT\DC1\STX\SOH\EOT\DC2\EOT\143\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\DC1\STX\SOH\ACK\DC2\EOT\141\SOH\v\ETB\n\
+    \\ENQ\EOT\DC1\STX\SOH\ACK\DC2\EOT\143\SOH\v\ETB\n\
     \\r\n\
-    \\ENQ\EOT\DC1\STX\SOH\SOH\DC2\EOT\141\SOH\CAN\US\n\
+    \\ENQ\EOT\DC1\STX\SOH\SOH\DC2\EOT\143\SOH\CAN\US\n\
     \\r\n\
-    \\ENQ\EOT\DC1\STX\SOH\ETX\DC2\EOT\141\SOH\"#\n\
+    \\ENQ\EOT\DC1\STX\SOH\ETX\DC2\EOT\143\SOH\"#\n\
     \D\n\
-    \\STX\EOT\DC2\DC2\ACK\145\SOH\NUL\149\SOH\SOH\SUB6 Represents a constructor for Plutus data in Cardano.\n\
+    \\STX\EOT\DC2\DC2\ACK\147\SOH\NUL\151\SOH\SOH\SUB6 Represents a constructor for Plutus data in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\DC2\SOH\DC2\EOT\145\SOH\b\SO\n\
+    \\ETX\EOT\DC2\SOH\DC2\EOT\147\SOH\b\SO\n\
     \\f\n\
-    \\EOT\EOT\DC2\STX\NUL\DC2\EOT\146\SOH\STX\DC1\n\
+    \\EOT\EOT\DC2\STX\NUL\DC2\EOT\148\SOH\STX\DC1\n\
     \\r\n\
-    \\ENQ\EOT\DC2\STX\NUL\ENQ\DC2\EOT\146\SOH\STX\b\n\
+    \\ENQ\EOT\DC2\STX\NUL\ENQ\DC2\EOT\148\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\DC2\STX\NUL\SOH\DC2\EOT\146\SOH\t\f\n\
+    \\ENQ\EOT\DC2\STX\NUL\SOH\DC2\EOT\148\SOH\t\f\n\
     \\r\n\
-    \\ENQ\EOT\DC2\STX\NUL\ETX\DC2\EOT\146\SOH\SI\DLE\n\
+    \\ENQ\EOT\DC2\STX\NUL\ETX\DC2\EOT\148\SOH\SI\DLE\n\
     \\f\n\
-    \\EOT\EOT\DC2\STX\SOH\DC2\EOT\147\SOH\STX\GS\n\
+    \\EOT\EOT\DC2\STX\SOH\DC2\EOT\149\SOH\STX\GS\n\
     \\r\n\
-    \\ENQ\EOT\DC2\STX\SOH\ENQ\DC2\EOT\147\SOH\STX\b\n\
+    \\ENQ\EOT\DC2\STX\SOH\ENQ\DC2\EOT\149\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\DC2\STX\SOH\SOH\DC2\EOT\147\SOH\t\CAN\n\
+    \\ENQ\EOT\DC2\STX\SOH\SOH\DC2\EOT\149\SOH\t\CAN\n\
     \\r\n\
-    \\ENQ\EOT\DC2\STX\SOH\ETX\DC2\EOT\147\SOH\ESC\FS\n\
+    \\ENQ\EOT\DC2\STX\SOH\ETX\DC2\EOT\149\SOH\ESC\FS\n\
     \\f\n\
-    \\EOT\EOT\DC2\STX\STX\DC2\EOT\148\SOH\STX!\n\
+    \\EOT\EOT\DC2\STX\STX\DC2\EOT\150\SOH\STX!\n\
     \\r\n\
-    \\ENQ\EOT\DC2\STX\STX\EOT\DC2\EOT\148\SOH\STX\n\
+    \\ENQ\EOT\DC2\STX\STX\EOT\DC2\EOT\150\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\DC2\STX\STX\ACK\DC2\EOT\148\SOH\v\NAK\n\
+    \\ENQ\EOT\DC2\STX\STX\ACK\DC2\EOT\150\SOH\v\NAK\n\
     \\r\n\
-    \\ENQ\EOT\DC2\STX\STX\SOH\DC2\EOT\148\SOH\SYN\FS\n\
+    \\ENQ\EOT\DC2\STX\STX\SOH\DC2\EOT\150\SOH\SYN\FS\n\
     \\r\n\
-    \\ENQ\EOT\DC2\STX\STX\ETX\DC2\EOT\148\SOH\US \n\
+    \\ENQ\EOT\DC2\STX\STX\ETX\DC2\EOT\150\SOH\US \n\
     \D\n\
-    \\STX\EOT\DC3\DC2\ACK\152\SOH\NUL\158\SOH\SOH\SUB6 Represents a big integer for Plutus data in Cardano.\n\
+    \\STX\EOT\DC3\DC2\ACK\154\SOH\NUL\160\SOH\SOH\SUB6 Represents a big integer for Plutus data in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\DC3\SOH\DC2\EOT\152\SOH\b\SO\n\
+    \\ETX\EOT\DC3\SOH\DC2\EOT\154\SOH\b\SO\n\
     \\SO\n\
-    \\EOT\EOT\DC3\b\NUL\DC2\ACK\153\SOH\STX\157\SOH\ETX\n\
+    \\EOT\EOT\DC3\b\NUL\DC2\ACK\155\SOH\STX\159\SOH\ETX\n\
     \\r\n\
-    \\ENQ\EOT\DC3\b\NUL\SOH\DC2\EOT\153\SOH\b\SI\n\
+    \\ENQ\EOT\DC3\b\NUL\SOH\DC2\EOT\155\SOH\b\SI\n\
     \\f\n\
-    \\EOT\EOT\DC3\STX\NUL\DC2\EOT\154\SOH\EOT\DC2\n\
+    \\EOT\EOT\DC3\STX\NUL\DC2\EOT\156\SOH\EOT\DC2\n\
     \\r\n\
-    \\ENQ\EOT\DC3\STX\NUL\ENQ\DC2\EOT\154\SOH\EOT\t\n\
+    \\ENQ\EOT\DC3\STX\NUL\ENQ\DC2\EOT\156\SOH\EOT\t\n\
     \\r\n\
-    \\ENQ\EOT\DC3\STX\NUL\SOH\DC2\EOT\154\SOH\n\
+    \\ENQ\EOT\DC3\STX\NUL\SOH\DC2\EOT\156\SOH\n\
     \\r\n\
     \\r\n\
-    \\ENQ\EOT\DC3\STX\NUL\ETX\DC2\EOT\154\SOH\DLE\DC1\n\
+    \\ENQ\EOT\DC3\STX\NUL\ETX\DC2\EOT\156\SOH\DLE\DC1\n\
     \\f\n\
-    \\EOT\EOT\DC3\STX\SOH\DC2\EOT\155\SOH\EOT\CAN\n\
+    \\EOT\EOT\DC3\STX\SOH\DC2\EOT\157\SOH\EOT\CAN\n\
     \\r\n\
-    \\ENQ\EOT\DC3\STX\SOH\ENQ\DC2\EOT\155\SOH\EOT\t\n\
+    \\ENQ\EOT\DC3\STX\SOH\ENQ\DC2\EOT\157\SOH\EOT\t\n\
     \\r\n\
-    \\ENQ\EOT\DC3\STX\SOH\SOH\DC2\EOT\155\SOH\n\
+    \\ENQ\EOT\DC3\STX\SOH\SOH\DC2\EOT\157\SOH\n\
     \\DC3\n\
     \\r\n\
-    \\ENQ\EOT\DC3\STX\SOH\ETX\DC2\EOT\155\SOH\SYN\ETB\n\
+    \\ENQ\EOT\DC3\STX\SOH\ETX\DC2\EOT\157\SOH\SYN\ETB\n\
     \\f\n\
-    \\EOT\EOT\DC3\STX\STX\DC2\EOT\156\SOH\EOT\CAN\n\
+    \\EOT\EOT\DC3\STX\STX\DC2\EOT\158\SOH\EOT\CAN\n\
     \\r\n\
-    \\ENQ\EOT\DC3\STX\STX\ENQ\DC2\EOT\156\SOH\EOT\t\n\
+    \\ENQ\EOT\DC3\STX\STX\ENQ\DC2\EOT\158\SOH\EOT\t\n\
     \\r\n\
-    \\ENQ\EOT\DC3\STX\STX\SOH\DC2\EOT\156\SOH\n\
+    \\ENQ\EOT\DC3\STX\STX\SOH\DC2\EOT\158\SOH\n\
     \\DC3\n\
     \\r\n\
-    \\ENQ\EOT\DC3\STX\STX\ETX\DC2\EOT\156\SOH\SYN\ETB\n\
+    \\ENQ\EOT\DC3\STX\STX\ETX\DC2\EOT\158\SOH\SYN\ETB\n\
     \G\n\
-    \\STX\EOT\DC4\DC2\ACK\161\SOH\NUL\164\SOH\SOH\SUB9 Represents a key-value pair for Plutus data in Cardano.\n\
+    \\STX\EOT\DC4\DC2\ACK\163\SOH\NUL\166\SOH\SOH\SUB9 Represents a key-value pair for Plutus data in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\DC4\SOH\DC2\EOT\161\SOH\b\SYN\n\
+    \\ETX\EOT\DC4\SOH\DC2\EOT\163\SOH\b\SYN\n\
     \ \n\
-    \\EOT\EOT\DC4\STX\NUL\DC2\EOT\162\SOH\STX\NAK\"\DC2 Key of the pair.\n\
+    \\EOT\EOT\DC4\STX\NUL\DC2\EOT\164\SOH\STX\NAK\"\DC2 Key of the pair.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\DC4\STX\NUL\ACK\DC2\EOT\162\SOH\STX\f\n\
+    \\ENQ\EOT\DC4\STX\NUL\ACK\DC2\EOT\164\SOH\STX\f\n\
     \\r\n\
-    \\ENQ\EOT\DC4\STX\NUL\SOH\DC2\EOT\162\SOH\r\DLE\n\
+    \\ENQ\EOT\DC4\STX\NUL\SOH\DC2\EOT\164\SOH\r\DLE\n\
     \\r\n\
-    \\ENQ\EOT\DC4\STX\NUL\ETX\DC2\EOT\162\SOH\DC3\DC4\n\
+    \\ENQ\EOT\DC4\STX\NUL\ETX\DC2\EOT\164\SOH\DC3\DC4\n\
     \\"\n\
-    \\EOT\EOT\DC4\STX\SOH\DC2\EOT\163\SOH\STX\ETB\"\DC4 Value of the pair.\n\
+    \\EOT\EOT\DC4\STX\SOH\DC2\EOT\165\SOH\STX\ETB\"\DC4 Value of the pair.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\DC4\STX\SOH\ACK\DC2\EOT\163\SOH\STX\f\n\
+    \\ENQ\EOT\DC4\STX\SOH\ACK\DC2\EOT\165\SOH\STX\f\n\
     \\r\n\
-    \\ENQ\EOT\DC4\STX\SOH\SOH\DC2\EOT\163\SOH\r\DC2\n\
+    \\ENQ\EOT\DC4\STX\SOH\SOH\DC2\EOT\165\SOH\r\DC2\n\
     \\r\n\
-    \\ENQ\EOT\DC4\STX\SOH\ETX\DC2\EOT\163\SOH\NAK\SYN\n\
+    \\ENQ\EOT\DC4\STX\SOH\ETX\DC2\EOT\165\SOH\NAK\SYN\n\
     \9\n\
-    \\STX\EOT\NAK\DC2\ACK\167\SOH\NUL\175\SOH\SOH\SUB+ Represents a Plutus data item in Cardano.\n\
+    \\STX\EOT\NAK\DC2\ACK\169\SOH\NUL\177\SOH\SOH\SUB+ Represents a Plutus data item in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\NAK\SOH\DC2\EOT\167\SOH\b\DC2\n\
+    \\ETX\EOT\NAK\SOH\DC2\EOT\169\SOH\b\DC2\n\
     \\SO\n\
-    \\EOT\EOT\NAK\b\NUL\DC2\ACK\168\SOH\STX\174\SOH\ETX\n\
+    \\EOT\EOT\NAK\b\NUL\DC2\ACK\170\SOH\STX\176\SOH\ETX\n\
     \\r\n\
-    \\ENQ\EOT\NAK\b\NUL\SOH\DC2\EOT\168\SOH\b\DC3\n\
+    \\ENQ\EOT\NAK\b\NUL\SOH\DC2\EOT\170\SOH\b\DC3\n\
     \\FS\n\
-    \\EOT\EOT\NAK\STX\NUL\DC2\EOT\169\SOH\EOT\SYN\"\SO Constructor.\n\
+    \\EOT\EOT\NAK\STX\NUL\DC2\EOT\171\SOH\EOT\SYN\"\SO Constructor.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\NUL\ACK\DC2\EOT\169\SOH\EOT\n\
+    \\ENQ\EOT\NAK\STX\NUL\ACK\DC2\EOT\171\SOH\EOT\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\NUL\SOH\DC2\EOT\169\SOH\v\DC1\n\
+    \\ENQ\EOT\NAK\STX\NUL\SOH\DC2\EOT\171\SOH\v\DC1\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\NUL\ETX\DC2\EOT\169\SOH\DC4\NAK\n\
+    \\ENQ\EOT\NAK\STX\NUL\ETX\DC2\EOT\171\SOH\DC4\NAK\n\
     \#\n\
-    \\EOT\EOT\NAK\STX\SOH\DC2\EOT\170\SOH\EOT\SUB\"\NAK Map of Plutus data.\n\
+    \\EOT\EOT\NAK\STX\SOH\DC2\EOT\172\SOH\EOT\SUB\"\NAK Map of Plutus data.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\SOH\ACK\DC2\EOT\170\SOH\EOT\DC1\n\
+    \\ENQ\EOT\NAK\STX\SOH\ACK\DC2\EOT\172\SOH\EOT\DC1\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\SOH\SOH\DC2\EOT\170\SOH\DC2\NAK\n\
+    \\ENQ\EOT\NAK\STX\SOH\SOH\DC2\EOT\172\SOH\DC2\NAK\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\SOH\ETX\DC2\EOT\170\SOH\CAN\EM\n\
+    \\ENQ\EOT\NAK\STX\SOH\ETX\DC2\EOT\172\SOH\CAN\EM\n\
     \\FS\n\
-    \\EOT\EOT\NAK\STX\STX\DC2\EOT\171\SOH\EOT\ETB\"\SO Big integer.\n\
+    \\EOT\EOT\NAK\STX\STX\DC2\EOT\173\SOH\EOT\ETB\"\SO Big integer.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\STX\ACK\DC2\EOT\171\SOH\EOT\n\
+    \\ENQ\EOT\NAK\STX\STX\ACK\DC2\EOT\173\SOH\EOT\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\STX\SOH\DC2\EOT\171\SOH\v\DC2\n\
+    \\ENQ\EOT\NAK\STX\STX\SOH\DC2\EOT\173\SOH\v\DC2\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\STX\ETX\DC2\EOT\171\SOH\NAK\SYN\n\
+    \\ENQ\EOT\NAK\STX\STX\ETX\DC2\EOT\173\SOH\NAK\SYN\n\
     \\RS\n\
-    \\EOT\EOT\NAK\STX\ETX\DC2\EOT\172\SOH\EOT\FS\"\DLE Bounded bytes.\n\
+    \\EOT\EOT\NAK\STX\ETX\DC2\EOT\174\SOH\EOT\FS\"\DLE Bounded bytes.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\ETX\ENQ\DC2\EOT\172\SOH\EOT\t\n\
+    \\ENQ\EOT\NAK\STX\ETX\ENQ\DC2\EOT\174\SOH\EOT\t\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\ETX\SOH\DC2\EOT\172\SOH\n\
+    \\ENQ\EOT\NAK\STX\ETX\SOH\DC2\EOT\174\SOH\n\
     \\ETB\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\ETX\ETX\DC2\EOT\172\SOH\SUB\ESC\n\
+    \\ENQ\EOT\NAK\STX\ETX\ETX\DC2\EOT\174\SOH\SUB\ESC\n\
     \%\n\
-    \\EOT\EOT\NAK\STX\EOT\DC2\EOT\173\SOH\EOT\RS\"\ETB Array of Plutus data.\n\
+    \\EOT\EOT\NAK\STX\EOT\DC2\EOT\175\SOH\EOT\RS\"\ETB Array of Plutus data.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\EOT\ACK\DC2\EOT\173\SOH\EOT\DC3\n\
+    \\ENQ\EOT\NAK\STX\EOT\ACK\DC2\EOT\175\SOH\EOT\DC3\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\EOT\SOH\DC2\EOT\173\SOH\DC4\EM\n\
+    \\ENQ\EOT\NAK\STX\EOT\SOH\DC2\EOT\175\SOH\DC4\EM\n\
     \\r\n\
-    \\ENQ\EOT\NAK\STX\EOT\ETX\DC2\EOT\173\SOH\FS\GS\n\
+    \\ENQ\EOT\NAK\STX\EOT\ETX\DC2\EOT\175\SOH\FS\GS\n\
     \;\n\
-    \\STX\EOT\SYN\DC2\ACK\178\SOH\NUL\180\SOH\SOH\SUB- Represents a map of Plutus data in Cardano.\n\
+    \\STX\EOT\SYN\DC2\ACK\180\SOH\NUL\182\SOH\SOH\SUB- Represents a map of Plutus data in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\SYN\SOH\DC2\EOT\178\SOH\b\NAK\n\
+    \\ETX\EOT\SYN\SOH\DC2\EOT\180\SOH\b\NAK\n\
     \(\n\
-    \\EOT\EOT\SYN\STX\NUL\DC2\EOT\179\SOH\STX$\"\SUB List of key-value pairs.\n\
+    \\EOT\EOT\SYN\STX\NUL\DC2\EOT\181\SOH\STX$\"\SUB List of key-value pairs.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\SYN\STX\NUL\EOT\DC2\EOT\179\SOH\STX\n\
+    \\ENQ\EOT\SYN\STX\NUL\EOT\DC2\EOT\181\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\SYN\STX\NUL\ACK\DC2\EOT\179\SOH\v\EM\n\
+    \\ENQ\EOT\SYN\STX\NUL\ACK\DC2\EOT\181\SOH\v\EM\n\
     \\r\n\
-    \\ENQ\EOT\SYN\STX\NUL\SOH\DC2\EOT\179\SOH\SUB\US\n\
+    \\ENQ\EOT\SYN\STX\NUL\SOH\DC2\EOT\181\SOH\SUB\US\n\
     \\r\n\
-    \\ENQ\EOT\SYN\STX\NUL\ETX\DC2\EOT\179\SOH\"#\n\
+    \\ENQ\EOT\SYN\STX\NUL\ETX\DC2\EOT\181\SOH\"#\n\
     \>\n\
-    \\STX\EOT\ETB\DC2\ACK\183\SOH\NUL\185\SOH\SOH\SUB0 Represents an array of Plutus data in Cardano.\n\
+    \\STX\EOT\ETB\DC2\ACK\185\SOH\NUL\187\SOH\SOH\SUB0 Represents an array of Plutus data in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\ETB\SOH\DC2\EOT\183\SOH\b\ETB\n\
+    \\ETX\EOT\ETB\SOH\DC2\EOT\185\SOH\b\ETB\n\
     \*\n\
-    \\EOT\EOT\ETB\STX\NUL\DC2\EOT\184\SOH\STX \"\FS List of Plutus data items.\n\
+    \\EOT\EOT\ETB\STX\NUL\DC2\EOT\186\SOH\STX \"\FS List of Plutus data items.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETB\STX\NUL\EOT\DC2\EOT\184\SOH\STX\n\
+    \\ENQ\EOT\ETB\STX\NUL\EOT\DC2\EOT\186\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETB\STX\NUL\ACK\DC2\EOT\184\SOH\v\NAK\n\
+    \\ENQ\EOT\ETB\STX\NUL\ACK\DC2\EOT\186\SOH\v\NAK\n\
     \\r\n\
-    \\ENQ\EOT\ETB\STX\NUL\SOH\DC2\EOT\184\SOH\SYN\ESC\n\
+    \\ENQ\EOT\ETB\STX\NUL\SOH\DC2\EOT\186\SOH\SYN\ESC\n\
     \\r\n\
-    \\ENQ\EOT\ETB\STX\NUL\ETX\DC2\EOT\184\SOH\RS\US\n\
+    \\ENQ\EOT\ETB\STX\NUL\ETX\DC2\EOT\186\SOH\RS\US\n\
     \/\n\
-    \\STX\EOT\CAN\DC2\ACK\188\SOH\NUL\194\SOH\SOH\SUB! Represents a script in Cardano.\n\
+    \\STX\EOT\CAN\DC2\ACK\190\SOH\NUL\196\SOH\SOH\SUB! Represents a script in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\CAN\SOH\DC2\EOT\188\SOH\b\SO\n\
+    \\ETX\EOT\CAN\SOH\DC2\EOT\190\SOH\b\SO\n\
     \\SO\n\
-    \\EOT\EOT\CAN\b\NUL\DC2\ACK\189\SOH\STX\193\SOH\ETX\n\
+    \\EOT\EOT\CAN\b\NUL\DC2\ACK\191\SOH\STX\195\SOH\ETX\n\
     \\r\n\
-    \\ENQ\EOT\CAN\b\NUL\SOH\DC2\EOT\189\SOH\b\SO\n\
+    \\ENQ\EOT\CAN\b\NUL\SOH\DC2\EOT\191\SOH\b\SO\n\
     \\RS\n\
-    \\EOT\EOT\CAN\STX\NUL\DC2\EOT\190\SOH\EOT\FS\"\DLE Native script.\n\
+    \\EOT\EOT\CAN\STX\NUL\DC2\EOT\192\SOH\EOT\FS\"\DLE Native script.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\CAN\STX\NUL\ACK\DC2\EOT\190\SOH\EOT\DLE\n\
+    \\ENQ\EOT\CAN\STX\NUL\ACK\DC2\EOT\192\SOH\EOT\DLE\n\
     \\r\n\
-    \\ENQ\EOT\CAN\STX\NUL\SOH\DC2\EOT\190\SOH\DC1\ETB\n\
+    \\ENQ\EOT\CAN\STX\NUL\SOH\DC2\EOT\192\SOH\DC1\ETB\n\
     \\r\n\
-    \\ENQ\EOT\CAN\STX\NUL\ETX\DC2\EOT\190\SOH\SUB\ESC\n\
+    \\ENQ\EOT\CAN\STX\NUL\ETX\DC2\EOT\192\SOH\SUB\ESC\n\
     \!\n\
-    \\EOT\EOT\CAN\STX\SOH\DC2\EOT\191\SOH\EOT\CAN\"\DC3 Plutus V1 script.\n\
+    \\EOT\EOT\CAN\STX\SOH\DC2\EOT\193\SOH\EOT\CAN\"\DC3 Plutus V1 script.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\CAN\STX\SOH\ENQ\DC2\EOT\191\SOH\EOT\t\n\
+    \\ENQ\EOT\CAN\STX\SOH\ENQ\DC2\EOT\193\SOH\EOT\t\n\
     \\r\n\
-    \\ENQ\EOT\CAN\STX\SOH\SOH\DC2\EOT\191\SOH\n\
+    \\ENQ\EOT\CAN\STX\SOH\SOH\DC2\EOT\193\SOH\n\
     \\DC3\n\
     \\r\n\
-    \\ENQ\EOT\CAN\STX\SOH\ETX\DC2\EOT\191\SOH\SYN\ETB\n\
+    \\ENQ\EOT\CAN\STX\SOH\ETX\DC2\EOT\193\SOH\SYN\ETB\n\
     \!\n\
-    \\EOT\EOT\CAN\STX\STX\DC2\EOT\192\SOH\EOT\CAN\"\DC3 Plutus V2 script.\n\
+    \\EOT\EOT\CAN\STX\STX\DC2\EOT\194\SOH\EOT\CAN\"\DC3 Plutus V2 script.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\CAN\STX\STX\ENQ\DC2\EOT\192\SOH\EOT\t\n\
+    \\ENQ\EOT\CAN\STX\STX\ENQ\DC2\EOT\194\SOH\EOT\t\n\
     \\r\n\
-    \\ENQ\EOT\CAN\STX\STX\SOH\DC2\EOT\192\SOH\n\
+    \\ENQ\EOT\CAN\STX\STX\SOH\DC2\EOT\194\SOH\n\
     \\DC3\n\
     \\r\n\
-    \\ENQ\EOT\CAN\STX\STX\ETX\DC2\EOT\192\SOH\SYN\ETB\n\
+    \\ENQ\EOT\CAN\STX\STX\ETX\DC2\EOT\194\SOH\SYN\ETB\n\
     \\f\n\
-    \\STX\EOT\EM\DC2\ACK\196\SOH\NUL\204\SOH\SOH\n\
+    \\STX\EOT\EM\DC2\ACK\198\SOH\NUL\206\SOH\SOH\n\
     \\v\n\
-    \\ETX\EOT\EM\SOH\DC2\EOT\196\SOH\b\DC1\n\
+    \\ETX\EOT\EM\SOH\DC2\EOT\198\SOH\b\DC1\n\
     \\SO\n\
-    \\EOT\EOT\EM\b\NUL\DC2\ACK\197\SOH\STX\203\SOH\ETX\n\
+    \\EOT\EOT\EM\b\NUL\DC2\ACK\199\SOH\STX\205\SOH\ETX\n\
     \\r\n\
-    \\ENQ\EOT\EM\b\NUL\SOH\DC2\EOT\197\SOH\b\DC1\n\
+    \\ENQ\EOT\EM\b\NUL\SOH\DC2\EOT\199\SOH\b\DC1\n\
     \\f\n\
-    \\EOT\EOT\EM\STX\NUL\DC2\EOT\198\SOH\EOT\DC2\n\
+    \\EOT\EOT\EM\STX\NUL\DC2\EOT\200\SOH\EOT\DC2\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\NUL\ENQ\DC2\EOT\198\SOH\EOT\t\n\
+    \\ENQ\EOT\EM\STX\NUL\ENQ\DC2\EOT\200\SOH\EOT\t\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\NUL\SOH\DC2\EOT\198\SOH\n\
+    \\ENQ\EOT\EM\STX\NUL\SOH\DC2\EOT\200\SOH\n\
     \\r\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\NUL\ETX\DC2\EOT\198\SOH\DLE\DC1\n\
+    \\ENQ\EOT\EM\STX\NUL\ETX\DC2\EOT\200\SOH\DLE\DC1\n\
     \\f\n\
-    \\EOT\EOT\EM\STX\SOH\DC2\EOT\199\SOH\EOT\DC4\n\
+    \\EOT\EOT\EM\STX\SOH\DC2\EOT\201\SOH\EOT\DC4\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\SOH\ENQ\DC2\EOT\199\SOH\EOT\t\n\
+    \\ENQ\EOT\EM\STX\SOH\ENQ\DC2\EOT\201\SOH\EOT\t\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\SOH\SOH\DC2\EOT\199\SOH\n\
+    \\ENQ\EOT\EM\STX\SOH\SOH\DC2\EOT\201\SOH\n\
     \\SI\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\SOH\ETX\DC2\EOT\199\SOH\DC2\DC3\n\
+    \\ENQ\EOT\EM\STX\SOH\ETX\DC2\EOT\201\SOH\DC2\DC3\n\
     \\f\n\
-    \\EOT\EOT\EM\STX\STX\DC2\EOT\200\SOH\EOT\DC4\n\
+    \\EOT\EOT\EM\STX\STX\DC2\EOT\202\SOH\EOT\DC4\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\STX\ENQ\DC2\EOT\200\SOH\EOT\n\
+    \\ENQ\EOT\EM\STX\STX\ENQ\DC2\EOT\202\SOH\EOT\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\STX\SOH\DC2\EOT\200\SOH\v\SI\n\
+    \\ENQ\EOT\EM\STX\STX\SOH\DC2\EOT\202\SOH\v\SI\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\STX\ETX\DC2\EOT\200\SOH\DC2\DC3\n\
+    \\ENQ\EOT\EM\STX\STX\ETX\DC2\EOT\202\SOH\DC2\DC3\n\
     \\f\n\
-    \\EOT\EOT\EM\STX\ETX\DC2\EOT\201\SOH\EOT\GS\n\
+    \\EOT\EOT\EM\STX\ETX\DC2\EOT\203\SOH\EOT\GS\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\ETX\ACK\DC2\EOT\201\SOH\EOT\DC2\n\
+    \\ENQ\EOT\EM\STX\ETX\ACK\DC2\EOT\203\SOH\EOT\DC2\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\ETX\SOH\DC2\EOT\201\SOH\DC3\CAN\n\
+    \\ENQ\EOT\EM\STX\ETX\SOH\DC2\EOT\203\SOH\DC3\CAN\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\ETX\ETX\DC2\EOT\201\SOH\ESC\FS\n\
+    \\ENQ\EOT\EM\STX\ETX\ETX\DC2\EOT\203\SOH\ESC\FS\n\
     \\f\n\
-    \\EOT\EOT\EM\STX\EOT\DC2\EOT\202\SOH\EOT\EM\n\
+    \\EOT\EOT\EM\STX\EOT\DC2\EOT\204\SOH\EOT\EM\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\EOT\ACK\DC2\EOT\202\SOH\EOT\DLE\n\
+    \\ENQ\EOT\EM\STX\EOT\ACK\DC2\EOT\204\SOH\EOT\DLE\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\EOT\SOH\DC2\EOT\202\SOH\DC1\DC4\n\
+    \\ENQ\EOT\EM\STX\EOT\SOH\DC2\EOT\204\SOH\DC1\DC4\n\
     \\r\n\
-    \\ENQ\EOT\EM\STX\EOT\ETX\DC2\EOT\202\SOH\ETB\CAN\n\
+    \\ENQ\EOT\EM\STX\EOT\ETX\DC2\EOT\204\SOH\ETB\CAN\n\
     \\f\n\
-    \\STX\EOT\SUB\DC2\ACK\206\SOH\NUL\208\SOH\SOH\n\
+    \\STX\EOT\SUB\DC2\ACK\208\SOH\NUL\210\SOH\SOH\n\
     \\v\n\
-    \\ETX\EOT\SUB\SOH\DC2\EOT\206\SOH\b\SYN\n\
+    \\ETX\EOT\SUB\SOH\DC2\EOT\208\SOH\b\SYN\n\
     \\f\n\
-    \\EOT\EOT\SUB\STX\NUL\DC2\EOT\207\SOH\STX\US\n\
+    \\EOT\EOT\SUB\STX\NUL\DC2\EOT\209\SOH\STX\US\n\
     \\r\n\
-    \\ENQ\EOT\SUB\STX\NUL\EOT\DC2\EOT\207\SOH\STX\n\
+    \\ENQ\EOT\SUB\STX\NUL\EOT\DC2\EOT\209\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\SUB\STX\NUL\ACK\DC2\EOT\207\SOH\v\DC4\n\
+    \\ENQ\EOT\SUB\STX\NUL\ACK\DC2\EOT\209\SOH\v\DC4\n\
     \\r\n\
-    \\ENQ\EOT\SUB\STX\NUL\SOH\DC2\EOT\207\SOH\NAK\SUB\n\
+    \\ENQ\EOT\SUB\STX\NUL\SOH\DC2\EOT\209\SOH\NAK\SUB\n\
     \\r\n\
-    \\ENQ\EOT\SUB\STX\NUL\ETX\DC2\EOT\207\SOH\GS\RS\n\
+    \\ENQ\EOT\SUB\STX\NUL\ETX\DC2\EOT\209\SOH\GS\RS\n\
     \\f\n\
-    \\STX\EOT\ESC\DC2\ACK\210\SOH\NUL\212\SOH\SOH\n\
+    \\STX\EOT\ESC\DC2\ACK\212\SOH\NUL\214\SOH\SOH\n\
     \\v\n\
-    \\ETX\EOT\ESC\SOH\DC2\EOT\210\SOH\b\DC4\n\
+    \\ETX\EOT\ESC\SOH\DC2\EOT\212\SOH\b\DC4\n\
     \\f\n\
-    \\EOT\EOT\ESC\STX\NUL\DC2\EOT\211\SOH\STX#\n\
+    \\EOT\EOT\ESC\STX\NUL\DC2\EOT\213\SOH\STX#\n\
     \\r\n\
-    \\ENQ\EOT\ESC\STX\NUL\EOT\DC2\EOT\211\SOH\STX\n\
+    \\ENQ\EOT\ESC\STX\NUL\EOT\DC2\EOT\213\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ESC\STX\NUL\ACK\DC2\EOT\211\SOH\v\CAN\n\
+    \\ENQ\EOT\ESC\STX\NUL\ACK\DC2\EOT\213\SOH\v\CAN\n\
     \\r\n\
-    \\ENQ\EOT\ESC\STX\NUL\SOH\DC2\EOT\211\SOH\EM\RS\n\
+    \\ENQ\EOT\ESC\STX\NUL\SOH\DC2\EOT\213\SOH\EM\RS\n\
     \\r\n\
-    \\ENQ\EOT\ESC\STX\NUL\ETX\DC2\EOT\211\SOH!\"\n\
+    \\ENQ\EOT\ESC\STX\NUL\ETX\DC2\EOT\213\SOH!\"\n\
     \\f\n\
-    \\STX\EOT\FS\DC2\ACK\214\SOH\NUL\217\SOH\SOH\n\
+    \\STX\EOT\FS\DC2\ACK\216\SOH\NUL\219\SOH\SOH\n\
     \\v\n\
-    \\ETX\EOT\FS\SOH\DC2\EOT\214\SOH\b\NAK\n\
+    \\ETX\EOT\FS\SOH\DC2\EOT\216\SOH\b\NAK\n\
     \\f\n\
-    \\EOT\EOT\FS\STX\NUL\DC2\EOT\215\SOH\STX\DC4\n\
+    \\EOT\EOT\FS\STX\NUL\DC2\EOT\217\SOH\STX\DC4\n\
     \\r\n\
-    \\ENQ\EOT\FS\STX\NUL\ACK\DC2\EOT\215\SOH\STX\v\n\
+    \\ENQ\EOT\FS\STX\NUL\ACK\DC2\EOT\217\SOH\STX\v\n\
     \\r\n\
-    \\ENQ\EOT\FS\STX\NUL\SOH\DC2\EOT\215\SOH\f\SI\n\
+    \\ENQ\EOT\FS\STX\NUL\SOH\DC2\EOT\217\SOH\f\SI\n\
     \\r\n\
-    \\ENQ\EOT\FS\STX\NUL\ETX\DC2\EOT\215\SOH\DC2\DC3\n\
+    \\ENQ\EOT\FS\STX\NUL\ETX\DC2\EOT\217\SOH\DC2\DC3\n\
     \\f\n\
-    \\EOT\EOT\FS\STX\SOH\DC2\EOT\216\SOH\STX\SYN\n\
+    \\EOT\EOT\FS\STX\SOH\DC2\EOT\218\SOH\STX\SYN\n\
     \\r\n\
-    \\ENQ\EOT\FS\STX\SOH\ACK\DC2\EOT\216\SOH\STX\v\n\
+    \\ENQ\EOT\FS\STX\SOH\ACK\DC2\EOT\218\SOH\STX\v\n\
     \\r\n\
-    \\ENQ\EOT\FS\STX\SOH\SOH\DC2\EOT\216\SOH\f\DC1\n\
+    \\ENQ\EOT\FS\STX\SOH\SOH\DC2\EOT\218\SOH\f\DC1\n\
     \\r\n\
-    \\ENQ\EOT\FS\STX\SOH\ETX\DC2\EOT\216\SOH\DC4\NAK\n\
+    \\ENQ\EOT\FS\STX\SOH\ETX\DC2\EOT\218\SOH\DC4\NAK\n\
     \\f\n\
-    \\STX\EOT\GS\DC2\ACK\219\SOH\NUL\222\SOH\SOH\n\
+    \\STX\EOT\GS\DC2\ACK\221\SOH\NUL\224\SOH\SOH\n\
     \\v\n\
-    \\ETX\EOT\GS\SOH\DC2\EOT\219\SOH\b\DLE\n\
+    \\ETX\EOT\GS\SOH\DC2\EOT\221\SOH\b\DLE\n\
     \\f\n\
-    \\EOT\EOT\GS\STX\NUL\DC2\EOT\220\SOH\STX\DC3\n\
+    \\EOT\EOT\GS\STX\NUL\DC2\EOT\222\SOH\STX\DC3\n\
     \\r\n\
-    \\ENQ\EOT\GS\STX\NUL\ENQ\DC2\EOT\220\SOH\STX\b\n\
+    \\ENQ\EOT\GS\STX\NUL\ENQ\DC2\EOT\222\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\GS\STX\NUL\SOH\DC2\EOT\220\SOH\t\SO\n\
+    \\ENQ\EOT\GS\STX\NUL\SOH\DC2\EOT\222\SOH\t\SO\n\
     \\r\n\
-    \\ENQ\EOT\GS\STX\NUL\ETX\DC2\EOT\220\SOH\DC1\DC2\n\
+    \\ENQ\EOT\GS\STX\NUL\ETX\DC2\EOT\222\SOH\DC1\DC2\n\
     \\f\n\
-    \\EOT\EOT\GS\STX\SOH\DC2\EOT\221\SOH\STX\SYN\n\
+    \\EOT\EOT\GS\STX\SOH\DC2\EOT\223\SOH\STX\SYN\n\
     \\r\n\
-    \\ENQ\EOT\GS\STX\SOH\ACK\DC2\EOT\221\SOH\STX\v\n\
+    \\ENQ\EOT\GS\STX\SOH\ACK\DC2\EOT\223\SOH\STX\v\n\
     \\r\n\
-    \\ENQ\EOT\GS\STX\SOH\SOH\DC2\EOT\221\SOH\f\DC1\n\
+    \\ENQ\EOT\GS\STX\SOH\SOH\DC2\EOT\223\SOH\f\DC1\n\
     \\r\n\
-    \\ENQ\EOT\GS\STX\SOH\ETX\DC2\EOT\221\SOH\DC4\NAK\n\
+    \\ENQ\EOT\GS\STX\SOH\ETX\DC2\EOT\223\SOH\DC4\NAK\n\
     \9\n\
-    \\STX\EOT\RS\DC2\ACK\225\SOH\NUL\230\SOH\SOH\SUB+ Represents a stake credential in Cardano.\n\
+    \\STX\EOT\RS\DC2\ACK\227\SOH\NUL\232\SOH\SOH\SUB+ Represents a stake credential in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\RS\SOH\DC2\EOT\225\SOH\b\ETB\n\
+    \\ETX\EOT\RS\SOH\DC2\EOT\227\SOH\b\ETB\n\
     \\SO\n\
-    \\EOT\EOT\RS\b\NUL\DC2\ACK\226\SOH\STX\229\SOH\ETX\n\
+    \\EOT\EOT\RS\b\NUL\DC2\ACK\228\SOH\STX\231\SOH\ETX\n\
     \\r\n\
-    \\ENQ\EOT\RS\b\NUL\SOH\DC2\EOT\226\SOH\b\CAN\n\
+    \\ENQ\EOT\RS\b\NUL\SOH\DC2\EOT\228\SOH\b\CAN\n\
     \!\n\
-    \\EOT\EOT\RS\STX\NUL\DC2\EOT\227\SOH\EOT\FS\"\DC3 Address key hash.\n\
+    \\EOT\EOT\RS\STX\NUL\DC2\EOT\229\SOH\EOT\FS\"\DC3 Address key hash.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\RS\STX\NUL\ENQ\DC2\EOT\227\SOH\EOT\t\n\
+    \\ENQ\EOT\RS\STX\NUL\ENQ\DC2\EOT\229\SOH\EOT\t\n\
     \\r\n\
-    \\ENQ\EOT\RS\STX\NUL\SOH\DC2\EOT\227\SOH\n\
+    \\ENQ\EOT\RS\STX\NUL\SOH\DC2\EOT\229\SOH\n\
     \\ETB\n\
     \\r\n\
-    \\ENQ\EOT\RS\STX\NUL\ETX\DC2\EOT\227\SOH\SUB\ESC\n\
+    \\ENQ\EOT\RS\STX\NUL\ETX\DC2\EOT\229\SOH\SUB\ESC\n\
     \\FS\n\
-    \\EOT\EOT\RS\STX\SOH\DC2\EOT\228\SOH\EOT\SUB\"\SO Script hash.\n\
+    \\EOT\EOT\RS\STX\SOH\DC2\EOT\230\SOH\EOT\SUB\"\SO Script hash.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\RS\STX\SOH\ENQ\DC2\EOT\228\SOH\EOT\t\n\
+    \\ENQ\EOT\RS\STX\SOH\ENQ\DC2\EOT\230\SOH\EOT\t\n\
     \\r\n\
-    \\ENQ\EOT\RS\STX\SOH\SOH\DC2\EOT\228\SOH\n\
+    \\ENQ\EOT\RS\STX\SOH\SOH\DC2\EOT\230\SOH\n\
     \\NAK\n\
     \\r\n\
-    \\ENQ\EOT\RS\STX\SOH\ETX\DC2\EOT\228\SOH\CAN\EM\n\
+    \\ENQ\EOT\RS\STX\SOH\ETX\DC2\EOT\230\SOH\CAN\EM\n\
     \;\n\
-    \\STX\EOT\US\DC2\ACK\233\SOH\NUL\236\SOH\SOH\SUB- Represents a rational number as a fraction.\n\
+    \\STX\EOT\US\DC2\ACK\235\SOH\NUL\238\SOH\SOH\SUB- Represents a rational number as a fraction.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\US\SOH\DC2\EOT\233\SOH\b\SYN\n\
+    \\ETX\EOT\US\SOH\DC2\EOT\235\SOH\b\SYN\n\
     \\f\n\
-    \\EOT\EOT\US\STX\NUL\DC2\EOT\234\SOH\STX\SYN\n\
+    \\EOT\EOT\US\STX\NUL\DC2\EOT\236\SOH\STX\SYN\n\
     \\r\n\
-    \\ENQ\EOT\US\STX\NUL\ENQ\DC2\EOT\234\SOH\STX\a\n\
+    \\ENQ\EOT\US\STX\NUL\ENQ\DC2\EOT\236\SOH\STX\a\n\
     \\r\n\
-    \\ENQ\EOT\US\STX\NUL\SOH\DC2\EOT\234\SOH\b\DC1\n\
+    \\ENQ\EOT\US\STX\NUL\SOH\DC2\EOT\236\SOH\b\DC1\n\
     \\r\n\
-    \\ENQ\EOT\US\STX\NUL\ETX\DC2\EOT\234\SOH\DC4\NAK\n\
+    \\ENQ\EOT\US\STX\NUL\ETX\DC2\EOT\236\SOH\DC4\NAK\n\
     \\f\n\
-    \\EOT\EOT\US\STX\SOH\DC2\EOT\235\SOH\STX\EM\n\
+    \\EOT\EOT\US\STX\SOH\DC2\EOT\237\SOH\STX\EM\n\
     \\r\n\
-    \\ENQ\EOT\US\STX\SOH\ENQ\DC2\EOT\235\SOH\STX\b\n\
+    \\ENQ\EOT\US\STX\SOH\ENQ\DC2\EOT\237\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\US\STX\SOH\SOH\DC2\EOT\235\SOH\t\DC4\n\
+    \\ENQ\EOT\US\STX\SOH\SOH\DC2\EOT\237\SOH\t\DC4\n\
     \\r\n\
-    \\ENQ\EOT\US\STX\SOH\ETX\DC2\EOT\235\SOH\ETB\CAN\n\
+    \\ENQ\EOT\US\STX\SOH\ETX\DC2\EOT\237\SOH\ETB\CAN\n\
     \.\n\
-    \\STX\EOT \DC2\ACK\239\SOH\NUL\244\SOH\SOH\SUB  Represents a relay in Cardano.\n\
+    \\STX\EOT \DC2\ACK\241\SOH\NUL\246\SOH\SOH\SUB  Represents a relay in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT \SOH\DC2\EOT\239\SOH\b\r\n\
+    \\ETX\EOT \SOH\DC2\EOT\241\SOH\b\r\n\
     \\f\n\
-    \\EOT\EOT \STX\NUL\DC2\EOT\240\SOH\STX\DC2\n\
+    \\EOT\EOT \STX\NUL\DC2\EOT\242\SOH\STX\DC2\n\
     \\r\n\
-    \\ENQ\EOT \STX\NUL\ENQ\DC2\EOT\240\SOH\STX\a\n\
+    \\ENQ\EOT \STX\NUL\ENQ\DC2\EOT\242\SOH\STX\a\n\
     \\r\n\
-    \\ENQ\EOT \STX\NUL\SOH\DC2\EOT\240\SOH\b\r\n\
+    \\ENQ\EOT \STX\NUL\SOH\DC2\EOT\242\SOH\b\r\n\
     \\r\n\
-    \\ENQ\EOT \STX\NUL\ETX\DC2\EOT\240\SOH\DLE\DC1\n\
+    \\ENQ\EOT \STX\NUL\ETX\DC2\EOT\242\SOH\DLE\DC1\n\
     \\f\n\
-    \\EOT\EOT \STX\SOH\DC2\EOT\241\SOH\STX\DC2\n\
+    \\EOT\EOT \STX\SOH\DC2\EOT\243\SOH\STX\DC2\n\
     \\r\n\
-    \\ENQ\EOT \STX\SOH\ENQ\DC2\EOT\241\SOH\STX\a\n\
+    \\ENQ\EOT \STX\SOH\ENQ\DC2\EOT\243\SOH\STX\a\n\
     \\r\n\
-    \\ENQ\EOT \STX\SOH\SOH\DC2\EOT\241\SOH\b\r\n\
+    \\ENQ\EOT \STX\SOH\SOH\DC2\EOT\243\SOH\b\r\n\
     \\r\n\
-    \\ENQ\EOT \STX\SOH\ETX\DC2\EOT\241\SOH\DLE\DC1\n\
+    \\ENQ\EOT \STX\SOH\ETX\DC2\EOT\243\SOH\DLE\DC1\n\
     \\f\n\
-    \\EOT\EOT \STX\STX\DC2\EOT\242\SOH\STX\SYN\n\
+    \\EOT\EOT \STX\STX\DC2\EOT\244\SOH\STX\SYN\n\
     \\r\n\
-    \\ENQ\EOT \STX\STX\ENQ\DC2\EOT\242\SOH\STX\b\n\
+    \\ENQ\EOT \STX\STX\ENQ\DC2\EOT\244\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT \STX\STX\SOH\DC2\EOT\242\SOH\t\DC1\n\
+    \\ENQ\EOT \STX\STX\SOH\DC2\EOT\244\SOH\t\DC1\n\
     \\r\n\
-    \\ENQ\EOT \STX\STX\ETX\DC2\EOT\242\SOH\DC4\NAK\n\
+    \\ENQ\EOT \STX\STX\ETX\DC2\EOT\244\SOH\DC4\NAK\n\
     \\f\n\
-    \\EOT\EOT \STX\ETX\DC2\EOT\243\SOH\STX\DC2\n\
+    \\EOT\EOT \STX\ETX\DC2\EOT\245\SOH\STX\DC2\n\
     \\r\n\
-    \\ENQ\EOT \STX\ETX\ENQ\DC2\EOT\243\SOH\STX\b\n\
+    \\ENQ\EOT \STX\ETX\ENQ\DC2\EOT\245\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT \STX\ETX\SOH\DC2\EOT\243\SOH\t\r\n\
+    \\ENQ\EOT \STX\ETX\SOH\DC2\EOT\245\SOH\t\r\n\
     \\r\n\
-    \\ENQ\EOT \STX\ETX\ETX\DC2\EOT\243\SOH\DLE\DC1\n\
+    \\ENQ\EOT \STX\ETX\ETX\DC2\EOT\245\SOH\DLE\DC1\n\
     \4\n\
-    \\STX\EOT!\DC2\ACK\247\SOH\NUL\250\SOH\SOH\SUB& Represents pool metadata in Cardano.\n\
+    \\STX\EOT!\DC2\ACK\249\SOH\NUL\252\SOH\SOH\SUB& Represents pool metadata in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT!\SOH\DC2\EOT\247\SOH\b\DC4\n\
+    \\ETX\EOT!\SOH\DC2\EOT\249\SOH\b\DC4\n\
     \\f\n\
-    \\EOT\EOT!\STX\NUL\DC2\EOT\248\SOH\STX\DC1\n\
+    \\EOT\EOT!\STX\NUL\DC2\EOT\250\SOH\STX\DC1\n\
     \\r\n\
-    \\ENQ\EOT!\STX\NUL\ENQ\DC2\EOT\248\SOH\STX\b\n\
+    \\ENQ\EOT!\STX\NUL\ENQ\DC2\EOT\250\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT!\STX\NUL\SOH\DC2\EOT\248\SOH\t\f\n\
+    \\ENQ\EOT!\STX\NUL\SOH\DC2\EOT\250\SOH\t\f\n\
     \\r\n\
-    \\ENQ\EOT!\STX\NUL\ETX\DC2\EOT\248\SOH\SI\DLE\n\
+    \\ENQ\EOT!\STX\NUL\ETX\DC2\EOT\250\SOH\SI\DLE\n\
     \\f\n\
-    \\EOT\EOT!\STX\SOH\DC2\EOT\249\SOH\STX\DC1\n\
+    \\EOT\EOT!\STX\SOH\DC2\EOT\251\SOH\STX\DC1\n\
     \\r\n\
-    \\ENQ\EOT!\STX\SOH\ENQ\DC2\EOT\249\SOH\STX\a\n\
+    \\ENQ\EOT!\STX\SOH\ENQ\DC2\EOT\251\SOH\STX\a\n\
     \\r\n\
-    \\ENQ\EOT!\STX\SOH\SOH\DC2\EOT\249\SOH\b\f\n\
+    \\ENQ\EOT!\STX\SOH\SOH\DC2\EOT\251\SOH\b\f\n\
     \\r\n\
-    \\ENQ\EOT!\STX\SOH\ETX\DC2\EOT\249\SOH\SI\DLE\n\
+    \\ENQ\EOT!\STX\SOH\ETX\DC2\EOT\251\SOH\SI\DLE\n\
     \4\n\
-    \\STX\EOT\"\DC2\ACK\253\SOH\NUL\135\STX\SOH\SUB& Represents a certificate in Cardano.\n\
+    \\STX\EOT\"\DC2\ACK\255\SOH\NUL\137\STX\SOH\SUB& Represents a certificate in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\"\SOH\DC2\EOT\253\SOH\b\DC3\n\
+    \\ETX\EOT\"\SOH\DC2\EOT\255\SOH\b\DC3\n\
     \\SO\n\
-    \\EOT\EOT\"\b\NUL\DC2\ACK\254\SOH\STX\134\STX\ETX\n\
+    \\EOT\EOT\"\b\NUL\DC2\ACK\128\STX\STX\136\STX\ETX\n\
     \\r\n\
-    \\ENQ\EOT\"\b\NUL\SOH\DC2\EOT\254\SOH\b\DC3\n\
+    \\ENQ\EOT\"\b\NUL\SOH\DC2\EOT\128\STX\b\DC3\n\
     \/\n\
-    \\EOT\EOT\"\STX\NUL\DC2\EOT\255\SOH\EOT+\"! Stake registration certificate.\n\
+    \\EOT\EOT\"\STX\NUL\DC2\EOT\129\STX\EOT+\"! Stake registration certificate.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\NUL\ACK\DC2\EOT\255\SOH\EOT\DC3\n\
+    \\ENQ\EOT\"\STX\NUL\ACK\DC2\EOT\129\STX\EOT\DC3\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\NUL\SOH\DC2\EOT\255\SOH\DC4&\n\
+    \\ENQ\EOT\"\STX\NUL\SOH\DC2\EOT\129\STX\DC4&\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\NUL\ETX\DC2\EOT\255\SOH)*\n\
+    \\ENQ\EOT\"\STX\NUL\ETX\DC2\EOT\129\STX)*\n\
     \1\n\
-    \\EOT\EOT\"\STX\SOH\DC2\EOT\128\STX\EOT-\"# Stake deregistration certificate.\n\
+    \\EOT\EOT\"\STX\SOH\DC2\EOT\130\STX\EOT-\"# Stake deregistration certificate.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\SOH\ACK\DC2\EOT\128\STX\EOT\DC3\n\
+    \\ENQ\EOT\"\STX\SOH\ACK\DC2\EOT\130\STX\EOT\DC3\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\SOH\SOH\DC2\EOT\128\STX\DC4(\n\
+    \\ENQ\EOT\"\STX\SOH\SOH\DC2\EOT\130\STX\DC4(\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\SOH\ETX\DC2\EOT\128\STX+,\n\
+    \\ENQ\EOT\"\STX\SOH\ETX\DC2\EOT\130\STX+,\n\
     \-\n\
-    \\EOT\EOT\"\STX\STX\DC2\EOT\129\STX\EOT-\"\US Stake delegation certificate.\n\
+    \\EOT\EOT\"\STX\STX\DC2\EOT\131\STX\EOT-\"\US Stake delegation certificate.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\STX\ACK\DC2\EOT\129\STX\EOT\ETB\n\
+    \\ENQ\EOT\"\STX\STX\ACK\DC2\EOT\131\STX\EOT\ETB\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\STX\SOH\DC2\EOT\129\STX\CAN(\n\
+    \\ENQ\EOT\"\STX\STX\SOH\DC2\EOT\131\STX\CAN(\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\STX\ETX\DC2\EOT\129\STX+,\n\
+    \\ENQ\EOT\"\STX\STX\ETX\DC2\EOT\131\STX+,\n\
     \.\n\
-    \\EOT\EOT\"\STX\ETX\DC2\EOT\130\STX\EOT/\"  Pool registration certificate.\n\
+    \\EOT\EOT\"\STX\ETX\DC2\EOT\132\STX\EOT/\"  Pool registration certificate.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\ETX\ACK\DC2\EOT\130\STX\EOT\CAN\n\
+    \\ENQ\EOT\"\STX\ETX\ACK\DC2\EOT\132\STX\EOT\CAN\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\ETX\SOH\DC2\EOT\130\STX\EM*\n\
+    \\ENQ\EOT\"\STX\ETX\SOH\DC2\EOT\132\STX\EM*\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\ETX\ETX\DC2\EOT\130\STX-.\n\
+    \\ENQ\EOT\"\STX\ETX\ETX\DC2\EOT\132\STX-.\n\
     \,\n\
-    \\EOT\EOT\"\STX\EOT\DC2\EOT\131\STX\EOT+\"\RS Pool retirement certificate.\n\
+    \\EOT\EOT\"\STX\EOT\DC2\EOT\133\STX\EOT+\"\RS Pool retirement certificate.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\EOT\ACK\DC2\EOT\131\STX\EOT\SYN\n\
+    \\ENQ\EOT\"\STX\EOT\ACK\DC2\EOT\133\STX\EOT\SYN\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\EOT\SOH\DC2\EOT\131\STX\ETB&\n\
+    \\ENQ\EOT\"\STX\EOT\SOH\DC2\EOT\133\STX\ETB&\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\EOT\ETX\DC2\EOT\131\STX)*\n\
+    \\ENQ\EOT\"\STX\EOT\ETX\DC2\EOT\133\STX)*\n\
     \3\n\
-    \\EOT\EOT\"\STX\ENQ\DC2\EOT\132\STX\EOT8\"% Genesis key delegation certificate.\n\
+    \\EOT\EOT\"\STX\ENQ\DC2\EOT\134\STX\EOT8\"% Genesis key delegation certificate.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\ENQ\ACK\DC2\EOT\132\STX\EOT\FS\n\
+    \\ENQ\EOT\"\STX\ENQ\ACK\DC2\EOT\134\STX\EOT\FS\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\ENQ\SOH\DC2\EOT\132\STX\GS3\n\
+    \\ENQ\EOT\"\STX\ENQ\SOH\DC2\EOT\134\STX\GS3\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\ENQ\ETX\DC2\EOT\132\STX67\n\
+    \\ENQ\EOT\"\STX\ENQ\ETX\DC2\EOT\134\STX67\n\
     \7\n\
-    \\EOT\EOT\"\STX\ACK\DC2\EOT\133\STX\EOT\EM\") Move instantaneous rewards certificate.\n\
+    \\EOT\EOT\"\STX\ACK\DC2\EOT\135\STX\EOT\EM\") Move instantaneous rewards certificate.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\ACK\ACK\DC2\EOT\133\STX\EOT\v\n\
+    \\ENQ\EOT\"\STX\ACK\ACK\DC2\EOT\135\STX\EOT\v\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\ACK\SOH\DC2\EOT\133\STX\f\DC4\n\
+    \\ENQ\EOT\"\STX\ACK\SOH\DC2\EOT\135\STX\f\DC4\n\
     \\r\n\
-    \\ENQ\EOT\"\STX\ACK\ETX\DC2\EOT\133\STX\ETB\CAN\n\
+    \\ENQ\EOT\"\STX\ACK\ETX\DC2\EOT\135\STX\ETB\CAN\n\
     \E\n\
-    \\STX\EOT#\DC2\ACK\138\STX\NUL\141\STX\SOH\SUB7 Represents a stake delegation certificate in Cardano.\n\
+    \\STX\EOT#\DC2\ACK\140\STX\NUL\143\STX\SOH\SUB7 Represents a stake delegation certificate in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT#\SOH\DC2\EOT\138\STX\b\ESC\n\
+    \\ETX\EOT#\SOH\DC2\EOT\140\STX\b\ESC\n\
     \!\n\
-    \\EOT\EOT#\STX\NUL\DC2\EOT\139\STX\STX'\"\DC3 Stake credential.\n\
+    \\EOT\EOT#\STX\NUL\DC2\EOT\141\STX\STX'\"\DC3 Stake credential.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT#\STX\NUL\ACK\DC2\EOT\139\STX\STX\DC1\n\
+    \\ENQ\EOT#\STX\NUL\ACK\DC2\EOT\141\STX\STX\DC1\n\
     \\r\n\
-    \\ENQ\EOT#\STX\NUL\SOH\DC2\EOT\139\STX\DC2\"\n\
+    \\ENQ\EOT#\STX\NUL\SOH\DC2\EOT\141\STX\DC2\"\n\
     \\r\n\
-    \\ENQ\EOT#\STX\NUL\ETX\DC2\EOT\139\STX%&\n\
+    \\ENQ\EOT#\STX\NUL\ETX\DC2\EOT\141\STX%&\n\
     \\RS\n\
-    \\EOT\EOT#\STX\SOH\DC2\EOT\140\STX\STX\EM\"\DLE Pool key hash.\n\
+    \\EOT\EOT#\STX\SOH\DC2\EOT\142\STX\STX\EM\"\DLE Pool key hash.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT#\STX\SOH\ENQ\DC2\EOT\140\STX\STX\a\n\
+    \\ENQ\EOT#\STX\SOH\ENQ\DC2\EOT\142\STX\STX\a\n\
     \\r\n\
-    \\ENQ\EOT#\STX\SOH\SOH\DC2\EOT\140\STX\b\DC4\n\
+    \\ENQ\EOT#\STX\SOH\SOH\DC2\EOT\142\STX\b\DC4\n\
     \\r\n\
-    \\ENQ\EOT#\STX\SOH\ETX\DC2\EOT\140\STX\ETB\CAN\n\
+    \\ENQ\EOT#\STX\SOH\ETX\DC2\EOT\142\STX\ETB\CAN\n\
     \F\n\
-    \\STX\EOT$\DC2\ACK\144\STX\NUL\154\STX\SOH\SUB8 Represents a pool registration certificate in Cardano.\n\
+    \\STX\EOT$\DC2\ACK\146\STX\NUL\156\STX\SOH\SUB8 Represents a pool registration certificate in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT$\SOH\DC2\EOT\144\STX\b\FS\n\
+    \\ETX\EOT$\SOH\DC2\EOT\146\STX\b\FS\n\
     \\"\n\
-    \\EOT\EOT$\STX\NUL\DC2\EOT\145\STX\STX\NAK\"\DC4 Operator key hash.\n\
+    \\EOT\EOT$\STX\NUL\DC2\EOT\147\STX\STX\NAK\"\DC4 Operator key hash.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT$\STX\NUL\ENQ\DC2\EOT\145\STX\STX\a\n\
+    \\ENQ\EOT$\STX\NUL\ENQ\DC2\EOT\147\STX\STX\a\n\
     \\r\n\
-    \\ENQ\EOT$\STX\NUL\SOH\DC2\EOT\145\STX\b\DLE\n\
+    \\ENQ\EOT$\STX\NUL\SOH\DC2\EOT\147\STX\b\DLE\n\
     \\r\n\
-    \\ENQ\EOT$\STX\NUL\ETX\DC2\EOT\145\STX\DC3\DC4\n\
+    \\ENQ\EOT$\STX\NUL\ETX\DC2\EOT\147\STX\DC3\DC4\n\
     \\GS\n\
-    \\EOT\EOT$\STX\SOH\DC2\EOT\146\STX\STX\CAN\"\SI VRF key hash.\n\
+    \\EOT\EOT$\STX\SOH\DC2\EOT\148\STX\STX\CAN\"\SI VRF key hash.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT$\STX\SOH\ENQ\DC2\EOT\146\STX\STX\a\n\
+    \\ENQ\EOT$\STX\SOH\ENQ\DC2\EOT\148\STX\STX\a\n\
     \\r\n\
-    \\ENQ\EOT$\STX\SOH\SOH\DC2\EOT\146\STX\b\DC3\n\
+    \\ENQ\EOT$\STX\SOH\SOH\DC2\EOT\148\STX\b\DC3\n\
     \\r\n\
-    \\ENQ\EOT$\STX\SOH\ETX\DC2\EOT\146\STX\SYN\ETB\n\
+    \\ENQ\EOT$\STX\SOH\ETX\DC2\EOT\148\STX\SYN\ETB\n\
     \\RS\n\
-    \\EOT\EOT$\STX\STX\DC2\EOT\147\STX\STX\DC4\"\DLE Pledge amount.\n\
+    \\EOT\EOT$\STX\STX\DC2\EOT\149\STX\STX\DC4\"\DLE Pledge amount.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT$\STX\STX\ENQ\DC2\EOT\147\STX\STX\b\n\
+    \\ENQ\EOT$\STX\STX\ENQ\DC2\EOT\149\STX\STX\b\n\
     \\r\n\
-    \\ENQ\EOT$\STX\STX\SOH\DC2\EOT\147\STX\t\SI\n\
+    \\ENQ\EOT$\STX\STX\SOH\DC2\EOT\149\STX\t\SI\n\
     \\r\n\
-    \\ENQ\EOT$\STX\STX\ETX\DC2\EOT\147\STX\DC2\DC3\n\
+    \\ENQ\EOT$\STX\STX\ETX\DC2\EOT\149\STX\DC2\DC3\n\
     \\SUB\n\
-    \\EOT\EOT$\STX\ETX\DC2\EOT\148\STX\STX\DC2\"\f Pool cost.\n\
+    \\EOT\EOT$\STX\ETX\DC2\EOT\150\STX\STX\DC2\"\f Pool cost.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT$\STX\ETX\ENQ\DC2\EOT\148\STX\STX\b\n\
+    \\ENQ\EOT$\STX\ETX\ENQ\DC2\EOT\150\STX\STX\b\n\
     \\r\n\
-    \\ENQ\EOT$\STX\ETX\SOH\DC2\EOT\148\STX\t\r\n\
+    \\ENQ\EOT$\STX\ETX\SOH\DC2\EOT\150\STX\t\r\n\
     \\r\n\
-    \\ENQ\EOT$\STX\ETX\ETX\DC2\EOT\148\STX\DLE\DC1\n\
+    \\ENQ\EOT$\STX\ETX\ETX\DC2\EOT\150\STX\DLE\DC1\n\
     \\FS\n\
-    \\EOT\EOT$\STX\EOT\DC2\EOT\149\STX\STX\FS\"\SO Pool margin.\n\
+    \\EOT\EOT$\STX\EOT\DC2\EOT\151\STX\STX\FS\"\SO Pool margin.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT$\STX\EOT\ACK\DC2\EOT\149\STX\STX\DLE\n\
+    \\ENQ\EOT$\STX\EOT\ACK\DC2\EOT\151\STX\STX\DLE\n\
     \\r\n\
-    \\ENQ\EOT$\STX\EOT\SOH\DC2\EOT\149\STX\DC1\ETB\n\
+    \\ENQ\EOT$\STX\EOT\SOH\DC2\EOT\151\STX\DC1\ETB\n\
     \\r\n\
-    \\ENQ\EOT$\STX\EOT\ETX\DC2\EOT\149\STX\SUB\ESC\n\
+    \\ENQ\EOT$\STX\EOT\ETX\DC2\EOT\151\STX\SUB\ESC\n\
     \\US\n\
-    \\EOT\EOT$\STX\ENQ\DC2\EOT\150\STX\STX\ESC\"\DC1 Reward account.\n\
+    \\EOT\EOT$\STX\ENQ\DC2\EOT\152\STX\STX\ESC\"\DC1 Reward account.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT$\STX\ENQ\ENQ\DC2\EOT\150\STX\STX\a\n\
+    \\ENQ\EOT$\STX\ENQ\ENQ\DC2\EOT\152\STX\STX\a\n\
     \\r\n\
-    \\ENQ\EOT$\STX\ENQ\SOH\DC2\EOT\150\STX\b\SYN\n\
+    \\ENQ\EOT$\STX\ENQ\SOH\DC2\EOT\152\STX\b\SYN\n\
     \\r\n\
-    \\ENQ\EOT$\STX\ENQ\ETX\DC2\EOT\150\STX\EM\SUB\n\
+    \\ENQ\EOT$\STX\ENQ\ETX\DC2\EOT\152\STX\EM\SUB\n\
     \.\n\
-    \\EOT\EOT$\STX\ACK\DC2\EOT\151\STX\STX!\"  List of pool owner key hashes.\n\
+    \\EOT\EOT$\STX\ACK\DC2\EOT\153\STX\STX!\"  List of pool owner key hashes.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT$\STX\ACK\EOT\DC2\EOT\151\STX\STX\n\
+    \\ENQ\EOT$\STX\ACK\EOT\DC2\EOT\153\STX\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT$\STX\ACK\ENQ\DC2\EOT\151\STX\v\DLE\n\
+    \\ENQ\EOT$\STX\ACK\ENQ\DC2\EOT\153\STX\v\DLE\n\
     \\r\n\
-    \\ENQ\EOT$\STX\ACK\SOH\DC2\EOT\151\STX\DC1\FS\n\
+    \\ENQ\EOT$\STX\ACK\SOH\DC2\EOT\153\STX\DC1\FS\n\
     \\r\n\
-    \\ENQ\EOT$\STX\ACK\ETX\DC2\EOT\151\STX\US \n\
+    \\ENQ\EOT$\STX\ACK\ETX\DC2\EOT\153\STX\US \n\
     \\US\n\
-    \\EOT\EOT$\STX\a\DC2\EOT\152\STX\STX\FS\"\DC1 List of relays.\n\
+    \\EOT\EOT$\STX\a\DC2\EOT\154\STX\STX\FS\"\DC1 List of relays.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT$\STX\a\EOT\DC2\EOT\152\STX\STX\n\
+    \\ENQ\EOT$\STX\a\EOT\DC2\EOT\154\STX\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT$\STX\a\ACK\DC2\EOT\152\STX\v\DLE\n\
+    \\ENQ\EOT$\STX\a\ACK\DC2\EOT\154\STX\v\DLE\n\
     \\r\n\
-    \\ENQ\EOT$\STX\a\SOH\DC2\EOT\152\STX\DC1\ETB\n\
+    \\ENQ\EOT$\STX\a\SOH\DC2\EOT\154\STX\DC1\ETB\n\
     \\r\n\
-    \\ENQ\EOT$\STX\a\ETX\DC2\EOT\152\STX\SUB\ESC\n\
+    \\ENQ\EOT$\STX\a\ETX\DC2\EOT\154\STX\SUB\ESC\n\
     \\RS\n\
-    \\EOT\EOT$\STX\b\DC2\EOT\153\STX\STX!\"\DLE Pool metadata.\n\
+    \\EOT\EOT$\STX\b\DC2\EOT\155\STX\STX!\"\DLE Pool metadata.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT$\STX\b\ACK\DC2\EOT\153\STX\STX\SO\n\
+    \\ENQ\EOT$\STX\b\ACK\DC2\EOT\155\STX\STX\SO\n\
     \\r\n\
-    \\ENQ\EOT$\STX\b\SOH\DC2\EOT\153\STX\SI\FS\n\
+    \\ENQ\EOT$\STX\b\SOH\DC2\EOT\155\STX\SI\FS\n\
     \\r\n\
-    \\ENQ\EOT$\STX\b\ETX\DC2\EOT\153\STX\US \n\
+    \\ENQ\EOT$\STX\b\ETX\DC2\EOT\155\STX\US \n\
     \D\n\
-    \\STX\EOT%\DC2\ACK\157\STX\NUL\160\STX\SOH\SUB6 Represents a pool retirement certificate in Cardano.\n\
+    \\STX\EOT%\DC2\ACK\159\STX\NUL\162\STX\SOH\SUB6 Represents a pool retirement certificate in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT%\SOH\DC2\EOT\157\STX\b\SUB\n\
+    \\ETX\EOT%\SOH\DC2\EOT\159\STX\b\SUB\n\
     \\RS\n\
-    \\EOT\EOT%\STX\NUL\DC2\EOT\158\STX\STX\EM\"\DLE Pool key hash.\n\
+    \\EOT\EOT%\STX\NUL\DC2\EOT\160\STX\STX\EM\"\DLE Pool key hash.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT%\STX\NUL\ENQ\DC2\EOT\158\STX\STX\a\n\
+    \\ENQ\EOT%\STX\NUL\ENQ\DC2\EOT\160\STX\STX\a\n\
     \\r\n\
-    \\ENQ\EOT%\STX\NUL\SOH\DC2\EOT\158\STX\b\DC4\n\
+    \\ENQ\EOT%\STX\NUL\SOH\DC2\EOT\160\STX\b\DC4\n\
     \\r\n\
-    \\ENQ\EOT%\STX\NUL\ETX\DC2\EOT\158\STX\ETB\CAN\n\
+    \\ENQ\EOT%\STX\NUL\ETX\DC2\EOT\160\STX\ETB\CAN\n\
     \!\n\
-    \\EOT\EOT%\STX\SOH\DC2\EOT\159\STX\STX\DC3\"\DC3 Retirement epoch.\n\
+    \\EOT\EOT%\STX\SOH\DC2\EOT\161\STX\STX\DC3\"\DC3 Retirement epoch.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT%\STX\SOH\ENQ\DC2\EOT\159\STX\STX\b\n\
+    \\ENQ\EOT%\STX\SOH\ENQ\DC2\EOT\161\STX\STX\b\n\
     \\r\n\
-    \\ENQ\EOT%\STX\SOH\SOH\DC2\EOT\159\STX\t\SO\n\
+    \\ENQ\EOT%\STX\SOH\SOH\DC2\EOT\161\STX\t\SO\n\
     \\r\n\
-    \\ENQ\EOT%\STX\SOH\ETX\DC2\EOT\159\STX\DC1\DC2\n\
+    \\ENQ\EOT%\STX\SOH\ETX\DC2\EOT\161\STX\DC1\DC2\n\
     \K\n\
-    \\STX\EOT&\DC2\ACK\163\STX\NUL\167\STX\SOH\SUB= Represents a genesis key delegation certificate in Cardano.\n\
+    \\STX\EOT&\DC2\ACK\165\STX\NUL\169\STX\SOH\SUB= Represents a genesis key delegation certificate in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT&\SOH\DC2\EOT\163\STX\b \n\
+    \\ETX\EOT&\SOH\DC2\EOT\165\STX\b \n\
     \\GS\n\
-    \\EOT\EOT&\STX\NUL\DC2\EOT\164\STX\STX\EM\"\SI Genesis hash.\n\
+    \\EOT\EOT&\STX\NUL\DC2\EOT\166\STX\STX\EM\"\SI Genesis hash.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT&\STX\NUL\ENQ\DC2\EOT\164\STX\STX\a\n\
+    \\ENQ\EOT&\STX\NUL\ENQ\DC2\EOT\166\STX\STX\a\n\
     \\r\n\
-    \\ENQ\EOT&\STX\NUL\SOH\DC2\EOT\164\STX\b\DC4\n\
+    \\ENQ\EOT&\STX\NUL\SOH\DC2\EOT\166\STX\b\DC4\n\
     \\r\n\
-    \\ENQ\EOT&\STX\NUL\ETX\DC2\EOT\164\STX\ETB\CAN\n\
+    \\ENQ\EOT&\STX\NUL\ETX\DC2\EOT\166\STX\ETB\CAN\n\
     \&\n\
-    \\EOT\EOT&\STX\SOH\DC2\EOT\165\STX\STX\"\"\CAN Genesis delegate hash.\n\
+    \\EOT\EOT&\STX\SOH\DC2\EOT\167\STX\STX\"\"\CAN Genesis delegate hash.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT&\STX\SOH\ENQ\DC2\EOT\165\STX\STX\a\n\
+    \\ENQ\EOT&\STX\SOH\ENQ\DC2\EOT\167\STX\STX\a\n\
     \\r\n\
-    \\ENQ\EOT&\STX\SOH\SOH\DC2\EOT\165\STX\b\GS\n\
+    \\ENQ\EOT&\STX\SOH\SOH\DC2\EOT\167\STX\b\GS\n\
     \\r\n\
-    \\ENQ\EOT&\STX\SOH\ETX\DC2\EOT\165\STX !\n\
+    \\ENQ\EOT&\STX\SOH\ETX\DC2\EOT\167\STX !\n\
     \\GS\n\
-    \\EOT\EOT&\STX\STX\DC2\EOT\166\STX\STX\CAN\"\SI VRF key hash.\n\
+    \\EOT\EOT&\STX\STX\DC2\EOT\168\STX\STX\CAN\"\SI VRF key hash.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT&\STX\STX\ENQ\DC2\EOT\166\STX\STX\a\n\
+    \\ENQ\EOT&\STX\STX\ENQ\DC2\EOT\168\STX\STX\a\n\
     \\r\n\
-    \\ENQ\EOT&\STX\STX\SOH\DC2\EOT\166\STX\b\DC3\n\
+    \\ENQ\EOT&\STX\STX\SOH\DC2\EOT\168\STX\b\DC3\n\
     \\r\n\
-    \\ENQ\EOT&\STX\STX\ETX\DC2\EOT\166\STX\SYN\ETB\n\
+    \\ENQ\EOT&\STX\STX\ETX\DC2\EOT\168\STX\SYN\ETB\n\
     \\f\n\
-    \\STX\ENQ\SOH\DC2\ACK\169\STX\NUL\173\STX\SOH\n\
+    \\STX\ENQ\SOH\DC2\ACK\171\STX\NUL\175\STX\SOH\n\
     \\v\n\
-    \\ETX\ENQ\SOH\SOH\DC2\EOT\169\STX\ENQ\SO\n\
+    \\ETX\ENQ\SOH\SOH\DC2\EOT\171\STX\ENQ\SO\n\
     \\f\n\
-    \\EOT\ENQ\SOH\STX\NUL\DC2\EOT\170\STX\STX\GS\n\
+    \\EOT\ENQ\SOH\STX\NUL\DC2\EOT\172\STX\STX\GS\n\
     \\r\n\
-    \\ENQ\ENQ\SOH\STX\NUL\SOH\DC2\EOT\170\STX\STX\CAN\n\
+    \\ENQ\ENQ\SOH\STX\NUL\SOH\DC2\EOT\172\STX\STX\CAN\n\
     \\r\n\
-    \\ENQ\ENQ\SOH\STX\NUL\STX\DC2\EOT\170\STX\ESC\FS\n\
+    \\ENQ\ENQ\SOH\STX\NUL\STX\DC2\EOT\172\STX\ESC\FS\n\
     \\f\n\
-    \\EOT\ENQ\SOH\STX\SOH\DC2\EOT\171\STX\STX\SUB\n\
+    \\EOT\ENQ\SOH\STX\SOH\DC2\EOT\173\STX\STX\SUB\n\
     \\r\n\
-    \\ENQ\ENQ\SOH\STX\SOH\SOH\DC2\EOT\171\STX\STX\NAK\n\
+    \\ENQ\ENQ\SOH\STX\SOH\SOH\DC2\EOT\173\STX\STX\NAK\n\
     \\r\n\
-    \\ENQ\ENQ\SOH\STX\SOH\STX\DC2\EOT\171\STX\CAN\EM\n\
+    \\ENQ\ENQ\SOH\STX\SOH\STX\DC2\EOT\173\STX\CAN\EM\n\
     \\f\n\
-    \\EOT\ENQ\SOH\STX\STX\DC2\EOT\172\STX\STX\SUB\n\
+    \\EOT\ENQ\SOH\STX\STX\DC2\EOT\174\STX\STX\SUB\n\
     \\r\n\
-    \\ENQ\ENQ\SOH\STX\STX\SOH\DC2\EOT\172\STX\STX\NAK\n\
+    \\ENQ\ENQ\SOH\STX\STX\SOH\DC2\EOT\174\STX\STX\NAK\n\
     \\r\n\
-    \\ENQ\ENQ\SOH\STX\STX\STX\DC2\EOT\172\STX\CAN\EM\n\
+    \\ENQ\ENQ\SOH\STX\STX\STX\DC2\EOT\174\STX\CAN\EM\n\
     \\f\n\
-    \\STX\EOT'\DC2\ACK\175\STX\NUL\178\STX\SOH\n\
+    \\STX\EOT'\DC2\ACK\177\STX\NUL\180\STX\SOH\n\
     \\v\n\
-    \\ETX\EOT'\SOH\DC2\EOT\175\STX\b\DC1\n\
+    \\ETX\EOT'\SOH\DC2\EOT\177\STX\b\DC1\n\
     \\f\n\
-    \\EOT\EOT'\STX\NUL\DC2\EOT\176\STX\STX'\n\
+    \\EOT\EOT'\STX\NUL\DC2\EOT\178\STX\STX'\n\
     \\r\n\
-    \\ENQ\EOT'\STX\NUL\ACK\DC2\EOT\176\STX\STX\DC1\n\
+    \\ENQ\EOT'\STX\NUL\ACK\DC2\EOT\178\STX\STX\DC1\n\
     \\r\n\
-    \\ENQ\EOT'\STX\NUL\SOH\DC2\EOT\176\STX\DC2\"\n\
+    \\ENQ\EOT'\STX\NUL\SOH\DC2\EOT\178\STX\DC2\"\n\
     \\r\n\
-    \\ENQ\EOT'\STX\NUL\ETX\DC2\EOT\176\STX%&\n\
+    \\ENQ\EOT'\STX\NUL\ETX\DC2\EOT\178\STX%&\n\
     \\f\n\
-    \\EOT\EOT'\STX\SOH\DC2\EOT\177\STX\STX\ETB\n\
+    \\EOT\EOT'\STX\SOH\DC2\EOT\179\STX\STX\ETB\n\
     \\r\n\
-    \\ENQ\EOT'\STX\SOH\ENQ\DC2\EOT\177\STX\STX\a\n\
+    \\ENQ\EOT'\STX\SOH\ENQ\DC2\EOT\179\STX\STX\a\n\
     \\r\n\
-    \\ENQ\EOT'\STX\SOH\SOH\DC2\EOT\177\STX\b\DC2\n\
+    \\ENQ\EOT'\STX\SOH\SOH\DC2\EOT\179\STX\b\DC2\n\
     \\r\n\
-    \\ENQ\EOT'\STX\SOH\ETX\DC2\EOT\177\STX\NAK\SYN\n\
+    \\ENQ\EOT'\STX\SOH\ETX\DC2\EOT\179\STX\NAK\SYN\n\
     \N\n\
-    \\STX\EOT(\DC2\ACK\181\STX\NUL\185\STX\SOH\SUB@ Represents a move instantaneous reward certificate in Cardano.\n\
+    \\STX\EOT(\DC2\ACK\183\STX\NUL\187\STX\SOH\SUB@ Represents a move instantaneous reward certificate in Cardano.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT(\SOH\DC2\EOT\181\STX\b\SI\n\
+    \\ETX\EOT(\SOH\DC2\EOT\183\STX\b\SI\n\
     \\f\n\
-    \\EOT\EOT(\STX\NUL\DC2\EOT\182\STX\STX\NAK\n\
+    \\EOT\EOT(\STX\NUL\DC2\EOT\184\STX\STX\NAK\n\
     \\r\n\
-    \\ENQ\EOT(\STX\NUL\ACK\DC2\EOT\182\STX\STX\v\n\
+    \\ENQ\EOT(\STX\NUL\ACK\DC2\EOT\184\STX\STX\v\n\
     \\r\n\
-    \\ENQ\EOT(\STX\NUL\SOH\DC2\EOT\182\STX\f\DLE\n\
+    \\ENQ\EOT(\STX\NUL\SOH\DC2\EOT\184\STX\f\DLE\n\
     \\r\n\
-    \\ENQ\EOT(\STX\NUL\ETX\DC2\EOT\182\STX\DC3\DC4\n\
+    \\ENQ\EOT(\STX\NUL\ETX\DC2\EOT\184\STX\DC3\DC4\n\
     \\f\n\
-    \\EOT\EOT(\STX\SOH\DC2\EOT\183\STX\STX\FS\n\
+    \\EOT\EOT(\STX\SOH\DC2\EOT\185\STX\STX\FS\n\
     \\r\n\
-    \\ENQ\EOT(\STX\SOH\EOT\DC2\EOT\183\STX\STX\n\
+    \\ENQ\EOT(\STX\SOH\EOT\DC2\EOT\185\STX\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT(\STX\SOH\ACK\DC2\EOT\183\STX\v\DC4\n\
+    \\ENQ\EOT(\STX\SOH\ACK\DC2\EOT\185\STX\v\DC4\n\
     \\r\n\
-    \\ENQ\EOT(\STX\SOH\SOH\DC2\EOT\183\STX\NAK\ETB\n\
+    \\ENQ\EOT(\STX\SOH\SOH\DC2\EOT\185\STX\NAK\ETB\n\
     \\r\n\
-    \\ENQ\EOT(\STX\SOH\ETX\DC2\EOT\183\STX\SUB\ESC\n\
+    \\ENQ\EOT(\STX\SOH\ETX\DC2\EOT\185\STX\SUB\ESC\n\
     \\f\n\
-    \\EOT\EOT(\STX\STX\DC2\EOT\184\STX\STX\ETB\n\
+    \\EOT\EOT(\STX\STX\DC2\EOT\186\STX\STX\ETB\n\
     \\r\n\
-    \\ENQ\EOT(\STX\STX\ENQ\DC2\EOT\184\STX\STX\b\n\
+    \\ENQ\EOT(\STX\STX\ENQ\DC2\EOT\186\STX\STX\b\n\
     \\r\n\
-    \\ENQ\EOT(\STX\STX\SOH\DC2\EOT\184\STX\t\DC2\n\
+    \\ENQ\EOT(\STX\STX\SOH\DC2\EOT\186\STX\t\DC2\n\
     \\r\n\
-    \\ENQ\EOT(\STX\STX\ETX\DC2\EOT\184\STX\NAK\SYN\n\
+    \\ENQ\EOT(\STX\STX\ETX\DC2\EOT\186\STX\NAK\SYN\n\
     \}\n\
-    \\STX\EOT)\DC2\ACK\191\STX\NUL\197\STX\SOH\SUBI Pattern of an address that can be used to evaluate matching predicates.\n\
+    \\STX\EOT)\DC2\ACK\193\STX\NUL\199\STX\SOH\SUBI Pattern of an address that can be used to evaluate matching predicates.\n\
     \2$ PATTERN MATCHING\n\
     \ ================\n\
     \\n\
     \\v\n\
-    \\ETX\EOT)\SOH\DC2\EOT\191\STX\b\SYN\n\
+    \\ETX\EOT)\SOH\DC2\EOT\193\STX\b\SYN\n\
     \\f\n\
-    \\EOT\EOT)\STX\NUL\DC2\EOT\192\STX\STX\SUB\n\
+    \\EOT\EOT)\STX\NUL\DC2\EOT\194\STX\STX\SUB\n\
     \\r\n\
-    \\ENQ\EOT)\STX\NUL\ENQ\DC2\EOT\192\STX\STX\a\n\
+    \\ENQ\EOT)\STX\NUL\ENQ\DC2\EOT\194\STX\STX\a\n\
     \\r\n\
-    \\ENQ\EOT)\STX\NUL\SOH\DC2\EOT\192\STX\b\NAK\n\
+    \\ENQ\EOT)\STX\NUL\SOH\DC2\EOT\194\STX\b\NAK\n\
     \\r\n\
-    \\ENQ\EOT)\STX\NUL\ETX\DC2\EOT\192\STX\CAN\EM\n\
+    \\ENQ\EOT)\STX\NUL\ETX\DC2\EOT\194\STX\CAN\EM\n\
     \\f\n\
-    \\EOT\EOT)\STX\SOH\DC2\EOT\193\STX\STX\EM\n\
+    \\EOT\EOT)\STX\SOH\DC2\EOT\195\STX\STX\EM\n\
     \\r\n\
-    \\ENQ\EOT)\STX\SOH\ENQ\DC2\EOT\193\STX\STX\a\n\
+    \\ENQ\EOT)\STX\SOH\ENQ\DC2\EOT\195\STX\STX\a\n\
     \\r\n\
-    \\ENQ\EOT)\STX\SOH\SOH\DC2\EOT\193\STX\b\DC4\n\
+    \\ENQ\EOT)\STX\SOH\SOH\DC2\EOT\195\STX\b\DC4\n\
     \\r\n\
-    \\ENQ\EOT)\STX\SOH\ETX\DC2\EOT\193\STX\ETB\CAN\n\
+    \\ENQ\EOT)\STX\SOH\ETX\DC2\EOT\195\STX\ETB\CAN\n\
     \\f\n\
-    \\EOT\EOT)\STX\STX\DC2\EOT\194\STX\STX\FS\n\
+    \\EOT\EOT)\STX\STX\DC2\EOT\196\STX\STX\FS\n\
     \\r\n\
-    \\ENQ\EOT)\STX\STX\ENQ\DC2\EOT\194\STX\STX\a\n\
+    \\ENQ\EOT)\STX\STX\ENQ\DC2\EOT\196\STX\STX\a\n\
     \\r\n\
-    \\ENQ\EOT)\STX\STX\SOH\DC2\EOT\194\STX\b\ETB\n\
+    \\ENQ\EOT)\STX\STX\SOH\DC2\EOT\196\STX\b\ETB\n\
     \\r\n\
-    \\ENQ\EOT)\STX\STX\ETX\DC2\EOT\194\STX\SUB\ESC\n\
+    \\ENQ\EOT)\STX\STX\ETX\DC2\EOT\196\STX\SUB\ESC\n\
     \\f\n\
-    \\EOT\EOT)\STX\ETX\DC2\EOT\195\STX\STX\GS\n\
+    \\EOT\EOT)\STX\ETX\DC2\EOT\197\STX\STX\GS\n\
     \\r\n\
-    \\ENQ\EOT)\STX\ETX\ENQ\DC2\EOT\195\STX\STX\ACK\n\
+    \\ENQ\EOT)\STX\ETX\ENQ\DC2\EOT\197\STX\STX\ACK\n\
     \\r\n\
-    \\ENQ\EOT)\STX\ETX\SOH\DC2\EOT\195\STX\a\CAN\n\
+    \\ENQ\EOT)\STX\ETX\SOH\DC2\EOT\197\STX\a\CAN\n\
     \\r\n\
-    \\ENQ\EOT)\STX\ETX\ETX\DC2\EOT\195\STX\ESC\FS\n\
+    \\ENQ\EOT)\STX\ETX\ETX\DC2\EOT\197\STX\ESC\FS\n\
     \\f\n\
-    \\EOT\EOT)\STX\EOT\DC2\EOT\196\STX\STX \n\
+    \\EOT\EOT)\STX\EOT\DC2\EOT\198\STX\STX \n\
     \\r\n\
-    \\ENQ\EOT)\STX\EOT\ENQ\DC2\EOT\196\STX\STX\ACK\n\
+    \\ENQ\EOT)\STX\EOT\ENQ\DC2\EOT\198\STX\STX\ACK\n\
     \\r\n\
-    \\ENQ\EOT)\STX\EOT\SOH\DC2\EOT\196\STX\a\ESC\n\
+    \\ENQ\EOT)\STX\EOT\SOH\DC2\EOT\198\STX\a\ESC\n\
     \\r\n\
-    \\ENQ\EOT)\STX\EOT\ETX\DC2\EOT\196\STX\RS\US\n\
+    \\ENQ\EOT)\STX\EOT\ETX\DC2\EOT\198\STX\RS\US\n\
     \b\n\
-    \\STX\EOT*\DC2\ACK\200\STX\NUL\202\STX\SOH\SUBM Pattern of a native asset that can be used to evaluate matching predicates.\n\
+    \\STX\EOT*\DC2\ACK\202\STX\NUL\204\STX\SOH\SUBM Pattern of a native asset that can be used to evaluate matching predicates.\n\
     \\"\ENQ TBD\n\
     \\n\
     \\v\n\
-    \\ETX\EOT*\SOH\DC2\EOT\200\STX\b\DC4\n\
+    \\ETX\EOT*\SOH\DC2\EOT\202\STX\b\DC4\n\
     \_\n\
-    \\STX\EOT+\DC2\ACK\205\STX\NUL\207\STX\SOH\SUBJ Pattern of a tx output that can be used to evaluate matching predicates.\n\
+    \\STX\EOT+\DC2\ACK\207\STX\NUL\209\STX\SOH\SUBJ Pattern of a tx output that can be used to evaluate matching predicates.\n\
     \\"\ENQ TBD\n\
     \\n\
     \\v\n\
-    \\ETX\EOT+\SOH\DC2\EOT\205\STX\b\NAK\n\
+    \\ETX\EOT+\SOH\DC2\EOT\207\STX\b\NAK\n\
     \\\\n\
-    \\STX\EOT,\DC2\ACK\210\STX\NUL\212\STX\SOH\SUBG Pattern of an datum that can be used to evaluate matching predicates.\n\
+    \\STX\EOT,\DC2\ACK\212\STX\NUL\214\STX\SOH\SUBG Pattern of an datum that can be used to evaluate matching predicates.\n\
     \\"\ENQ TBD\n\
     \\n\
     \\v\n\
-    \\ETX\EOT,\SOH\DC2\EOT\210\STX\b\DC4\n\
+    \\ETX\EOT,\SOH\DC2\EOT\212\STX\b\DC4\n\
     \Q\n\
-    \\STX\EOT-\DC2\ACK\215\STX\NUL\222\STX\SOH\SUBC Pattern of a Tx that can be used to evaluate matching predicates.\n\
+    \\STX\EOT-\DC2\ACK\217\STX\NUL\224\STX\SOH\SUBC Pattern of a Tx that can be used to evaluate matching predicates.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT-\SOH\DC2\EOT\215\STX\b\DC1\n\
+    \\ETX\EOT-\SOH\DC2\EOT\217\STX\b\DC1\n\
     \\SO\n\
-    \\EOT\EOT-\b\NUL\DC2\ACK\216\STX\STX\221\STX\ETX\n\
+    \\EOT\EOT-\b\NUL\DC2\ACK\218\STX\STX\223\STX\ETX\n\
     \\r\n\
-    \\ENQ\EOT-\b\NUL\SOH\DC2\EOT\216\STX\b\DC2\n\
+    \\ENQ\EOT-\b\NUL\SOH\DC2\EOT\218\STX\b\DC2\n\
     \<\n\
-    \\EOT\EOT-\STX\NUL\DC2\EOT\217\STX\EOT!\". Match any output that exhibits this pattern.\n\
+    \\EOT\EOT-\STX\NUL\DC2\EOT\219\STX\EOT!\". Match any output that exhibits this pattern.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT-\STX\NUL\ACK\DC2\EOT\217\STX\EOT\DC1\n\
+    \\ENQ\EOT-\STX\NUL\ACK\DC2\EOT\219\STX\EOT\DC1\n\
     \\r\n\
-    \\ENQ\EOT-\STX\NUL\SOH\DC2\EOT\217\STX\DC2\FS\n\
+    \\ENQ\EOT-\STX\NUL\SOH\DC2\EOT\219\STX\DC2\FS\n\
     \\r\n\
-    \\ENQ\EOT-\STX\NUL\ETX\DC2\EOT\217\STX\US \n\
+    \\ENQ\EOT-\STX\NUL\ETX\DC2\EOT\219\STX\US \n\
     \`\n\
-    \\EOT\EOT-\STX\SOH\DC2\EOT\218\STX\EOT#\"R Match any address (inputs, outputs, collateral, etc) that exhibits this pattern.\n\
+    \\EOT\EOT-\STX\SOH\DC2\EOT\220\STX\EOT#\"R Match any address (inputs, outputs, collateral, etc) that exhibits this pattern.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT-\STX\SOH\ACK\DC2\EOT\218\STX\EOT\DC2\n\
+    \\ENQ\EOT-\STX\SOH\ACK\DC2\EOT\220\STX\EOT\DC2\n\
     \\r\n\
-    \\ENQ\EOT-\STX\SOH\SOH\DC2\EOT\218\STX\DC3\RS\n\
+    \\ENQ\EOT-\STX\SOH\SOH\DC2\EOT\220\STX\DC3\RS\n\
     \\r\n\
-    \\ENQ\EOT-\STX\SOH\ETX\DC2\EOT\218\STX!\"\n\
+    \\ENQ\EOT-\STX\SOH\ETX\DC2\EOT\220\STX!\"\n\
     \;\n\
-    \\EOT\EOT-\STX\STX\DC2\EOT\219\STX\EOT\US\"- Match any asset that exhibits this pattern.\n\
+    \\EOT\EOT-\STX\STX\DC2\EOT\221\STX\EOT\US\"- Match any asset that exhibits this pattern.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT-\STX\STX\ACK\DC2\EOT\219\STX\EOT\DLE\n\
+    \\ENQ\EOT-\STX\STX\ACK\DC2\EOT\221\STX\EOT\DLE\n\
     \\r\n\
-    \\ENQ\EOT-\STX\STX\SOH\DC2\EOT\219\STX\DC1\SUB\n\
+    \\ENQ\EOT-\STX\STX\SOH\DC2\EOT\221\STX\DC1\SUB\n\
     \\r\n\
-    \\ENQ\EOT-\STX\STX\ETX\DC2\EOT\219\STX\GS\RS\n\
+    \\ENQ\EOT-\STX\STX\ETX\DC2\EOT\221\STX\GS\RS\n\
     \;\n\
-    \\EOT\EOT-\STX\ETX\DC2\EOT\220\STX\EOT\US\"- Match any datum that exhibits this pattern.\n\
+    \\EOT\EOT-\STX\ETX\DC2\EOT\222\STX\EOT\US\"- Match any datum that exhibits this pattern.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT-\STX\ETX\ACK\DC2\EOT\220\STX\EOT\DLE\n\
+    \\ENQ\EOT-\STX\ETX\ACK\DC2\EOT\222\STX\EOT\DLE\n\
     \\r\n\
-    \\ENQ\EOT-\STX\ETX\SOH\DC2\EOT\220\STX\DC1\SUB\n\
+    \\ENQ\EOT-\STX\ETX\SOH\DC2\EOT\222\STX\DC1\SUB\n\
     \\r\n\
-    \\ENQ\EOT-\STX\ETX\ETX\DC2\EOT\220\STX\GS\RSb\ACKproto3"
+    \\ENQ\EOT-\STX\ETX\ETX\DC2\EOT\222\STX\GS\RSb\ACKproto3"

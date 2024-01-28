@@ -82,24 +82,26 @@ message AuxData {
 
 // Represents a transaction in the Cardano blockchain.
 message Tx {
-  repeated TxInput inputs = 1; // List of transaction inputs
-  repeated TxOutput outputs = 2; // List of transaction outputs
-  repeated Certificate certificates = 3; // List of certificates
-  repeated Withdrawal withdrawals = 4; // List of withdrawals
-  repeated Multiasset mint = 5; // List of minted custom assets
-  repeated TxInput reference_inputs = 6; // List of reference inputs
-  WitnessSet witnesses = 7; // Witnesses that validte the transaction
-  Collateral collateral = 8; // Collateral details in case of failed transaction
-  uint64 fee = 9; // Transaction fee in ADA
-  TxValidity validity = 10; // Validity interval of the transaction
-  bool successful = 11; // Flag indicating whether the transaction was successful
-  AuxData auxiliary = 12; // Auxiliary data not directly tied to the validation process
+  bytes hash = 1; // Hash of the transaction
+  repeated TxInput inputs = 2; // List of transaction inputs
+  repeated TxOutput outputs = 3; // List of transaction outputs
+  repeated Certificate certificates = 4; // List of certificates
+  repeated Withdrawal withdrawals = 5; // List of withdrawals
+  repeated Multiasset mint = 6; // List of minted custom assets
+  repeated TxInput reference_inputs = 7; // List of reference inputs
+  WitnessSet witnesses = 8; // Witnesses that validte the transaction
+  Collateral collateral = 9; // Collateral details in case of failed transaction
+  uint64 fee = 10; // Transaction fee in ADA
+  TxValidity validity = 11; // Validity interval of the transaction
+  bool successful = 12; // Flag indicating whether the transaction was successful
+  AuxData auxiliary = 13; // Auxiliary data not directly tied to the validation process
 }
 
 // Contains the header information for a block.
 message BlockHeader {
   uint64 slot = 1; // Slot number.
-  bytes hash = 2; // Block hash.
+  uint64 height = 2; // Block height.
+  bytes hash = 3; // Block hash.
 }
 
 // Contains the transaction data for a block.

@@ -186,6 +186,7 @@ Contains the header information for a block.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | slot | [uint64](#uint64) |  | Slot number. |
+| height | [uint64](#uint64) |  | Block height. |
 | hash | [bytes](#bytes) |  | Block hash. |
 
 
@@ -697,6 +698,7 @@ Represents a transaction in the Cardano blockchain.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
+| hash | [bytes](#bytes) |  | Hash of the transaction |
 | inputs | [TxInput](#utxorpc-cardano-v1-TxInput) | repeated | List of transaction inputs |
 | outputs | [TxOutput](#utxorpc-cardano-v1-TxOutput) | repeated | List of transaction outputs |
 | certificates | [Certificate](#utxorpc-cardano-v1-Certificate) | repeated | List of certificates |

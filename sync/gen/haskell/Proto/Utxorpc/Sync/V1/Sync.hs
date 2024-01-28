@@ -261,10 +261,12 @@ _AnyChainBlock'Cardano
               _otherwise -> Prelude.Nothing)
 {- | Fields :
      
-         * 'Proto.Utxorpc.Sync.V1.Sync_Fields.index' @:: Lens' BlockRef Data.Word.Word64@
+         * 'Proto.Utxorpc.Sync.V1.Sync_Fields.slot' @:: Lens' BlockRef Data.Word.Word64@
+         * 'Proto.Utxorpc.Sync.V1.Sync_Fields.height' @:: Lens' BlockRef Data.Word.Word64@
          * 'Proto.Utxorpc.Sync.V1.Sync_Fields.hash' @:: Lens' BlockRef Data.ByteString.ByteString@ -}
 data BlockRef
-  = BlockRef'_constructor {_BlockRef'index :: !Data.Word.Word64,
+  = BlockRef'_constructor {_BlockRef'slot :: !Data.Word.Word64,
+                           _BlockRef'height :: !Data.Word.Word64,
                            _BlockRef'hash :: !Data.ByteString.ByteString,
                            _BlockRef'_unknownFields :: !Data.ProtoLens.FieldSet}
   deriving stock (Prelude.Eq, Prelude.Ord)
@@ -274,11 +276,17 @@ instance Prelude.Show BlockRef where
         '{'
         (Prelude.showString
            (Data.ProtoLens.showMessageShort __x) (Prelude.showChar '}' __s))
-instance Data.ProtoLens.Field.HasField BlockRef "index" Data.Word.Word64 where
+instance Data.ProtoLens.Field.HasField BlockRef "slot" Data.Word.Word64 where
   fieldOf _
     = (Prelude..)
         (Lens.Family2.Unchecked.lens
-           _BlockRef'index (\ x__ y__ -> x__ {_BlockRef'index = y__}))
+           _BlockRef'slot (\ x__ y__ -> x__ {_BlockRef'slot = y__}))
+        Prelude.id
+instance Data.ProtoLens.Field.HasField BlockRef "height" Data.Word.Word64 where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _BlockRef'height (\ x__ y__ -> x__ {_BlockRef'height = y__}))
         Prelude.id
 instance Data.ProtoLens.Field.HasField BlockRef "hash" Data.ByteString.ByteString where
   fieldOf _
@@ -290,19 +298,28 @@ instance Data.ProtoLens.Message BlockRef where
   messageName _ = Data.Text.pack "utxorpc.sync.v1.BlockRef"
   packedMessageDescriptor _
     = "\n\
-      \\bBlockRef\DC2\DC4\n\
-      \\ENQindex\CAN\SOH \SOH(\EOTR\ENQindex\DC2\DC2\n\
-      \\EOThash\CAN\STX \SOH(\fR\EOThash"
+      \\bBlockRef\DC2\DC2\n\
+      \\EOTslot\CAN\SOH \SOH(\EOTR\EOTslot\DC2\SYN\n\
+      \\ACKheight\CAN\STX \SOH(\EOTR\ACKheight\DC2\DC2\n\
+      \\EOThash\CAN\ETX \SOH(\fR\EOThash"
   packedFileDescriptor _ = packedFileDescriptor
   fieldsByTag
     = let
-        index__field_descriptor
+        slot__field_descriptor
           = Data.ProtoLens.FieldDescriptor
-              "index"
+              "slot"
               (Data.ProtoLens.ScalarField Data.ProtoLens.UInt64Field ::
                  Data.ProtoLens.FieldTypeDescriptor Data.Word.Word64)
               (Data.ProtoLens.PlainField
-                 Data.ProtoLens.Optional (Data.ProtoLens.Field.field @"index")) ::
+                 Data.ProtoLens.Optional (Data.ProtoLens.Field.field @"slot")) ::
+              Data.ProtoLens.FieldDescriptor BlockRef
+        height__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "height"
+              (Data.ProtoLens.ScalarField Data.ProtoLens.UInt64Field ::
+                 Data.ProtoLens.FieldTypeDescriptor Data.Word.Word64)
+              (Data.ProtoLens.PlainField
+                 Data.ProtoLens.Optional (Data.ProtoLens.Field.field @"height")) ::
               Data.ProtoLens.FieldDescriptor BlockRef
         hash__field_descriptor
           = Data.ProtoLens.FieldDescriptor
@@ -314,15 +331,17 @@ instance Data.ProtoLens.Message BlockRef where
               Data.ProtoLens.FieldDescriptor BlockRef
       in
         Data.Map.fromList
-          [(Data.ProtoLens.Tag 1, index__field_descriptor),
-           (Data.ProtoLens.Tag 2, hash__field_descriptor)]
+          [(Data.ProtoLens.Tag 1, slot__field_descriptor),
+           (Data.ProtoLens.Tag 2, height__field_descriptor),
+           (Data.ProtoLens.Tag 3, hash__field_descriptor)]
   unknownFields
     = Lens.Family2.Unchecked.lens
         _BlockRef'_unknownFields
         (\ x__ y__ -> x__ {_BlockRef'_unknownFields = y__})
   defMessage
     = BlockRef'_constructor
-        {_BlockRef'index = Data.ProtoLens.fieldDefault,
+        {_BlockRef'slot = Data.ProtoLens.fieldDefault,
+         _BlockRef'height = Data.ProtoLens.fieldDefault,
          _BlockRef'hash = Data.ProtoLens.fieldDefault,
          _BlockRef'_unknownFields = []}
   parseMessage
@@ -347,9 +366,13 @@ instance Data.ProtoLens.Message BlockRef where
                    do tag <- Data.ProtoLens.Encoding.Bytes.getVarInt
                       case tag of
                         8 -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
-                                       Data.ProtoLens.Encoding.Bytes.getVarInt "index"
-                                loop (Lens.Family2.set (Data.ProtoLens.Field.field @"index") y x)
-                        18
+                                       Data.ProtoLens.Encoding.Bytes.getVarInt "slot"
+                                loop (Lens.Family2.set (Data.ProtoLens.Field.field @"slot") y x)
+                        16
+                          -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                       Data.ProtoLens.Encoding.Bytes.getVarInt "height"
+                                loop (Lens.Family2.set (Data.ProtoLens.Field.field @"height") y x)
+                        26
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                            Data.ProtoLens.Encoding.Bytes.getBytes
@@ -368,8 +391,7 @@ instance Data.ProtoLens.Message BlockRef where
   buildMessage
     = \ _x
         -> (Data.Monoid.<>)
-             (let
-                _v = Lens.Family2.view (Data.ProtoLens.Field.field @"index") _x
+             (let _v = Lens.Family2.view (Data.ProtoLens.Field.field @"slot") _x
               in
                 if (Prelude.==) _v Data.ProtoLens.fieldDefault then
                     Data.Monoid.mempty
@@ -378,29 +400,41 @@ instance Data.ProtoLens.Message BlockRef where
                       (Data.ProtoLens.Encoding.Bytes.putVarInt 8)
                       (Data.ProtoLens.Encoding.Bytes.putVarInt _v))
              ((Data.Monoid.<>)
-                (let _v = Lens.Family2.view (Data.ProtoLens.Field.field @"hash") _x
+                (let
+                   _v = Lens.Family2.view (Data.ProtoLens.Field.field @"height") _x
                  in
                    if (Prelude.==) _v Data.ProtoLens.fieldDefault then
                        Data.Monoid.mempty
                    else
                        (Data.Monoid.<>)
-                         (Data.ProtoLens.Encoding.Bytes.putVarInt 18)
-                         ((\ bs
-                             -> (Data.Monoid.<>)
-                                  (Data.ProtoLens.Encoding.Bytes.putVarInt
-                                     (Prelude.fromIntegral (Data.ByteString.length bs)))
-                                  (Data.ProtoLens.Encoding.Bytes.putBytes bs))
-                            _v))
-                (Data.ProtoLens.Encoding.Wire.buildFieldSet
-                   (Lens.Family2.view Data.ProtoLens.unknownFields _x)))
+                         (Data.ProtoLens.Encoding.Bytes.putVarInt 16)
+                         (Data.ProtoLens.Encoding.Bytes.putVarInt _v))
+                ((Data.Monoid.<>)
+                   (let _v = Lens.Family2.view (Data.ProtoLens.Field.field @"hash") _x
+                    in
+                      if (Prelude.==) _v Data.ProtoLens.fieldDefault then
+                          Data.Monoid.mempty
+                      else
+                          (Data.Monoid.<>)
+                            (Data.ProtoLens.Encoding.Bytes.putVarInt 26)
+                            ((\ bs
+                                -> (Data.Monoid.<>)
+                                     (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                        (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                     (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                               _v))
+                   (Data.ProtoLens.Encoding.Wire.buildFieldSet
+                      (Lens.Family2.view Data.ProtoLens.unknownFields _x))))
 instance Control.DeepSeq.NFData BlockRef where
   rnf
     = \ x__
         -> Control.DeepSeq.deepseq
              (_BlockRef'_unknownFields x__)
              (Control.DeepSeq.deepseq
-                (_BlockRef'index x__)
-                (Control.DeepSeq.deepseq (_BlockRef'hash x__) ()))
+                (_BlockRef'slot x__)
+                (Control.DeepSeq.deepseq
+                   (_BlockRef'height x__)
+                   (Control.DeepSeq.deepseq (_BlockRef'hash x__) ())))
 {- | Fields :
      
          * 'Proto.Utxorpc.Sync.V1.Sync_Fields.startToken' @:: Lens' DumpHistoryRequest BlockRef@
@@ -1589,10 +1623,11 @@ instance Data.ProtoLens.Service.Types.HasMethodImpl ChainSyncService "followTip"
 packedFileDescriptor :: Data.ByteString.ByteString
 packedFileDescriptor
   = "\n\
-    \\SUButxorpc/sync/v1/sync.proto\DC2\SIutxorpc.sync.v1\SUB google/protobuf/field_mask.proto\SUB utxorpc/cardano/v1/cardano.proto\"4\n\
-    \\bBlockRef\DC2\DC4\n\
-    \\ENQindex\CAN\SOH \SOH(\EOTR\ENQindex\DC2\DC2\n\
-    \\EOThash\CAN\STX \SOH(\fR\EOThash\"c\n\
+    \\SUButxorpc/sync/v1/sync.proto\DC2\SIutxorpc.sync.v1\SUB google/protobuf/field_mask.proto\SUB utxorpc/cardano/v1/cardano.proto\"J\n\
+    \\bBlockRef\DC2\DC2\n\
+    \\EOTslot\CAN\SOH \SOH(\EOTR\EOTslot\DC2\SYN\n\
+    \\ACKheight\CAN\STX \SOH(\EOTR\ACKheight\DC2\DC2\n\
+    \\EOThash\CAN\ETX \SOH(\fR\EOThash\"c\n\
     \\rAnyChainBlock\DC2\DC2\n\
     \\ETXraw\CAN\SOH \SOH(\fH\NULR\ETXraw\DC25\n\
     \\acardano\CAN\STX \SOH(\v2\EM.utxorpc.cardano.v1.BlockH\NULR\acardanoB\a\n\
@@ -1625,8 +1660,8 @@ packedFileDescriptor
     \FetchBlock\DC2\".utxorpc.sync.v1.FetchBlockRequest\SUB#.utxorpc.sync.v1.FetchBlockResponse\DC2X\n\
     \\vDumpHistory\DC2#.utxorpc.sync.v1.DumpHistoryRequest\SUB$.utxorpc.sync.v1.DumpHistoryResponse\DC2T\n\
     \\tFollowTip\DC2!.utxorpc.sync.v1.FollowTipRequest\SUB\".utxorpc.sync.v1.FollowTipResponse0\SOHB\183\SOH\n\
-    \\DC3com.utxorpc.sync.v1B\tSyncProtoP\SOHZ7github.com/bufbuild/buf-tour/gen/utxorpc/sync/v1;syncv1\162\STX\ETXUSX\170\STX\SIUtxorpc.Sync.V1\202\STX\SIUtxorpc\\Sync\\V1\226\STX\ESCUtxorpc\\Sync\\V1\\GPBMetadata\234\STX\DC1Utxorpc::Sync::V1J\191\DC3\n\
-    \\ACK\DC2\EOT\NUL\NUL?\SOH\n\
+    \\DC3com.utxorpc.sync.v1B\tSyncProtoP\SOHZ7github.com/bufbuild/buf-tour/gen/utxorpc/sync/v1;syncv1\162\STX\ETXUSX\170\STX\SIUtxorpc.Sync.V1\202\STX\SIUtxorpc\\Sync\\V1\226\STX\ESCUtxorpc\\Sync\\V1\\GPBMetadata\234\STX\DC1Utxorpc::Sync::V1J\242\DC3\n\
+    \\ACK\DC2\EOT\NUL\NUL@\SOH\n\
     \\b\n\
     \\SOH\f\DC2\ETX\NUL\NUL\DC2\n\
     \\b\n\
@@ -1636,256 +1671,265 @@ packedFileDescriptor
     \\t\n\
     \\STX\ETX\SOH\DC2\ETX\ENQ\NUL*\n\
     \8\n\
-    \\STX\EOT\NUL\DC2\EOT\b\NUL\v\SOH\SUB, Represents a reference to a specific block\n\
+    \\STX\EOT\NUL\DC2\EOT\b\NUL\f\SOH\SUB, Represents a reference to a specific block\n\
     \\n\
     \\n\
     \\n\
     \\ETX\EOT\NUL\SOH\DC2\ETX\b\b\DLE\n\
-    \B\n\
-    \\EOT\EOT\NUL\STX\NUL\DC2\ETX\t\STX\DC3\"5 Height or slot number (depending on the blockchain)\n\
+    \'\n\
+    \\EOT\EOT\NUL\STX\NUL\DC2\ETX\t\STX\DC2\"\SUB Slot number of the block\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\NUL\STX\NUL\ENQ\DC2\ETX\t\STX\b\n\
     \\f\n\
-    \\ENQ\EOT\NUL\STX\NUL\SOH\DC2\ETX\t\t\SO\n\
+    \\ENQ\EOT\NUL\STX\NUL\SOH\DC2\ETX\t\t\r\n\
     \\f\n\
-    \\ENQ\EOT\NUL\STX\NUL\ETX\DC2\ETX\t\DC1\DC2\n\
-    \/\n\
+    \\ENQ\EOT\NUL\STX\NUL\ETX\DC2\ETX\t\DLE\DC1\n\
+    \\"\n\
     \\EOT\EOT\NUL\STX\SOH\DC2\ETX\n\
-    \\STX\DC1\"\" Hash of the content of the block\n\
+    \\STX\DC4\"\NAK Height of the block\n\
     \\n\
     \\f\n\
     \\ENQ\EOT\NUL\STX\SOH\ENQ\DC2\ETX\n\
-    \\STX\a\n\
+    \\STX\b\n\
     \\f\n\
     \\ENQ\EOT\NUL\STX\SOH\SOH\DC2\ETX\n\
-    \\b\f\n\
+    \\t\SI\n\
     \\f\n\
     \\ENQ\EOT\NUL\STX\SOH\ETX\DC2\ETX\n\
-    \\SI\DLE\n\
+    \\DC2\DC3\n\
+    \/\n\
+    \\EOT\EOT\NUL\STX\STX\DC2\ETX\v\STX\DC1\"\" Hash of the content of the block\n\
     \\n\
-    \\n\
-    \\STX\EOT\SOH\DC2\EOT\r\NUL\DC2\SOH\n\
-    \\n\
-    \\n\
-    \\ETX\EOT\SOH\SOH\DC2\ETX\r\b\NAK\n\
     \\f\n\
-    \\EOT\EOT\SOH\b\NUL\DC2\EOT\SO\STX\DC1\ETX\n\
+    \\ENQ\EOT\NUL\STX\STX\ENQ\DC2\ETX\v\STX\a\n\
     \\f\n\
-    \\ENQ\EOT\SOH\b\NUL\SOH\DC2\ETX\SO\b\r\n\
+    \\ENQ\EOT\NUL\STX\STX\SOH\DC2\ETX\v\b\f\n\
+    \\f\n\
+    \\ENQ\EOT\NUL\STX\STX\ETX\DC2\ETX\v\SI\DLE\n\
+    \\n\
+    \\n\
+    \\STX\EOT\SOH\DC2\EOT\SO\NUL\DC3\SOH\n\
+    \\n\
+    \\n\
+    \\ETX\EOT\SOH\SOH\DC2\ETX\SO\b\NAK\n\
+    \\f\n\
+    \\EOT\EOT\SOH\b\NUL\DC2\EOT\SI\STX\DC2\ETX\n\
+    \\f\n\
+    \\ENQ\EOT\SOH\b\NUL\SOH\DC2\ETX\SI\b\r\n\
     \-\n\
-    \\EOT\EOT\SOH\STX\NUL\DC2\ETX\SI\EOT\DC2\"  Original bytes for a raw block\n\
+    \\EOT\EOT\SOH\STX\NUL\DC2\ETX\DLE\EOT\DC2\"  Original bytes for a raw block\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\SOH\STX\NUL\ENQ\DC2\ETX\SI\EOT\t\n\
+    \\ENQ\EOT\SOH\STX\NUL\ENQ\DC2\ETX\DLE\EOT\t\n\
     \\f\n\
-    \\ENQ\EOT\SOH\STX\NUL\SOH\DC2\ETX\SI\n\
+    \\ENQ\EOT\SOH\STX\NUL\SOH\DC2\ETX\DLE\n\
     \\r\n\
     \\f\n\
-    \\ENQ\EOT\SOH\STX\NUL\ETX\DC2\ETX\SI\DLE\DC1\n\
+    \\ENQ\EOT\SOH\STX\NUL\ETX\DC2\ETX\DLE\DLE\DC1\n\
     \&\n\
-    \\EOT\EOT\SOH\STX\SOH\DC2\ETX\DLE\EOT)\"\EM A parsed Cardano block.\n\
+    \\EOT\EOT\SOH\STX\SOH\DC2\ETX\DC1\EOT)\"\EM A parsed Cardano block.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\SOH\STX\SOH\ACK\DC2\ETX\DLE\EOT\FS\n\
+    \\ENQ\EOT\SOH\STX\SOH\ACK\DC2\ETX\DC1\EOT\FS\n\
     \\f\n\
-    \\ENQ\EOT\SOH\STX\SOH\SOH\DC2\ETX\DLE\GS$\n\
+    \\ENQ\EOT\SOH\STX\SOH\SOH\DC2\ETX\DC1\GS$\n\
     \\f\n\
-    \\ENQ\EOT\SOH\STX\SOH\ETX\DC2\ETX\DLE'(\n\
+    \\ENQ\EOT\SOH\STX\SOH\ETX\DC2\ETX\DC1'(\n\
     \8\n\
-    \\STX\EOT\STX\DC2\EOT\NAK\NUL\CAN\SOH\SUB, Request to fetch a block by its reference.\n\
+    \\STX\EOT\STX\DC2\EOT\SYN\NUL\EM\SOH\SUB, Request to fetch a block by its reference.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\STX\SOH\DC2\ETX\NAK\b\EM\n\
+    \\ETX\EOT\STX\SOH\DC2\ETX\SYN\b\EM\n\
     \(\n\
-    \\EOT\EOT\STX\STX\NUL\DC2\ETX\SYN\STX\FS\"\ESC List of block references.\n\
+    \\EOT\EOT\STX\STX\NUL\DC2\ETX\ETB\STX\FS\"\ESC List of block references.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\NUL\EOT\DC2\ETX\SYN\STX\n\
+    \\ENQ\EOT\STX\STX\NUL\EOT\DC2\ETX\ETB\STX\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\NUL\ACK\DC2\ETX\SYN\v\DC3\n\
+    \\ENQ\EOT\STX\STX\NUL\ACK\DC2\ETX\ETB\v\DC3\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\NUL\SOH\DC2\ETX\SYN\DC4\ETB\n\
+    \\ENQ\EOT\STX\STX\NUL\SOH\DC2\ETX\ETB\DC4\ETB\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\NUL\ETX\DC2\ETX\SYN\SUB\ESC\n\
+    \\ENQ\EOT\STX\STX\NUL\ETX\DC2\ETX\ETB\SUB\ESC\n\
     \7\n\
-    \\EOT\EOT\STX\STX\SOH\DC2\ETX\ETB\STX+\"* Field mask to selectively return fields.\n\
+    \\EOT\EOT\STX\STX\SOH\DC2\ETX\CAN\STX+\"* Field mask to selectively return fields.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\SOH\ACK\DC2\ETX\ETB\STX\ESC\n\
+    \\ENQ\EOT\STX\STX\SOH\ACK\DC2\ETX\CAN\STX\ESC\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\SOH\SOH\DC2\ETX\ETB\FS&\n\
+    \\ENQ\EOT\STX\STX\SOH\SOH\DC2\ETX\CAN\FS&\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\SOH\ETX\DC2\ETX\ETB)*\n\
+    \\ENQ\EOT\STX\STX\SOH\ETX\DC2\ETX\CAN)*\n\
     \5\n\
-    \\STX\EOT\ETX\DC2\EOT\ESC\NUL\GS\SOH\SUB) Response containing the fetched blocks.\n\
+    \\STX\EOT\ETX\DC2\EOT\FS\NUL\RS\SOH\SUB) Response containing the fetched blocks.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\ETX\SOH\DC2\ETX\ESC\b\SUB\n\
+    \\ETX\EOT\ETX\SOH\DC2\ETX\FS\b\SUB\n\
     \&\n\
-    \\EOT\EOT\ETX\STX\NUL\DC2\ETX\FS\STX#\"\EM List of fetched blocks.\n\
+    \\EOT\EOT\ETX\STX\NUL\DC2\ETX\GS\STX#\"\EM List of fetched blocks.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\ETX\STX\NUL\EOT\DC2\ETX\FS\STX\n\
+    \\ENQ\EOT\ETX\STX\NUL\EOT\DC2\ETX\GS\STX\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\ETX\STX\NUL\ACK\DC2\ETX\FS\v\CAN\n\
+    \\ENQ\EOT\ETX\STX\NUL\ACK\DC2\ETX\GS\v\CAN\n\
     \\f\n\
-    \\ENQ\EOT\ETX\STX\NUL\SOH\DC2\ETX\FS\EM\RS\n\
+    \\ENQ\EOT\ETX\STX\NUL\SOH\DC2\ETX\GS\EM\RS\n\
     \\f\n\
-    \\ENQ\EOT\ETX\STX\NUL\ETX\DC2\ETX\FS!\"\n\
+    \\ENQ\EOT\ETX\STX\NUL\ETX\DC2\ETX\GS!\"\n\
     \0\n\
-    \\STX\EOT\EOT\DC2\EOT \NUL$\SOH\SUB$ Request to dump the block history.\n\
+    \\STX\EOT\EOT\DC2\EOT!\NUL%\SOH\SUB$ Request to dump the block history.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\EOT\SOH\DC2\ETX \b\SUB\n\
+    \\ETX\EOT\EOT\SOH\DC2\ETX!\b\SUB\n\
     \9\n\
-    \\EOT\EOT\EOT\STX\NUL\DC2\ETX!\STX\ESC\", Starting point for the block history dump.\n\
+    \\EOT\EOT\EOT\STX\NUL\DC2\ETX\"\STX\ESC\", Starting point for the block history dump.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\EOT\STX\NUL\ACK\DC2\ETX!\STX\n\
+    \\ENQ\EOT\EOT\STX\NUL\ACK\DC2\ETX\"\STX\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\EOT\STX\NUL\SOH\DC2\ETX!\v\SYN\n\
+    \\ENQ\EOT\EOT\STX\NUL\SOH\DC2\ETX\"\v\SYN\n\
     \\f\n\
-    \\ENQ\EOT\EOT\STX\NUL\ETX\DC2\ETX!\EM\SUB\n\
+    \\ENQ\EOT\EOT\STX\NUL\ETX\DC2\ETX\"\EM\SUB\n\
     \1\n\
-    \\EOT\EOT\EOT\STX\SOH\DC2\ETX\"\STX\ETB\"$ Maximum number of items to return.\n\
+    \\EOT\EOT\EOT\STX\SOH\DC2\ETX#\STX\ETB\"$ Maximum number of items to return.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\EOT\STX\SOH\ENQ\DC2\ETX\"\STX\b\n\
+    \\ENQ\EOT\EOT\STX\SOH\ENQ\DC2\ETX#\STX\b\n\
     \\f\n\
-    \\ENQ\EOT\EOT\STX\SOH\SOH\DC2\ETX\"\t\DC2\n\
+    \\ENQ\EOT\EOT\STX\SOH\SOH\DC2\ETX#\t\DC2\n\
     \\f\n\
-    \\ENQ\EOT\EOT\STX\SOH\ETX\DC2\ETX\"\NAK\SYN\n\
+    \\ENQ\EOT\EOT\STX\SOH\ETX\DC2\ETX#\NAK\SYN\n\
     \7\n\
-    \\EOT\EOT\EOT\STX\STX\DC2\ETX#\STX+\"* Field mask to selectively return fields.\n\
+    \\EOT\EOT\EOT\STX\STX\DC2\ETX$\STX+\"* Field mask to selectively return fields.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\EOT\STX\STX\ACK\DC2\ETX#\STX\ESC\n\
+    \\ENQ\EOT\EOT\STX\STX\ACK\DC2\ETX$\STX\ESC\n\
     \\f\n\
-    \\ENQ\EOT\EOT\STX\STX\SOH\DC2\ETX#\FS&\n\
+    \\ENQ\EOT\EOT\STX\STX\SOH\DC2\ETX$\FS&\n\
     \\f\n\
-    \\ENQ\EOT\EOT\STX\STX\ETX\DC2\ETX#)*\n\
+    \\ENQ\EOT\EOT\STX\STX\ETX\DC2\ETX$)*\n\
     \;\n\
-    \\STX\EOT\ENQ\DC2\EOT'\NUL*\SOH\SUB/ Response containing the dumped block history.\n\
+    \\STX\EOT\ENQ\DC2\EOT(\NUL+\SOH\SUB/ Response containing the dumped block history.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\ENQ\SOH\DC2\ETX'\b\ESC\n\
+    \\ETX\EOT\ENQ\SOH\DC2\ETX(\b\ESC\n\
     \-\n\
-    \\EOT\EOT\ENQ\STX\NUL\DC2\ETX(\STX#\"  List of blocks in the history.\n\
+    \\EOT\EOT\ENQ\STX\NUL\DC2\ETX)\STX#\"  List of blocks in the history.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\ENQ\STX\NUL\EOT\DC2\ETX(\STX\n\
+    \\ENQ\EOT\ENQ\STX\NUL\EOT\DC2\ETX)\STX\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\ENQ\STX\NUL\ACK\DC2\ETX(\v\CAN\n\
+    \\ENQ\EOT\ENQ\STX\NUL\ACK\DC2\ETX)\v\CAN\n\
     \\f\n\
-    \\ENQ\EOT\ENQ\STX\NUL\SOH\DC2\ETX(\EM\RS\n\
+    \\ENQ\EOT\ENQ\STX\NUL\SOH\DC2\ETX)\EM\RS\n\
     \\f\n\
-    \\ENQ\EOT\ENQ\STX\NUL\ETX\DC2\ETX(!\"\n\
+    \\ENQ\EOT\ENQ\STX\NUL\ETX\DC2\ETX)!\"\n\
     \)\n\
-    \\EOT\EOT\ENQ\STX\SOH\DC2\ETX)\STX\SUB\"\FS Next token for pagination.\n\
+    \\EOT\EOT\ENQ\STX\SOH\DC2\ETX*\STX\SUB\"\FS Next token for pagination.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\ENQ\STX\SOH\ACK\DC2\ETX)\STX\n\
+    \\ENQ\EOT\ENQ\STX\SOH\ACK\DC2\ETX*\STX\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\ENQ\STX\SOH\SOH\DC2\ETX)\v\NAK\n\
+    \\ENQ\EOT\ENQ\STX\SOH\SOH\DC2\ETX*\v\NAK\n\
     \\f\n\
-    \\ENQ\EOT\ENQ\STX\SOH\ETX\DC2\ETX)\CAN\EM\n\
+    \\ENQ\EOT\ENQ\STX\SOH\ETX\DC2\ETX*\CAN\EM\n\
     \:\n\
-    \\STX\EOT\ACK\DC2\EOT-\NUL/\SOH\SUB. Request to follow the tip of the blockchain.\n\
+    \\STX\EOT\ACK\DC2\EOT.\NUL0\SOH\SUB. Request to follow the tip of the blockchain.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\ACK\SOH\DC2\ETX-\b\CAN\n\
+    \\ETX\EOT\ACK\SOH\DC2\ETX.\b\CAN\n\
     \A\n\
-    \\EOT\EOT\ACK\STX\NUL\DC2\ETX.\STX\"\"4 List of block references to find the intersection.\n\
+    \\EOT\EOT\ACK\STX\NUL\DC2\ETX/\STX\"\"4 List of block references to find the intersection.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\ACK\STX\NUL\EOT\DC2\ETX.\STX\n\
+    \\ENQ\EOT\ACK\STX\NUL\EOT\DC2\ETX/\STX\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\ACK\STX\NUL\ACK\DC2\ETX.\v\DC3\n\
+    \\ENQ\EOT\ACK\STX\NUL\ACK\DC2\ETX/\v\DC3\n\
     \\f\n\
-    \\ENQ\EOT\ACK\STX\NUL\SOH\DC2\ETX.\DC4\GS\n\
+    \\ENQ\EOT\ACK\STX\NUL\SOH\DC2\ETX/\DC4\GS\n\
     \\f\n\
-    \\ENQ\EOT\ACK\STX\NUL\ETX\DC2\ETX. !\n\
+    \\ENQ\EOT\ACK\STX\NUL\ETX\DC2\ETX/ !\n\
     \P\n\
-    \\STX\EOT\a\DC2\EOT2\NUL8\SOH\SUBD Response containing the action to perform while following the tip.\n\
+    \\STX\EOT\a\DC2\EOT3\NUL9\SOH\SUBD Response containing the action to perform while following the tip.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\a\SOH\DC2\ETX2\b\EM\n\
+    \\ETX\EOT\a\SOH\DC2\ETX3\b\EM\n\
     \\f\n\
-    \\EOT\EOT\a\b\NUL\DC2\EOT3\STX7\ETX\n\
+    \\EOT\EOT\a\b\NUL\DC2\EOT4\STX8\ETX\n\
     \\f\n\
-    \\ENQ\EOT\a\b\NUL\SOH\DC2\ETX3\b\SO\n\
+    \\ENQ\EOT\a\b\NUL\SOH\DC2\ETX4\b\SO\n\
     \ \n\
-    \\EOT\EOT\a\STX\NUL\DC2\ETX4\EOT\FS\"\DC3 Apply this block.\n\
+    \\EOT\EOT\a\STX\NUL\DC2\ETX5\EOT\FS\"\DC3 Apply this block.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\a\STX\NUL\ACK\DC2\ETX4\EOT\DC1\n\
+    \\ENQ\EOT\a\STX\NUL\ACK\DC2\ETX5\EOT\DC1\n\
     \\f\n\
-    \\ENQ\EOT\a\STX\NUL\SOH\DC2\ETX4\DC2\ETB\n\
+    \\ENQ\EOT\a\STX\NUL\SOH\DC2\ETX5\DC2\ETB\n\
     \\f\n\
-    \\ENQ\EOT\a\STX\NUL\ETX\DC2\ETX4\SUB\ESC\n\
+    \\ENQ\EOT\a\STX\NUL\ETX\DC2\ETX5\SUB\ESC\n\
     \\US\n\
-    \\EOT\EOT\a\STX\SOH\DC2\ETX5\EOT\ESC\"\DC2 Undo this block.\n\
+    \\EOT\EOT\a\STX\SOH\DC2\ETX6\EOT\ESC\"\DC2 Undo this block.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\a\STX\SOH\ACK\DC2\ETX5\EOT\DC1\n\
+    \\ENQ\EOT\a\STX\SOH\ACK\DC2\ETX6\EOT\DC1\n\
     \\f\n\
-    \\ENQ\EOT\a\STX\SOH\SOH\DC2\ETX5\DC2\SYN\n\
+    \\ENQ\EOT\a\STX\SOH\SOH\DC2\ETX6\DC2\SYN\n\
     \\f\n\
-    \\ENQ\EOT\a\STX\SOH\ETX\DC2\ETX5\EM\SUB\n\
+    \\ENQ\EOT\a\STX\SOH\ETX\DC2\ETX6\EM\SUB\n\
     \-\n\
-    \\EOT\EOT\a\STX\STX\DC2\ETX6\EOT\ETB\"  Reset to this block reference.\n\
+    \\EOT\EOT\a\STX\STX\DC2\ETX7\EOT\ETB\"  Reset to this block reference.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\a\STX\STX\ACK\DC2\ETX6\EOT\f\n\
+    \\ENQ\EOT\a\STX\STX\ACK\DC2\ETX7\EOT\f\n\
     \\f\n\
-    \\ENQ\EOT\a\STX\STX\SOH\DC2\ETX6\r\DC2\n\
+    \\ENQ\EOT\a\STX\STX\SOH\DC2\ETX7\r\DC2\n\
     \\f\n\
-    \\ENQ\EOT\a\STX\STX\ETX\DC2\ETX6\NAK\SYN\n\
+    \\ENQ\EOT\a\STX\STX\ETX\DC2\ETX7\NAK\SYN\n\
     \8\n\
-    \\STX\ACK\NUL\DC2\EOT;\NUL?\SOH\SUB, Service definition for syncing chain data.\n\
+    \\STX\ACK\NUL\DC2\EOT<\NUL@\SOH\SUB, Service definition for syncing chain data.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\ACK\NUL\SOH\DC2\ETX;\b\CAN\n\
+    \\ETX\ACK\NUL\SOH\DC2\ETX<\b\CAN\n\
     \.\n\
-    \\EOT\ACK\NUL\STX\NUL\DC2\ETX<\STXA\"! Fetch a block by its reference.\n\
+    \\EOT\ACK\NUL\STX\NUL\DC2\ETX=\STXA\"! Fetch a block by its reference.\n\
     \\n\
     \\f\n\
-    \\ENQ\ACK\NUL\STX\NUL\SOH\DC2\ETX<\ACK\DLE\n\
+    \\ENQ\ACK\NUL\STX\NUL\SOH\DC2\ETX=\ACK\DLE\n\
     \\f\n\
-    \\ENQ\ACK\NUL\STX\NUL\STX\DC2\ETX<\DC1\"\n\
+    \\ENQ\ACK\NUL\STX\NUL\STX\DC2\ETX=\DC1\"\n\
     \\f\n\
-    \\ENQ\ACK\NUL\STX\NUL\ETX\DC2\ETX<-?\n\
+    \\ENQ\ACK\NUL\STX\NUL\ETX\DC2\ETX=-?\n\
     \&\n\
-    \\EOT\ACK\NUL\STX\SOH\DC2\ETX=\STXD\"\EM Dump the block history.\n\
+    \\EOT\ACK\NUL\STX\SOH\DC2\ETX>\STXD\"\EM Dump the block history.\n\
     \\n\
     \\f\n\
-    \\ENQ\ACK\NUL\STX\SOH\SOH\DC2\ETX=\ACK\DC1\n\
+    \\ENQ\ACK\NUL\STX\SOH\SOH\DC2\ETX>\ACK\DC1\n\
     \\f\n\
-    \\ENQ\ACK\NUL\STX\SOH\STX\DC2\ETX=\DC2$\n\
+    \\ENQ\ACK\NUL\STX\SOH\STX\DC2\ETX>\DC2$\n\
     \\f\n\
-    \\ENQ\ACK\NUL\STX\SOH\ETX\DC2\ETX=/B\n\
+    \\ENQ\ACK\NUL\STX\SOH\ETX\DC2\ETX>/B\n\
     \0\n\
-    \\EOT\ACK\NUL\STX\STX\DC2\ETX>\STXE\"# Follow the tip of the blockchain.\n\
+    \\EOT\ACK\NUL\STX\STX\DC2\ETX?\STXE\"# Follow the tip of the blockchain.\n\
     \\n\
     \\f\n\
-    \\ENQ\ACK\NUL\STX\STX\SOH\DC2\ETX>\ACK\SI\n\
+    \\ENQ\ACK\NUL\STX\STX\SOH\DC2\ETX?\ACK\SI\n\
     \\f\n\
-    \\ENQ\ACK\NUL\STX\STX\STX\DC2\ETX>\DLE \n\
+    \\ENQ\ACK\NUL\STX\STX\STX\DC2\ETX?\DLE \n\
     \\f\n\
-    \\ENQ\ACK\NUL\STX\STX\ACK\DC2\ETX>+1\n\
+    \\ENQ\ACK\NUL\STX\STX\ACK\DC2\ETX?+1\n\
     \\f\n\
-    \\ENQ\ACK\NUL\STX\STX\ETX\DC2\ETX>2Cb\ACKproto3"
+    \\ENQ\ACK\NUL\STX\STX\ETX\DC2\ETX?2Cb\ACKproto3"

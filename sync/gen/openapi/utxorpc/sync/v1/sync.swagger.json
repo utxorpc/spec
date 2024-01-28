@@ -156,6 +156,11 @@
           "format": "uint64",
           "description": "Slot number."
         },
+        "height": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Block height."
+        },
         "hash": {
           "type": "string",
           "format": "byte",
@@ -167,10 +172,15 @@
     "v1BlockRef": {
       "type": "object",
       "properties": {
-        "index": {
+        "slot": {
           "type": "string",
           "format": "uint64",
-          "title": "Height or slot number (depending on the blockchain)"
+          "title": "Slot number of the block"
+        },
+        "height": {
+          "type": "string",
+          "format": "uint64",
+          "title": "Height of the block"
         },
         "hash": {
           "type": "string",

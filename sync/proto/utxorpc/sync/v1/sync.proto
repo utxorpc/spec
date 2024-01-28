@@ -7,8 +7,9 @@ import "utxorpc/cardano/v1/cardano.proto";
 
 // Represents a reference to a specific block
 message BlockRef {
-  uint64 index = 1; // Height or slot number (depending on the blockchain)
-  bytes hash = 2; // Hash of the content of the block
+  uint64 slot = 1; // Slot number of the block
+  uint64 height = 2; // Height of the block
+  bytes hash = 3; // Hash of the content of the block
 }
 
 message AnyChainBlock {

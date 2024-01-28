@@ -251,6 +251,11 @@ header ::
   (Prelude.Functor f, Data.ProtoLens.Field.HasField s "header" a) =>
   Lens.Family2.LensLike' f s a
 header = Data.ProtoLens.Field.field @"header"
+height ::
+  forall f s a.
+  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "height" a) =>
+  Lens.Family2.LensLike' f s a
+height = Data.ProtoLens.Field.field @"height"
 inputs ::
   forall f s a.
   (Prelude.Functor f, Data.ProtoLens.Field.HasField s "inputs" a) =>

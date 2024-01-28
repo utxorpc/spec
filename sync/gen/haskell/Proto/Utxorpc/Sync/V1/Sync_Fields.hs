@@ -55,11 +55,11 @@ hash ::
   (Prelude.Functor f, Data.ProtoLens.Field.HasField s "hash" a) =>
   Lens.Family2.LensLike' f s a
 hash = Data.ProtoLens.Field.field @"hash"
-index ::
+height ::
   forall f s a.
-  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "index" a) =>
+  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "height" a) =>
   Lens.Family2.LensLike' f s a
-index = Data.ProtoLens.Field.field @"index"
+height = Data.ProtoLens.Field.field @"height"
 intersect ::
   forall f s a.
   (Prelude.Functor f,
@@ -153,6 +153,11 @@ reset ::
   (Prelude.Functor f, Data.ProtoLens.Field.HasField s "reset" a) =>
   Lens.Family2.LensLike' f s a
 reset = Data.ProtoLens.Field.field @"reset"
+slot ::
+  forall f s a.
+  (Prelude.Functor f, Data.ProtoLens.Field.HasField s "slot" a) =>
+  Lens.Family2.LensLike' f s a
+slot = Data.ProtoLens.Field.field @"slot"
 startToken ::
   forall f s a.
   (Prelude.Functor f,

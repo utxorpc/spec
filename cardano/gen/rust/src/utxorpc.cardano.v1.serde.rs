@@ -812,12 +812,18 @@ impl serde::Serialize for BlockHeader {
         if self.slot != 0 {
             len += 1;
         }
+        if self.height != 0 {
+            len += 1;
+        }
         if !self.hash.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.BlockHeader", len)?;
         if self.slot != 0 {
             struct_ser.serialize_field("slot", ToString::to_string(&self.slot).as_str())?;
+        }
+        if self.height != 0 {
+            struct_ser.serialize_field("height", ToString::to_string(&self.height).as_str())?;
         }
         if !self.hash.is_empty() {
             struct_ser.serialize_field("hash", pbjson::private::base64::encode(&self.hash).as_str())?;
@@ -833,12 +839,14 @@ impl<'de> serde::Deserialize<'de> for BlockHeader {
     {
         const FIELDS: &[&str] = &[
             "slot",
+            "height",
             "hash",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Slot,
+            Height,
             Hash,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -862,6 +870,7 @@ impl<'de> serde::Deserialize<'de> for BlockHeader {
                     {
                         match value {
                             "slot" => Ok(GeneratedField::Slot),
+                            "height" => Ok(GeneratedField::Height),
                             "hash" => Ok(GeneratedField::Hash),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -883,6 +892,7 @@ impl<'de> serde::Deserialize<'de> for BlockHeader {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut slot__ = None;
+                let mut height__ = None;
                 let mut hash__ = None;
                 while let Some(k) = map.next_key()? {
                     match k {
@@ -891,6 +901,14 @@ impl<'de> serde::Deserialize<'de> for BlockHeader {
                                 return Err(serde::de::Error::duplicate_field("slot"));
                             }
                             slot__ = 
+                                Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Height => {
+                            if height__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("height"));
+                            }
+                            height__ = 
                                 Some(map.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
                             ;
                         }
@@ -906,6 +924,7 @@ impl<'de> serde::Deserialize<'de> for BlockHeader {
                 }
                 Ok(BlockHeader {
                     slot: slot__.unwrap_or_default(),
+                    height: height__.unwrap_or_default(),
                     hash: hash__.unwrap_or_default(),
                 })
             }
@@ -4680,6 +4699,9 @@ impl serde::Serialize for Tx {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if !self.hash.is_empty() {
+            len += 1;
+        }
         if !self.inputs.is_empty() {
             len += 1;
         }
@@ -4717,6 +4739,9 @@ impl serde::Serialize for Tx {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("utxorpc.cardano.v1.Tx", len)?;
+        if !self.hash.is_empty() {
+            struct_ser.serialize_field("hash", pbjson::private::base64::encode(&self.hash).as_str())?;
+        }
         if !self.inputs.is_empty() {
             struct_ser.serialize_field("inputs", &self.inputs)?;
         }
@@ -4763,6 +4788,7 @@ impl<'de> serde::Deserialize<'de> for Tx {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "hash",
             "inputs",
             "outputs",
             "certificates",
@@ -4780,6 +4806,7 @@ impl<'de> serde::Deserialize<'de> for Tx {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Hash,
             Inputs,
             Outputs,
             Certificates,
@@ -4813,6 +4840,7 @@ impl<'de> serde::Deserialize<'de> for Tx {
                         E: serde::de::Error,
                     {
                         match value {
+                            "hash" => Ok(GeneratedField::Hash),
                             "inputs" => Ok(GeneratedField::Inputs),
                             "outputs" => Ok(GeneratedField::Outputs),
                             "certificates" => Ok(GeneratedField::Certificates),
@@ -4844,6 +4872,7 @@ impl<'de> serde::Deserialize<'de> for Tx {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut hash__ = None;
                 let mut inputs__ = None;
                 let mut outputs__ = None;
                 let mut certificates__ = None;
@@ -4858,6 +4887,14 @@ impl<'de> serde::Deserialize<'de> for Tx {
                 let mut auxiliary__ = None;
                 while let Some(k) = map.next_key()? {
                     match k {
+                        GeneratedField::Hash => {
+                            if hash__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("hash"));
+                            }
+                            hash__ = 
+                                Some(map.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
                         GeneratedField::Inputs => {
                             if inputs__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("inputs"));
@@ -4935,6 +4972,7 @@ impl<'de> serde::Deserialize<'de> for Tx {
                     }
                 }
                 Ok(Tx {
+                    hash: hash__.unwrap_or_default(),
                     inputs: inputs__.unwrap_or_default(),
                     outputs: outputs__.unwrap_or_default(),
                     certificates: certificates__.unwrap_or_default(),

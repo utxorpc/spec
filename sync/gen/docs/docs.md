@@ -50,7 +50,8 @@ Represents a reference to a specific block
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| index | [uint64](#uint64) |  | Height or slot number (depending on the blockchain) |
+| slot | [uint64](#uint64) |  | Slot number of the block |
+| height | [uint64](#uint64) |  | Height of the block |
 | hash | [bytes](#bytes) |  | Hash of the content of the block |
 
 
