@@ -7,8 +7,8 @@ package watchv1connect
 import (
 	context "context"
 	errors "errors"
-	v1 "github.com/bufbuild/buf-tour/gen/utxorpc/watch/v1"
 	connect_go "github.com/bufbuild/connect-go"
+	v1 "github.com/utxorpc/spec/watch/gen/go/utxorpc/watch/v1"
 	http "net/http"
 	strings "strings"
 )
