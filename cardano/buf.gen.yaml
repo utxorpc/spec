@@ -1,8 +1,10 @@
 version: v1
+
 managed:
   enabled: true
   go_package_prefix:
     default: github.com/utxorpc/spec/cardano/gen/go
+
 plugins:
   - plugin: buf.build/protocolbuffers/go
     out: gen/go
@@ -42,11 +44,19 @@ plugins:
     opt:
       - target=ts
       - import_extension=.ts
-
+  
   - plugin: connect-es
     out: gen/web/src
     opt:
       - target=ts
+
+  # node
+
+  - plugin: es
+    out: gen/node/src
+    opt:
+      - target=ts
+      - import_extension=.ts
 
   # other
 
