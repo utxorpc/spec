@@ -1,6 +1,6 @@
 {
   "name": "@utxorpc/cardano-spec",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "UTxO RPC auto-generated spec types & stubs for the Cardano module",
   "main": "./lib/index.js",
   "exports": {
