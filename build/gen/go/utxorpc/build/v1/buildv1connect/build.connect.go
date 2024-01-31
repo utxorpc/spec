@@ -9,8 +9,8 @@ package buildv1connect
 import (
 	context "context"
 	errors "errors"
-	v1 "github.com/bufbuild/buf-tour/gen/utxorpc/build/v1"
 	connect_go "github.com/bufbuild/connect-go"
+	v1 "github.com/utxorpc/spec/build/gen/go/utxorpc/build/v1"
 	http "net/http"
 	strings "strings"
 )

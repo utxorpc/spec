@@ -7,8 +7,8 @@ package submitv1connect
 import (
 	context "context"
 	errors "errors"
-	v1 "github.com/bufbuild/buf-tour/gen/utxorpc/submit/v1"
 	connect_go "github.com/bufbuild/connect-go"
+	v1 "github.com/utxorpc/spec/submit/gen/go/utxorpc/submit/v1"
 	http "net/http"
 	strings "strings"
 )

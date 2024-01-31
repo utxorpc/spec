@@ -1,0 +1,107 @@
+name: "Run Buf Code Generation"
+
+on:
+  workflow_call:
+    inputs:
+      codegen-artifact:
+        required: true
+        type: string
+
+jobs:
+  codegen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install protoc
+        run: |
+          PROTOC_ZIP=protoc-3.14.0-linux-x86_64.zip
+          curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/$PROTOC_ZIP
+          unzip -o $PROTOC_ZIP -d . bin/protoc
+          unzip -o $PROTOC_ZIP -d . 'include/*'
+          rm -f $PROTOC_ZIP
+          echo "$(pwd)/bin" >> "$GITHUB_PATH"
+
+      - name: Setup npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.11.0
+          cache: "npm"
+
+      - name: Add node_modules to PATH
+        run: echo "$(pwd)/node_modules/.bin" >> "$GITHUB_PATH"
+
+      - name: Install Prost from Cargo
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: protoc-gen-prost
+
+      - name: Install protoc-gen-prost-crate from Cargo
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: protoc-gen-prost-crate
+
+      - name: Install Prost serde from Cargo
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: protoc-gen-prost-serde
+
+      - name: Install Tonic from Cargo
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: protoc-gen-tonic
+
+      - name: Install Protoc Plugins from npm
+        run: |
+          npm install @connectrpc/protoc-gen-connect-es
+          npm install @bufbuild/protoc-gen-es
+
+      - name: Setup Haskell
+        id: setup-hs
+        uses: haskell-actions/setup@v2
+        with:
+          ghc-version: 9.6.4
+        # ^ ghc >= 8.2 && < 9.8 required by proto-lens-protoc 0.8.0.0
+
+      - name: Configure Cabal build
+        run: |
+          cabal configure --enable-tests --enable-benchmarks --disable-documentation
+          cabal build all --dry-run
+
+      - name: Restore Cabal build cache
+        uses: actions/cache/restore@v4
+        id: cache-cabal-build
+        env:
+          key: ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version }}-cabal-${{ steps.setup-hs.outputs.cabal-version }}
+        with:
+          path: ${{ steps.setup-hs.outputs.cabal-store }}
+          key: ${{ env.key }}-plan-${{ hashFiles('**/plan.json') }}
+          restore-keys: |
+            ${{ env.key }}-
+
+      - name: Install Haskell plugin from Hackage
+        run: cabal install proto-lens-protoc-0.8.0.0
+
+      - name: Install Buf from npm
+        run: npm install @bufbuild/buf
+
+      - name: Generate code
+        run: |
+          for DIR in build cardano submit sync watch; do
+            cd $DIR && buf generate proto
+            cd ..
+          done
+
+      - name: Create codegen artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.codegen-artifact }}
+          path: "**/gen"
+
+      - name: Cache Cabal
+        if: steps.cache-cabal-build.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ steps.setup-hs.outputs.cabal-store }}
+          key: ${{ steps.cache-cabal-build.outputs.cache-primary-key }}

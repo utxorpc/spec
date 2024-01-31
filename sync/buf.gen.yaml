@@ -2,7 +2,7 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/bufbuild/buf-tour/gen
+    default: github.com/utxorpc/spec/sync/gen/go
 plugins:
   - plugin: buf.build/protocolbuffers/go
     out: gen/go
@@ -63,6 +63,21 @@ plugins:
     out: gen/web/src
     opt:
       - target=ts
+
+  # node
+
+  - plugin: es
+    out: gen/node/src
+    opt:
+      - target=ts
+      - rewrite_imports=./utxorpc/cardano/v1/*_pb.js:@utxorpc/cardano-spec
+      - import_extension=.js
+
+  - plugin: connect-es
+    out: gen/node/src
+    opt:
+      - target=ts
+
   # other
 
   - plugin: buf.build/grpc-ecosystem/openapiv2

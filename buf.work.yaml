@@ -1,6 +1,7 @@
 version: v1
 directories:
+  - cardano/proto
   - build/proto
   - watch/proto
   - sync/proto
-  - cardano/proto
+  - submit/proto
