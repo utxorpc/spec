@@ -2,7 +2,7 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/bufbuild/buf-tour/gen
+    default: github.com/utxorpc/spec/sync/gen/go
 plugins:
   - plugin: buf.build/protocolbuffers/go
     out: gen/go
