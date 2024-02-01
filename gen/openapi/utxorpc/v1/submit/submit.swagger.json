@@ -1,0 +1,239 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "utxorpc/v1/submit/submit.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "SubmitService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "cardanoAddressPattern": {
+      "type": "object",
+      "properties": {
+        "byronAddress": {
+          "type": "string",
+          "format": "byte"
+        },
+        "paymentPart": {
+          "type": "string",
+          "format": "byte"
+        },
+        "delegationPart": {
+          "type": "string",
+          "format": "byte"
+        },
+        "paymentIsScript": {
+          "type": "boolean"
+        },
+        "delegationIsScript": {
+          "type": "boolean"
+        }
+      },
+      "description": "Pattern of an address that can be used to evaluate matching predicates."
+    },
+    "cardanoAssetPattern": {
+      "type": "object",
+      "description": "Pattern of a native asset that can be used to evaluate matching predicates.\n\nTBD"
+    },
+    "cardanoDatumPattern": {
+      "type": "object",
+      "description": "Pattern of an datum that can be used to evaluate matching predicates.\n\nTBD"
+    },
+    "cardanoOutputPattern": {
+      "type": "object",
+      "description": "Pattern of a tx output that can be used to evaluate matching predicates.\n\nTBD"
+    },
+    "cardanoTxPattern": {
+      "type": "object",
+      "properties": {
+        "anyOutput": {
+          "$ref": "#/definitions/cardanoOutputPattern",
+          "description": "Match any output that exhibits this pattern."
+        },
+        "anyAddress": {
+          "$ref": "#/definitions/cardanoAddressPattern",
+          "description": "Match any address (inputs, outputs, collateral, etc) that exhibits this pattern."
+        },
+        "anyAsset": {
+          "$ref": "#/definitions/cardanoAssetPattern",
+          "description": "Match any asset that exhibits this pattern."
+        },
+        "anyDatum": {
+          "$ref": "#/definitions/cardanoDatumPattern",
+          "description": "Match any datum that exhibits this pattern."
+        }
+      },
+      "description": "Pattern of a Tx that can be used to evaluate matching predicates."
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "submitReadMempoolResponse": {
+      "type": "object",
+      "properties": {
+        "stage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/submitStage"
+          },
+          "description": "List of stages corresponding to the transaction references."
+        }
+      },
+      "description": "Response containing the stage of the submitted transactions."
+    },
+    "submitStage": {
+      "type": "string",
+      "enum": [
+        "STAGE_UNSPECIFIED",
+        "STAGE_ACKNOWLEDGED",
+        "STAGE_MEMPOOL",
+        "STAGE_NETWORK",
+        "STAGE_CONFIRMED"
+      ],
+      "default": "STAGE_UNSPECIFIED",
+      "description": "Enum representing the various stages of a transaction's lifecycle.\n\n - STAGE_UNSPECIFIED: Unspecified stage.\n - STAGE_ACKNOWLEDGED: Transaction has been acknowledged by the node.\n - STAGE_MEMPOOL: Transaction is in the mempool.\n - STAGE_NETWORK: Transaction has been propagated across the network.\n - STAGE_CONFIRMED: Transaction has been confirmed on the blockchain."
+    },
+    "submitSubmitTxResponse": {
+      "type": "object",
+      "properties": {
+        "ref": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          },
+          "description": "List of transaction references."
+        }
+      },
+      "description": "Response containing references to the submitted transactions."
+    },
+    "submitTxInMempool": {
+      "type": "object",
+      "properties": {
+        "tx": {
+          "$ref": "#/definitions/v1submitAnyChainTx",
+          "title": "The contents of the tx"
+        },
+        "stage": {
+          "$ref": "#/definitions/submitStage",
+          "title": "The current stage of the tx"
+        }
+      }
+    },
+    "submitWaitForTxResponse": {
+      "type": "object",
+      "properties": {
+        "ref": {
+          "type": "string",
+          "format": "byte",
+          "description": "Transaction reference."
+        },
+        "stage": {
+          "$ref": "#/definitions/submitStage",
+          "description": "Stage reached by the transaction."
+        }
+      },
+      "description": "Response containing the transaction reference and stage once it has been reached."
+    },
+    "submitWatchMempoolResponse": {
+      "type": "object",
+      "properties": {
+        "tx": {
+          "$ref": "#/definitions/submitTxInMempool",
+          "title": "The content and stage of the tx that has changed"
+        }
+      },
+      "description": "Response that represents a change in a mempool tx."
+    },
+    "v1submitAnyChainTx": {
+      "type": "object",
+      "properties": {
+        "raw": {
+          "type": "string",
+          "format": "byte",
+          "description": "Raw transaction data."
+        }
+      },
+      "description": "Represents a transaction from any supported blockchain."
+    },
+    "v1submitAnyChainTxPattern": {
+      "type": "object",
+      "properties": {
+        "cardano": {
+          "$ref": "#/definitions/cardanoTxPattern",
+          "description": "A Cardano tx pattern."
+        }
+      },
+      "description": "Represents a tx pattern from any supported blockchain."
+    },
+    "v1submitTxPredicate": {
+      "type": "object",
+      "properties": {
+        "match": {
+          "$ref": "#/definitions/v1submitAnyChainTxPattern",
+          "description": "Predicate is true if tx exhibits pattern."
+        },
+        "not": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1submitTxPredicate"
+          },
+          "description": "Predicate is true if tx doesn't exhibit pattern."
+        },
+        "allOf": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1submitTxPredicate"
+          },
+          "description": "Predicate is true if tx exhibits all of the patterns."
+        },
+        "anyOf": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1submitTxPredicate"
+          },
+          "description": "Predicate is true if tx exhibits any of the patterns."
+        }
+      },
+      "title": "Represents a simple tx predicate that can composed to create more complext ones"
+    }
+  }
+}

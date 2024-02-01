@@ -1,4 +1,7 @@
 version: v1
+name: buf.build/utxorpc/submit
+deps:
+  - buf.build/utxorpc/cardano
 breaking:
   use:
     - FILE

@@ -87,17 +87,13 @@ jobs:
         run: npm install @bufbuild/buf
 
       - name: Generate code
-        run: |
-          for DIR in build cardano submit sync watch; do
-            cd $DIR && buf generate proto
-            cd ..
-          done
+        run: buf generate
 
       - name: Create codegen artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.codegen-artifact }}
-          path: "**/gen"
+          path: "gen/**"
 
       - name: Cache Cabal
         if: steps.cache-cabal-build.outputs.cache-hit != 'true'
