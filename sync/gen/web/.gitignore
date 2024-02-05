@@ -1,7 +1,0 @@
-# Ignore compiled JavaScript files
-/lib
-
-# Ignore node modules
-/node_modules
-
-package-lock.json

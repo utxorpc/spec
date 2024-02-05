@@ -20,22 +20,18 @@ extra-source-files:
 
 library
   exposed-modules:
-      Proto.Utxorpc.Build.V1.Build
-      Proto.Utxorpc.Cardano.V1.Cardano
-      Proto.Utxorpc.Submit.V1.Submit
-      Proto.Utxorpc.Sync.V1.Sync
-      Proto.Utxorpc.Watch.V1.Watch
-      Proto.Utxorpc.Build.V1.Build_Fields
-      Proto.Utxorpc.Cardano.V1.Cardano_Fields
-      Proto.Utxorpc.Submit.V1.Submit_Fields
-      Proto.Utxorpc.Sync.V1.Sync_Fields
-      Proto.Utxorpc.Watch.V1.Watch_Fields
+      Proto.Utxorpc.V1.Build.Build
+      Proto.Utxorpc.V1.Build.Build_Fields
+      Proto.Utxorpc.V1.Cardano.Cardano
+      Proto.Utxorpc.V1.Cardano.Cardano_Fields
+      Proto.Utxorpc.V1.Submit.Submit
+      Proto.Utxorpc.V1.Submit.Submit_Fields
+      Proto.Utxorpc.V1.Sync.Sync
+      Proto.Utxorpc.V1.Sync.Sync_Fields
+      Proto.Utxorpc.V1.Watch.Watch
+      Proto.Utxorpc.V1.Watch.Watch_Fields
   hs-source-dirs:
-      build/gen/haskell
-      cardano/gen/haskell
-      submit/gen/haskell
-      sync/gen/haskell
-      watch/gen/haskell
+      gen/haskell
   build-depends:
       base >=4.7 && <5
     , proto-lens >= 0.7.1.4 && < 0.8
