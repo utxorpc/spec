@@ -22,4 +22,4 @@ jobs:
         with:
           name: codegen
 
-      - uses: ./.github/actions/rust-release.yml
+      - uses: ./.github/actions/rust-release
