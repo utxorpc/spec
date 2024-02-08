@@ -9,9 +9,9 @@ jobs:
   generate:
     uses: ./.github/workflows/generate.yml
 
-  # build-haskell:
-  #   needs: [generate]
-  #   uses: ./.github/workflows/build-haskell.yml
+  build-haskell:
+    needs: [generate]
+    uses: ./.github/workflows/build-haskell.yml
 
   rust-release:
     needs: [generate]

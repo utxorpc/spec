@@ -22,4 +22,4 @@ runs:
       env:
         CARGO_REGISTRY_TOKEN: ${{ inputs.cargo-registry-token }}
       run: |
-        cargo publish --dry-run
+        cargo publish --dry-run --allow-dirty
