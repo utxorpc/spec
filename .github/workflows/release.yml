@@ -3,6 +3,7 @@ name: "Generate and build Haskell"
 on:
   push:
     tags: v*
+  workflow_dispatch:
 
 jobs:
   generate:
