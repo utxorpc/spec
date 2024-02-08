@@ -14,6 +14,4 @@ jobs:
     needs: [generate]
     uses: ./.github/workflows/build-haskell.yml
     with:
-      # codegen-workflow: generate.yml
       codegen-artifact: codegen
-      # codegen-ref: ${{ github.ref }}
