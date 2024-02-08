@@ -61,7 +61,7 @@ jobs:
       #   run: cabal install proto-lens-protoc-0.8.0.0
 
       - name: Setup Haskell
-        uses: ./.github/setup-protoc-hololens
+        uses: ./.github/actions/setup-protoc-hololens
 
       - name: Install Buf from npm
         run: npm install -g @bufbuild/buf
