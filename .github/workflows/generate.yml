@@ -29,6 +29,7 @@ jobs:
         with:
           node-version: 20.11.0
           cache: "npm"
+          cache-dependency-path: "buf.gen.yaml"
 
       - name: Install node protoc plugins
         run: |
