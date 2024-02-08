@@ -1,0 +1,13 @@
+name: "Generate and build Haskell"
+
+on:
+  push:
+    tags: v*
+
+jobs:
+  generate:
+    uses: ./.github/workflows/generate.yml
+
+  build-haskell:
+    needs: [generate]
+    uses: ./.github/workflows/build-haskell.yml
