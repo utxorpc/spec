@@ -58,23 +58,23 @@ jobs:
           ghc-version: 9.6.4
         # ^ ghc >= 8.2 && < 9.8 required by proto-lens-protoc 0.8.0.0
 
-      - name: Configure Cabal build
-        run: |
-          cabal configure --enable-tests --enable-benchmarks --disable-documentation
-          cabal build all --dry-run
+      # - name: Configure Cabal build
+      #   run: |
+      #     cabal configure --enable-tests --enable-benchmarks --disable-documentation
+      #     cabal build all --dry-run
 
-      - name: Restore Cabal build cache
-        uses: actions/cache/restore@v4
-        id: cache-cabal-build
-        env:
-          key:
-            ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version
-            }}-cabal-${{ steps.setup-hs.outputs.cabal-version }}
-        with:
-          path: ${{ steps.setup-hs.outputs.cabal-store }}
-          key: ${{ env.key }}-plan-${{ hashFiles('**/plan.json') }}
-          restore-keys: |
-            ${{ env.key }}-
+      # - name: Restore Cabal build cache
+      #   uses: actions/cache/restore@v4
+      #   id: cache-cabal-build
+      #   env:
+      #     key:
+      #       ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version
+      #       }}-cabal-${{ steps.setup-hs.outputs.cabal-version }}
+      #   with:
+      #     path: ${{ steps.setup-hs.outputs.cabal-store }}
+      #     key: ${{ env.key }}-plan-${{ hashFiles('**/plan.json') }}
+      #     restore-keys: |
+      #       ${{ env.key }}-
 
       - name: Install Haskell plugin from Hackage
         run: cabal install proto-lens-protoc-0.8.0.0
@@ -91,9 +91,9 @@ jobs:
           name: codegen
           path: "gen/**"
 
-      - name: Cache Cabal
-        if: steps.cache-cabal-build.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ steps.setup-hs.outputs.cabal-store }}
-          key: ${{ steps.cache-cabal-build.outputs.cache-primary-key }}
+      # - name: Cache Cabal
+      #   if: steps.cache-cabal-build.outputs.cache-hit != 'true'
+      #   uses: actions/cache/save@v4
+      #   with:
+      #     path: ${{ steps.setup-hs.outputs.cabal-store }}
+      #     key: ${{ steps.cache-cabal-build.outputs.cache-primary-key }}
