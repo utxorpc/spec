@@ -26,3 +26,5 @@ jobs:
           name: codegen
 
       - uses: ./.github/actions/rust-release
+        with:
+          cargo-registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
