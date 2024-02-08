@@ -6,11 +6,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      HASKELL_ROOT: gen/haskell
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - run: cd gen/haskell
 
       - name: Install protoc
         run: |
@@ -26,6 +26,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: codegen
+          path: gen
 
       - name: Setup Haskell
         id: setup-hs
@@ -35,6 +36,7 @@ jobs:
 
       - name: Configure Cabal build
         run: |
+          cd ${{ env.HASKELL_ROOT }}
           cabal configure --enable-tests --enable-benchmarks --disable-documentation
           cabal build all --dry-run
         # ^ Creates a plan.json file equivalent to a package-lock.json, used for creating a cache key
@@ -43,8 +45,7 @@ jobs:
         uses: actions/cache/restore@v4
         id: cache-cabal-build
         env:
-          key:
-            ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version
+          key: ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version
             }}-cabal-${{ steps.setup-hs.outputs.cabal-version }}
         with:
           path: ${{ steps.setup-hs.outputs.cabal-store }}
@@ -55,6 +56,7 @@ jobs:
       - name: Get Package Version
         id: package-version
         run: |
+          cd ${{ env.HASKELL_ROOT }}
           VERSION=$(sed -nE '/^version:\s*([0-9]\.[0-9]+\.[0-9]+.*)$/s||\1|p' utxorpc.cabal)
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
@@ -63,6 +65,7 @@ jobs:
         env:
           version: ${{ steps.package-version.outputs.VERSION }}
         run: |
+          cd ${{ env.HASKELL_ROOT }}
           cabal build
           cabal sdist
           echo "SDIST-LOCATION=$(pwd)/dist-newstyle/sdist/utxorpc-${{ env.version }}.tar.gz" >> "$GITHUB_OUTPUT"

@@ -31,7 +31,7 @@ library
       Proto.Utxorpc.V1alpha.Watch.Watch
       Proto.Utxorpc.V1alpha.Watch.Watch_Fields
   hs-source-dirs:
-      gen/haskell
+      .
   build-depends:
       base >=4.7 && <5
     , proto-lens >= 0.7.1 && < 0.8
