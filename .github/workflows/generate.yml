@@ -1,6 +1,7 @@
 name: "Run Buf Code Generation"
 
 on:
+  workflow_dispatch: {}
   workflow_call:
     inputs:
       codegen-artifact:
@@ -29,8 +30,9 @@ jobs:
           node-version: 20.11.0
           cache: "npm"
 
-      - name: Add node_modules to PATH
-        run: echo "$(pwd)/node_modules/.bin" >> "$GITHUB_PATH"
+      - name: Install node protoc plugins
+        run: |
+          npm install -g @bufbuild/protoc-gen-es @connectrpc/protoc-gen-connect-es
 
       - name: Install Prost from Cargo
         uses: baptiste0928/cargo-install@v2
@@ -52,11 +54,6 @@ jobs:
         with:
           crate: protoc-gen-tonic
 
-      - name: Install Protoc Plugins from npm
-        run: |
-          npm install @connectrpc/protoc-gen-connect-es
-          npm install @bufbuild/protoc-gen-es
-
       - name: Setup Haskell
         id: setup-hs
         uses: haskell-actions/setup@v2
@@ -73,7 +70,9 @@ jobs:
         uses: actions/cache/restore@v4
         id: cache-cabal-build
         env:
-          key: ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version }}-cabal-${{ steps.setup-hs.outputs.cabal-version }}
+          key:
+            ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version
+            }}-cabal-${{ steps.setup-hs.outputs.cabal-version }}
         with:
           path: ${{ steps.setup-hs.outputs.cabal-store }}
           key: ${{ env.key }}-plan-${{ hashFiles('**/plan.json') }}
@@ -84,7 +83,7 @@ jobs:
         run: cabal install proto-lens-protoc-0.8.0.0
 
       - name: Install Buf from npm
-        run: npm install @bufbuild/buf
+        run: npm install -g @bufbuild/buf
 
       - name: Generate code
         run: buf generate
@@ -92,7 +91,7 @@ jobs:
       - name: Create codegen artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.codegen-artifact }}
+          name: codegen
           path: "gen/**"
 
       - name: Cache Cabal
