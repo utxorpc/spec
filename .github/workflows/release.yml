@@ -24,6 +24,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: codegen
+          path: ./codegen
 
       - uses: ./.github/actions/rust-release
         with:
