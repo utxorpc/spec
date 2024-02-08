@@ -13,7 +13,8 @@ runs:
         profile: minimal
 
     - name: Publish to Crates.io
-      working-dir: codgen/rust
+      working-directory: codegen/rust
+      shell: bash
       env:
         CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
       run: |
