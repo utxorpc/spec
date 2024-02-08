@@ -1,4 +1,4 @@
-cabal-version: 1.12
+cabal-version: 3.0
 
 name:           utxorpc
 version:        0.1.0.0
@@ -10,7 +10,7 @@ description:    UTxO RPC (u5c for short) is an interface tailored for interactio
                 * Performance: A serialized binary format which is compact and efficient, resulting in smaller message sizes and reduced network overhead compared to its JSON counterpart
                 .
                 Please note that UTxO RPC is just a specification of an interface between agents and the blockchain, it doesn't provide any concrete client / provider implementations. The primary purpose of u5c is to define a set of standardized methods, data structures, and communication patterns.
-category:       Blockchain, Cardano, GRPC
+category:       Network, GRPC, Blockchain, Cardano
 homepage:       https://github.com/utxorpc/spec#readme
 bug-reports:    https://github.com/utxorpc/spec/issues
 license:        Apache-2.0
@@ -20,21 +20,21 @@ extra-source-files:
 
 library
   exposed-modules:
-      Proto.Utxorpc.V1.Build.Build
-      Proto.Utxorpc.V1.Build.Build_Fields
-      Proto.Utxorpc.V1.Cardano.Cardano
-      Proto.Utxorpc.V1.Cardano.Cardano_Fields
-      Proto.Utxorpc.V1.Submit.Submit
-      Proto.Utxorpc.V1.Submit.Submit_Fields
-      Proto.Utxorpc.V1.Sync.Sync
-      Proto.Utxorpc.V1.Sync.Sync_Fields
-      Proto.Utxorpc.V1.Watch.Watch
-      Proto.Utxorpc.V1.Watch.Watch_Fields
+      Proto.Utxorpc.V1alpha.Build.Build
+      Proto.Utxorpc.V1alpha.Build.Build_Fields
+      Proto.Utxorpc.V1alpha.Cardano.Cardano
+      Proto.Utxorpc.V1alpha.Cardano.Cardano_Fields
+      Proto.Utxorpc.V1alpha.Submit.Submit
+      Proto.Utxorpc.V1alpha.Submit.Submit_Fields
+      Proto.Utxorpc.V1alpha.Sync.Sync
+      Proto.Utxorpc.V1alpha.Sync.Sync_Fields
+      Proto.Utxorpc.V1alpha.Watch.Watch
+      Proto.Utxorpc.V1alpha.Watch.Watch_Fields
   hs-source-dirs:
       gen/haskell
   build-depends:
       base >=4.7 && <5
-    , proto-lens >= 0.7.1.4 && < 0.8
-    , proto-lens-protobuf-types >= 0.7.2.0 && < 0.8
-    , proto-lens-runtime >= 0.7.0.5 && < 0.8
+    , proto-lens >= 0.7.1 && < 0.8
+    , proto-lens-protobuf-types >= 0.7.2 && < 0.8
+    , proto-lens-runtime >= 0.7.0 && < 0.8
   default-language: Haskell2010
