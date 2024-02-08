@@ -20,16 +20,16 @@ extra-source-files:
 
 library
   exposed-modules:
-      Proto.Utxorpc.V1.Build.Build
-      Proto.Utxorpc.V1.Build.Build_Fields
-      Proto.Utxorpc.V1.Cardano.Cardano
-      Proto.Utxorpc.V1.Cardano.Cardano_Fields
-      Proto.Utxorpc.V1.Submit.Submit
-      Proto.Utxorpc.V1.Submit.Submit_Fields
-      Proto.Utxorpc.V1.Sync.Sync
-      Proto.Utxorpc.V1.Sync.Sync_Fields
-      Proto.Utxorpc.V1.Watch.Watch
-      Proto.Utxorpc.V1.Watch.Watch_Fields
+      Proto.Utxorpc.V1alpha.Build.Build
+      Proto.Utxorpc.V1alpha.Build.Build_Fields
+      Proto.Utxorpc.V1alpha.Cardano.Cardano
+      Proto.Utxorpc.V1alpha.Cardano.Cardano_Fields
+      Proto.Utxorpc.V1alpha.Submit.Submit
+      Proto.Utxorpc.V1alpha.Submit.Submit_Fields
+      Proto.Utxorpc.V1alpha.Sync.Sync
+      Proto.Utxorpc.V1alpha.Sync.Sync_Fields
+      Proto.Utxorpc.V1alpha.Watch.Watch
+      Proto.Utxorpc.V1alpha.Watch.Watch_Fields
   hs-source-dirs:
       gen/haskell
   build-depends:
