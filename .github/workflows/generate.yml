@@ -52,13 +52,7 @@ jobs:
           crate: protoc-gen-tonic
 
       - name: Setup Haskell
-        id: setup-hs
-        uses: haskell-actions/setup@v2
-        with:
-          ghc-version: 9.6.4
-
-      - name: Install Haskell plugin from Hackage
-        run: cabal install proto-lens-protoc-0.8.0.0
+        uses: ./.github/actions/setup-protoc-hololens
 
       - name: Install Buf from npm
         run: npm install -g @bufbuild/buf
