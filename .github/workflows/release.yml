@@ -1,4 +1,4 @@
-name: "Generate and build Haskell"
+name: "Release"
 
 on:
   push:
@@ -9,6 +9,12 @@ jobs:
   generate:
     uses: ./.github/workflows/generate.yml
 
-  build-haskell:
+  # build-haskell:
+  #   needs: [generate]
+  #   uses: ./.github/workflows/build-haskell.yml
+
+  rust-release:
     needs: [generate]
-    uses: ./.github/workflows/build-haskell.yml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/rust-release.yml
