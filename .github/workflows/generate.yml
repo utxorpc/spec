@@ -2,11 +2,7 @@ name: "Run Buf Code Generation"
 
 on:
   workflow_dispatch: {}
-  workflow_call:
-    inputs:
-      codegen-artifact:
-        required: true
-        type: string
+  workflow_call: {}
 
 jobs:
   codegen:
