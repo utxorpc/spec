@@ -10,6 +10,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - run: cd gen/haskell
+
       - name: Install protoc
         run: |
           PROTOC_ZIP=protoc-3.14.0-linux-x86_64.zip
