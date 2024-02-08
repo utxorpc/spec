@@ -1,0 +1,25 @@
+name: 'build rust crate'
+description: 'Builds the Rust crate from the codegen artifact'
+inputs:
+  cargo-registry-token:
+    description: token to authenticate to crates.io
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+   
+    - name: Setup Rust Toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+
+    - name: Publish to Crates.io
+      working-directory: codegen/rust
+      shell: bash
+      env:
+        CARGO_REGISTRY_TOKEN: ${{ inputs.cargo-registry-token }}
+      run: |
+        cargo publish --dry-run --allow-dirty
