@@ -38,6 +38,6 @@ runs:
       working-directory: codegen/node
       shell: bash
       env:
-        NODE_AUTH_TOKEN: ${{ inputs.registry-token }}
+        NPM_TOKEN: ${{ inputs.registry-token }}
       run: |
         npm publish
