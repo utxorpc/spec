@@ -1,0 +1,31 @@
+name: 'release npm package'
+description: 'Transpiles and publishes the Node package from the codegen artifact'
+inputs:
+  npm-registry-token:
+    description: token to authenticate to npmjs.org
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+  
+    - name: Setup npm
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.11.0
+        cache: "npm"
+        cache-dependency-path: "codegen/node/package.json"
+
+    - name: Typescript Transpile
+      shell: bash
+      run: |
+        npm install
+        npm run build
+
+    - name: Publish to npm
+      working-directory: codegen/node
+      shell: bash
+      env:
+        NPM_REGISTRY_TOKEN: ${{ inputs.npm-registry-token }}
+      run: |
+        npm publish --dry-run
