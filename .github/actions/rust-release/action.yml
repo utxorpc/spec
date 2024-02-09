@@ -31,6 +31,6 @@ runs:
       working-directory: codegen/rust
       shell: bash
       env:
-        CARGO_REGISTRY_TOKEN: ${{ inputs.registry-token }}
+        TOKEN: ${{ inputs.registry-token }}
       run: |
-        cargo publish --allow-dirty
+        cargo publish --allow-dirty --token ${TOKEN}
