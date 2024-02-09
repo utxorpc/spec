@@ -34,7 +34,7 @@ runs:
         npm publish --dry-run
     
     - name: Publish to npm
-      if: inputs.mode == 'ree'
+      if: inputs.mode == 'release'
       working-directory: codegen/node
       shell: bash
       env:
