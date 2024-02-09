@@ -43,19 +43,6 @@ plugins:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
 
-  # web
-
-  - plugin: es
-    out: gen/web/src
-    opt:
-      - target=ts
-      - import_extension=.ts
-  
-  - plugin: connect-es
-    out: gen/web/src
-    opt:
-      - target=ts
-
   # node
 
   - plugin: es
@@ -63,6 +50,11 @@ plugins:
     opt:
       - target=ts
       - import_extension=.ts
+  
+  - plugin: connect-es
+    out: gen/node/src
+    opt:
+      - target=ts
 
   # haskell
 
