@@ -3,7 +3,7 @@ description: 'Builds the Rust crate from the codegen artifact'
 inputs:
   cargo-registry-token:
     description: token to authenticate to crates.io
-    required: true
+    required: false
   mode:
     description: supporte values are 'release' and 'dry-run'
     required: true

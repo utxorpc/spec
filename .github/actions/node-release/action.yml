@@ -3,7 +3,7 @@ description: 'Transpiles and publishes the Node package from the codegen artifac
 inputs:
   npm-registry-token:
     description: token to authenticate to npmjs.org
-    required: true
+    required: false
   mode:
     description: supporte values are 'release' and 'dry-run'
     required: true
