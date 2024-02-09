@@ -40,4 +40,4 @@ runs:
       env:
         NPM_TOKEN: ${{ inputs.registry-token }}
       run: |
-        npm publish
+        npm publish --access public
