@@ -1,9 +1,9 @@
 name: 'release rust crate'
 description: 'Builds the Rust crate from the codegen artifact'
 inputs:
-  cargo-registry-token:
+  registry-token:
     description: token to authenticate to crates.io
-    required: true
+    required: false
   mode:
     description: supporte values are 'release' and 'dry-run'
     required: true
@@ -31,6 +31,6 @@ runs:
       working-directory: codegen/rust
       shell: bash
       env:
-        CARGO_REGISTRY_TOKEN: ${{ inputs.cargo-registry-token }}
+        CARGO_REGISTRY_TOKEN: ${{ inputs.registry-token }}
       run: |
         cargo publish --allow-dirty

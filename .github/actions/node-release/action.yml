@@ -1,9 +1,9 @@
 name: 'release npm package'
 description: 'Transpiles and publishes the Node package from the codegen artifact'
 inputs:
-  npm-registry-token:
+  registry-token:
     description: token to authenticate to npmjs.org
-    required: true
+    required: false
   mode:
     description: supporte values are 'release' and 'dry-run'
     required: true
@@ -38,6 +38,6 @@ runs:
       working-directory: codegen/node
       shell: bash
       env:
-        NPM_REGISTRY_TOKEN: ${{ inputs.npm-registry-token }}
+        NPM_TOKEN: ${{ inputs.registry-token }}
       run: |
-        npm publish
+        npm publish --access public

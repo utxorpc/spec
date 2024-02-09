@@ -23,7 +23,7 @@ jobs:
 
       - uses: ./.github/actions/rust-release
         with:
-          cargo-registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
           mode: ${{ inputs.mode }}
 
   node-release:
@@ -40,5 +40,5 @@ jobs:
 
       - uses: ./.github/actions/node-release
         with:
-          npm-registry-token: ${{ secrets.NPM_REGISTRY_TOKEN }}
+          registry-token: ${{ secrets.NPM_REGISTRY_TOKEN }}
           mode: ${{ inputs.mode }}
