@@ -1,13 +1,12 @@
-name: 'build rust crate'
+name: 'release rust crate'
 description: 'Builds the Rust crate from the codegen artifact'
 inputs:
   cargo-registry-token:
     description: token to authenticate to crates.io
     required: true
-  dry-run:
-    description: Whether to run npm publish in dry-run mode
-    required: false
-    default: 'true'
+  mode:
+    description: supporte values are 'release' and 'dry-run'
+    required: true
 
 runs:
   using: 'composite'
@@ -21,14 +20,14 @@ runs:
         profile: minimal
 
     - name: Publish dry run
-      if: inputs.dry-run == true
+      if: inputs.mode == 'dry-run'
       working-directory: codegen/rust
       shell: bash
       run: |
         cargo publish --dry-run --allow-dirty
 
     - name: Publish to Crates.io
-      if: inputs.dry-run == false
+      if: inputs.mode == 'ree'
       working-directory: codegen/rust
       shell: bash
       env:
