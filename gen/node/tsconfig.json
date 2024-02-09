@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "Node16",
+    "declaration": true,
+    "outDir": "./lib",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "Node16"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
