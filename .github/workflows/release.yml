@@ -43,6 +43,6 @@ jobs:
           name: codegen
           path: ./codegen
 
-      - uses: ./.github/actions/rust-release
+      - uses: ./.github/actions/node-release
         with:
           npm-registry-token: ${{ secrets.NPM_REGISTRY_TOKEN }}
