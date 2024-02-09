@@ -19,7 +19,7 @@ jobs:
     needs: [publish-dry-run]
     uses: ./.github/workflows/publish.yml
     with:
-      mode: "dry-run"
+      mode: "release"
 
   build-haskell:
     needs: [generate]
