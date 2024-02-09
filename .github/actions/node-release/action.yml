@@ -18,6 +18,7 @@ runs:
 
     - name: Typescript Transpile
       shell: bash
+      working-directory: codegen/node
       run: |
         npm install
         npm run build
