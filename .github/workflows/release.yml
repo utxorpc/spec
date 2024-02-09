@@ -9,42 +9,18 @@ jobs:
   generate:
     uses: ./.github/workflows/generate.yml
 
+  publish-dry-run:
+    needs: [generate]
+    uses: ./.github/workflows/publish.yml
+    with:
+      mode: "dry-run"
+
+  publish:
+    needs: [publish-dry-run]
+    uses: ./.github/workflows/publish.yml
+    with:
+      mode: "release"
+
   build-haskell:
     needs: [generate]
     uses: ./.github/workflows/build-haskell.yml
-
-  rust-release:
-    needs: [generate]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: codegen
-          path: ./codegen
-
-      - uses: ./.github/actions/rust-release
-        with:
-          cargo-registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-          mode: "dry-run"
-
-  node-release:
-    needs: [generate]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: codegen
-          path: ./codegen
-
-      - uses: ./.github/actions/node-release
-        with:
-          npm-registry-token: ${{ secrets.NPM_REGISTRY_TOKEN }}
-          mode: "dry-run"
