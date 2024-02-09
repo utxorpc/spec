@@ -7,6 +7,12 @@ on:
         type: string
         description: supporte values are 'release' and 'dry-run'
         required: true
+      cargo-registry-token:
+        type: string
+        required: true
+      npm-registry-token:
+        type: string
+        required: true
 
 jobs:
   rust-release:
@@ -23,7 +29,7 @@ jobs:
 
       - uses: ./.github/actions/rust-release
         with:
-          cargo-registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          registry-token: ${{ inputs.cargo-registry-token }}
           mode: ${{ inputs.mode }}
 
   node-release:
@@ -40,5 +46,5 @@ jobs:
 
       - uses: ./.github/actions/node-release
         with:
-          npm-registry-token: ${{ secrets.NPM_REGISTRY_TOKEN }}
+          registry-token: ${{ inputs.npm-registry-token }}
           mode: ${{ inputs.mode }}
