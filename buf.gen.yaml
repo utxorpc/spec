@@ -49,7 +49,6 @@ plugins:
     out: gen/node/src
     opt:
       - target=ts
-      - import_extension=.ts
   
   - plugin: connect-es
     out: gen/node/src
