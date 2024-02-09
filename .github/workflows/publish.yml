@@ -1,0 +1,44 @@
+name: "publish packages"
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        type: string
+        description: supporte values are 'release' and 'dry-run'
+        required: true
+
+jobs:
+  rust-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: codegen
+          path: ./codegen
+
+      - uses: ./.github/actions/rust-release
+        with:
+          cargo-registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          mode: ${{ inputs.mode }}
+
+  node-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: codegen
+          path: ./codegen
+
+      - uses: ./.github/actions/node-release
+        with:
+          npm-registry-token: ${{ secrets.NPM_REGISTRY_TOKEN }}
+          mode: ${{ inputs.mode }}
