@@ -4,6 +4,10 @@ inputs:
   npm-registry-token:
     description: token to authenticate to npmjs.org
     required: true
+  dry-run:
+    description: Whether to run npm publish in dry-run mode
+    required: false
+    default: 'true'
 
 runs:
   using: 'composite'
@@ -23,10 +27,18 @@ runs:
         npm install
         npm run build
 
+    - name: Publish dry run
+      if: inputs.dry-run == true
+      working-directory: codegen/node
+      shell: bash
+      run: |
+        npm publish --dry-run
+    
     - name: Publish to npm
+      if: inputs.dry-run == false
       working-directory: codegen/node
       shell: bash
       env:
         NPM_REGISTRY_TOKEN: ${{ inputs.npm-registry-token }}
       run: |
-        npm publish --dry-run
+        npm publish

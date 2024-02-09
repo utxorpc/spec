@@ -4,6 +4,10 @@ inputs:
   cargo-registry-token:
     description: token to authenticate to crates.io
     required: true
+  dry-run:
+    description: Whether to run npm publish in dry-run mode
+    required: false
+    default: 'true'
 
 runs:
   using: 'composite'
@@ -16,10 +20,18 @@ runs:
         override: true
         profile: minimal
 
+    - name: Publish dry run
+      if: inputs.dry-run == true
+      working-directory: codegen/rust
+      shell: bash
+      run: |
+        cargo publish --dry-run --allow-dirty
+
     - name: Publish to Crates.io
+      if: inputs.dry-run == false
       working-directory: codegen/rust
       shell: bash
       env:
         CARGO_REGISTRY_TOKEN: ${{ inputs.cargo-registry-token }}
       run: |
-        cargo publish --dry-run --allow-dirty
+        cargo publish --allow-dirty
