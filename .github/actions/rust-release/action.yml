@@ -27,7 +27,7 @@ runs:
         cargo publish --dry-run --allow-dirty
 
     - name: Publish to Crates.io
-      if: inputs.mode == 'ree'
+      if: inputs.mode == 'release'
       working-directory: codegen/rust
       shell: bash
       env:
