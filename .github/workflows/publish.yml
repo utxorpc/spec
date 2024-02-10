@@ -57,5 +57,5 @@ jobs:
 
       - uses: ./.github/actions/go-release
         with:
-          registry-token: ${{ secrets.NPM_REGISTRY_TOKEN }}
+          git-token: ${{ secrets.GITHUB_TOKEN }}
           mode: ${{ inputs.mode }}
