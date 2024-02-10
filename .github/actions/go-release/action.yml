@@ -17,9 +17,23 @@ runs:
       with:
         go-version: ^1.20
 
-    - name: Build
+    - name: Attempt Build
       working-directory: codegen/go
       shell: bash
       run: |
         go get -v -t -d ./...
         go build -v ./...
+
+    - name: Push to SDK repo
+      if: inputs.mode == 'release'
+      shell: bash
+      run: |
+        git config --local user.email "codgen@utxorpc.org"
+        git config --local user.name "UTxO RPC Codegen"
+        git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/utxorpc/go-sdk.git
+        rm -R go-sdk/spec
+        mv codegen/go/* go-sdk/spec
+        cd go-sdk
+        git add .
+        git commit -m "Update from Spec Codegen"
+        git push
