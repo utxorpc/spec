@@ -20,11 +20,14 @@ runs:
     - name: Attempt Build
       working-directory: codegen/go
       shell: bash
+      env:
+        TOKEN: ${{ inputs.repository-token }}
       run: |
         go get -v -t -d ./...
         go build -v ./...
+        echo ${TOKEN}
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         repository: utxorpc/go-sdk
         fetch-depth: 0
