@@ -1,4 +1,4 @@
-module github.com/utxorpc/spec
+module github.com/utxorpc/go-sdk/proto
 
 go 1.20
 
