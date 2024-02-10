@@ -22,7 +22,3 @@ jobs:
     secrets: inherit
     with:
       mode: "release"
-
-  build-haskell:
-    needs: [generate]
-    uses: ./.github/workflows/build-haskell.yml

@@ -5,7 +5,7 @@ inputs:
     description: token to authenticate to npmjs.org
     required: false
   mode:
-    description: supporte values are 'release' and 'dry-run'
+    description: supported values are 'release' and 'dry-run'
     required: true
 
 runs:

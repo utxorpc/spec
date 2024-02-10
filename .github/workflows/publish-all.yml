@@ -59,3 +59,20 @@ jobs:
         with:
           repository-token: ${{ secrets.GOSDK_REPOSITORY_TOKEN }}
           mode: ${{ inputs.mode }}
+
+  publish-haskell:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: codegen
+          path: ./codegen
+
+      - uses: ./.github/actions/publish-haskell
+        with:
+          repository-token: ${{ secrets.HACKAGE_REGISTRY_TOKEN }}
+          mode: ${{ inputs.mode }}
