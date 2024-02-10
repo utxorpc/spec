@@ -41,7 +41,8 @@ runs:
         cd go-sdk
         git config --local user.email "codegen@utxorpc.org"
         git config --local user.name "UTxO RPC Codegen"
-        git commit -a -m "chore: update spec codegen"
+        git add -A
+        git commit -m "chore: update spec codegen"
 
     - name: Push changes
       if: inputs.mode == 'release'
