@@ -9,10 +9,9 @@ ignore_missing_version = false
 tag = false
 sign_tags = false
 tag_name = "v{new_version}"
-tag_message = "release: {new_version}"
 allow_dirty = false
 commit = false
-message = "Bump version: {current_version} → {new_version}"
+message = "release: v{new_version}"
 commit_args = ""
 
 [[tool.bumpversion.files]]
