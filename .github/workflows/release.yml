@@ -12,6 +12,7 @@ jobs:
   publish-dry-run:
     needs: [generate]
     uses: ./.github/workflows/publish.yml
+    secrets: inherit
     with:
       mode: "dry-run"
 

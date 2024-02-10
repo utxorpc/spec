@@ -3,7 +3,7 @@ description: 'Pushes go code to the sdk repo'
 inputs:
   repository-token:
     description: token for git authentication
-    required: false
+    required: true
   mode:
     description: supporte values are 'release' and 'dry-run'
     required: true
@@ -25,7 +25,6 @@ runs:
       run: |
         go get -v -t -d ./...
         go build -v ./...
-        echo ${TOKEN}
 
     - uses: actions/checkout@v4
       with:
