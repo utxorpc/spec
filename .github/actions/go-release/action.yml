@@ -31,6 +31,7 @@ runs:
         repository: utxorpc/go-sdk
         fetch-depth: 0
         token: ${{ inputs.repository-token }}
+        path: go-sdk
 
     - name: Commit new spec
       shell: bash
