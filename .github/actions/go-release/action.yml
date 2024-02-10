@@ -33,12 +33,6 @@ runs:
         token: ${{ inputs.repository-token }}
         path: go-sdk
 
-      # cd go-sdk
-      # git config --local user.email "codegen@utxorpc.org"
-      # git config --local user.name "UTxO RPC Codegen"
-      # git add -A
-      # git commit -m "chore: update spec codegen"
-
     - name: Copy new spec
       shell: bash
       run: |
@@ -52,12 +46,9 @@ runs:
         commit-message: "chore: update spec codegen"
         git-token: ${{ inputs.repository-token }}
         token: ${{ inputs.repository-token }}
+        branch-suffix: short-commit-hash
+        branch: spec-codegen
+        title: "chore: update spec codegen"
+        body: "A new codegen version of the specs is available. Please review and merge to keep the SDK up-to-date."
         path: go-sdk
         base: main
-
-
-    # - name: Push changes
-    #   uses: ad-m/github-push-action@master
-    #   with:
-    #     github_token: ${{ inputs.repository-token }}
-    #     repository: utxorpc/go-sdk
