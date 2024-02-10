@@ -3,7 +3,7 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/utxorpc/spec/gen/go
+    default: github.com/utxorpc/go-sdk/spec
 
 plugins:
 
@@ -11,11 +11,13 @@ plugins:
 
   - plugin: buf.build/protocolbuffers/go
     out: gen/go
-    opt: paths=source_relative
+    opt:
+     - paths=source_relative
   
   - plugin: buf.build/connectrpc/go
     out: gen/go
-    opt: paths=source_relative
+    opt:
+     - paths=source_relative
   
   # rust
 
