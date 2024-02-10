@@ -32,7 +32,7 @@ runs:
       run: |
         git config --local user.email "codgen@utxorpc.org"
         git config --local user.name "UTxO RPC Codegen"
-        git clone https://x-access-token:${{ GIT_TOKEN }}@github.com/utxorpc/go-sdk.git
+        git clone https://x-access-token:${{ env.GIT_TOKEN }}@github.com/utxorpc/go-sdk.git
         rm -R go-sdk/spec
         mv codegen/go/* go-sdk/spec
         cd go-sdk
