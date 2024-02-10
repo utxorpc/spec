@@ -47,16 +47,16 @@ runs:
     
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
+      if: inputs.mode == 'release'
       with:
         commit-message: "chore: update spec codegen"
         git-token: ${{ inputs.repository-token }}
+        path: go-sdk
         base: main
 
 
     # - name: Push changes
-    #   if: inputs.mode == 'release'
     #   uses: ad-m/github-push-action@master
     #   with:
     #     github_token: ${{ inputs.repository-token }}
     #     repository: utxorpc/go-sdk
-    #     directory: go-sdk
