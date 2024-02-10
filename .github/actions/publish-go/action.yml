@@ -1,4 +1,4 @@
-name: 'release go code'
+name: 'publish go'
 description: 'Pushes go code to the sdk repo'
 inputs:
   repository-token:
