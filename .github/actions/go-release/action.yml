@@ -34,7 +34,7 @@ runs:
         git config --local user.name "UTxO RPC Codegen"
         git clone https://x-access-token:${{ env.GIT_TOKEN }}@github.com/utxorpc/go-sdk.git
         rm -Rf go-sdk/spec
-        mv codegen/go/* go-sdk/spec
+        mv codegen/go go-sdk/spec
         cd go-sdk
         git add .
         git commit -m "Update from Spec Codegen"
