@@ -1,4 +1,4 @@
-name: "publish packages"
+name: "[internal] publish all packages"
 
 on:
   workflow_call:
@@ -9,7 +9,7 @@ on:
         required: true
 
 jobs:
-  rust-release:
+  publish-rust:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,12 +21,12 @@ jobs:
           name: codegen
           path: ./codegen
 
-      - uses: ./.github/actions/rust-release
+      - uses: ./.github/actions/publish-rust
         with:
           registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
           mode: ${{ inputs.mode }}
 
-  node-release:
+  publish-node:
     runs-on: ubuntu-latest
 
     steps:
@@ -38,12 +38,12 @@ jobs:
           name: codegen
           path: ./codegen
 
-      - uses: ./.github/actions/node-release
+      - uses: ./.github/actions/publish-node
         with:
           registry-token: ${{ secrets.NPM_REGISTRY_TOKEN }}
           mode: ${{ inputs.mode }}
 
-  go-release:
+  publish-go:
     runs-on: ubuntu-latest
 
     steps:
@@ -55,7 +55,7 @@ jobs:
           name: codegen
           path: ./codegen
 
-      - uses: ./.github/actions/go-release
+      - uses: ./.github/actions/publish-go
         with:
           repository-token: ${{ secrets.GOSDK_REPOSITORY_TOKEN }}
           mode: ${{ inputs.mode }}

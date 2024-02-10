@@ -1,4 +1,4 @@
-name: 'release npm package'
+name: 'publish node'
 description: 'Transpiles and publishes the Node package from the codegen artifact'
 inputs:
   registry-token:

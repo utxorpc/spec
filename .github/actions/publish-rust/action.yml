@@ -1,4 +1,4 @@
-name: 'release rust crate'
+name: 'publish rust'
 description: 'Builds the Rust crate from the codegen artifact'
 inputs:
   registry-token:
