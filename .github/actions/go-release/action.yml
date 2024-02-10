@@ -1,7 +1,7 @@
 name: 'release go code'
 description: 'Pushes go code to the sdk repo'
 inputs:
-  git-token:
+  repository-token:
     description: token for git authentication
     required: false
   mode:
@@ -28,7 +28,7 @@ runs:
       with:
         repository: utxorpc/go-sdk
         fetch-depth: 0
-        token: ${{ inputs.git-token }}
+        token: ${{ inputs.repository-token }}
 
     - name: Commit new spec
       shell: bash
@@ -42,5 +42,5 @@ runs:
       if: inputs.mode == 'release'
       uses: ad-m/github-push-action@master
       with:
-        github_token: ${{ inputs.git-token }}
+        github_token: ${{ inputs.repository-token }}
         repository: utxorpc/go-sdk

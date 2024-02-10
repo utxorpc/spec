@@ -57,5 +57,5 @@ jobs:
 
       - uses: ./.github/actions/go-release
         with:
-          git-token: ${{ secrets.GOSDK_REPOSITORY_TOKEN }}
+          repository-token: ${{ secrets.GOSDK_REPOSITORY_TOKEN }}
           mode: ${{ inputs.mode }}
