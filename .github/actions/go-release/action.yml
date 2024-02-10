@@ -51,6 +51,7 @@ runs:
       with:
         commit-message: "chore: update spec codegen"
         git-token: ${{ inputs.repository-token }}
+        token: ${{ inputs.repository-token }}
         path: go-sdk
         base: main
 
