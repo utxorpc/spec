@@ -24,18 +24,23 @@ runs:
         go get -v -t -d ./...
         go build -v ./...
 
-    - name: Push to SDK repo
-      if: inputs.mode == 'release'
+    - uses: actions/checkout@v3
+      with:
+        repository: utxorpc/go-sdk
+        fetch-depth: 0
+        token: ${{ inputs.git-token }}
+
+    - name: Commit new spec
       shell: bash
-      env:
-        GIT_TOKEN: ${{ inputs.git-token }}
       run: |
-        git config --global user.email "codgen@utxorpc.org"
-        git config --global user.name "UTxO RPC Codegen"
-        git clone https://x-access-token:${{ env.GIT_TOKEN }}@github.com/utxorpc/go-sdk.git
         rm -Rf go-sdk/spec
         mv codegen/go go-sdk/spec
         cd go-sdk
-        git add .
-        git commit -m "Update from Spec Codegen"
-        git push
+        git commit -a -m "chore: update spec codegen"
+
+    - name: Push changes
+      if: inputs.mode == 'release'
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ inputs.git-token }}
+        repository: utxorpc/go-sdk
