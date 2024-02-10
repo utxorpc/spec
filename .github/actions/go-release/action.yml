@@ -1,0 +1,25 @@
+name: 'release go code'
+description: 'Pushes go code to the sdk repo'
+inputs:
+  git-token:
+    description: token for git authentication
+    required: false
+  mode:
+    description: supporte values are 'release' and 'dry-run'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+   
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.20
+
+    - name: Build
+      working-directory: codegen/rust
+      shell: bash
+      run: |
+        go get -v -t -d ./...
+        go build -v .
