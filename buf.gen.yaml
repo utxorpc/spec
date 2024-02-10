@@ -3,7 +3,7 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/utxorpc/go-sdk/proto
+    default: github.com/utxorpc/go-sdk/spec
 
 plugins:
 
