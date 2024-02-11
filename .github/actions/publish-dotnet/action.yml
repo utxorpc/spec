@@ -18,16 +18,20 @@ runs:
         dotnet-version: '8.0.x' # Specify your .NET version here
 
     - name: Restore dependencies
+      shell: bash
       working-directory: codegen/dotnet
       run: dotnet restore
 
     - name: Build
+      shell: bash
       working-directory: codegen/dotnet
       run: dotnet build --configuration Release --no-restore
 
     - name: Pack
+      shell: bash
       run: dotnet pack --configuration Release --no-build --output ./nupkgs
       
     - name: Publish to NuGet
+      shell: bash
       if: inputs.mode == 'release'
       run: dotnet nuget push ./nupkgs/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ inputs.registry-token }} --skip-duplicate
