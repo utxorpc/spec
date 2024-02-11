@@ -1,0 +1,33 @@
+name: 'publish dotnet'
+description: 'Generates nuget package and publishes to nuget.org'
+inputs:
+  registry-token:
+    description: token to authenticate to nuget.org
+    required: false
+  mode:
+    description: supported values are 'release' and 'dry-run'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x' # Specify your .NET version here
+
+    - name: Restore dependencies
+      working-directory: codegen/dotnet
+      run: dotnet restore
+
+    - name: Build
+      working-directory: codegen/dotnet
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Pack
+      run: dotnet pack --configuration Release --no-build --output ./nupkgs
+      
+    - name: Publish to NuGet
+      if: inputs.mode == 'release'
+      run: dotnet nuget push ./nupkgs/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ inputs.registry-token }} --skip-duplicate

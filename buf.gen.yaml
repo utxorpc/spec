@@ -63,6 +63,13 @@ plugins:
     path: proto-lens-protoc
     out: gen/haskell
 
+  # dotnet
+  - plugin: buf.build/grpc/csharp:v1.60.0
+    out: gen/dotnet
+    
+  - plugin: buf.build/protocolbuffers/csharp
+    out: gen/dotnet
+
   # other
 
   - plugin: buf.build/grpc-ecosystem/openapiv2

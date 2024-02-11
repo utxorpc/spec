@@ -1,2 +1,5 @@
 .DS_Store
 dist-newstyle
+# .NET build files
+bin
+obj
