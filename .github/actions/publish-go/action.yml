@@ -1,0 +1,54 @@
+name: 'publish go'
+description: 'Pushes go code to the sdk repo'
+inputs:
+  repository-token:
+    description: token for git authentication
+    required: true
+  mode:
+    description: supporte values are 'release' and 'dry-run'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+   
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.20
+
+    - name: Attempt Build
+      working-directory: codegen/go
+      shell: bash
+      env:
+        TOKEN: ${{ inputs.repository-token }}
+      run: |
+        go get -v -t -d ./...
+        go build -v ./...
+
+    - uses: actions/checkout@v4
+      with:
+        repository: utxorpc/go-sdk
+        fetch-depth: 0
+        token: ${{ inputs.repository-token }}
+        path: go-sdk
+
+    - name: Copy new spec
+      shell: bash
+      run: |
+        rm -Rf go-sdk/spec
+        mv codegen/go go-sdk/spec
+    
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v6
+      if: inputs.mode == 'release'
+      with:
+        commit-message: "chore: update spec codegen"
+        git-token: ${{ inputs.repository-token }}
+        token: ${{ inputs.repository-token }}
+        branch-suffix: short-commit-hash
+        branch: spec-codegen
+        title: "chore: update spec codegen"
+        body: "A new codegen version of the specs is available. Please review and merge to keep the SDK up-to-date."
+        path: go-sdk
+        base: main

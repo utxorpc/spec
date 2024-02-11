@@ -1,11 +1,8 @@
 name: "Run Buf Code Generation"
 
 on:
-  workflow_call:
-    inputs:
-      codegen-artifact:
-        required: true
-        type: string
+  workflow_dispatch: {}
+  workflow_call: {}
 
 jobs:
   codegen:
@@ -28,9 +25,11 @@ jobs:
         with:
           node-version: 20.11.0
           cache: "npm"
+          cache-dependency-path: "buf.gen.yaml"
 
-      - name: Add node_modules to PATH
-        run: echo "$(pwd)/node_modules/.bin" >> "$GITHUB_PATH"
+      - name: Install node protoc plugins
+        run: |
+          npm install -g @bufbuild/protoc-gen-es @connectrpc/protoc-gen-connect-es
 
       - name: Install Prost from Cargo
         uses: baptiste0928/cargo-install@v2
@@ -52,56 +51,17 @@ jobs:
         with:
           crate: protoc-gen-tonic
 
-      - name: Install Protoc Plugins from npm
-        run: |
-          npm install @connectrpc/protoc-gen-connect-es
-          npm install @bufbuild/protoc-gen-es
-
       - name: Setup Haskell
-        id: setup-hs
-        uses: haskell-actions/setup@v2
-        with:
-          ghc-version: 9.6.4
-        # ^ ghc >= 8.2 && < 9.8 required by proto-lens-protoc 0.8.0.0
-
-      - name: Configure Cabal build
-        run: |
-          cabal configure --enable-tests --enable-benchmarks --disable-documentation
-          cabal build all --dry-run
-
-      - name: Restore Cabal build cache
-        uses: actions/cache/restore@v4
-        id: cache-cabal-build
-        env:
-          key: ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version }}-cabal-${{ steps.setup-hs.outputs.cabal-version }}
-        with:
-          path: ${{ steps.setup-hs.outputs.cabal-store }}
-          key: ${{ env.key }}-plan-${{ hashFiles('**/plan.json') }}
-          restore-keys: |
-            ${{ env.key }}-
-
-      - name: Install Haskell plugin from Hackage
-        run: cabal install proto-lens-protoc-0.8.0.0
+        uses: ./.github/actions/setup-protoc-hololens
 
       - name: Install Buf from npm
-        run: npm install @bufbuild/buf
+        run: npm install -g @bufbuild/buf
 
       - name: Generate code
-        run: |
-          for DIR in build cardano submit sync watch; do
-            cd $DIR && buf generate proto
-            cd ..
-          done
+        run: buf generate proto
 
       - name: Create codegen artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.codegen-artifact }}
-          path: "**/gen"
-
-      - name: Cache Cabal
-        if: steps.cache-cabal-build.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ steps.setup-hs.outputs.cabal-store }}
-          key: ${{ steps.cache-cabal-build.outputs.cache-primary-key }}
+          name: codegen
+          path: "gen/**"

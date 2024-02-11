@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <PackageId>Utxorpc.Spec.V1</PackageId>
+        <PackageId>Utxorpc.V1.Sync</PackageId>
         <Version>0.1.2-alpha</Version>
         <Authors>clark@txpipe.io</Authors>
         <Company>TxPipe LLC</Company>
