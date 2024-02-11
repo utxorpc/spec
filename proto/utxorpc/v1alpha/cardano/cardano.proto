@@ -100,6 +100,7 @@ message Tx {
 message BlockHeader {
   uint64 slot = 1; // Slot number.
   bytes hash = 2; // Block hash.
+  uint64 height = 3; // Block height.
 }
 
 // Contains the transaction data for a block.
