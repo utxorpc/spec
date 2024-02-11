@@ -5,8 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <PackageId>Utxorpc.V1</PackageId>
-        <Version>0.2.0</Version>
-        <VersionSuffix>alpha</VersionSuffix>
+        <Version>0.2.0-alpha</Version>
         <Authors>clark@txpipe.io</Authors>
         <Company>TxPipe LLC</Company>
         <PackageDescription>

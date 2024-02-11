@@ -76,3 +76,20 @@ jobs:
         with:
           repository-token: ${{ secrets.HACKAGE_REGISTRY_TOKEN }}
           mode: ${{ inputs.mode }}
+          
+  publish-dotnet:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: codegen
+          path: ./codegen
+
+      - uses: ./.github/actions/publish-dotnet
+        with:
+          registry-token: ${{ secrets.NUGET_REGISTRY_TOKEN }}
+          mode: ${{ inputs.mode }}
