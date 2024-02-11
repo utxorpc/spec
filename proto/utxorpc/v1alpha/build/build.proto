@@ -2,7 +2,7 @@
 
 syntax = "proto3";
 
-package utxorpc.v1.build;
+package utxorpc.v1alpha.build;
 
 import "google/protobuf/field_mask.proto";
 import "utxorpc/v1alpha/cardano/cardano.proto";
