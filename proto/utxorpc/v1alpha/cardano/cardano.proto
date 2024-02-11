@@ -94,6 +94,7 @@ message Tx {
   TxValidity validity = 10; // Validity interval of the transaction
   bool successful = 11; // Flag indicating whether the transaction was successful
   AuxData auxiliary = 12; // Auxiliary data not directly tied to the validation process
+  bytes hash = 13; // Hash of the transaction that serves as main identifier
 }
 
 // Contains the header information for a block.
