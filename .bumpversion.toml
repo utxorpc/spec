@@ -24,4 +24,4 @@ filename = "gen/node/package.json"
 filename = "gen/haskell/utxorpc.cabal"
 
 [[tool.bumpversion.files]]
-filename = "gen/dotnet/Utxorpc.V1.csproj"
+filename = "gen/dotnet/Utxorpc.Spec.csproj"
