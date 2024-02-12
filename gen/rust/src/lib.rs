@@ -1,11 +1,13 @@
 // @generated
 pub mod utxorpc {
-    pub mod v1alpha {
-        // @@protoc_insertion_point(attribute:utxorpc.v1alpha.build)
+    pub mod v1 {
+        // @@protoc_insertion_point(attribute:utxorpc.v1.build)
         pub mod build {
-            include!("utxorpc.v1alpha.build.rs");
-            // @@protoc_insertion_point(utxorpc.v1alpha.build)
+            include!("utxorpc.v1.build.rs");
+            // @@protoc_insertion_point(utxorpc.v1.build)
         }
+    }
+    pub mod v1alpha {
         // @@protoc_insertion_point(attribute:utxorpc.v1alpha.cardano)
         pub mod cardano {
             include!("utxorpc.v1alpha.cardano.rs");
