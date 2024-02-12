@@ -1,0 +1,353 @@
+syntax = "proto3";
+
+package utxorpc.v1alpha.cardano;
+
+// Purpose of the redeemer in a transaction.
+enum RedeemerPurpose {
+  REDEEMER_PURPOSE_UNSPECIFIED = 0;
+  REDEEMER_PURPOSE_SPEND = 1;
+  REDEEMER_PURPOSE_MINT = 2;
+  REDEEMER_PURPOSE_CERT = 3;
+  REDEEMER_PURPOSE_REWARD = 4;
+}
+
+// Redeemer information for a Plutus script.
+message Redeemer {
+  RedeemerPurpose purpose = 1; // Purpose of the redeemer.
+  PlutusData datum = 2; // Plutus data associated with the redeemer.
+}
+
+// Represents a transaction input in the Cardano blockchain.
+message TxInput {
+  bytes tx_hash = 1; // Hash of the previous transaction.
+  uint32 output_index = 2; // Index of the output in the previous transaction.
+  TxOutput as_output = 3; // Content of the input represented as output of the related transaction
+  Redeemer redeemer = 4; // Redeemer for the Plutus script.
+}
+
+// Represents a transaction output in the Cardano blockchain.
+message TxOutput {
+  bytes address = 1; // Address receiving the output.
+  uint64 coin = 2; // Amount of ADA in the output.
+  repeated Multiasset assets = 3; // Additional native (non-ADA) assets in the output.
+  PlutusData datum = 4; // Plutus data associated with the output.
+  bytes datum_hash = 5; // Hash of the Plutus data.
+  Script script = 6; // Script associated with the output.
+}
+
+// Represents a custom asset in the Cardano blockchain.
+message Asset {
+  bytes name = 1; // Name of the custom asset.
+  uint64 output_coin = 2; // Quantity of the custom asset in case of an output.
+  int64 mint_coin = 3; // Quantity of the custom asset in case of a mint.
+}
+
+// Represents a multi-asset group in the Cardano blockchain.
+message Multiasset {
+  bytes policy_id = 1; // Policy ID governing the custom assets.
+  repeated Asset assets = 2; // List of custom assets.
+}
+
+// Represents the validity interval of a transaction.
+message TxValidity {
+  uint64 start = 1; // Start of the validity interval.
+  uint64 ttl = 2; // End of the validity interval (TTL: Time to Live).
+}
+
+// Represents the collateral information for a transaction.
+message Collateral {
+  repeated TxInput collateral = 1; // Collateral inputs for the transaction.
+  TxOutput collateral_return = 2; // Collateral return in case of script failure.
+  uint64 total_collateral = 3; // Total amount of collateral.
+}
+
+// Represents a withdrawal from a reward account.
+message Withdrawal {
+  bytes reward_account = 1; // Address of the reward account.
+  uint64 coin = 2; // Amount of ADA withdrawn.
+}
+
+// Represents a set of witnesses that validate a transaction
+message WitnessSet {
+  repeated VKeyWitness vkeywitness = 1; // List of VKey witnesses.
+  repeated Script script = 2; // List of scripts.
+  repeated PlutusData plutus_datums = 3; // List of Plutus data elements associated with the transaction.
+}
+
+// Auxiliary data not directly tied to the validation process
+message AuxData {
+  repeated Metadata metadata = 1; // List of auxiliary metadata elements.
+  repeated Script scripts = 2; // List of auxiliary scripts.
+}
+
+// Represents a transaction in the Cardano blockchain.
+message Tx {
+  repeated TxInput inputs = 1; // List of transaction inputs
+  repeated TxOutput outputs = 2; // List of transaction outputs
+  repeated Certificate certificates = 3; // List of certificates
+  repeated Withdrawal withdrawals = 4; // List of withdrawals
+  repeated Multiasset mint = 5; // List of minted custom assets
+  repeated TxInput reference_inputs = 6; // List of reference inputs
+  WitnessSet witnesses = 7; // Witnesses that validte the transaction
+  Collateral collateral = 8; // Collateral details in case of failed transaction
+  uint64 fee = 9; // Transaction fee in ADA
+  TxValidity validity = 10; // Validity interval of the transaction
+  bool successful = 11; // Flag indicating whether the transaction was successful
+  AuxData auxiliary = 12; // Auxiliary data not directly tied to the validation process
+  bytes hash = 13; // Hash of the transaction that serves as main identifier
+}
+
+// Contains the header information for a block.
+message BlockHeader {
+  uint64 slot = 1; // Slot number.
+  bytes hash = 2; // Block hash.
+  uint64 height = 3; // Block height.
+}
+
+// Contains the transaction data for a block.
+message BlockBody {
+  repeated Tx tx = 1; // List of transactions.
+}
+
+// Represents a complete block, including header and body.
+message Block {
+  BlockHeader header = 1; // Block header.
+  BlockBody body = 2; // Block body.
+}
+
+// Represents a VKey witness used to sign a transaction.
+message VKeyWitness {
+  bytes vkey = 1; // Verification key.
+  bytes signature = 2; // Signature generated using the associated private key.
+}
+
+// Represents a native script in Cardano.
+message NativeScript {
+  oneof native_script {
+    bytes script_pubkey = 1; // Script based on an address key hash.
+    NativeScriptList script_all = 2; // Script that requires all nested scripts to be satisfied.
+    NativeScriptList script_any = 3; // Script that requires any of the nested scripts to be satisfied.
+    ScriptNOfK script_n_of_k = 4; // Script that requires k out of n nested scripts to be satisfied.
+    uint64 invalid_before = 5; // Slot number before which the script is invalid.
+    uint64 invalid_hereafter = 6; // Slot number after which the script is invalid.
+  }
+}
+
+// Represents a list of native scripts.
+message NativeScriptList {
+  repeated NativeScript items = 1; // List of native scripts.
+}
+
+// Represents a "k out of n" native script.
+message ScriptNOfK {
+  uint32 k = 1; // The number of required satisfied scripts.
+  repeated NativeScript scripts = 2; // List of native scripts.
+}
+
+// Represents a constructor for Plutus data in Cardano.
+message Constr {
+  uint32 tag = 1;
+  uint64 any_constructor = 2;
+  repeated PlutusData fields = 3;
+}
+
+// Represents a big integer for Plutus data in Cardano.
+message BigInt {
+  oneof big_int {
+    int64 int = 1;
+    bytes big_u_int = 2;
+    bytes big_n_int = 3;
+  }
+}
+
+// Represents a key-value pair for Plutus data in Cardano.
+message PlutusDataPair {
+  PlutusData key = 1; // Key of the pair.
+  PlutusData value = 2; // Value of the pair.
+}
+
+// Represents a Plutus data item in Cardano.
+message PlutusData {
+  oneof plutus_data {
+    Constr constr = 1; // Constructor.
+    PlutusDataMap map = 2; // Map of Plutus data.
+    BigInt big_int = 3; // Big integer.
+    bytes bounded_bytes = 4; // Bounded bytes.
+    PlutusDataArray array = 5; // Array of Plutus data.
+  }
+}
+
+// Represents a map of Plutus data in Cardano.
+message PlutusDataMap {
+  repeated PlutusDataPair pairs = 1; // List of key-value pairs.
+}
+
+// Represents an array of Plutus data in Cardano.
+message PlutusDataArray {
+  repeated PlutusData items = 1; // List of Plutus data items.
+}
+
+// Represents a script in Cardano.
+message Script {
+  oneof script {
+    NativeScript native = 1; // Native script.
+    bytes plutus_v1 = 2; // Plutus V1 script.
+    bytes plutus_v2 = 3; // Plutus V2 script.
+  }
+}
+
+message Metadatum {
+  oneof metadatum {
+    int64 int = 1;
+    bytes bytes = 2;
+    string text = 3;
+    MetadatumArray array = 4;
+    MetadatumMap map = 5;
+  }
+}
+
+message MetadatumArray {
+  repeated Metadatum items = 1;
+}
+
+message MetadatumMap {
+  repeated MetadatumPair pairs = 1;
+}
+
+message MetadatumPair {
+  Metadatum key = 1;
+  Metadatum value = 2;
+}
+
+message Metadata {
+  uint64 label = 1;
+  Metadatum value = 2;
+}
+
+// Represents a stake credential in Cardano.
+message StakeCredential {
+  oneof stake_credential {
+    bytes addr_key_hash = 1; // Address key hash.
+    bytes script_hash = 2; // Script hash.
+  }
+}
+
+// Represents a rational number as a fraction.
+message RationalNumber {
+  int32 numerator = 1;
+  uint32 denominator = 2;
+}
+
+// Represents a relay in Cardano.
+message Relay {
+  bytes ip_v4 = 1;
+  bytes ip_v6 = 2;
+  string dns_name = 3;
+  uint32 port = 4;
+}
+
+// Represents pool metadata in Cardano.
+message PoolMetadata {
+  string url = 1;
+  bytes hash = 2;
+}
+
+// Represents a certificate in Cardano.
+message Certificate {
+  oneof certificate {
+    StakeCredential stake_registration = 1; // Stake registration certificate.
+    StakeCredential stake_deregistration = 2; // Stake deregistration certificate.
+    StakeDelegationCert stake_delegation = 3; // Stake delegation certificate.
+    PoolRegistrationCert pool_registration = 4; // Pool registration certificate.
+    PoolRetirementCert pool_retirement = 5; // Pool retirement certificate.
+    GenesisKeyDelegationCert genesis_key_delegation = 6; // Genesis key delegation certificate.
+    MirCert mir_cert = 7; // Move instantaneous rewards certificate.
+  }
+}
+
+// Represents a stake delegation certificate in Cardano.
+message StakeDelegationCert {
+  StakeCredential stake_credential = 1; // Stake credential.
+  bytes pool_keyhash = 2; // Pool key hash.
+}
+
+// Represents a pool registration certificate in Cardano.
+message PoolRegistrationCert {
+  bytes operator = 1; // Operator key hash.
+  bytes vrf_keyhash = 2; // VRF key hash.
+  uint64 pledge = 3; // Pledge amount.
+  uint64 cost = 4; // Pool cost.
+  RationalNumber margin = 5; // Pool margin.
+  bytes reward_account = 6; // Reward account.
+  repeated bytes pool_owners = 7; // List of pool owner key hashes.
+  repeated Relay relays = 8; // List of relays.
+  PoolMetadata pool_metadata = 9; // Pool metadata.
+}
+
+// Represents a pool retirement certificate in Cardano.
+message PoolRetirementCert {
+  bytes pool_keyhash = 1; // Pool key hash.
+  uint64 epoch = 2; // Retirement epoch.
+}
+
+// Represents a genesis key delegation certificate in Cardano.
+message GenesisKeyDelegationCert {
+  bytes genesis_hash = 1; // Genesis hash.
+  bytes genesis_delegate_hash = 2; // Genesis delegate hash.
+  bytes vrf_keyhash = 3; // VRF key hash.
+}
+
+enum MirSource {
+  MIR_SOURCE_UNSPECIFIED = 0;
+  MIR_SOURCE_RESERVES = 1;
+  MIR_SOURCE_TREASURY = 2;
+}
+
+message MirTarget {
+  StakeCredential stake_credential = 1;
+  int64 delta_coin = 2;
+}
+
+// Represents a move instantaneous reward certificate in Cardano.
+message MirCert {
+  MirSource from = 1;
+  repeated MirTarget to = 2;
+  uint64 other_pot = 3;
+}
+
+// PATTERN MATCHING
+// ================
+
+// Pattern of an address that can be used to evaluate matching predicates.
+message AddressPattern {
+  bytes byron_address = 1;
+  bytes payment_part = 2;
+  bytes delegation_part = 3;
+  bool payment_is_script = 4;
+  bool delegation_is_script = 5;
+}
+
+// Pattern of a native asset that can be used to evaluate matching predicates.
+message AssetPattern {
+  // TBD
+}
+
+// Pattern of a tx output that can be used to evaluate matching predicates.
+message OutputPattern {
+  // TBD
+}
+
+// Pattern of an datum that can be used to evaluate matching predicates.
+message DatumPattern {
+  // TBD
+}
+
+// Pattern of a Tx that can be used to evaluate matching predicates.
+message TxPattern {
+  oneof tx_pattern {
+    OutputPattern any_output = 1; // Match any output that exhibits this pattern.
+    AddressPattern any_address = 2; // Match any address (inputs, outputs, collateral, etc) that exhibits this pattern.
+    AssetPattern any_asset = 3; // Match any asset that exhibits this pattern.
+    DatumPattern any_datum = 4; // Match any datum that exhibits this pattern.
+  }
+}

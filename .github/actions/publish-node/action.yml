@@ -1,0 +1,43 @@
+name: 'publish node'
+description: 'Transpiles and publishes the Node package from the codegen artifact'
+inputs:
+  registry-token:
+    description: token to authenticate to npmjs.org
+    required: false
+  mode:
+    description: supported values are 'release' and 'dry-run'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+  
+    - name: Setup npm
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.11.0
+        cache: "npm"
+        cache-dependency-path: "codegen/node/package.json"
+
+    - name: Typescript Transpile
+      shell: bash
+      working-directory: codegen/node
+      run: |
+        npm install
+        npm run build
+
+    - name: Publish dry run
+      if: inputs.mode == 'dry-run'
+      working-directory: codegen/node
+      shell: bash
+      run: |
+        npm publish --dry-run
+    
+    - name: Publish to npm
+      if: inputs.mode == 'release'
+      working-directory: codegen/node
+      shell: bash
+      env:
+        NPM_TOKEN: ${{ inputs.registry-token }}
+      run: |
+        npm publish --access public
