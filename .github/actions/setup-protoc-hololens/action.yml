@@ -7,7 +7,6 @@ runs:
     - name: Setup Haskell
       id: setup-hs
       uses: haskell-actions/setup@v2
-      working-directory: gen/haskell
       with:
         enable-stack: true
         stack-no-global: true
