@@ -7,8 +7,10 @@ runs:
     - name: Setup Haskell
       id: setup-hs
       uses: haskell-actions/setup@v2
+      working-directory: gen/haskell
       with:
-        ghc-version: 9.6.4
+        enable-stack: true
+        stack-no-global: true
 
     - name: Restore Stack Root
       uses: actions/cache/restore@v4
