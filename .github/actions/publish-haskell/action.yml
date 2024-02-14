@@ -52,7 +52,7 @@ runs:
       env:
         version: ${{ steps.package-version.outputs.VERSION }}
       run: |
-        export HACKAGE_TOKEN={{ secrets.HASKELL_REGISTRY_TOKEN }}
+        export HACKAGE_TOKEN=${{ inputs.repository-token }}
         stack test
         stack upload --candidate --test-tarball .
         stack sdist
