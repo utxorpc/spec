@@ -1,0 +1,8 @@
+resolver: lts-22.7
+packages: [.]
+
+extra-deps:
+  - proto-lens-protobuf-types-0.7.2.0
+  - proto-lens-protoc-0.8.0.0
+  - proto-lens-setup-0.4.0.7
+  - ghc-source-gen-0.4.4.1

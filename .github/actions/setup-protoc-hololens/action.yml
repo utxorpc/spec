@@ -1,29 +1,29 @@
-name: 'setup protoc hololens'
-description: 'setup protoc hololens plugin (Haskell)'
+name: "setup protoc hololens"
+description: "setup protoc hololens plugin (Haskell)"
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
-  
     - name: Setup Haskell
       id: setup-hs
       uses: haskell-actions/setup@v2
       with:
         ghc-version: 9.6.4
 
-    - name: Restore Cabal cache
+    - name: Restore Stack Root
       uses: actions/cache/restore@v4
-      id: cache-cabal-build
+      id: restore-stack
       with:
-        path: ${{ steps.setup-hs.outputs.cabal-store }}
-        key: cabal-protoc
+        path: ${{ steps.setup-hs.outputs.stack-root }}
+        key: stack-protoc
 
     - name: Install Haskell plugin from Hackage
       shell: bash
-      run: cabal install proto-lens-protoc-0.8.0.0
+      run: stack install proto-lens-protoc-0.8.0.0
 
-    - name: Save Cabal cache
+    - name: Save Stack cache
+      if: steps.restore-stack.outputs.cache-hit != 'true'
       uses: actions/cache/save@v4
       with:
-        path: ${{ steps.setup-hs.outputs.cabal-store }}
-        key: cabal-protoc
+        path: ${{ steps.setup-hs.outputs.stack-root }}
+        key: stack-protoc
