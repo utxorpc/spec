@@ -22,18 +22,17 @@ runs:
     - name: Restore Stack
       id: restore-stack
       uses: actions/cache/restore@v4
-      working-directory: gen/haskell
       with:
         path: |
           ${{ steps.setup-hs.outputs.stack-root }}
-          .stack-work
+          codegen/haskell/.stack-work
         key: stack-${{ hashFiles('stack.yaml.lock') }}
-        restore-keys: stack-root_
+        restore-keys: stack-
 
     - name: Get Package Version
       id: package-version
       shell: bash
-      working-directory: gen/haskell
+      working-directory: codegen/haskell
       run: |
         VERSION=$(sed -nE '/^version:\s*([0-9]\.[0-9]+\.[0-9]+.*)$/s||\1|p' utxorpc.cabal)
         echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
@@ -41,24 +40,22 @@ runs:
     - name: Build Dependencies
       id: build-dependencies
       shell: bash
-      working-directory: gen/haskell
+      working-directory: codegen/haskell
       run: |
         stack build --only-dependencies
 
-    - name: Build Package
+    - name: Test and build package
       id: build
       shell: bash
-      working-directory: gen/haskell
+      working-directory: codegen/haskell
       env:
         version: ${{ steps.package-version.outputs.VERSION }}
       run: |
-        export HACKAGE_TOKEN=${{ inputs.repository-token }}
         stack test
-        stack upload --candidate --test-tarball .
         stack sdist
         echo "SDIST-LOCATION=$(pwd)/dist-newstyle/sdist/utxorpc-${{ env.version }}.tar.gz" >> "$GITHUB_OUTPUT"
 
-    - name: Upload Haskell Artifacts
+    - name: Upload GitHub artifacts
       if: inputs.mode == 'release'
       uses: actions/upload-artifact@v4
       env:
@@ -68,12 +65,27 @@ runs:
         name: haskell-${{ env.version }}
         path: ${{ env.location }}
 
+    - name: Upload candidate to Hackage
+      if: ${{ inputs.mode == "dry-run" }}
+      shell: bash
+      working-directory: codegen/haskell
+      run: |
+        export HACKAGE_TOKEN=${{ inputs.repository-token }}
+        stack upload --candidate --test-tarball .
+
+    - name: Upload to Hackage
+      if: ${{ inputs.mode == "release" && startsWith(github.ref, ref/tags/v) }}
+      shell: bash
+      working-directory: codegen/haskell
+      run: |
+        export HACKAGE_TOKEN=${{ inputs.repository-token }}
+        stack upload --test-tarball .
+
     - name: Cache Stack
       if: steps.restore-stack.outputs.cache-hit != 'true'
       uses: actions/cache/save@v4
-      working-directory: gen/haskell
       with:
         path: |
           ${{ steps.setup-hs.outputs.stack-root }}
-          .stack-work
+          codegen/haskell/.stack-work
         key: stack-${{ hashFiles('stack.yaml.lock') }}
