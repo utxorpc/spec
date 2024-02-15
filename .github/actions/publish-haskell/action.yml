@@ -30,7 +30,14 @@ runs:
         restore-keys: stack-
 
     - name: Install protoc
-      uses: ./.github/actions/setup-protoc-hololens
+      shell: bash
+      run: |
+        PROTOC_ZIP=protoc-3.14.0-linux-x86_64.zip
+        curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/$PROTOC_ZIP
+        unzip -o $PROTOC_ZIP -d . bin/protoc
+        unzip -o $PROTOC_ZIP -d . 'include/*'
+        rm -f $PROTOC_ZIP
+        echo "$(pwd)/bin" >> "$GITHUB_PATH"
 
     - name: Get Package Version
       id: package-version
