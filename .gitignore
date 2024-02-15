@@ -5,7 +5,5 @@ obj
 gen/dotnet/*.cs
 gen/go/utxorpc/
 gen/haskell/Proto
-gen/node/src
+gen/node/src/
 gen/openapi/
-gen/rust/src
-!gen/rust/src/lib.rs
