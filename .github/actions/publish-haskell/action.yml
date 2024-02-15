@@ -64,7 +64,7 @@ runs:
         stack test
         stack sdist
         TARBALL=$(stack sdist 2>&1 |
-            sed -nE 's|^(.*)utxorpc-.*\.tar\.gz.*$|\1|p')
+            sed -nE 's|^(.*utxorpc-.*\.tar\.gz).*$|\1|p')
 
         echo "TARBALL=$TARBALL" >> "$GITHUB_OUTPUT"
 
