@@ -8,24 +8,22 @@ runs:
       id: setup-hs
       uses: haskell-actions/setup@v2
       with:
-        enable-stack: true
-        stack-no-global: true
+        ghc-version: 9.6.4
 
-    - name: Restore Stack Root
+    - name: Restore Cabal cache
       uses: actions/cache/restore@v4
-      id: restore-stack
+      id: restore-cabal-store
       with:
-        path: ${{ steps.setup-hs.outputs.stack-root }}
-        key: stack-protoc
+        path: ${{ steps.setup-hs.outputs.cabal-store }}
+        key: cabal-store
 
     - name: Install Haskell plugin from Hackage
       shell: bash
-      working-directory: gen/haskell
-      run: stack install proto-lens-protoc-0.8.0.0
+      run: cabal install proto-lens-protoc-0.8.0.0
 
-    - name: Save Stack cache
-      if: steps.restore-stack.outputs.cache-hit != 'true'
+    - name: Save Cabal cache
+      if: steps.restore-cabal-store.outputs.cache-hit != 'true'
       uses: actions/cache/save@v4
       with:
-        path: ${{ steps.setup-hs.outputs.stack-root }}
-        key: stack-protoc
+        path: ${{ steps.setup-hs.outputs.cabal-store }}
+        key: cabal-store
