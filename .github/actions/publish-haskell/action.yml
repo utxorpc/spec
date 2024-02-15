@@ -63,14 +63,17 @@ runs:
       run: |
         stack test
         stack sdist
-        echo "SDIST-LOCATION=$(pwd)/dist-newstyle/sdist/utxorpc-${{ env.version }}.tar.gz" >> "$GITHUB_OUTPUT"
+        TARBALL=$(stack sdist 2>&1 |
+            sed -nE 's|^(.*)utxorpc-.*\.tar\.gz.*$|\1|p')
+
+        echo "TARBALL=$TARBALL" >> "$GITHUB_OUTPUT"
 
     - name: Upload GitHub artifacts
       if: inputs.mode == 'release'
       uses: actions/upload-artifact@v4
       env:
         version: ${{ steps.package-version.outputs.VERSION }}
-        location: ${{ steps.build.outputs.SDIST-LOCATION }}
+        location: ${{ steps.build.outputs.TARBALL }}
       with:
         name: haskell-${{ env.version }}
         path: ${{ env.location }}
@@ -84,7 +87,7 @@ runs:
         stack upload --candidate --test-tarball .
 
     - name: Upload to Hackage
-      if: inputs.mode == 'release' && startsWith(github.ref, 'ref/tags/v')
+      if: inputs.mode == 'release' && startsWith(github.ref, 'refs/tags/v')
       shell: bash
       working-directory: codegen/haskell
       run: |
