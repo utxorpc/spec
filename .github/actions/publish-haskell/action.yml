@@ -66,7 +66,7 @@ runs:
         path: ${{ env.location }}
 
     - name: Upload candidate to Hackage
-      if: ${{ inputs.mode }} == "dry-run"
+      if: inputs.mode == "dry-run"
       shell: bash
       working-directory: codegen/haskell
       run: |
@@ -74,7 +74,7 @@ runs:
         stack upload --candidate --test-tarball .
 
     - name: Upload to Hackage
-      if: ${{ inputs.mode }} == "release" && ${{ startsWith(github.ref, "ref/tags/v") }}
+      if: inputs.mode == "release" && startsWith(github.ref, "ref/tags/v")
       shell: bash
       working-directory: codegen/haskell
       run: |
