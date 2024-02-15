@@ -16,9 +16,9 @@ jobs:
     with:
       mode: "dry-run"
 
-  # publish:
-  #   needs: [publish-dry-run]
-  #   uses: ./.github/workflows/publish-all.yml
-  #   secrets: inherit
-  #   with:
-  #     mode: "release"
+  publish:
+    needs: [publish-dry-run]
+    uses: ./.github/workflows/publish-all.yml
+    secrets: inherit
+    with:
+      mode: "release"
