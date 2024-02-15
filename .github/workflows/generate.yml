@@ -34,22 +34,25 @@ jobs:
       - name: Install Prost from Cargo
         uses: baptiste0928/cargo-install@v2
         with:
-          crate: protoc-gen-prost@0.2.3
-
+          crate: protoc-gen-prost
+          version: 0.2.3
       - name: Install protoc-gen-prost-crate from Cargo
         uses: baptiste0928/cargo-install@v2
         with:
-          crate: protoc-gen-prost-crate@0.3.1
+          crate: protoc-gen-prost-crate
+          version: 0.3.1
 
       - name: Install Prost serde from Cargo
         uses: baptiste0928/cargo-install@v2
         with:
-          crate: protoc-gen-prost-serde@0.2.3
+          crate: protoc-gen-prost-serde
+          version: 0.2.3
 
       - name: Install Tonic from Cargo
         uses: baptiste0928/cargo-install@v2
         with:
-          crate: protoc-gen-tonic@0.3.0
+          crate: protoc-gen-tonic
+          version: 0.3.0
 
       - name: Setup Haskell
         uses: ./.github/actions/setup-protoc-hololens
