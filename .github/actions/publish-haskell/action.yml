@@ -29,6 +29,9 @@ runs:
         key: stack-${{ hashFiles('stack.yaml.lock') }}
         restore-keys: stack-
 
+    - name: Install protoc
+      uses: ./.github/actions/setup-protoc-protolens
+
     - name: Get Package Version
       id: package-version
       shell: bash
