@@ -1,7 +1,10 @@
 # UTxO RPC
 
-This package contains the generated code from [the UTxO RPC specification](https://utxorpc.org/). Codegen was performed using `proto-lens-protoc` and contains `Message` types useful for serde.
+## Users
+Please see [the package description](https://hackage.haskell.org/package/utxorpc).
 
-Users: For more support for implementing a UTxO RPC client or service, see [the SDK](https://www.github.com/utxorpc/haskell-sdk).
+## Maintainers
+See [the UTxO spec repo README](https://github.com/utxorpc/spec#readme).
 
-Maintainers: See [the UTxO spec repo README](https://github.com/utxorpc/spec#readme).
+> [!NOTE]
+> `proto-lens-protobuf-types` version >= 0.7.2 is required to build this package as it contains support for the `FieldMask` well-known type.
