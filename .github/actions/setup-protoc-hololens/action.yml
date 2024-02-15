@@ -20,6 +20,7 @@ runs:
 
     - name: Install Haskell plugin from Hackage
       shell: bash
+      working-directory: gen/haskell
       run: stack install proto-lens-protoc-0.8.0.0
 
     - name: Save Stack cache
