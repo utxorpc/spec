@@ -30,7 +30,7 @@ runs:
         restore-keys: stack-
 
     - name: Install protoc
-      uses: ./.github/actions/setup-protoc-protolens
+      uses: ./.github/actions/setup-protoc-hololens
 
     - name: Get Package Version
       id: package-version
