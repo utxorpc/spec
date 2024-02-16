@@ -320,34 +320,61 @@ message MirCert {
 
 // Pattern of an address that can be used to evaluate matching predicates.
 message AddressPattern {
-  bytes byron_address = 1;
-  bytes payment_part = 2;
-  bytes delegation_part = 3;
-  bool payment_is_script = 4;
-  bool delegation_is_script = 5;
+  bytes byron_address = 1; // The address should match this exact Byron address value.
+  bytes payment_part = 2; // The payment part of the address should match this value.
+  bytes delegation_part = 3; // The delegation part of the address should match this value.
+  bool payment_is_script = 4; // The payment part of the address is a script.
+  bool delegation_is_script = 5; // The delegation part of the address is a script.
+}
+
+// Pattern of a coin value that can be used to evaluate matching predicates.
+message CoinPattern {
+  int64 exact_value = 1; // The value should be exactly this amount
+  int64 upper_bound = 2; // The value should be at most this amount (inclusive)
+  int64 lower_bound = 3; // The value should be at leaste this amount (inclusive)
 }
 
 // Pattern of a native asset that can be used to evaluate matching predicates.
 message AssetPattern {
-  // TBD
+  bytes policy_id = 1; // The asset should belong to this policy id
+  bytes asset_name = 2; // The asset should present this name
+  CoinPattern coin_pattern = 3; // The amount of the asset should match this pattern
+}
+
+// Pattern of multiple native asset that can be used to evaluate matching predicates.
+message MultiAssetPattern {
+  CoinPattern lovalace_pattern = 1; // The multi-asset should exhibit this lovelace pattern
+  repeated AssetPattern asset_patterns = 2; // The multi-asset should exhibit this asset patterns simultanously.
 }
 
 // Pattern of a tx output that can be used to evaluate matching predicates.
 message OutputPattern {
-  // TBD
+  AddressPattern any_address = 1; // Match any address in the output that exhibits this pattern.
+  MultiAssetPattern any_asset = 2; // Match any asset in the output that exhibits this pattern.
+  CoinPattern lovelace_pattern = 3; // Match the Lovelace amount in the output that exhibits this pattern.
+}
+
+// Pattern of a tx input that can be used to evaluate matching predicates.
+message InputPattern {
+  AddressPattern address = 1; // Match the input with an address that exhibits this pattern.
+  MultiAssetPattern any_asset = 2; // Match the input with any asset that exhibits this pattern.
+  CoinPattern lovelace_pattern = 3; // Match the Lovelace amount in the input that exhibits this pattern.
+  RedeemerPurpose purpose = 4; // Math the input that has this redeemer purpose.
+  DatumPattern redeemer = 5; // Match the input with a redeemer exhibits this pattern.
 }
 
 // Pattern of an datum that can be used to evaluate matching predicates.
 message DatumPattern {
-  // TBD
+  bytes hash = 1; // Math the datum that exhibits this hash value.
 }
 
 // Pattern of a Tx that can be used to evaluate matching predicates.
 message TxPattern {
   oneof tx_pattern {
-    OutputPattern any_output = 1; // Match any output that exhibits this pattern.
-    AddressPattern any_address = 2; // Match any address (inputs, outputs, collateral, etc) that exhibits this pattern.
-    AssetPattern any_asset = 3; // Match any asset that exhibits this pattern.
-    DatumPattern any_datum = 4; // Match any datum that exhibits this pattern.
+    InputPattern any_input = 1; // Match any input that exhibits this pattern.
+    OutputPattern any_output = 2; // Match any output that exhibits this pattern.
+    AddressPattern any_address = 3; // Match any address (inputs, outputs, collateral, etc) that exhibits this pattern.
+    MultiAssetPattern any_asset = 4; // Match any asset that exhibits this pattern.
+    DatumPattern any_datum = 5; // Match any datum that exhibits this pattern.
   }
 }
