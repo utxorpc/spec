@@ -46,6 +46,8 @@ runs:
         cd go-codegen
         RELEASE_VERSION=${GITHUB_REF#refs/*/}
         git config --global --add safe.directory `pwd -P`
+        git config --global user.email "wolf31o2@blinklabs.io"
+        git config --global user.name "Chris Gianelloni (bot)"
         git commit -am "GHA: automatic publish: \${RELEASE_VERSION}"
         git push origin HEAD:main
         if [[ \${RELEASE_VERSION} == v* ]]; then
