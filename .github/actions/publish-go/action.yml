@@ -47,6 +47,8 @@ runs:
         RELEASE_VERSION=${GITHUB_REF#refs/*/}
         git config --global --add safe.directory `pwd -P`
         git commit -am "GHA: automatic publish: \${RELEASE_VERSION}"
-        git tag v\${RELEASE_VERSION} -a v\${RELEASE_VERSION}"
         git push origin HEAD:main
-        git push origin v\${RELEASE_VERSION}
+        if [[ \${RELEASE_VERSION} == v* ]]; then
+          git tag v\${RELEASE_VERSION} -a v\${RELEASE_VERSION}"
+          git push origin v\${RELEASE_VERSION}
+        fi
