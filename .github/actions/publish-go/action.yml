@@ -5,7 +5,7 @@ inputs:
     description: token for git authentication
     required: true
   mode:
-    description: supporte values are 'release' and 'dry-run'
+    description: supported values are 'release' and 'dry-run'
     required: true
 
 runs:
@@ -28,27 +28,27 @@ runs:
 
     - uses: actions/checkout@v4
       with:
-        repository: utxorpc/go-sdk
+        repository: utxorpc/go-codegen
         fetch-depth: 0
         token: ${{ inputs.repository-token }}
-        path: go-sdk
+        path: go-codegen
 
     - name: Copy new spec
       shell: bash
       run: |
-        rm -Rf go-sdk/spec
-        mv codegen/go go-sdk/spec
-    
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v6
+        rm -Rf go-codegen/utxorpc
+        mv codegen/go/* go-codegen/
+
+    - name: Publish
       if: inputs.mode == 'release'
-      with:
-        commit-message: "chore: update spec codegen"
-        git-token: ${{ inputs.repository-token }}
-        token: ${{ inputs.repository-token }}
-        branch-suffix: short-commit-hash
-        branch: spec-codegen
-        title: "chore: update spec codegen"
-        body: "A new codegen version of the specs is available. Please review and merge to keep the SDK up-to-date."
-        path: go-sdk
-        base: main
+      shell: bash
+      run: |
+        cd go-codegen
+        RELEASE_VERSION=${GITHUB_REF#refs/*/}
+        git config --global --add safe.directory `pwd -P`
+        git commit -am "GHA: automatic publish: \${RELEASE_VERSION}"
+        git push origin HEAD:main
+        if [[ \${RELEASE_VERSION} == v* ]]; then
+          git tag v\${RELEASE_VERSION} -a v\${RELEASE_VERSION}"
+          git push origin v\${RELEASE_VERSION}
+        fi

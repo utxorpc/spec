@@ -1,5 +1,5 @@
-name: 'publish haskell'
-description: 'Publishes Haskell codegen spec to Hackage (WIP)'
+name: "publish haskell"
+description: "Publishes Haskell codegen spec to Hackage (WIP)"
 inputs:
   registry-token:
     description: token to authenticate to Hackage registry
@@ -9,34 +9,35 @@ inputs:
     required: true
 
 runs:
-  using: 'composite'
+  using: "composite"
 
   steps:
     - name: Setup Haskell
       id: setup-hs
       uses: haskell-actions/setup@v2
       with:
-        ghc-version: 9.6.4
+        enable-stack: true
+        stack-no-global: true
 
-    - name: Configure Cabal build
-      shell: bash
-      working-directory: codegen/haskell
-      run: |
-        cabal configure --enable-tests --enable-benchmarks --disable-documentation
-        cabal build all --dry-run
-      # ^ Creates a plan.json file equivalent to a package-lock.json, used for creating a cache key
-
-    - name: Restore Cabal build cache
+    - name: Restore Stack
+      id: restore-stack
       uses: actions/cache/restore@v4
-      id: cache-cabal-build
-      env:
-        key: ${{ runner.os }}-ghc-${{ steps.setup-hs.outputs.ghc-version
-          }}-cabal-${{ steps.setup-hs.outputs.cabal-version }}
       with:
-        path: ${{ steps.setup-hs.outputs.cabal-store }}
-        key: ${{ env.key }}-plan-${{ hashFiles('**/plan.json') }}
-        restore-keys: |
-          ${{ env.key }}-
+        path: |
+          ${{ steps.setup-hs.outputs.stack-root }}
+          codegen/haskell/.stack-work
+        key: stack-${{ hashFiles('stack.yaml.lock') }}
+        restore-keys: stack-
+
+    - name: Install protoc
+      shell: bash
+      run: |
+        PROTOC_ZIP=protoc-3.14.0-linux-x86_64.zip
+        curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/$PROTOC_ZIP
+        unzip -o $PROTOC_ZIP -d . bin/protoc
+        unzip -o $PROTOC_ZIP -d . 'include/*'
+        rm -f $PROTOC_ZIP
+        echo "$(pwd)/bin" >> "$GITHUB_PATH"
 
     - name: Get Package Version
       id: package-version
@@ -46,18 +47,25 @@ runs:
         VERSION=$(sed -nE '/^version:\s*([0-9]\.[0-9]+\.[0-9]+.*)$/s||\1|p' utxorpc.cabal)
         echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
-    - name: Build Haskell Library
+    - name: Build Dependencies
+      id: build-dependencies
+      shell: bash
+      working-directory: codegen/haskell
+      run: |
+        stack build --only-dependencies
+
+    - name: Test and build package
       id: build
       shell: bash
       working-directory: codegen/haskell
       env:
         version: ${{ steps.package-version.outputs.VERSION }}
       run: |
-        cabal build
-        cabal sdist
+        stack test
+        stack sdist
         echo "SDIST-LOCATION=$(pwd)/dist-newstyle/sdist/utxorpc-${{ env.version }}.tar.gz" >> "$GITHUB_OUTPUT"
 
-    - name: Upload Haskell Artifacts
+    - name: Upload GitHub artifacts
       if: inputs.mode == 'release'
       uses: actions/upload-artifact@v4
       env:
@@ -67,9 +75,27 @@ runs:
         name: haskell-${{ env.version }}
         path: ${{ env.location }}
 
-    - name: Cache Cabal
-      if: steps.cache-cabal-build.outputs.cache-hit != 'true'
+    - name: Upload candidate to Hackage
+      if: inputs.mode == 'dry-run'
+      shell: bash
+      working-directory: codegen/haskell
+      run: |
+        export HACKAGE_KEY=${{ inputs.registry-token }}
+        stack upload --candidate --test-tarball .
+
+    - name: Upload to Hackage
+      if: inputs.mode == 'release' && startsWith(github.ref, 'ref/tags/v')
+      shell: bash
+      working-directory: codegen/haskell
+      run: |
+        export HACKAGE_KEY=${{ inputs.registry-token }}
+        stack upload --test-tarball .
+
+    - name: Cache Stack
+      if: steps.restore-stack.outputs.cache-hit != 'true'
       uses: actions/cache/save@v4
       with:
-        path: ${{ steps.setup-hs.outputs.cabal-store }}
-        key: ${{ steps.cache-cabal-build.outputs.cache-primary-key }}
+        path: |
+          ${{ steps.setup-hs.outputs.stack-root }}
+          codegen/haskell/.stack-work
+        key: stack-${{ hashFiles('stack.yaml.lock') }}

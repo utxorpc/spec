@@ -1,9 +1,7 @@
-name: "Release"
+name: "Release Dry-run"
 
 on:
   workflow_dispatch:
-  push:
-    tags: [v*]
 
 jobs:
   generate:
@@ -15,10 +13,3 @@ jobs:
     secrets: inherit
     with:
       mode: "dry-run"
-
-  publish:
-    needs: [publish-dry-run]
-    uses: ./.github/workflows/publish-all.yml
-    secrets: inherit
-    with:
-      mode: "release"
