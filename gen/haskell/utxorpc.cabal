@@ -3,13 +3,14 @@ cabal-version: 3.0
 name:           utxorpc
 version:        0.0.4.0
 synopsis:       A gRPC interface for UTxO Blockchains
-description:    UTxO RPC (u5c for short) is an interface tailored for interactions with UTxO-based blockchains, prioritizing performance and developer experience. By providing a common contract, a range of SDKs, and thorough documentation, UTxO RPC aims to facilitate:
+description:    [UTxO]((https://utxorpc.org/) RPC (u5c for short) is an interface tailored for interactions with UTxO-based blockchains, prioritizing performance and developer experience. By providing a common contract, a range of SDKs, and thorough documentation, UTxO RPC aims to facilitate:
 
                 * Reusability: Enabling shared components that can be reused across different projects to simplify the integration effort.
                 * Interoperability: A common interface to simplify integrations between different parties and avoid the common pitfall of vendor lock-in.
                 * Performance: A serialized binary format which is compact and efficient, resulting in smaller message sizes and reduced network overhead compared to its JSON counterpart
 
                 Please note that UTxO RPC is just a specification of an interface between agents and the blockchain, it doesn't provide any concrete client / provider implementations. The primary purpose of u5c is to define a set of standardized methods, data structures, and communication patterns.
+
 category:       Network, GRPC, Blockchain, Cardano
 homepage:       https://github.com/utxorpc/spec#readme
 bug-reports:    https://github.com/utxorpc/spec/issues
@@ -38,6 +39,7 @@ library
   build-depends:
       base >=4.7 && <5
     , proto-lens >= 0.7.1 && < 0.8
+    -- >= 0.7.2 required as it contains support for `FieldMask`
     , proto-lens-protobuf-types >= 0.7.2 && < 0.8
     , proto-lens-runtime >= 0.7.0 && < 0.8
   default-language: Haskell2010
