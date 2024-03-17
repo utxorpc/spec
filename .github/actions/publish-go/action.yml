@@ -51,6 +51,6 @@ runs:
         git commit -am "GHA: automatic publish: \${RELEASE_VERSION}"
         git push origin HEAD:main
         if [[ \${RELEASE_VERSION} == v* ]]; then
-          git tag v\${RELEASE_VERSION} -a v\${RELEASE_VERSION}"
+          git tag v\${RELEASE_VERSION} -a v\${RELEASE_VERSION}
           git push origin v\${RELEASE_VERSION}
         fi
