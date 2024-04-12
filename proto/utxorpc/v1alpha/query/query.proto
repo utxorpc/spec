@@ -2,7 +2,7 @@
 
 syntax = "proto3";
 
-package utxorpc.v1alpha.build;
+package utxorpc.v1alpha.query;
 
 import "google/protobuf/field_mask.proto";
 import "utxorpc/v1alpha/cardano/cardano.proto";
@@ -75,21 +75,10 @@ message GetUtxoByRefResponse {
   string next_token = 2; // Token for pagination.
 }
 
-// Request to hold UTxOs.
-message HoldUtxoRequest {
-  repeated UtxoRef refs = 1; // List of UTxO references to hold.
-}
-
-// Response containing information about lost UTxOs.
-message HoldUtxoResponse {
-  repeated UtxoRef lost = 1; // List of lost UTxO references.
-}
-
 // Service definition for querying the state of the ledger.
 service LedgerStateService {
   rpc GetChainTip(GetChainTipRequest) returns (GetChainTipResponse); // Get the current chain tip.
   rpc GetChainParam(GetChainParamRequest) returns (GetChainParamResponse); // Get specific chain parameters.
   rpc GetUtxoByAddress(GetUtxoByAddressRequest) returns (GetUtxoByAddressResponse); // Get UTxOs by their associated addresses.
   rpc GetUtxoByRef(GetUtxoByRefRequest) returns (GetUtxoByRefResponse); // Get UTxOs by their references.
-  rpc HoldUtxo(HoldUtxoRequest) returns (stream HoldUtxoResponse); // Hold UTxOs and receive updates about lost UTxOs
 }

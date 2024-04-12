@@ -24,10 +24,10 @@ extra-source-files:
 
 library
   exposed-modules:
-      Proto.Utxorpc.V1alpha.Build.Build
-      Proto.Utxorpc.V1alpha.Build.Build_Fields
       Proto.Utxorpc.V1alpha.Cardano.Cardano
       Proto.Utxorpc.V1alpha.Cardano.Cardano_Fields
+      Proto.Utxorpc.V1alpha.Query.Query
+      Proto.Utxorpc.V1alpha.Query.Query_Fields
       Proto.Utxorpc.V1alpha.Submit.Submit
       Proto.Utxorpc.V1alpha.Submit.Submit_Fields
       Proto.Utxorpc.V1alpha.Sync.Sync
