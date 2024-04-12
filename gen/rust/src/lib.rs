@@ -1,17 +1,15 @@
 // @generated
 pub mod utxorpc {
-    pub mod v1 {
-        // @@protoc_insertion_point(attribute:utxorpc.v1.build)
-        pub mod build {
-            include!("utxorpc.v1.build.rs");
-            // @@protoc_insertion_point(utxorpc.v1.build)
-        }
-    }
     pub mod v1alpha {
         // @@protoc_insertion_point(attribute:utxorpc.v1alpha.cardano)
         pub mod cardano {
             include!("utxorpc.v1alpha.cardano.rs");
             // @@protoc_insertion_point(utxorpc.v1alpha.cardano)
+        }
+        // @@protoc_insertion_point(attribute:utxorpc.v1alpha.query)
+        pub mod query {
+            include!("utxorpc.v1alpha.query.rs");
+            // @@protoc_insertion_point(utxorpc.v1alpha.query)
         }
         // @@protoc_insertion_point(attribute:utxorpc.v1alpha.submit)
         pub mod submit {
