@@ -320,7 +320,7 @@ message MirCert {
 
 // Pattern of an address that can be used to evaluate matching predicates.
 message AddressPattern {
-  bytes byron_address = 1; // The address should match this exact Byron address value.
+  bytes exact_address = 1; // The address should match this exact address value.
   bytes payment_part = 2; // The payment part of the address should match this value.
   bytes delegation_part = 3; // The delegation part of the address should match this value.
 }
@@ -334,7 +334,7 @@ message AssetPattern {
 // Pattern of a tx output that can be used to evaluate matching predicates.
 message TxOutputPattern {
   AddressPattern address = 1; // Match any address in the output that exhibits this pattern.
-  AssetPattern has_asset = 2; // Match any asset in the output that exhibits this pattern.
+  AssetPattern asset = 2; // Match any asset in the output that exhibits this pattern.
 }
 
 // Pattern of a Tx that can be used to evaluate matching predicates.
@@ -342,7 +342,8 @@ message TxPattern {
   TxOutputPattern consumes = 1; // Match any input that exhibits this pattern.
   TxOutputPattern produces = 2; // Match any output that exhibits this pattern.
   AddressPattern has_address = 3; // Match any address (inputs, outputs, collateral, etc) that exhibits this pattern.
-  AssetPattern has_asset = 4; // Match any asset that exhibits this pattern.
+  AssetPattern moves_asset = 4; // Match any asset that exhibits this pattern.
+  AssetPattern mints_asset = 5; // Match any tx that either mint or burn the the asset pattern.
 }
 
 // PARAMS

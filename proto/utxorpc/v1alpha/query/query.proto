@@ -10,8 +10,13 @@ import "utxorpc/v1alpha/cardano/cardano.proto";
 // Represents a specific point in the blockchain.
 message ChainPoint {
   uint64 slot = 1; // Slot number.
-  uint64 height = 2; // Block height.
-  bytes hash = 3; // Block hash.
+  bytes hash = 2; // Block hash.
+}
+
+// Represents a reference to a transaction output
+message TxoRef {
+  bytes hash = 1; // Tx hash.
+  uint32 index = 2; // Output index.
 }
 
 // Request to get the chain parameters
@@ -47,20 +52,18 @@ message UtxoPredicate {
   repeated UtxoPredicate any_of = 4; // Predicate is true if utxo exhibits any of the patterns.
 }
 
-// Request to get UTxOs by chain-specific criteria.
-message ReadUtxosRequest {
-  UtxoPredicate predicate = 1; // A predicate to filter relevant utxos.
-  bool include_native = 3; // Flag to include the raw bytes in their native representation.
-  bool include_parsed = 4; // Flag to parse the result vs using native bytes from the chain.
-  google.protobuf.FieldMask field_mask = 7; // Field mask to selectively return fields in the parsed response.
-}
-
 // An evenlope that holds an UTxO from any of compatible chains
 message AnyUtxoData {
-  bytes native_bytes = 1; // An opaque bytestring corresponding to native representation in the source chain.
+  TxoRef txo_ref = 1; // Hash of the previous transaction.
+  bytes native_bytes = 2; // An opaque bytestring corresponding to native representation in the source chain.
   oneof parsed_state {
-    utxorpc.v1alpha.cardano.TxOutput cardano = 2; // A cardano UTxO
+    utxorpc.v1alpha.cardano.TxOutput cardano = 3; // A cardano UTxO
   }
+}
+
+// Request to get specific UTxOs
+message ReadUtxosRequest {
+  repeated TxoRef keys = 1; // List of keys UTxOs.
 }
 
 // Response containing the UTxOs associated with the requested addresses.
@@ -69,10 +72,22 @@ message ReadUtxosResponse {
   ChainPoint ledger_tip = 2; // The chain point that represent the ledger current position.
 }
 
+// Reques to search for UTxO based on a pattern.
+message SearchUtxosRequest {
+  UtxoPredicate predicate = 1; // Pattern to match UTxOs by.
+}
+
+// Response containing the UTxOs that match the requested addresses.
+message SearchUtxosResponse {
+  repeated AnyUtxoData items = 1; // List of UTxOs.
+  ChainPoint ledger_tip = 2; // The chain point that represent the ledger current position.
+}
+
 // Service definition for querying the state of the chain.
 service QueryService {
   rpc ReadParams(ReadParamsRequest) returns (ReadParamsResponse); // Get overall chain state.
-  rpc ReadUtxos(ReadUtxosRequest) returns (ReadUtxosResponse); // Read a slice of the utxo set
+  rpc ReadUtxos(ReadUtxosRequest) returns (ReadUtxosResponse); // Read specific UTxOs by reference.
+  rpc SearchUtxos(SearchUtxosRequest) returns (SearchUtxosResponse); // Search for UTxO based on a pattern.
   rpc StreamUtxos(ReadUtxosRequest) returns (stream ReadUtxosResponse); // Stream all available utxos
 
   // TODO: decide if we want to expand the scope
