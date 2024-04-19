@@ -48,7 +48,8 @@ runs:
         git config --global --add safe.directory `pwd -P`
         git config --global user.email "wolf31o2@blinklabs.io"
         git config --global user.name "Chris Gianelloni (bot)"
-        git commit --allow-empty -am "GHA: automatic publish: ${RELEASE_VERSION}"
+        git add .
+        git commit --allow-empty -m "GHA: automatic publish: ${RELEASE_VERSION}"
         git push origin HEAD:main
         if [[ ${RELEASE_VERSION} == v* ]]; then
           git tag ${RELEASE_VERSION}
