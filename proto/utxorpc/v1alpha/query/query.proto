@@ -44,7 +44,7 @@ message AnyUtxoPattern {
   }
 }
 
-// Represents a simple utxo predicate that can composed to create more complext ones
+// Represents a simple utxo predicate that can composed to create more complex ones
 message UtxoPredicate {
   AnyUtxoPattern match = 1; // Predicate is true if tx exhibits pattern.
   repeated UtxoPredicate not = 2; // Predicate is true if tx doesn't exhibit pattern.
