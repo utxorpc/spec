@@ -12,7 +12,7 @@ message AnyChainTxPattern {
   }
 }
 
-// Represents a simple tx predicate that can composed to create more complext ones
+// Represents a simple tx predicate that can composed to create more complex ones
 message TxPredicate {
   AnyChainTxPattern match = 1; // Predicate is true if tx exhibits pattern.
   repeated TxPredicate not = 2; // Predicate is true if tx doesn't exhibit pattern.
