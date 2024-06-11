@@ -3,7 +3,7 @@ cabal-version: 3.0
 name:           utxorpc
 version:        0.0.5.1
 synopsis:       A gRPC interface for UTxO Blockchains
-description:    [UTxO]((https://utxorpc.org/) RPC (u5c for short) is an interface tailored for interactions with UTxO-based blockchains, prioritizing performance and developer experience. By providing a common contract, a range of SDKs, and thorough documentation, UTxO RPC aims to facilitate:
+description:    [UTxO](https://utxorpc.org/) RPC (u5c for short) is an interface tailored for interactions with UTxO-based blockchains, prioritizing performance and developer experience. By providing a common contract, a range of SDKs, and thorough documentation, UTxO RPC aims to facilitate:
 
                 * Reusability: Enabling shared components that can be reused across different projects to simplify the integration effort.
                 * Interoperability: A common interface to simplify integrations between different parties and avoid the common pitfall of vendor lock-in.
