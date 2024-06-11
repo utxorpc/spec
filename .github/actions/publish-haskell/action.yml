@@ -78,6 +78,11 @@ runs:
         name: haskell-${{ env.version }}
         path: ${{ env.location }}
 
+    - name: Generate Haddocks
+      shell: bash
+      working-directory: codegen/haskell
+      run: stack haddock --haddock-for-hackage
+
     - name: Upload candidate to Hackage
       if: inputs.mode == 'dry-run'
       shell: bash
@@ -85,6 +90,7 @@ runs:
       run: |
         export HACKAGE_KEY=${{ inputs.registry-token }}
         stack upload --candidate --test-tarball .
+        stack upload --candidate -d .
 
     - name: Upload to Hackage
       if: inputs.mode == 'release' && startsWith(github.ref, 'refs/tags/v')
@@ -93,6 +99,7 @@ runs:
       run: |
         export HACKAGE_KEY=${{ inputs.registry-token }}
         stack upload --test-tarball .
+        stack upload -d .
 
     - name: Cache Stack
       if: steps.restore-stack.outputs.cache-hit != 'true'
