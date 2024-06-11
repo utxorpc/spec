@@ -2,14 +2,17 @@ cabal-version: 3.0
 
 name:           utxorpc
 version:        0.0.5.1
-synopsis:       A gRPC interface for UTxO Blockchains
-description:    [UTxO](https://utxorpc.org/) RPC (u5c for short) is an interface tailored for interactions with UTxO-based blockchains, prioritizing performance and developer experience. By providing a common contract, a range of SDKs, and thorough documentation, UTxO RPC aims to facilitate:
+x-revision: 3
+synopsis:       Generated code for a gRPC interface for UTxO Blockchains
+description:    [UTxO RPC](https://utxorpc.org/) (u5c for short) is an interface tailored for interactions with UTxO-based blockchains, prioritizing performance and developer experience. By providing a common contract, a range of SDKs, and thorough documentation, UTxO RPC aims to facilitate:
 
                 * Reusability: Enabling shared components that can be reused across different projects to simplify the integration effort.
                 * Interoperability: A common interface to simplify integrations between different parties and avoid the common pitfall of vendor lock-in.
                 * Performance: A serialized binary format which is compact and efficient, resulting in smaller message sizes and reduced network overhead compared to its JSON counterpart
 
-                Please note that UTxO RPC is just a specification of an interface between agents and the blockchain, it doesn't provide any concrete client / provider implementations. The primary purpose of u5c is to define a set of standardized methods, data structures, and communication patterns.
+                Please note that this package only contains the generated Haskell code from the u5c specification. To write a u5c implementation, please see the [client](https://hackage.haskell.org/package/utxorpc-client) or [server](https://hackage.haskell.org/package/utxorpc-server) SDK.
+
+                For documentation on the specification, see [https://utxorpc.org](https://utxorpc.org/).
 
 category:       Network, GRPC, Blockchain, Cardano
 homepage:       https://github.com/utxorpc/spec#readme
