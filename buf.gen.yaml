@@ -13,7 +13,7 @@ plugins:
     out: gen/go
     opt:
      - paths=source_relative
-  
+
   - plugin: buf.build/connectrpc/go
     out: gen/go
     opt:
@@ -45,13 +45,18 @@ plugins:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
 
+  # python
+
+  - plugin: buf.build/community/danielgtaylor-betterproto:v1.2.5
+    out: gen/python/src
+
   # node
 
   - plugin: es
     out: gen/node/src
     opt:
       - target=ts
-  
+
   - plugin: connect-es
     out: gen/node/src
     opt:

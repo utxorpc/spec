@@ -1,0 +1,36 @@
+name: "Publish python"
+description: 'Publishes python package to PyPI'
+inputs:
+  registry-token:
+    description: token to authenticate to pypi
+    required: false
+  mode:
+    description: supported values are 'release' and 'dry-run'
+    required: true
+
+runs:
+  using: 'composite'
+  steps: 
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+
+    - name: Install Poetry
+      run: pip install --no-input poetry
+
+    - name: Publish dry run
+      if: inputs.mode == 'dry-run'
+      working-directory: codegen/python
+      shell: bash
+      run: |
+        poetry publish --build --dry-run
+    
+    - name: Publish to PyPI
+      if: inputs.mode == 'release'
+      working-directory: codegen/python
+      shell: bash
+      run: |
+        poetry config pypi-token.pypi "{% raw %}${{ inputs.registry-token }}{% endraw %}"
+        poetry publish --build
