@@ -18,7 +18,7 @@ plugins:
     out: gen/go
     opt:
      - paths=source_relative
-  
+
   # rust
 
   - plugin: prost
@@ -47,8 +47,14 @@ plugins:
 
   # python
 
-  - plugin: buf.build/community/danielgtaylor-betterproto:v1.2.5
-    out: gen/python/src
+  - plugin: buf.build/protocolbuffers/python
+    out: gen/python/utxorpc_spec
+
+  - plugin: buf.build/protocolbuffers/pyi
+    out: gen/python/utxorpc_spec
+
+  - plugin: buf.build/grpc/python:v1.64.2
+    out: gen/python/utxorpc_spec
 
   # node
 

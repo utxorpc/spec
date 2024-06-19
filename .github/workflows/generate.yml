@@ -62,7 +62,7 @@ jobs:
         run: npm install -g @bufbuild/buf
 
       - name: Generate code
-        run: buf generate proto
+        run: make all
 
       - name: Create codegen artifact
         uses: actions/upload-artifact@v4

@@ -11,8 +11,8 @@ readme = "README.md"
 repository = "https://github.com/utxorpc/spec"
 
 [tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
-python = ">=3.7,<4.0"
-betterproto = "^v1.2.5"
+python = ">=3.8,<4.0"
+grpcio = "^1.64.1"
 
 [[tool.poetry.source]]
 name = "pypi"
