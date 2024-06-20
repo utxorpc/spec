@@ -13,6 +13,7 @@ repository = "https://github.com/utxorpc/spec"
 [tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
 python = ">=3.8,<4.0"
 grpcio = "^1.64.1"
+protobuf = "^5.27.1"
 
 [[tool.poetry.source]]
 name = "pypi"
