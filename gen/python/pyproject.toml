@@ -1,0 +1,23 @@
+[build-system]  # https://python-poetry.org/docs/pyproject/#poetry-and-pep-517
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]  # https://python-poetry.org/docs/pyproject/
+name = "utxorpc-spec"
+version = "0.5.1"
+description = "Auto-generated structs for the UTxO RPC spec."
+authors = ["Felipe Gonzalez <felipe@txpipe.io>"]
+readme = "README.md"
+repository = "https://github.com/utxorpc/spec"
+
+# Needed because Poetry ignores whatever is on .gitignore
+include = ["utxorpc_spec/**/*.py", "utxorpc_spec/**/*.pyi"]
+
+[tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
+python = ">=3.8,<4.0"
+grpcio = "^1.64.1"
+protobuf = "^5.27.1"
+grpc-stubs = "^1.53.0.5"
+
+[[tool.poetry.source]]
+name = "pypi"

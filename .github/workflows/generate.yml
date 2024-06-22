@@ -64,6 +64,9 @@ jobs:
       - name: Generate code
         run: buf generate proto
 
+      - name: Fix python imports
+        run: find gen/python/utxorpc_spec -type f -exec sed -i '' 's@from utxorpc@from utxorpc_spec.utxorpc@g' {} \;
+
       - name: Create codegen artifact
         uses: actions/upload-artifact@v4
         with:

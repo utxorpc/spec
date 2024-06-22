@@ -26,6 +26,23 @@ jobs:
           registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
           mode: ${{ inputs.mode }}
 
+  publish-python:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: codegen
+          path: ./codegen
+
+      - uses: ./.github/actions/publish-python
+        with:
+          registry-token: ${{ secrets.PYPI_REGISTRY_TOKEN }}
+          mode: ${{ inputs.mode }}
+
   publish-node:
     runs-on: ubuntu-latest
 
