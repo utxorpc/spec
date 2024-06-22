@@ -10,6 +10,9 @@ authors = ["Felipe Gonzalez <felipe@txpipe.io>"]
 readme = "README.md"
 repository = "https://github.com/utxorpc/spec"
 
+# Needed because Poetry ignores whatever is on .gitignore
+include = ["utxorpc_spec/**/*.py", "utxorpc_spec/**/*.pyi"]
+
 [tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
 python = ">=3.8,<4.0"
 grpcio = "^1.64.1"
