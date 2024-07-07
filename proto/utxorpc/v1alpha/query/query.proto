@@ -27,7 +27,7 @@ message ReadParamsRequest {
 // An evenlope that holds parameter data from any of the compatible chains
 message AnyChainParams {
   oneof params {
-    utxorpc.v1alpha.cardano.Params cardano = 1; // Cardano parameters
+    utxorpc.v1alpha.cardano.PParams cardano = 1; // Cardano parameters
   }
 }
 
