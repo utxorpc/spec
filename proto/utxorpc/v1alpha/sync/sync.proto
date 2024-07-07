@@ -57,7 +57,7 @@ message FollowTipResponse {
 }
 
 // Service definition for syncing chain data.
-service ChainSyncService {
+service SyncService {
   rpc FetchBlock(FetchBlockRequest) returns (FetchBlockResponse); // Fetch a block by its reference.
   rpc DumpHistory(DumpHistoryRequest) returns (DumpHistoryResponse); // Dump the block history.
   rpc FollowTip(FollowTipRequest) returns (stream FollowTipResponse); // Follow the tip of the blockchain.
