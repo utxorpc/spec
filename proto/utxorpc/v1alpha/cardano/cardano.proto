@@ -374,7 +374,7 @@ message CostModels {
 }
 
 message Params {
-  uint64 coins_per_utxo_byte = 1; //
+  uint64 coins_per_utxo_byte = 1; // The number of coins per UTXO byte.
   uint64 max_tx_size = 2; // The maximum transaction size.
   uint64 min_fee_coefficient = 3; // The minimum fee coefficient.
   uint64 min_fee_constant = 4; // The minimum fee constant.
