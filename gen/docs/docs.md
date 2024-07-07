@@ -15,6 +15,12 @@
     - [Certificate](#utxorpc-v1alpha-cardano-Certificate)
     - [Collateral](#utxorpc-v1alpha-cardano-Collateral)
     - [Constr](#utxorpc-v1alpha-cardano-Constr)
+    - [CostModel](#utxorpc-v1alpha-cardano-CostModel)
+    - [CostModels](#utxorpc-v1alpha-cardano-CostModels)
+    - [EvalError](#utxorpc-v1alpha-cardano-EvalError)
+    - [EvalTrace](#utxorpc-v1alpha-cardano-EvalTrace)
+    - [ExPrices](#utxorpc-v1alpha-cardano-ExPrices)
+    - [ExUnits](#utxorpc-v1alpha-cardano-ExUnits)
     - [GenesisKeyDelegationCert](#utxorpc-v1alpha-cardano-GenesisKeyDelegationCert)
     - [Metadata](#utxorpc-v1alpha-cardano-Metadata)
     - [Metadatum](#utxorpc-v1alpha-cardano-Metadatum)
@@ -26,7 +32,7 @@
     - [Multiasset](#utxorpc-v1alpha-cardano-Multiasset)
     - [NativeScript](#utxorpc-v1alpha-cardano-NativeScript)
     - [NativeScriptList](#utxorpc-v1alpha-cardano-NativeScriptList)
-    - [Params](#utxorpc-v1alpha-cardano-Params)
+    - [PParams](#utxorpc-v1alpha-cardano-PParams)
     - [PlutusData](#utxorpc-v1alpha-cardano-PlutusData)
     - [PlutusDataArray](#utxorpc-v1alpha-cardano-PlutusDataArray)
     - [PlutusDataMap](#utxorpc-v1alpha-cardano-PlutusDataMap)
@@ -34,6 +40,7 @@
     - [PoolMetadata](#utxorpc-v1alpha-cardano-PoolMetadata)
     - [PoolRegistrationCert](#utxorpc-v1alpha-cardano-PoolRegistrationCert)
     - [PoolRetirementCert](#utxorpc-v1alpha-cardano-PoolRetirementCert)
+    - [ProtocolVersion](#utxorpc-v1alpha-cardano-ProtocolVersion)
     - [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber)
     - [Redeemer](#utxorpc-v1alpha-cardano-Redeemer)
     - [Relay](#utxorpc-v1alpha-cardano-Relay)
@@ -42,6 +49,7 @@
     - [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential)
     - [StakeDelegationCert](#utxorpc-v1alpha-cardano-StakeDelegationCert)
     - [Tx](#utxorpc-v1alpha-cardano-Tx)
+    - [TxEval](#utxorpc-v1alpha-cardano-TxEval)
     - [TxInput](#utxorpc-v1alpha-cardano-TxInput)
     - [TxOutput](#utxorpc-v1alpha-cardano-TxOutput)
     - [TxOutputPattern](#utxorpc-v1alpha-cardano-TxOutputPattern)
@@ -55,10 +63,13 @@
     - [RedeemerPurpose](#utxorpc-v1alpha-cardano-RedeemerPurpose)
   
 - [utxorpc/v1alpha/query/query.proto](#utxorpc_v1alpha_query_query-proto)
+    - [AnyChainDatum](#utxorpc-v1alpha-query-AnyChainDatum)
     - [AnyChainParams](#utxorpc-v1alpha-query-AnyChainParams)
     - [AnyUtxoData](#utxorpc-v1alpha-query-AnyUtxoData)
     - [AnyUtxoPattern](#utxorpc-v1alpha-query-AnyUtxoPattern)
     - [ChainPoint](#utxorpc-v1alpha-query-ChainPoint)
+    - [ReadDataRequest](#utxorpc-v1alpha-query-ReadDataRequest)
+    - [ReadDataResponse](#utxorpc-v1alpha-query-ReadDataResponse)
     - [ReadParamsRequest](#utxorpc-v1alpha-query-ReadParamsRequest)
     - [ReadParamsResponse](#utxorpc-v1alpha-query-ReadParamsResponse)
     - [ReadUtxosRequest](#utxorpc-v1alpha-query-ReadUtxosRequest)
@@ -71,8 +82,11 @@
     - [QueryService](#utxorpc-v1alpha-query-QueryService)
   
 - [utxorpc/v1alpha/submit/submit.proto](#utxorpc_v1alpha_submit_submit-proto)
+    - [AnyChainEval](#utxorpc-v1alpha-submit-AnyChainEval)
     - [AnyChainTx](#utxorpc-v1alpha-submit-AnyChainTx)
     - [AnyChainTxPattern](#utxorpc-v1alpha-submit-AnyChainTxPattern)
+    - [EvalTxRequest](#utxorpc-v1alpha-submit-EvalTxRequest)
+    - [EvalTxResponse](#utxorpc-v1alpha-submit-EvalTxResponse)
     - [ReadMempoolRequest](#utxorpc-v1alpha-submit-ReadMempoolRequest)
     - [ReadMempoolResponse](#utxorpc-v1alpha-submit-ReadMempoolResponse)
     - [SubmitTxRequest](#utxorpc-v1alpha-submit-SubmitTxRequest)
@@ -98,11 +112,12 @@
     - [FollowTipRequest](#utxorpc-v1alpha-sync-FollowTipRequest)
     - [FollowTipResponse](#utxorpc-v1alpha-sync-FollowTipResponse)
   
-    - [ChainSyncService](#utxorpc-v1alpha-sync-ChainSyncService)
+    - [SyncService](#utxorpc-v1alpha-sync-SyncService)
   
 - [utxorpc/v1alpha/watch/watch.proto](#utxorpc_v1alpha_watch_watch-proto)
     - [AnyChainTx](#utxorpc-v1alpha-watch-AnyChainTx)
     - [AnyChainTxPattern](#utxorpc-v1alpha-watch-AnyChainTxPattern)
+    - [BlockRef](#utxorpc-v1alpha-watch-BlockRef)
     - [TxPredicate](#utxorpc-v1alpha-watch-TxPredicate)
     - [WatchTxRequest](#utxorpc-v1alpha-watch-WatchTxRequest)
     - [WatchTxResponse](#utxorpc-v1alpha-watch-WatchTxResponse)
@@ -306,6 +321,94 @@ Represents a constructor for Plutus data in Cardano.
 
 
 
+<a name="utxorpc-v1alpha-cardano-CostModel"></a>
+
+### CostModel
+TODO
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-CostModels"></a>
+
+### CostModels
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| plutus_v1 | [CostModel](#utxorpc-v1alpha-cardano-CostModel) |  |  |
+| plutus_v2 | [CostModel](#utxorpc-v1alpha-cardano-CostModel) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-EvalError"></a>
+
+### EvalError
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| msg | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-EvalTrace"></a>
+
+### EvalTrace
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| msg | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-ExPrices"></a>
+
+### ExPrices
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| steps | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  |  |
+| memory | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-ExUnits"></a>
+
+### ExUnits
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| steps | [uint64](#uint64) |  |  |
+| memory | [uint64](#uint64) |  |  |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-GenesisKeyDelegationCert"></a>
 
 ### GenesisKeyDelegationCert
@@ -488,10 +591,36 @@ Represents a list of native scripts.
 
 
 
-<a name="utxorpc-v1alpha-cardano-Params"></a>
+<a name="utxorpc-v1alpha-cardano-PParams"></a>
 
-### Params
+### PParams
 
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| coins_per_utxo_byte | [uint64](#uint64) |  | The number of coins per UTXO byte. |
+| max_tx_size | [uint64](#uint64) |  | The maximum transaction size. |
+| min_fee_coefficient | [uint64](#uint64) |  | The minimum fee coefficient. |
+| min_fee_constant | [uint64](#uint64) |  | The minimum fee constant. |
+| max_block_body_size | [uint64](#uint64) |  | The maximum block body size. |
+| max_block_header_size | [uint64](#uint64) |  | The maximum block header size. |
+| stake_key_deposit | [uint64](#uint64) |  | The stake key deposit. |
+| pool_deposit | [uint64](#uint64) |  | The pool deposit. |
+| pool_retirement_epoch_bound | [uint64](#uint64) |  | The pool retirement epoch bound. |
+| desired_number_of_pools | [uint64](#uint64) |  | The desired number of pools. |
+| pool_influence | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  | The pool influence. |
+| monetary_expansion | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  | The monetary expansion. |
+| treasury_expansion | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  | The treasury expansion. |
+| min_pool_cost | [uint64](#uint64) |  | The minimum pool cost. |
+| protocol_version | [ProtocolVersion](#utxorpc-v1alpha-cardano-ProtocolVersion) |  | The protocol version. |
+| max_value_size | [uint64](#uint64) |  | The maximum value size. |
+| collateral_percentage | [uint64](#uint64) |  | The collateral percentage. |
+| max_collateral_inputs | [uint64](#uint64) |  | The maximum collateral inputs. |
+| cost_models | [CostModels](#utxorpc-v1alpha-cardano-CostModels) |  | The cost models. |
+| prices | [ExPrices](#utxorpc-v1alpha-cardano-ExPrices) |  | The prices. |
+| max_execution_units_per_transaction | [ExUnits](#utxorpc-v1alpha-cardano-ExUnits) |  | The maximum execution units per transaction. |
+| max_execution_units_per_block | [ExUnits](#utxorpc-v1alpha-cardano-ExUnits) |  | The maximum execution units per block. |
 
 
 
@@ -612,6 +741,22 @@ Represents a pool retirement certificate in Cardano.
 | ----- | ---- | ----- | ----------- |
 | pool_keyhash | [bytes](#bytes) |  | Pool key hash. |
 | epoch | [uint64](#uint64) |  | Retirement epoch. |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-ProtocolVersion"></a>
+
+### ProtocolVersion
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| major | [uint32](#uint32) |  |  |
+| minor | [uint32](#uint32) |  |  |
 
 
 
@@ -754,6 +899,24 @@ Represents a transaction in the Cardano blockchain.
 | successful | [bool](#bool) |  | Flag indicating whether the transaction was successful |
 | auxiliary | [AuxData](#utxorpc-v1alpha-cardano-AuxData) |  | Auxiliary data not directly tied to the validation process |
 | hash | [bytes](#bytes) |  | Hash of the transaction that serves as main identifier |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-TxEval"></a>
+
+### TxEval
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| fee | [uint64](#uint64) |  |  |
+| ex_units | [ExUnits](#utxorpc-v1alpha-cardano-ExUnits) |  |  |
+| errors | [EvalError](#utxorpc-v1alpha-cardano-EvalError) | repeated |  |
+| traces | [EvalTrace](#utxorpc-v1alpha-cardano-EvalTrace) | repeated |  |
 
 
 
@@ -942,6 +1105,23 @@ Purpose of the redeemer in a transaction.
 
 
 
+<a name="utxorpc-v1alpha-query-AnyChainDatum"></a>
+
+### AnyChainDatum
+An evenlope that holds a datum for any of the compatible chains
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [bytes](#bytes) |  |  |
+| native_bytes | [bytes](#bytes) |  | An opaque bytestring corresponding to native representation in the source chain. |
+| cardano | [utxorpc.v1alpha.cardano.PlutusData](#utxorpc-v1alpha-cardano-PlutusData) |  | A cardano UTxO |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-query-AnyChainParams"></a>
 
 ### AnyChainParams
@@ -950,7 +1130,7 @@ An evenlope that holds parameter data from any of the compatible chains
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| cardano | [utxorpc.v1alpha.cardano.Params](#utxorpc-v1alpha-cardano-Params) |  | Cardano parameters |
+| cardano | [utxorpc.v1alpha.cardano.PParams](#utxorpc-v1alpha-cardano-PParams) |  | Cardano parameters |
 
 
 
@@ -1005,6 +1185,38 @@ Represents a specific point in the blockchain.
 
 
 
+<a name="utxorpc-v1alpha-query-ReadDataRequest"></a>
+
+### ReadDataRequest
+Request to get data (as in plural of datum)
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| keys | [bytes](#bytes) | repeated |  |
+| field_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  | Field mask to selectively return fields in the response. |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-query-ReadDataResponse"></a>
+
+### ReadDataResponse
+Response containing data (as in plural of datum)
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| values | [AnyChainDatum](#utxorpc-v1alpha-query-AnyChainDatum) | repeated | The value of each datum. |
+| ledger_tip | [ChainPoint](#utxorpc-v1alpha-query-ChainPoint) |  | The chain point that represent the ledger current position. |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-query-ReadParamsRequest"></a>
 
 ### ReadParamsRequest
@@ -1045,6 +1257,7 @@ Request to get specific UTxOs
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | keys | [TxoRef](#utxorpc-v1alpha-query-TxoRef) | repeated | List of keys UTxOs. |
+| field_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  | Field mask to selectively return fields. |
 
 
 
@@ -1076,6 +1289,7 @@ Reques to search for UTxO based on a pattern.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | predicate | [UtxoPredicate](#utxorpc-v1alpha-query-UtxoPredicate) |  | Pattern to match UTxOs by. |
+| field_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  | Field mask to selectively return fields. |
 
 
 
@@ -1148,7 +1362,7 @@ Service definition for querying the state of the chain.
 | ReadParams | [ReadParamsRequest](#utxorpc-v1alpha-query-ReadParamsRequest) | [ReadParamsResponse](#utxorpc-v1alpha-query-ReadParamsResponse) | Get overall chain state. |
 | ReadUtxos | [ReadUtxosRequest](#utxorpc-v1alpha-query-ReadUtxosRequest) | [ReadUtxosResponse](#utxorpc-v1alpha-query-ReadUtxosResponse) | Read specific UTxOs by reference. |
 | SearchUtxos | [SearchUtxosRequest](#utxorpc-v1alpha-query-SearchUtxosRequest) | [SearchUtxosResponse](#utxorpc-v1alpha-query-SearchUtxosResponse) | Search for UTxO based on a pattern. |
-| StreamUtxos | [ReadUtxosRequest](#utxorpc-v1alpha-query-ReadUtxosRequest) | [ReadUtxosResponse](#utxorpc-v1alpha-query-ReadUtxosResponse) stream | Stream all available utxos |
+| ReadData | [ReadDataRequest](#utxorpc-v1alpha-query-ReadDataRequest) | [ReadDataResponse](#utxorpc-v1alpha-query-ReadDataResponse) | Read specific datum by hash |
 
  
 
@@ -1158,6 +1372,21 @@ Service definition for querying the state of the chain.
 <p align="right"><a href="#top">Top</a></p>
 
 ## utxorpc/v1alpha/submit/submit.proto
+
+
+
+<a name="utxorpc-v1alpha-submit-AnyChainEval"></a>
+
+### AnyChainEval
+Report containing the result of evaluating a particular transaction
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| cardano | [utxorpc.v1alpha.cardano.TxEval](#utxorpc-v1alpha-cardano-TxEval) |  | A Cardano tx evaluation report. |
+
+
+
 
 
 
@@ -1185,6 +1414,36 @@ Represents a tx pattern from any supported blockchain.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | cardano | [utxorpc.v1alpha.cardano.TxPattern](#utxorpc-v1alpha-cardano-TxPattern) |  | A Cardano tx pattern. |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-submit-EvalTxRequest"></a>
+
+### EvalTxRequest
+Request to evaluate transactions without submitting.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| tx | [AnyChainTx](#utxorpc-v1alpha-submit-AnyChainTx) | repeated | List of transactions to evaluate. |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-submit-EvalTxResponse"></a>
+
+### EvalTxResponse
+Response containing the reports form the transaction evaluation.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| report | [AnyChainEval](#utxorpc-v1alpha-submit-AnyChainEval) | repeated |  |
 
 
 
@@ -1375,6 +1634,7 @@ Service definition for submitting transactions and checking their status.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
+| EvalTx | [EvalTxRequest](#utxorpc-v1alpha-submit-EvalTxRequest) | [EvalTxResponse](#utxorpc-v1alpha-submit-EvalTxResponse) | Evaluates a transaction without submitting it. |
 | SubmitTx | [SubmitTxRequest](#utxorpc-v1alpha-submit-SubmitTxRequest) | [SubmitTxResponse](#utxorpc-v1alpha-submit-SubmitTxResponse) | Submit transactions to the blockchain. |
 | WaitForTx | [WaitForTxRequest](#utxorpc-v1alpha-submit-WaitForTxRequest) | [WaitForTxResponse](#utxorpc-v1alpha-submit-WaitForTxResponse) stream | Wait for transactions to reach a certain stage and stream the updates. |
 | ReadMempool | [ReadMempoolRequest](#utxorpc-v1alpha-submit-ReadMempoolRequest) | [ReadMempoolResponse](#utxorpc-v1alpha-submit-ReadMempoolResponse) | Returns a point-in-time snapshot of the mempool. |
@@ -1496,6 +1756,7 @@ Request to follow the tip of the blockchain.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | intersect | [BlockRef](#utxorpc-v1alpha-sync-BlockRef) | repeated | List of block references to find the intersection. |
+| field_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  | Field mask to selectively return fields. |
 
 
 
@@ -1525,9 +1786,9 @@ Response containing the action to perform while following the tip.
  
 
 
-<a name="utxorpc-v1alpha-sync-ChainSyncService"></a>
+<a name="utxorpc-v1alpha-sync-SyncService"></a>
 
-### ChainSyncService
+### SyncService
 Service definition for syncing chain data.
 
 | Method Name | Request Type | Response Type | Description |
@@ -1577,6 +1838,22 @@ Represents a tx pattern from any supported blockchain.
 
 
 
+<a name="utxorpc-v1alpha-watch-BlockRef"></a>
+
+### BlockRef
+Represents a reference to a specific block
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| index | [uint64](#uint64) |  | Height or slot number (depending on the blockchain) |
+| hash | [bytes](#bytes) |  | Hash of the content of the block |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-watch-TxPredicate"></a>
 
 ### TxPredicate
@@ -1605,6 +1882,7 @@ Request to watch transactions from the chain based on a set of predicates.
 | ----- | ---- | ----- | ----------- |
 | predicate | [TxPredicate](#utxorpc-v1alpha-watch-TxPredicate) |  | Predicate to filter transactions by. |
 | field_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  | Field mask to selectively return fields. |
+| intersect | [BlockRef](#utxorpc-v1alpha-watch-BlockRef) | repeated | List of block references to find the intersection. |
 
 
 
