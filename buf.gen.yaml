@@ -13,12 +13,12 @@ plugins:
     out: gen/go
     opt:
      - paths=source_relative
-  
+
   - plugin: buf.build/connectrpc/go
     out: gen/go
     opt:
      - paths=source_relative
-  
+
   # rust
 
   - plugin: prost
@@ -45,13 +45,24 @@ plugins:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
 
+  # python
+
+  - plugin: buf.build/protocolbuffers/python
+    out: gen/python/utxorpc_spec
+
+  - plugin: buf.build/protocolbuffers/pyi
+    out: gen/python/utxorpc_spec
+
+  - plugin: buf.build/grpc/python:v1.64.2
+    out: gen/python/utxorpc_spec
+
   # node
 
   - plugin: es
     out: gen/node/src
     opt:
       - target=ts
-  
+
   - plugin: connect-es
     out: gen/node/src
     opt:
