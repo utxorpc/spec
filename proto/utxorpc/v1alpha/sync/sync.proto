@@ -12,8 +12,8 @@ message BlockRef {
 }
 
 message AnyChainBlock {
+  bytes native_bytes = 1; // Original bytes as defined by the chain
   oneof chain {
-    bytes raw = 1; // Original bytes for a raw block
     utxorpc.v1alpha.cardano.Block cardano = 2; // A parsed Cardano block.
   }
 }
