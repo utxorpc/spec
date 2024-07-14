@@ -46,6 +46,7 @@ message Asset {
 message Multiasset {
   bytes policy_id = 1; // Policy ID governing the custom assets.
   repeated Asset assets = 2; // List of custom assets.
+  Redeemer redeemer = 3; // Redeemer for the Plutus script.
 }
 
 // Represents the validity interval of a transaction.
@@ -65,6 +66,7 @@ message Collateral {
 message Withdrawal {
   bytes reward_account = 1; // Address of the reward account.
   uint64 coin = 2; // Amount of ADA withdrawn.
+  Redeemer redeemer = 3; // Redeemer for the Plutus script.
 }
 
 // Represents a set of witnesses that validate a transaction
@@ -263,6 +265,7 @@ message Certificate {
     GenesisKeyDelegationCert genesis_key_delegation = 6; // Genesis key delegation certificate.
     MirCert mir_cert = 7; // Move instantaneous rewards certificate.
   }
+  Redeemer redeemer = 100; // Redeemer for the Plutus script.
 }
 
 // Represents a stake delegation certificate in Cardano.
