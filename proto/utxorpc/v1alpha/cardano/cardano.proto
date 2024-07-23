@@ -177,6 +177,7 @@ message PlutusData {
     bytes bounded_bytes = 4; // Bounded bytes.
     PlutusDataArray array = 5; // Array of Plutus data.
   }
+  bytes native_bytes = 6; // Native bytes field
 }
 
 // Represents a map of Plutus data in Cardano.
