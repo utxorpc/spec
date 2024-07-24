@@ -170,14 +170,14 @@ message PlutusDataPair {
 
 // Represents a Plutus data item in Cardano.
 message PlutusData {
+  bytes native_bytes = 1; // Original bytes as defined by the chain
   oneof plutus_data {
-    Constr constr = 1; // Constructor.
-    PlutusDataMap map = 2; // Map of Plutus data.
-    BigInt big_int = 3; // Big integer.
-    bytes bounded_bytes = 4; // Bounded bytes.
-    PlutusDataArray array = 5; // Array of Plutus data.
+    Constr constr = 2; // Constructor.
+    PlutusDataMap map = 3; // Map of Plutus data.
+    BigInt big_int = 4; // Big integer.
+    bytes bounded_bytes = 5; // Bounded bytes.
+    PlutusDataArray array = 6; // Array of Plutus data.
   }
-  bytes native_bytes = 6; // Native bytes field
 }
 
 // Represents a map of Plutus data in Cardano.

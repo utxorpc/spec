@@ -54,8 +54,8 @@ message UtxoPredicate {
 
 // An evenlope that holds an UTxO from any of compatible chains
 message AnyUtxoData {
-  TxoRef txo_ref = 1; // Hash of the previous transaction.
-  bytes native_bytes = 2; // An opaque bytestring corresponding to native representation in the source chain.
+  bytes native_bytes = 1; // Original bytes as defined by the chain
+  TxoRef txo_ref = 2; // Hash of the previous transaction.
   oneof parsed_state {
     utxorpc.v1alpha.cardano.TxOutput cardano = 3; // A cardano UTxO
   }
@@ -93,8 +93,8 @@ message ReadDataRequest {
 
 // An evenlope that holds a datum for any of the compatible chains
 message AnyChainDatum {
-  bytes key = 1;
-  bytes native_bytes = 2; // An opaque bytestring corresponding to native representation in the source chain.
+  bytes native_bytes = 1; // Original bytes as defined by the chain
+  bytes key = 2;
   oneof parsed_state {
     utxorpc.v1alpha.cardano.PlutusData cardano = 3; // A cardano UTxO
   }
