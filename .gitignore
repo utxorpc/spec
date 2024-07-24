@@ -11,3 +11,4 @@ gen/rust/src
 !gen/rust/src/lib.rs
 gen/python/utxorpc_spec
 gen/python/dist
+spec.sln
