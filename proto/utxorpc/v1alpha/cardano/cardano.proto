@@ -37,7 +37,7 @@ message TxOutput {
 
 message Datum {
   bytes native_bytes = 1; // Original bytes as defined by the chain
-  PlutusData parsed_state = 2; // Datum data.
+  PlutusData parsed_state = 2; // Parsed PlutusData
 }
 
 // Represents a custom asset in the Cardano blockchain.
