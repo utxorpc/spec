@@ -31,13 +31,13 @@ message TxOutput {
   uint64 coin = 2; // Amount of ADA in the output.
   repeated Multiasset assets = 3; // Additional native (non-ADA) assets in the output.
   Datum datum = 4; // Plutus data associated with the output.
-  bytes datum_hash = 5; // Hash of the Plutus data.
-  Script script = 6; // Script associated with the output.
+  Script script = 5; // Script associated with the output.
 }
 
 message Datum {
   bytes native_bytes = 1; // Original bytes as defined by the chain
   PlutusData parsed_state = 2; // Parsed PlutusData
+  bytes datum_hash = 3; // Hash of the Plutus data.
 }
 
 // Represents a custom asset in the Cardano blockchain.
