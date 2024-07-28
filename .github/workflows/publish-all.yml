@@ -77,22 +77,22 @@ jobs:
           repository-token: ${{ secrets.GOSDK_REPOSITORY_TOKEN }}
           mode: ${{ inputs.mode }}
 
-  publish-haskell:
-    runs-on: ubuntu-latest
+  # publish-haskell:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: codegen
-          path: ./codegen
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: codegen
+  #         path: ./codegen
 
-      - uses: ./.github/actions/publish-haskell
-        with:
-          registry-token: ${{ secrets.HACKAGE_REGISTRY_TOKEN }}
-          mode: ${{ inputs.mode }}
+  #     - uses: ./.github/actions/publish-haskell
+  #       with:
+  #         registry-token: ${{ secrets.HACKAGE_REGISTRY_TOKEN }}
+  #         mode: ${{ inputs.mode }}
 
   publish-dotnet:
     runs-on: ubuntu-latest
