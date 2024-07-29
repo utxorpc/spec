@@ -43,5 +43,5 @@ library
     , proto-lens >= 0.7.1 && < 0.8
     -- >= 0.7.2 required as it contains support for `FieldMask`
     , proto-lens-protobuf-types >= 0.7.2 && < 0.8
-    , proto-lens-runtime >= 0.8.0 && < 0.8
+    , proto-lens-runtime >= 0.7.0.6
   default-language: Haskell2010
