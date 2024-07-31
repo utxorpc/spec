@@ -32,6 +32,13 @@ packages:
       size: 3250
   original:
     hackage: ghc-source-gen-0.4.4.1
+- completed:
+    hackage: proto-lens-runtime-0.7.0.6@sha256:b12a2731424121ea337c5705088dd4c83db461c280c962749298503f2643ca24,3057
+    pantry-tree:
+      sha256: f70c8ec121f62902b4ce98f41dbb54126c81a2ff07c85df313782ae334463d00
+      size: 168
+  original:
+    hackage: proto-lens-runtime-0.7.0.6
 snapshots:
 - completed:
     sha256: 7b975b104cb3dbf0c297dfd01f936a4d2ee523241dd0b1ae960522b833fe3027
