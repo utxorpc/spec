@@ -372,13 +372,9 @@ message ProtocolVersion {
   uint32 minor = 2;
 }
 
-message CostModel {
-  // TODO
-}
-
 message CostModels {
-  CostModel plutus_v1 = 1;
-  CostModel plutus_v2 = 2;
+  repeated int64 plutus_v1 = 1;
+  repeated int64 plutus_v2 = 2;
 }
 
 message PParams {
