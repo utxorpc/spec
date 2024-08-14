@@ -29,7 +29,7 @@ jobs:
 
       - name: Install node protoc plugins
         run: |
-          npm install -g @bufbuild/protoc-gen-es@v1.10 @connectrpc/protoc-gen-connect-es@v1.10
+          npm install -g @bufbuild/protoc-gen-es@v1.10 @connectrpc/protoc-gen-connect-es@v1.4
 
       - name: Install Prost from Cargo
         uses: baptiste0928/cargo-install@v2
