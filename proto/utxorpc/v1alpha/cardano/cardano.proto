@@ -373,7 +373,7 @@ message ProtocolVersion {
 }
 
 message CostModel {
-  // TODO
+  repeated int64 values = 1;
 }
 
 message CostModels {
