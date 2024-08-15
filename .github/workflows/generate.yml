@@ -29,7 +29,7 @@ jobs:
 
       - name: Install node protoc plugins
         run: |
-          npm install -g @bufbuild/protoc-gen-es @connectrpc/protoc-gen-connect-es
+          npm install -g @bufbuild/protoc-gen-es@v1.10 @connectrpc/protoc-gen-connect-es@v1.4
 
       - name: Install Prost from Cargo
         uses: baptiste0928/cargo-install@v2
@@ -65,7 +65,9 @@ jobs:
         run: buf generate proto
 
       - name: Fix python imports
-        run: find gen/python/utxorpc_spec -type f -exec sed -i '' 's@from utxorpc@from utxorpc_spec.utxorpc@g' {} \;
+        run:
+          find gen/python/utxorpc_spec -type f -exec sed -i '' 's@from
+          utxorpc@from utxorpc_spec.utxorpc@g' {} \;
 
       - name: Create codegen artifact
         uses: actions/upload-artifact@v4
