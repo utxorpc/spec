@@ -49,18 +49,20 @@ enum Stage {
 }
 
 message TxInMempool {
-  AnyChainTx tx = 1; // The contents of the tx
-  Stage stage = 2; // The current stage of the tx
+  bytes ref = 1; // The transaction reference.
+  bytes native_bytes = 2; // Original bytes as defined by the chain
+  Stage stage = 3; // The current stage of the tx
+  oneof parsed_state {
+    utxorpc.v1alpha.cardano.Tx cardano = 4; // A Cardano transaction.
+  }
 }
 
 // Request to check the status of submitted transactions.
-message ReadMempoolRequest {
-  repeated TxInMempool tx = 1; // List of transaction currently on the mempool.
-}
+message ReadMempoolRequest {}
 
 // Response containing the stage of the submitted transactions.
 message ReadMempoolResponse {
-  repeated Stage stage = 1; // List of stages corresponding to the transaction references.
+  repeated TxInMempool items = 1; // List of transaction currently on the mempool.
 }
 
 // Request to wait for transactions to reach a certain stage.
