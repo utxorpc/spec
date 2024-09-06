@@ -9,6 +9,8 @@ enum RedeemerPurpose {
   REDEEMER_PURPOSE_MINT = 2;
   REDEEMER_PURPOSE_CERT = 3;
   REDEEMER_PURPOSE_REWARD = 4;
+  REDEEMER_PURPOSE_VOTE = 5;
+  REDEEMER_PURPOSE_PROPOSE = 6;
 }
 
 // Redeemer information for a Plutus script.
@@ -200,6 +202,7 @@ message Script {
     NativeScript native = 1; // Native script.
     bytes plutus_v1 = 2; // Plutus V1 script.
     bytes plutus_v2 = 3; // Plutus V2 script.
+    bytes plutus_v3 = 4; // Plutus V3 script.
   }
 }
 
@@ -269,6 +272,18 @@ message Certificate {
     PoolRetirementCert pool_retirement = 5; // Pool retirement certificate.
     GenesisKeyDelegationCert genesis_key_delegation = 6; // Genesis key delegation certificate.
     MirCert mir_cert = 7; // Move instantaneous rewards certificate.
+    RegCert reg_cert = 8; // Registration certificate.
+    UnRegCert unreg_cert = 9; // Unregistration certificate.
+    VoteDelegCert vote_deleg_cert = 10; // Vote delegation certificate.
+    StakeVoteDelegCert stake_vote_deleg_cert = 11; // Stake and vote delegation certificate.
+    StakeRegDelegCert stake_reg_deleg_cert = 12; // Stake registration and delegation certificate.
+    VoteRegDelegCert vote_reg_deleg_cert = 13; // Vote registration and delegation certificate.
+    StakeVoteRegDelegCert stake_vote_reg_deleg_cert = 14; // Stake and vote registration and delegation certificate.
+    AuthCommitteeHotCert auth_committee_hot_cert = 15; // Authorize committee hot key certificate.
+    ResignCommitteeColdCert resign_committee_cold_cert = 16; // Resign committee cold key certificate.
+    RegDRepCert reg_drep_cert = 17; // Register DRep certificate.
+    UnRegDRepCert unreg_drep_cert = 18; // Unregister DRep certificate.
+    UpdateDRepCert update_drep_cert = 19; // Update DRep certificate.
   }
   Redeemer redeemer = 100; // Redeemer for the Plutus script.
 }
@@ -321,6 +336,86 @@ message MirCert {
   MirSource from = 1;
   repeated MirTarget to = 2;
   uint64 other_pot = 3;
+}
+
+message RegCert {
+  StakeCredential stake_credential = 1;
+  uint64 coin = 2;
+}
+
+message UnRegCert {
+  StakeCredential stake_credential = 1;
+  uint64 coin = 2;
+}
+
+message DRep {
+  oneof drep {
+    bytes addr_key_hash = 1; // Address key hash
+    bytes script_hash = 2; // Script hash
+    bool abstain = 3; // Abstain
+    bool no_confidence = 4; // No confidence
+  }
+}
+
+message VoteDelegCert {
+  StakeCredential stake_credential = 1;
+  DRep drep = 2;
+}
+
+message StakeVoteDelegCert {
+  StakeCredential stake_credential = 1;
+  bytes pool_keyhash = 2;
+  DRep drep = 3;
+}
+
+message StakeRegDelegCert {
+  StakeCredential stake_credential = 1;
+  bytes pool_keyhash = 2;
+  uint64 coin = 3;
+}
+
+message VoteRegDelegCert {
+  StakeCredential stake_credential = 1;
+  DRep drep = 2;
+  uint64 coin = 3;
+}
+
+message StakeVoteRegDelegCert {
+  StakeCredential stake_credential = 1;
+  bytes pool_keyhash = 2;
+  DRep drep = 3;
+  uint64 coin = 4;
+}
+
+message AuthCommitteeHotCert {
+  StakeCredential committee_cold_credential = 1;
+  StakeCredential committee_hot_credential = 2;
+}
+
+message Anchor {
+  string url = 1;
+  bytes content_hash = 2;
+}
+
+message ResignCommitteeColdCert {
+  StakeCredential committee_cold_credential = 1;
+  Anchor anchor = 2;
+}
+
+message RegDRepCert {
+  StakeCredential drep_credential = 1;
+  uint64 coin = 2;
+  Anchor anchor = 3;
+}
+
+message UnRegDRepCert {
+  StakeCredential drep_credential = 1;
+  uint64 coin = 2;
+}
+
+message UpdateDRepCert {
+  StakeCredential drep_credential = 1;
+  Anchor anchor = 2;
 }
 
 // PATTERN MATCHING
@@ -379,6 +474,7 @@ message CostModel {
 message CostModels {
   CostModel plutus_v1 = 1;
   CostModel plutus_v2 = 2;
+  CostModel plutus_v3 = 3;
 }
 
 message PParams {
