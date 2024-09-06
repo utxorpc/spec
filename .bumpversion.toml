@@ -25,3 +25,6 @@ filename = "gen/haskell/utxorpc.cabal"
 
 [[tool.bumpversion.files]]
 filename = "gen/dotnet/Utxorpc.Spec.csproj"
+
+[[tool.bumpversion.files]]
+filename = "gen/python/pyproject.toml"
