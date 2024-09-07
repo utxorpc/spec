@@ -4,9 +4,9 @@
   "description": "UTxO RPC auto-generated spec types & stubs",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
-  "type": "module",
+  "module": "./lib/index.mjs",
   "scripts": {
-    "build": "tsc"
+    "build": "tsup src/index.ts --format esm,cjs --dts --out-dir lib"
   },
   "engines": {
     "node": ">=16.0.0"
@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/utxorpc/spec#readme",
   "devDependencies": {
+    "tsup": "^8.2.4",
     "typescript": "^5.1.3"
   },
   "dependencies": {
