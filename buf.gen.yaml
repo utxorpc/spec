@@ -37,12 +37,12 @@ plugins:
     strategy: all
     opt:
       - gen_crate=gen/rust/Cargo.toml
-      - no_features
       
   - plugin: tonic
     out: gen/rust/src
     opt:
       - compile_well_known_types
+      - no_transport
       - extern_path=.google.protobuf=::pbjson_types
 
   # python
