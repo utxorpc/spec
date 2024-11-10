@@ -37,7 +37,6 @@ plugins:
     strategy: all
     opt:
       - gen_crate=gen/rust/Cargo.toml
-      - no_features
       
   - plugin: tonic
     out: gen/rust/src
