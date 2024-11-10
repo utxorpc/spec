@@ -43,6 +43,7 @@ plugins:
     out: gen/rust/src
     opt:
       - compile_well_known_types
+      - no_transport
       - extern_path=.google.protobuf=::pbjson_types
 
   # python
