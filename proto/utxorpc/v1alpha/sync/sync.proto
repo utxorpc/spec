@@ -57,9 +57,18 @@ message FollowTipResponse {
   }
 }
 
+// Request to read the current tip of the blockchain.
+message ReadTipRequest {}
+
+// Response containing the current tip of the blockchain.
+message ReadTipResponse {
+  BlockRef tip = 1; // The current tip of the blockchain.
+}
+
 // Service definition for syncing chain data.
 service SyncService {
   rpc FetchBlock(FetchBlockRequest) returns (FetchBlockResponse); // Fetch a block by its reference.
   rpc DumpHistory(DumpHistoryRequest) returns (DumpHistoryResponse); // Dump the block history.
   rpc FollowTip(FollowTipRequest) returns (stream FollowTipResponse); // Follow the tip of the blockchain.
+  rpc ReadTip(ReadTipRequest) returns (ReadTipResponse); // Read the current tip of the blockchain.
 }
