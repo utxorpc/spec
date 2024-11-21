@@ -16,7 +16,9 @@ enum RedeemerPurpose {
 // Redeemer information for a Plutus script.
 message Redeemer {
   RedeemerPurpose purpose = 1; // Purpose of the redeemer.
-  PlutusData payload = 2; // Plutus data associated with the redeemer.
+  uint32 index = 2; // Index of the redeemer.
+  PlutusData payload = 3; // Plutus data associated with the redeemer.
+  ExUnits ex_units = 4; // Execution units consumed by the redeemer.
 }
 
 // Represents a transaction input in the Cardano blockchain.
@@ -515,7 +517,7 @@ message EvalTrace {
 
 message TxEval {
   uint64 fee = 1;
-  ExUnits ex_units = 2;
+  repeated Redeemer redeemers = 2;
   repeated EvalError errors = 3;
   repeated EvalTrace traces = 4;
 }
