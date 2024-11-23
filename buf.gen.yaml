@@ -75,10 +75,10 @@ plugins:
     out: gen/haskell
 
   # dotnet
-  - plugin: buf.build/grpc/csharp:v1.60.0
+  - plugin: buf.build/grpc/csharp:v1.68.0
     out: gen/dotnet
     
-  - plugin: buf.build/protocolbuffers/csharp
+  - plugin: buf.build/protocolbuffers/csharp:v28.3
     out: gen/dotnet
 
   # other
