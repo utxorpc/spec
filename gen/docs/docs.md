@@ -5,8 +5,10 @@
 
 - [utxorpc/v1alpha/cardano/cardano.proto](#utxorpc_v1alpha_cardano_cardano-proto)
     - [AddressPattern](#utxorpc-v1alpha-cardano-AddressPattern)
+    - [Anchor](#utxorpc-v1alpha-cardano-Anchor)
     - [Asset](#utxorpc-v1alpha-cardano-Asset)
     - [AssetPattern](#utxorpc-v1alpha-cardano-AssetPattern)
+    - [AuthCommitteeHotCert](#utxorpc-v1alpha-cardano-AuthCommitteeHotCert)
     - [AuxData](#utxorpc-v1alpha-cardano-AuxData)
     - [BigInt](#utxorpc-v1alpha-cardano-BigInt)
     - [Block](#utxorpc-v1alpha-cardano-Block)
@@ -17,6 +19,8 @@
     - [Constr](#utxorpc-v1alpha-cardano-Constr)
     - [CostModel](#utxorpc-v1alpha-cardano-CostModel)
     - [CostModels](#utxorpc-v1alpha-cardano-CostModels)
+    - [DRep](#utxorpc-v1alpha-cardano-DRep)
+    - [Datum](#utxorpc-v1alpha-cardano-Datum)
     - [EvalError](#utxorpc-v1alpha-cardano-EvalError)
     - [EvalTrace](#utxorpc-v1alpha-cardano-EvalTrace)
     - [ExPrices](#utxorpc-v1alpha-cardano-ExPrices)
@@ -43,11 +47,17 @@
     - [ProtocolVersion](#utxorpc-v1alpha-cardano-ProtocolVersion)
     - [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber)
     - [Redeemer](#utxorpc-v1alpha-cardano-Redeemer)
+    - [RegCert](#utxorpc-v1alpha-cardano-RegCert)
+    - [RegDRepCert](#utxorpc-v1alpha-cardano-RegDRepCert)
     - [Relay](#utxorpc-v1alpha-cardano-Relay)
+    - [ResignCommitteeColdCert](#utxorpc-v1alpha-cardano-ResignCommitteeColdCert)
     - [Script](#utxorpc-v1alpha-cardano-Script)
     - [ScriptNOfK](#utxorpc-v1alpha-cardano-ScriptNOfK)
     - [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential)
     - [StakeDelegationCert](#utxorpc-v1alpha-cardano-StakeDelegationCert)
+    - [StakeRegDelegCert](#utxorpc-v1alpha-cardano-StakeRegDelegCert)
+    - [StakeVoteDelegCert](#utxorpc-v1alpha-cardano-StakeVoteDelegCert)
+    - [StakeVoteRegDelegCert](#utxorpc-v1alpha-cardano-StakeVoteRegDelegCert)
     - [Tx](#utxorpc-v1alpha-cardano-Tx)
     - [TxEval](#utxorpc-v1alpha-cardano-TxEval)
     - [TxInput](#utxorpc-v1alpha-cardano-TxInput)
@@ -55,7 +65,12 @@
     - [TxOutputPattern](#utxorpc-v1alpha-cardano-TxOutputPattern)
     - [TxPattern](#utxorpc-v1alpha-cardano-TxPattern)
     - [TxValidity](#utxorpc-v1alpha-cardano-TxValidity)
+    - [UnRegCert](#utxorpc-v1alpha-cardano-UnRegCert)
+    - [UnRegDRepCert](#utxorpc-v1alpha-cardano-UnRegDRepCert)
+    - [UpdateDRepCert](#utxorpc-v1alpha-cardano-UpdateDRepCert)
     - [VKeyWitness](#utxorpc-v1alpha-cardano-VKeyWitness)
+    - [VoteDelegCert](#utxorpc-v1alpha-cardano-VoteDelegCert)
+    - [VoteRegDelegCert](#utxorpc-v1alpha-cardano-VoteRegDelegCert)
     - [Withdrawal](#utxorpc-v1alpha-cardano-Withdrawal)
     - [WitnessSet](#utxorpc-v1alpha-cardano-WitnessSet)
   
@@ -111,6 +126,8 @@
     - [FetchBlockResponse](#utxorpc-v1alpha-sync-FetchBlockResponse)
     - [FollowTipRequest](#utxorpc-v1alpha-sync-FollowTipRequest)
     - [FollowTipResponse](#utxorpc-v1alpha-sync-FollowTipResponse)
+    - [ReadTipRequest](#utxorpc-v1alpha-sync-ReadTipRequest)
+    - [ReadTipResponse](#utxorpc-v1alpha-sync-ReadTipResponse)
   
     - [SyncService](#utxorpc-v1alpha-sync-SyncService)
   
@@ -152,6 +169,22 @@ Pattern of an address that can be used to evaluate matching predicates.
 
 
 
+<a name="utxorpc-v1alpha-cardano-Anchor"></a>
+
+### Anchor
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| url | [string](#string) |  |  |
+| content_hash | [bytes](#bytes) |  |  |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-Asset"></a>
 
 ### Asset
@@ -179,6 +212,22 @@ Pattern of a native asset that can be used to evaluate matching predicates.
 | ----- | ---- | ----- | ----------- |
 | policy_id | [bytes](#bytes) |  | The asset should belong to this policy id |
 | asset_name | [bytes](#bytes) |  | The asset should present this name |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-AuthCommitteeHotCert"></a>
+
+### AuthCommitteeHotCert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| committee_cold_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| committee_hot_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
 
 
 
@@ -281,6 +330,19 @@ Represents a certificate in Cardano.
 | pool_retirement | [PoolRetirementCert](#utxorpc-v1alpha-cardano-PoolRetirementCert) |  | Pool retirement certificate. |
 | genesis_key_delegation | [GenesisKeyDelegationCert](#utxorpc-v1alpha-cardano-GenesisKeyDelegationCert) |  | Genesis key delegation certificate. |
 | mir_cert | [MirCert](#utxorpc-v1alpha-cardano-MirCert) |  | Move instantaneous rewards certificate. |
+| reg_cert | [RegCert](#utxorpc-v1alpha-cardano-RegCert) |  | Registration certificate. |
+| unreg_cert | [UnRegCert](#utxorpc-v1alpha-cardano-UnRegCert) |  | Unregistration certificate. |
+| vote_deleg_cert | [VoteDelegCert](#utxorpc-v1alpha-cardano-VoteDelegCert) |  | Vote delegation certificate. |
+| stake_vote_deleg_cert | [StakeVoteDelegCert](#utxorpc-v1alpha-cardano-StakeVoteDelegCert) |  | Stake and vote delegation certificate. |
+| stake_reg_deleg_cert | [StakeRegDelegCert](#utxorpc-v1alpha-cardano-StakeRegDelegCert) |  | Stake registration and delegation certificate. |
+| vote_reg_deleg_cert | [VoteRegDelegCert](#utxorpc-v1alpha-cardano-VoteRegDelegCert) |  | Vote registration and delegation certificate. |
+| stake_vote_reg_deleg_cert | [StakeVoteRegDelegCert](#utxorpc-v1alpha-cardano-StakeVoteRegDelegCert) |  | Stake and vote registration and delegation certificate. |
+| auth_committee_hot_cert | [AuthCommitteeHotCert](#utxorpc-v1alpha-cardano-AuthCommitteeHotCert) |  | Authorize committee hot key certificate. |
+| resign_committee_cold_cert | [ResignCommitteeColdCert](#utxorpc-v1alpha-cardano-ResignCommitteeColdCert) |  | Resign committee cold key certificate. |
+| reg_drep_cert | [RegDRepCert](#utxorpc-v1alpha-cardano-RegDRepCert) |  | Register DRep certificate. |
+| unreg_drep_cert | [UnRegDRepCert](#utxorpc-v1alpha-cardano-UnRegDRepCert) |  | Unregister DRep certificate. |
+| update_drep_cert | [UpdateDRepCert](#utxorpc-v1alpha-cardano-UpdateDRepCert) |  | Update DRep certificate. |
+| redeemer | [Redeemer](#utxorpc-v1alpha-cardano-Redeemer) |  | Redeemer for the Plutus script. |
 
 
 
@@ -324,7 +386,12 @@ Represents a constructor for Plutus data in Cardano.
 <a name="utxorpc-v1alpha-cardano-CostModel"></a>
 
 ### CostModel
-TODO
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| values | [int64](#int64) | repeated |  |
 
 
 
@@ -341,6 +408,42 @@ TODO
 | ----- | ---- | ----- | ----------- |
 | plutus_v1 | [CostModel](#utxorpc-v1alpha-cardano-CostModel) |  |  |
 | plutus_v2 | [CostModel](#utxorpc-v1alpha-cardano-CostModel) |  |  |
+| plutus_v3 | [CostModel](#utxorpc-v1alpha-cardano-CostModel) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-DRep"></a>
+
+### DRep
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| addr_key_hash | [bytes](#bytes) |  | Address key hash |
+| script_hash | [bytes](#bytes) |  | Script hash |
+| abstain | [bool](#bool) |  | Abstain |
+| no_confidence | [bool](#bool) |  | No confidence |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-Datum"></a>
+
+### Datum
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| hash | [bytes](#bytes) |  | Hash of this datum as seen on-chain |
+| payload | [PlutusData](#utxorpc-v1alpha-cardano-PlutusData) |  | Parsed Plutus data payload |
+| original_cbor | [bytes](#bytes) |  | Original cbor-encoded data as seen on-chain |
 
 
 
@@ -550,6 +653,7 @@ Represents a multi-asset group in the Cardano blockchain.
 | ----- | ---- | ----- | ----------- |
 | policy_id | [bytes](#bytes) |  | Policy ID governing the custom assets. |
 | assets | [Asset](#utxorpc-v1alpha-cardano-Asset) | repeated | List of custom assets. |
+| redeemer | [Redeemer](#utxorpc-v1alpha-cardano-Redeemer) |  | Redeemer for the Plutus script. |
 
 
 
@@ -788,7 +892,40 @@ Redeemer information for a Plutus script.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | purpose | [RedeemerPurpose](#utxorpc-v1alpha-cardano-RedeemerPurpose) |  | Purpose of the redeemer. |
-| datum | [PlutusData](#utxorpc-v1alpha-cardano-PlutusData) |  | Plutus data associated with the redeemer. |
+| payload | [PlutusData](#utxorpc-v1alpha-cardano-PlutusData) |  | Plutus data associated with the redeemer. |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-RegCert"></a>
+
+### RegCert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| coin | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-RegDRepCert"></a>
+
+### RegDRepCert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| drep_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| coin | [uint64](#uint64) |  |  |
+| anchor | [Anchor](#utxorpc-v1alpha-cardano-Anchor) |  |  |
 
 
 
@@ -813,6 +950,22 @@ Represents a relay in Cardano.
 
 
 
+<a name="utxorpc-v1alpha-cardano-ResignCommitteeColdCert"></a>
+
+### ResignCommitteeColdCert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| committee_cold_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| anchor | [Anchor](#utxorpc-v1alpha-cardano-Anchor) |  |  |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-Script"></a>
 
 ### Script
@@ -824,6 +977,7 @@ Represents a script in Cardano.
 | native | [NativeScript](#utxorpc-v1alpha-cardano-NativeScript) |  | Native script. |
 | plutus_v1 | [bytes](#bytes) |  | Plutus V1 script. |
 | plutus_v2 | [bytes](#bytes) |  | Plutus V2 script. |
+| plutus_v3 | [bytes](#bytes) |  | Plutus V3 script. |
 
 
 
@@ -872,6 +1026,58 @@ Represents a stake delegation certificate in Cardano.
 | ----- | ---- | ----- | ----------- |
 | stake_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  | Stake credential. |
 | pool_keyhash | [bytes](#bytes) |  | Pool key hash. |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-StakeRegDelegCert"></a>
+
+### StakeRegDelegCert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| pool_keyhash | [bytes](#bytes) |  |  |
+| coin | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-StakeVoteDelegCert"></a>
+
+### StakeVoteDelegCert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| pool_keyhash | [bytes](#bytes) |  |  |
+| drep | [DRep](#utxorpc-v1alpha-cardano-DRep) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-StakeVoteRegDelegCert"></a>
+
+### StakeVoteRegDelegCert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| pool_keyhash | [bytes](#bytes) |  |  |
+| drep | [DRep](#utxorpc-v1alpha-cardano-DRep) |  |  |
+| coin | [uint64](#uint64) |  |  |
 
 
 
@@ -952,8 +1158,7 @@ Represents a transaction output in the Cardano blockchain.
 | address | [bytes](#bytes) |  | Address receiving the output. |
 | coin | [uint64](#uint64) |  | Amount of ADA in the output. |
 | assets | [Multiasset](#utxorpc-v1alpha-cardano-Multiasset) | repeated | Additional native (non-ADA) assets in the output. |
-| datum | [PlutusData](#utxorpc-v1alpha-cardano-PlutusData) |  | Plutus data associated with the output. |
-| datum_hash | [bytes](#bytes) |  | Hash of the Plutus data. |
+| datum | [Datum](#utxorpc-v1alpha-cardano-Datum) |  | Plutus data associated with the output. |
 | script | [Script](#utxorpc-v1alpha-cardano-Script) |  | Script associated with the output. |
 
 
@@ -1012,6 +1217,54 @@ Represents the validity interval of a transaction.
 
 
 
+<a name="utxorpc-v1alpha-cardano-UnRegCert"></a>
+
+### UnRegCert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| coin | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-UnRegDRepCert"></a>
+
+### UnRegDRepCert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| drep_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| coin | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-UpdateDRepCert"></a>
+
+### UpdateDRepCert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| drep_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| anchor | [Anchor](#utxorpc-v1alpha-cardano-Anchor) |  |  |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-VKeyWitness"></a>
 
 ### VKeyWitness
@@ -1028,6 +1281,39 @@ Represents a VKey witness used to sign a transaction.
 
 
 
+<a name="utxorpc-v1alpha-cardano-VoteDelegCert"></a>
+
+### VoteDelegCert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| drep | [DRep](#utxorpc-v1alpha-cardano-DRep) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-VoteRegDelegCert"></a>
+
+### VoteRegDelegCert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| drep | [DRep](#utxorpc-v1alpha-cardano-DRep) |  |  |
+| coin | [uint64](#uint64) |  |  |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-Withdrawal"></a>
 
 ### Withdrawal
@@ -1038,6 +1324,7 @@ Represents a withdrawal from a reward account.
 | ----- | ---- | ----- | ----------- |
 | reward_account | [bytes](#bytes) |  | Address of the reward account. |
 | coin | [uint64](#uint64) |  | Amount of ADA withdrawn. |
+| redeemer | [Redeemer](#utxorpc-v1alpha-cardano-Redeemer) |  | Redeemer for the Plutus script. |
 
 
 
@@ -1088,6 +1375,8 @@ Purpose of the redeemer in a transaction.
 | REDEEMER_PURPOSE_MINT | 2 |  |
 | REDEEMER_PURPOSE_CERT | 3 |  |
 | REDEEMER_PURPOSE_REWARD | 4 |  |
+| REDEEMER_PURPOSE_VOTE | 5 |  |
+| REDEEMER_PURPOSE_PROPOSE | 6 |  |
 
 
  
@@ -1113,8 +1402,8 @@ An evenlope that holds a datum for any of the compatible chains
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
+| native_bytes | [bytes](#bytes) |  | Original bytes as defined by the chain |
 | key | [bytes](#bytes) |  |  |
-| native_bytes | [bytes](#bytes) |  | An opaque bytestring corresponding to native representation in the source chain. |
 | cardano | [utxorpc.v1alpha.cardano.PlutusData](#utxorpc-v1alpha-cardano-PlutusData) |  | A cardano UTxO |
 
 
@@ -1145,8 +1434,8 @@ An evenlope that holds an UTxO from any of compatible chains
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
+| native_bytes | [bytes](#bytes) |  | Original bytes as defined by the chain |
 | txo_ref | [TxoRef](#utxorpc-v1alpha-query-TxoRef) |  | Hash of the previous transaction. |
-| native_bytes | [bytes](#bytes) |  | An opaque bytestring corresponding to native representation in the source chain. |
 | cardano | [utxorpc.v1alpha.cardano.TxOutput](#utxorpc-v1alpha-cardano-TxOutput) |  | A cardano UTxO |
 
 
@@ -1283,13 +1572,15 @@ Response containing the UTxOs associated with the requested addresses.
 <a name="utxorpc-v1alpha-query-SearchUtxosRequest"></a>
 
 ### SearchUtxosRequest
-Reques to search for UTxO based on a pattern.
+Request to search for UTxO based on a pattern.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | predicate | [UtxoPredicate](#utxorpc-v1alpha-query-UtxoPredicate) |  | Pattern to match UTxOs by. |
 | field_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  | Field mask to selectively return fields. |
+| max_items | [int32](#int32) |  | The maximum number of items to return. |
+| start_token | [string](#string) |  | The next_page_token value returned from a previous request, if any. |
 
 
 
@@ -1306,6 +1597,7 @@ Response containing the UTxOs that match the requested addresses.
 | ----- | ---- | ----- | ----------- |
 | items | [AnyUtxoData](#utxorpc-v1alpha-query-AnyUtxoData) | repeated | List of UTxOs. |
 | ledger_tip | [ChainPoint](#utxorpc-v1alpha-query-ChainPoint) |  | The chain point that represent the ledger current position. |
+| next_token | [string](#string) |  | Token to retrieve the next page of results, or empty if there are no more results. |
 
 
 
@@ -1456,11 +1748,6 @@ Response containing the reports form the transaction evaluation.
 Request to check the status of submitted transactions.
 
 
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| tx | [TxInMempool](#utxorpc-v1alpha-submit-TxInMempool) | repeated | List of transaction currently on the mempool. |
-
-
 
 
 
@@ -1473,7 +1760,7 @@ Response containing the stage of the submitted transactions.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| stage | [Stage](#utxorpc-v1alpha-submit-Stage) | repeated | List of stages corresponding to the transaction references. |
+| items | [TxInMempool](#utxorpc-v1alpha-submit-TxInMempool) | repeated | List of transaction currently on the mempool. |
 
 
 
@@ -1518,8 +1805,10 @@ Response containing references to the submitted transactions.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| tx | [AnyChainTx](#utxorpc-v1alpha-submit-AnyChainTx) |  | The contents of the tx |
+| ref | [bytes](#bytes) |  | The transaction reference. |
+| native_bytes | [bytes](#bytes) |  | Original bytes as defined by the chain |
 | stage | [Stage](#utxorpc-v1alpha-submit-Stage) |  | The current stage of the tx |
+| cardano | [utxorpc.v1alpha.cardano.Tx](#utxorpc-v1alpha-cardano-Tx) |  | A Cardano transaction. |
 
 
 
@@ -1659,7 +1948,7 @@ Service definition for submitting transactions and checking their status.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| raw | [bytes](#bytes) |  | Original bytes for a raw block |
+| native_bytes | [bytes](#bytes) |  | Original bytes as defined by the chain |
 | cardano | [utxorpc.v1alpha.cardano.Block](#utxorpc-v1alpha-cardano-Block) |  | A parsed Cardano block. |
 
 
@@ -1779,6 +2068,31 @@ Response containing the action to perform while following the tip.
 
 
 
+
+<a name="utxorpc-v1alpha-sync-ReadTipRequest"></a>
+
+### ReadTipRequest
+Request to read the current tip of the blockchain.
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-sync-ReadTipResponse"></a>
+
+### ReadTipResponse
+Response containing the current tip of the blockchain.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| tip | [BlockRef](#utxorpc-v1alpha-sync-BlockRef) |  | The current tip of the blockchain. |
+
+
+
+
+
  
 
  
@@ -1796,6 +2110,7 @@ Service definition for syncing chain data.
 | FetchBlock | [FetchBlockRequest](#utxorpc-v1alpha-sync-FetchBlockRequest) | [FetchBlockResponse](#utxorpc-v1alpha-sync-FetchBlockResponse) | Fetch a block by its reference. |
 | DumpHistory | [DumpHistoryRequest](#utxorpc-v1alpha-sync-DumpHistoryRequest) | [DumpHistoryResponse](#utxorpc-v1alpha-sync-DumpHistoryResponse) | Dump the block history. |
 | FollowTip | [FollowTipRequest](#utxorpc-v1alpha-sync-FollowTipRequest) | [FollowTipResponse](#utxorpc-v1alpha-sync-FollowTipResponse) stream | Follow the tip of the blockchain. |
+| ReadTip | [ReadTipRequest](#utxorpc-v1alpha-sync-ReadTipRequest) | [ReadTipResponse](#utxorpc-v1alpha-sync-ReadTipResponse) | Read the current tip of the blockchain. |
 
  
 
