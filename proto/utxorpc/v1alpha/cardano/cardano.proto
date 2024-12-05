@@ -16,8 +16,8 @@ enum RedeemerPurpose {
 // Redeemer information for a Plutus script.
 message Redeemer {
   RedeemerPurpose purpose = 1; // Purpose of the redeemer.
-  uint32 index = 2; // Index of the redeemer.
-  PlutusData payload = 3; // Plutus data associated with the redeemer.
+  PlutusData payload = 2; // Plutus data associated with the redeemer.
+  uint32 index = 3; // Index of the redee mer.
   ExUnits ex_units = 4; // Execution units consumed by the redeemer.
 }
 
