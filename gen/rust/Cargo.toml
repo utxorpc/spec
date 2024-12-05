@@ -1,6 +1,6 @@
 [package]
 name = "utxorpc-spec"
-version = "0.12.0"
+version = "0.13.0"
 edition = "2021"
 description = "Auto-generated structs for the UTxO RPC spec"
 repository = "https://github.com/utxorpc/spec"
