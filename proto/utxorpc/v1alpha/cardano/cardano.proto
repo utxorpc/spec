@@ -517,7 +517,8 @@ message EvalTrace {
 
 message TxEval {
   uint64 fee = 1;
-  repeated Redeemer redeemers = 2;
+  ExUnits ex_units = 2;
   repeated EvalError errors = 3;
   repeated EvalTrace traces = 4;
+  repeated Redeemer redeemers = 5;
 }
