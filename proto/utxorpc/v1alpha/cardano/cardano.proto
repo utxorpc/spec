@@ -19,6 +19,7 @@ message Redeemer {
   PlutusData payload = 2; // Plutus data associated with the redeemer.
   uint32 index = 3; // Index of the redee mer.
   ExUnits ex_units = 4; // Execution units consumed by the redeemer.
+  bytes original_cbor = 5; // Original cbor-encoded data as seen on-chain
 }
 
 // Represents a transaction input in the Cardano blockchain.
