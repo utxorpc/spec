@@ -480,6 +480,10 @@ message CostModels {
   CostModel plutus_v3 = 3;
 }
 
+message VotingThresholds {
+  repeated RationalNumber thresholds = 1;
+}
+
 message PParams {
   uint64 coins_per_utxo_byte = 1; // The number of coins per UTXO byte.
   uint64 max_tx_size = 2; // The maximum transaction size.
@@ -504,6 +508,14 @@ message PParams {
   ExUnits max_execution_units_per_transaction = 21; // The maximum execution units per transaction.
   ExUnits max_execution_units_per_block = 22; // The maximum execution units per block.
   RationalNumber min_fee_script_ref_cost_per_byte = 23; // The minimum fee per script reference byte.
+  VotingThresholds pool_voting_thresholds = 24; // The pool voting thresholds.
+  VotingThresholds drep_voting_thresholds = 25; // The drep voting thresholds.
+  uint32 min_committee_size = 26; // The minimum committee size.
+  uint64 committee_term_limit = 27; // The committee term limit.
+  uint64 governance_action_validity_period = 28; // The governance action validity period.
+  uint64 governance_action_deposit = 29; // The governance action deposit.
+  uint64 drep_deposit = 30; // The drep deposit.
+  uint64 drep_inactivity_period = 31; // The drep inactivity period.
 }
 
 // EVALUATION
