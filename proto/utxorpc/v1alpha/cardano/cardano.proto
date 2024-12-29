@@ -503,7 +503,7 @@ message PParams {
   ExPrices prices = 20; // The prices.
   ExUnits max_execution_units_per_transaction = 21; // The maximum execution units per transaction.
   ExUnits max_execution_units_per_block = 22; // The maximum execution units per block.
-  uint64 min_fee_script_ref_cost_per_byte = 23; // The minimum fee per script reference byte.
+  RationalNumber min_fee_script_ref_cost_per_byte = 23; // The minimum fee per script reference byte.
 }
 
 // EVALUATION
