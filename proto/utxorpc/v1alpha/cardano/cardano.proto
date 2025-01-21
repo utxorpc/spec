@@ -147,9 +147,9 @@ message HardForkInitiationAction {
   ProtocolVersion protocol_version = 2; // The protocol version to fork to
 }
 
-message TreasuryWithdrawalAction {
+message TreasuryWithdrawalsAction {
   GovernanceActionId gov_action_id = 1;
-  WithdrawalAmount withdrawals = 2; // A map of the withdrawals to make
+  repeated WithdrawalAmount withdrawals = 2; // A map of the withdrawals to make
   bytes policy_hash = 3;
 }
 
