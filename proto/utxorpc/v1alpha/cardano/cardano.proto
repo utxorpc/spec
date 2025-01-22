@@ -113,7 +113,7 @@ message Tx {
 // Define a governance action proposal
 message GovernanceActionProposal {
   uint64 deposit = 1; // The amount deposited for the governance action
-  StakeCredential reward_account = 2; // The reward account the deposit should be returned to
+  bytes reward_account = 2; // The reward account the deposit should be returned to
   GovernanceAction gov_action = 3;
   Anchor anchor = 4;
 }
@@ -123,10 +123,12 @@ message GovernanceAction {
   oneof governance_action {
     ParameterChangeAction parameter_change_action = 1; // Change on-chain parameters
     HardForkInitiationAction hard_fork_initiation_action = 2; // Initiate a Hard Fork
-    TreasuryWithdrawalsAction treasury_withdrawal_action = 3; // Withdraw from the Treasury
+    TreasuryWithdrawalsAction treasury_withdrawals_action = 3; // Withdraw from the Treasury
     NoConfidenceAction no_confidence_action = 4; //
     UpdateCommitteeAction update_committee_action = 5; // Update the Constitution Committee
     NewConstitutionAction new_constitution_action = 6; // Replace the Constitution
+
+    // TODO: revisit if there's a better way to handle this option because it doesn't actually need a value but proto syntax needs to require it
     uint32 info_action = 7; // Info action should just be the integer number 6
   }
 }
@@ -148,9 +150,8 @@ message HardForkInitiationAction {
 }
 
 message TreasuryWithdrawalsAction {
-  GovernanceActionId gov_action_id = 1;
-  repeated WithdrawalAmount withdrawals = 2; // A map of the withdrawals to make
-  bytes policy_hash = 3;
+  repeated WithdrawalAmount withdrawals = 1; // A map of the withdrawals to make
+  bytes policy_hash = 2;
 }
 
 message WithdrawalAmount {
