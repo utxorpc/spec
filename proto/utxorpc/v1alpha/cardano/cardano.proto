@@ -519,3 +519,21 @@ message TxEval {
   repeated EvalError errors = 3;
   repeated EvalTrace traces = 4;
 }
+
+// Cardano Specific service
+// ========================
+
+// Request to get pool relays.
+message ReadPoolRelaysRequest {
+  repeated bytes pool_keyhash = 1; // List of pool key hashes.
+}
+
+// Response containing the chain parameters
+message ReadPoolRelaysResponse {
+  repeated Relay relays = 8;
+}
+
+// Service definition for querying the state of the chain.
+service CardanoService {
+  rpc ReadPoolRelays(ReadPoolRelaysRequest) returns (ReadPoolRelaysResponse); // Get pool relays. 
+}
