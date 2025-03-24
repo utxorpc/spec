@@ -16,16 +16,24 @@
     - [BlockHeader](#utxorpc-v1alpha-cardano-BlockHeader)
     - [Certificate](#utxorpc-v1alpha-cardano-Certificate)
     - [Collateral](#utxorpc-v1alpha-cardano-Collateral)
+    - [Constitution](#utxorpc-v1alpha-cardano-Constitution)
     - [Constr](#utxorpc-v1alpha-cardano-Constr)
     - [CostModel](#utxorpc-v1alpha-cardano-CostModel)
     - [CostModels](#utxorpc-v1alpha-cardano-CostModels)
     - [DRep](#utxorpc-v1alpha-cardano-DRep)
     - [Datum](#utxorpc-v1alpha-cardano-Datum)
+    - [EraBoundary](#utxorpc-v1alpha-cardano-EraBoundary)
+    - [EraSummaries](#utxorpc-v1alpha-cardano-EraSummaries)
+    - [EraSummary](#utxorpc-v1alpha-cardano-EraSummary)
     - [EvalError](#utxorpc-v1alpha-cardano-EvalError)
     - [EvalTrace](#utxorpc-v1alpha-cardano-EvalTrace)
     - [ExPrices](#utxorpc-v1alpha-cardano-ExPrices)
     - [ExUnits](#utxorpc-v1alpha-cardano-ExUnits)
     - [GenesisKeyDelegationCert](#utxorpc-v1alpha-cardano-GenesisKeyDelegationCert)
+    - [GovernanceAction](#utxorpc-v1alpha-cardano-GovernanceAction)
+    - [GovernanceActionId](#utxorpc-v1alpha-cardano-GovernanceActionId)
+    - [GovernanceActionProposal](#utxorpc-v1alpha-cardano-GovernanceActionProposal)
+    - [HardForkInitiationAction](#utxorpc-v1alpha-cardano-HardForkInitiationAction)
     - [Metadata](#utxorpc-v1alpha-cardano-Metadata)
     - [Metadatum](#utxorpc-v1alpha-cardano-Metadatum)
     - [MetadatumArray](#utxorpc-v1alpha-cardano-MetadatumArray)
@@ -36,7 +44,11 @@
     - [Multiasset](#utxorpc-v1alpha-cardano-Multiasset)
     - [NativeScript](#utxorpc-v1alpha-cardano-NativeScript)
     - [NativeScriptList](#utxorpc-v1alpha-cardano-NativeScriptList)
+    - [NewCommitteeCredentials](#utxorpc-v1alpha-cardano-NewCommitteeCredentials)
+    - [NewConstitutionAction](#utxorpc-v1alpha-cardano-NewConstitutionAction)
+    - [NoConfidenceAction](#utxorpc-v1alpha-cardano-NoConfidenceAction)
     - [PParams](#utxorpc-v1alpha-cardano-PParams)
+    - [ParameterChangeAction](#utxorpc-v1alpha-cardano-ParameterChangeAction)
     - [PlutusData](#utxorpc-v1alpha-cardano-PlutusData)
     - [PlutusDataArray](#utxorpc-v1alpha-cardano-PlutusDataArray)
     - [PlutusDataMap](#utxorpc-v1alpha-cardano-PlutusDataMap)
@@ -58,6 +70,7 @@
     - [StakeRegDelegCert](#utxorpc-v1alpha-cardano-StakeRegDelegCert)
     - [StakeVoteDelegCert](#utxorpc-v1alpha-cardano-StakeVoteDelegCert)
     - [StakeVoteRegDelegCert](#utxorpc-v1alpha-cardano-StakeVoteRegDelegCert)
+    - [TreasuryWithdrawalsAction](#utxorpc-v1alpha-cardano-TreasuryWithdrawalsAction)
     - [Tx](#utxorpc-v1alpha-cardano-Tx)
     - [TxEval](#utxorpc-v1alpha-cardano-TxEval)
     - [TxInput](#utxorpc-v1alpha-cardano-TxInput)
@@ -67,11 +80,14 @@
     - [TxValidity](#utxorpc-v1alpha-cardano-TxValidity)
     - [UnRegCert](#utxorpc-v1alpha-cardano-UnRegCert)
     - [UnRegDRepCert](#utxorpc-v1alpha-cardano-UnRegDRepCert)
+    - [UpdateCommitteeAction](#utxorpc-v1alpha-cardano-UpdateCommitteeAction)
     - [UpdateDRepCert](#utxorpc-v1alpha-cardano-UpdateDRepCert)
     - [VKeyWitness](#utxorpc-v1alpha-cardano-VKeyWitness)
     - [VoteDelegCert](#utxorpc-v1alpha-cardano-VoteDelegCert)
     - [VoteRegDelegCert](#utxorpc-v1alpha-cardano-VoteRegDelegCert)
+    - [VotingThresholds](#utxorpc-v1alpha-cardano-VotingThresholds)
     - [Withdrawal](#utxorpc-v1alpha-cardano-Withdrawal)
+    - [WithdrawalAmount](#utxorpc-v1alpha-cardano-WithdrawalAmount)
     - [WitnessSet](#utxorpc-v1alpha-cardano-WitnessSet)
   
     - [MirSource](#utxorpc-v1alpha-cardano-MirSource)
@@ -80,13 +96,18 @@
 - [utxorpc/v1alpha/query/query.proto](#utxorpc_v1alpha_query_query-proto)
     - [AnyChainDatum](#utxorpc-v1alpha-query-AnyChainDatum)
     - [AnyChainParams](#utxorpc-v1alpha-query-AnyChainParams)
+    - [AnyChainTx](#utxorpc-v1alpha-query-AnyChainTx)
     - [AnyUtxoData](#utxorpc-v1alpha-query-AnyUtxoData)
     - [AnyUtxoPattern](#utxorpc-v1alpha-query-AnyUtxoPattern)
     - [ChainPoint](#utxorpc-v1alpha-query-ChainPoint)
     - [ReadDataRequest](#utxorpc-v1alpha-query-ReadDataRequest)
     - [ReadDataResponse](#utxorpc-v1alpha-query-ReadDataResponse)
+    - [ReadEraSummaryRequest](#utxorpc-v1alpha-query-ReadEraSummaryRequest)
+    - [ReadEraSummaryResponse](#utxorpc-v1alpha-query-ReadEraSummaryResponse)
     - [ReadParamsRequest](#utxorpc-v1alpha-query-ReadParamsRequest)
     - [ReadParamsResponse](#utxorpc-v1alpha-query-ReadParamsResponse)
+    - [ReadTxRequest](#utxorpc-v1alpha-query-ReadTxRequest)
+    - [ReadTxResponse](#utxorpc-v1alpha-query-ReadTxResponse)
     - [ReadUtxosRequest](#utxorpc-v1alpha-query-ReadUtxosRequest)
     - [ReadUtxosResponse](#utxorpc-v1alpha-query-ReadUtxosResponse)
     - [SearchUtxosRequest](#utxorpc-v1alpha-query-SearchUtxosRequest)
@@ -366,6 +387,22 @@ Represents the collateral information for a transaction.
 
 
 
+<a name="utxorpc-v1alpha-cardano-Constitution"></a>
+
+### Constitution
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| anchor | [Anchor](#utxorpc-v1alpha-cardano-Anchor) |  | Anchor to the new document |
+| hash | [bytes](#bytes) |  | Hash of the document |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-Constr"></a>
 
 ### Constr
@@ -450,6 +487,57 @@ Represents a constructor for Plutus data in Cardano.
 
 
 
+<a name="utxorpc-v1alpha-cardano-EraBoundary"></a>
+
+### EraBoundary
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| time | [uint64](#uint64) |  | ms timestamp |
+| slot | [uint64](#uint64) |  | absolute slot number of the first block of this era |
+| epoch | [uint64](#uint64) |  | first epoch for this era |
+| hash | [bytes](#bytes) | optional | block hash of the first block of this era (if the era has started) |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-EraSummaries"></a>
+
+### EraSummaries
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| summaries | [EraSummary](#utxorpc-v1alpha-cardano-EraSummary) | repeated |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-EraSummary"></a>
+
+### EraSummary
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| start | [EraBoundary](#utxorpc-v1alpha-cardano-EraBoundary) |  | TODO: do we want any kind of &#34;era name&#34; identifier? a lot of tools expect a string name (ex: &#34;shelley&#34;) to look up era info
+
+start of this era |
+| end | [EraBoundary](#utxorpc-v1alpha-cardano-EraBoundary) |  | end of this era (if the era has a well-defined ending) |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-EvalError"></a>
 
 ### EvalError
@@ -523,6 +611,79 @@ Represents a genesis key delegation certificate in Cardano.
 | genesis_hash | [bytes](#bytes) |  | Genesis hash. |
 | genesis_delegate_hash | [bytes](#bytes) |  | Genesis delegate hash. |
 | vrf_keyhash | [bytes](#bytes) |  | VRF key hash. |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-GovernanceAction"></a>
+
+### GovernanceAction
+Define a Governance Action
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| parameter_change_action | [ParameterChangeAction](#utxorpc-v1alpha-cardano-ParameterChangeAction) |  | Change on-chain parameters |
+| hard_fork_initiation_action | [HardForkInitiationAction](#utxorpc-v1alpha-cardano-HardForkInitiationAction) |  | Initiate a Hard Fork |
+| treasury_withdrawals_action | [TreasuryWithdrawalsAction](#utxorpc-v1alpha-cardano-TreasuryWithdrawalsAction) |  | Withdraw from the Treasury |
+| no_confidence_action | [NoConfidenceAction](#utxorpc-v1alpha-cardano-NoConfidenceAction) |  |  |
+| update_committee_action | [UpdateCommitteeAction](#utxorpc-v1alpha-cardano-UpdateCommitteeAction) |  | Update the Constitution Committee |
+| new_constitution_action | [NewConstitutionAction](#utxorpc-v1alpha-cardano-NewConstitutionAction) |  | Replace the Constitution |
+| info_action | [uint32](#uint32) |  | TODO: revisit if there&#39;s a better way to handle this option because it doesn&#39;t actually need a value but proto syntax needs to require it
+
+Info action should just be the integer number 6 |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-GovernanceActionId"></a>
+
+### GovernanceActionId
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| transaction_id | [bytes](#bytes) |  |  |
+| governance_action_index | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-GovernanceActionProposal"></a>
+
+### GovernanceActionProposal
+Define a governance action proposal
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| deposit | [uint64](#uint64) |  | The amount deposited for the governance action |
+| reward_account | [bytes](#bytes) |  | The reward account the deposit should be returned to |
+| gov_action | [GovernanceAction](#utxorpc-v1alpha-cardano-GovernanceAction) |  |  |
+| anchor | [Anchor](#utxorpc-v1alpha-cardano-Anchor) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-HardForkInitiationAction"></a>
+
+### HardForkInitiationAction
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| gov_action_id | [GovernanceActionId](#utxorpc-v1alpha-cardano-GovernanceActionId) |  |  |
+| protocol_version | [ProtocolVersion](#utxorpc-v1alpha-cardano-ProtocolVersion) |  | The protocol version to fork to |
 
 
 
@@ -695,6 +856,54 @@ Represents a list of native scripts.
 
 
 
+<a name="utxorpc-v1alpha-cardano-NewCommitteeCredentials"></a>
+
+### NewCommitteeCredentials
+The new committee credential are passed as a map where the key is the committee cold credential hash
+and the value is the expiration epoch for that credential
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| committee_cold_credential | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) |  |  |
+| expires_epoch | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-NewConstitutionAction"></a>
+
+### NewConstitutionAction
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| gov_action_id | [GovernanceActionId](#utxorpc-v1alpha-cardano-GovernanceActionId) |  |  |
+| constitution | [Constitution](#utxorpc-v1alpha-cardano-Constitution) |  | The Constitution proposed |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-NoConfidenceAction"></a>
+
+### NoConfidenceAction
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| gov_action_id | [GovernanceActionId](#utxorpc-v1alpha-cardano-GovernanceActionId) |  |  |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-PParams"></a>
 
 ### PParams
@@ -725,6 +934,32 @@ Represents a list of native scripts.
 | prices | [ExPrices](#utxorpc-v1alpha-cardano-ExPrices) |  | The prices. |
 | max_execution_units_per_transaction | [ExUnits](#utxorpc-v1alpha-cardano-ExUnits) |  | The maximum execution units per transaction. |
 | max_execution_units_per_block | [ExUnits](#utxorpc-v1alpha-cardano-ExUnits) |  | The maximum execution units per block. |
+| min_fee_script_ref_cost_per_byte | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  | The minimum fee per script reference byte. |
+| pool_voting_thresholds | [VotingThresholds](#utxorpc-v1alpha-cardano-VotingThresholds) |  | The pool voting thresholds. |
+| drep_voting_thresholds | [VotingThresholds](#utxorpc-v1alpha-cardano-VotingThresholds) |  | The drep voting thresholds. |
+| min_committee_size | [uint32](#uint32) |  | The minimum committee size. |
+| committee_term_limit | [uint64](#uint64) |  | The committee term limit. |
+| governance_action_validity_period | [uint64](#uint64) |  | The governance action validity period. |
+| governance_action_deposit | [uint64](#uint64) |  | The governance action deposit. |
+| drep_deposit | [uint64](#uint64) |  | The drep deposit. |
+| drep_inactivity_period | [uint64](#uint64) |  | The drep inactivity period. |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-ParameterChangeAction"></a>
+
+### ParameterChangeAction
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| gov_action_id | [GovernanceActionId](#utxorpc-v1alpha-cardano-GovernanceActionId) |  |  |
+| protocol_param_update | [PParams](#utxorpc-v1alpha-cardano-PParams) |  | The updates proposed |
+| policy_hash | [bytes](#bytes) |  |  |
 
 
 
@@ -893,6 +1128,9 @@ Redeemer information for a Plutus script.
 | ----- | ---- | ----- | ----------- |
 | purpose | [RedeemerPurpose](#utxorpc-v1alpha-cardano-RedeemerPurpose) |  | Purpose of the redeemer. |
 | payload | [PlutusData](#utxorpc-v1alpha-cardano-PlutusData) |  | Plutus data associated with the redeemer. |
+| index | [uint32](#uint32) |  | Index of the redeemer. |
+| ex_units | [ExUnits](#utxorpc-v1alpha-cardano-ExUnits) |  | Execution units consumed by the redeemer. |
+| original_cbor | [bytes](#bytes) |  | Original cbor-encoded data as seen on-chain |
 
 
 
@@ -1084,6 +1322,22 @@ Represents a stake delegation certificate in Cardano.
 
 
 
+<a name="utxorpc-v1alpha-cardano-TreasuryWithdrawalsAction"></a>
+
+### TreasuryWithdrawalsAction
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| withdrawals | [WithdrawalAmount](#utxorpc-v1alpha-cardano-WithdrawalAmount) | repeated | A map of the withdrawals to make |
+| policy_hash | [bytes](#bytes) |  |  |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-Tx"></a>
 
 ### Tx
@@ -1105,6 +1359,7 @@ Represents a transaction in the Cardano blockchain.
 | successful | [bool](#bool) |  | Flag indicating whether the transaction was successful |
 | auxiliary | [AuxData](#utxorpc-v1alpha-cardano-AuxData) |  | Auxiliary data not directly tied to the validation process |
 | hash | [bytes](#bytes) |  | Hash of the transaction that serves as main identifier |
+| proposals | [GovernanceActionProposal](#utxorpc-v1alpha-cardano-GovernanceActionProposal) | repeated | List of governance actions proposed |
 
 
 
@@ -1123,6 +1378,7 @@ Represents a transaction in the Cardano blockchain.
 | ex_units | [ExUnits](#utxorpc-v1alpha-cardano-ExUnits) |  |  |
 | errors | [EvalError](#utxorpc-v1alpha-cardano-EvalError) | repeated |  |
 | traces | [EvalTrace](#utxorpc-v1alpha-cardano-EvalTrace) | repeated |  |
+| redeemers | [Redeemer](#utxorpc-v1alpha-cardano-Redeemer) | repeated |  |
 
 
 
@@ -1249,6 +1505,24 @@ Represents the validity interval of a transaction.
 
 
 
+<a name="utxorpc-v1alpha-cardano-UpdateCommitteeAction"></a>
+
+### UpdateCommitteeAction
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| gov_action_id | [GovernanceActionId](#utxorpc-v1alpha-cardano-GovernanceActionId) |  |  |
+| remove_committee_credentials | [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential) | repeated | Committee members to remove (if any) |
+| new_committee_credentials | [NewCommitteeCredentials](#utxorpc-v1alpha-cardano-NewCommitteeCredentials) | repeated | The new committee members |
+| new_committee_threshold | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  | The required threshold for the committee |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-UpdateDRepCert"></a>
 
 ### UpdateDRepCert
@@ -1314,6 +1588,21 @@ Represents a VKey witness used to sign a transaction.
 
 
 
+<a name="utxorpc-v1alpha-cardano-VotingThresholds"></a>
+
+### VotingThresholds
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| thresholds | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) | repeated |  |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-Withdrawal"></a>
 
 ### Withdrawal
@@ -1325,6 +1614,22 @@ Represents a withdrawal from a reward account.
 | reward_account | [bytes](#bytes) |  | Address of the reward account. |
 | coin | [uint64](#uint64) |  | Amount of ADA withdrawn. |
 | redeemer | [Redeemer](#utxorpc-v1alpha-cardano-Redeemer) |  | Redeemer for the Plutus script. |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-WithdrawalAmount"></a>
+
+### WithdrawalAmount
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| reward_account | [bytes](#bytes) |  |  |
+| coin | [uint64](#uint64) |  |  |
 
 
 
@@ -1414,12 +1719,28 @@ An evenlope that holds a datum for any of the compatible chains
 <a name="utxorpc-v1alpha-query-AnyChainParams"></a>
 
 ### AnyChainParams
-An evenlope that holds parameter data from any of the compatible chains
+An envelope that holds parameter data from any of the compatible chains
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | cardano | [utxorpc.v1alpha.cardano.PParams](#utxorpc-v1alpha-cardano-PParams) |  | Cardano parameters |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-query-AnyChainTx"></a>
+
+### AnyChainTx
+Represents a transaction from any supported blockchain.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| native_bytes | [bytes](#bytes) |  | Original bytes as defined by the chain |
+| cardano | [utxorpc.v1alpha.cardano.Tx](#utxorpc-v1alpha-cardano-Tx) |  | A Cardano transaction. |
 
 
 
@@ -1506,6 +1827,31 @@ Response containing data (as in plural of datum)
 
 
 
+<a name="utxorpc-v1alpha-query-ReadEraSummaryRequest"></a>
+
+### ReadEraSummaryRequest
+Request to get the summary of eras
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-query-ReadEraSummaryResponse"></a>
+
+### ReadEraSummaryResponse
+Response containing the summary of eras
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| cardano | [utxorpc.v1alpha.cardano.EraSummaries](#utxorpc-v1alpha-cardano-EraSummaries) |  | Cardano era summary |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-query-ReadParamsRequest"></a>
 
 ### ReadParamsRequest
@@ -1530,6 +1876,38 @@ Response containing the chain parameters
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | values | [AnyChainParams](#utxorpc-v1alpha-query-AnyChainParams) |  | The value of the parameters. |
+| ledger_tip | [ChainPoint](#utxorpc-v1alpha-query-ChainPoint) |  | The chain point that represent the ledger current position. |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-query-ReadTxRequest"></a>
+
+### ReadTxRequest
+Request to get a transaction by hash
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| hash | [bytes](#bytes) |  | The hash of the transaction. |
+| field_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  | Field mask to selectively return fields in the response. |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-query-ReadTxResponse"></a>
+
+### ReadTxResponse
+Response containing the transaction associated with the requested hash.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| tx | [AnyChainTx](#utxorpc-v1alpha-query-AnyChainTx) |  | The transaction. |
 | ledger_tip | [ChainPoint](#utxorpc-v1alpha-query-ChainPoint) |  | The chain point that represent the ledger current position. |
 
 
@@ -1655,6 +2033,8 @@ Service definition for querying the state of the chain.
 | ReadUtxos | [ReadUtxosRequest](#utxorpc-v1alpha-query-ReadUtxosRequest) | [ReadUtxosResponse](#utxorpc-v1alpha-query-ReadUtxosResponse) | Read specific UTxOs by reference. |
 | SearchUtxos | [SearchUtxosRequest](#utxorpc-v1alpha-query-SearchUtxosRequest) | [SearchUtxosResponse](#utxorpc-v1alpha-query-SearchUtxosResponse) | Search for UTxO based on a pattern. |
 | ReadData | [ReadDataRequest](#utxorpc-v1alpha-query-ReadDataRequest) | [ReadDataResponse](#utxorpc-v1alpha-query-ReadDataResponse) | Read specific datum by hash |
+| ReadTx | [ReadTxRequest](#utxorpc-v1alpha-query-ReadTxRequest) | [ReadTxResponse](#utxorpc-v1alpha-query-ReadTxResponse) | Get Txs by chain-specific criteria. |
+| ReadEraSummary | [ReadEraSummaryRequest](#utxorpc-v1alpha-query-ReadEraSummaryRequest) | [ReadEraSummaryResponse](#utxorpc-v1alpha-query-ReadEraSummaryResponse) | Get summary of all eras |
 
  
 

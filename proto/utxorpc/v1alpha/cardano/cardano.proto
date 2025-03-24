@@ -17,7 +17,7 @@ enum RedeemerPurpose {
 message Redeemer {
   RedeemerPurpose purpose = 1; // Purpose of the redeemer.
   PlutusData payload = 2; // Plutus data associated with the redeemer.
-  uint32 index = 3; // Index of the redee mer.
+  uint32 index = 3; // Index of the redeemer.
   ExUnits ex_units = 4; // Execution units consumed by the redeemer.
   bytes original_cbor = 5; // Original cbor-encoded data as seen on-chain
 }
@@ -594,6 +594,24 @@ message PParams {
   uint64 governance_action_deposit = 29; // The governance action deposit.
   uint64 drep_deposit = 30; // The drep deposit.
   uint64 drep_inactivity_period = 31; // The drep inactivity period.
+}
+
+message EraBoundary {
+  uint64 time = 1; // ms timestamp
+  uint64 slot = 2; // absolute slot number of the first block of this era
+  uint64 epoch = 3; // first epoch for this era
+  optional bytes hash = 4; // block hash of the first block of this era (if the era has started)
+}
+message EraSummary {
+  // TODO: do we want any kind of "era name" identifier?
+  //       a lot of tools expect a string name (ex: "shelley") to look up era info
+  EraBoundary start = 1; // start of this era
+  EraBoundary end = 2; // end of this era (if the era has a well-defined ending)
+  // TODO: do we want a summary of parameter changed?
+}
+
+message EraSummaries {
+  repeated EraSummary summaries = 1;
 }
 
 // EVALUATION
