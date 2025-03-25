@@ -23,6 +23,7 @@
     - [DRep](#utxorpc-v1alpha-cardano-DRep)
     - [Datum](#utxorpc-v1alpha-cardano-Datum)
     - [EraBoundary](#utxorpc-v1alpha-cardano-EraBoundary)
+    - [EraConfig](#utxorpc-v1alpha-cardano-EraConfig)
     - [EraSummaries](#utxorpc-v1alpha-cardano-EraSummaries)
     - [EraSummary](#utxorpc-v1alpha-cardano-EraSummary)
     - [EvalError](#utxorpc-v1alpha-cardano-EvalError)
@@ -102,6 +103,8 @@
     - [ChainPoint](#utxorpc-v1alpha-query-ChainPoint)
     - [ReadDataRequest](#utxorpc-v1alpha-query-ReadDataRequest)
     - [ReadDataResponse](#utxorpc-v1alpha-query-ReadDataResponse)
+    - [ReadEraConfigRequest](#utxorpc-v1alpha-query-ReadEraConfigRequest)
+    - [ReadEraConfigResponse](#utxorpc-v1alpha-query-ReadEraConfigResponse)
     - [ReadEraSummaryRequest](#utxorpc-v1alpha-query-ReadEraSummaryRequest)
     - [ReadEraSummaryResponse](#utxorpc-v1alpha-query-ReadEraSummaryResponse)
     - [ReadParamsRequest](#utxorpc-v1alpha-query-ReadParamsRequest)
@@ -499,6 +502,21 @@ Represents a constructor for Plutus data in Cardano.
 | slot | [uint64](#uint64) |  | absolute slot number of the first block of this era |
 | epoch | [uint64](#uint64) |  | first epoch for this era |
 | hash | [bytes](#bytes) | optional | block hash of the first block of this era (if the era has started) |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-EraConfig"></a>
+
+### EraConfig
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| config | [google.protobuf.Struct](#google-protobuf-Struct) |  |  |
 
 
 
@@ -1826,6 +1844,36 @@ Response containing data (as in plural of datum)
 
 
 
+<a name="utxorpc-v1alpha-query-ReadEraConfigRequest"></a>
+
+### ReadEraConfigRequest
+Request to get the configuration information for an era
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  | name of the era |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-query-ReadEraConfigResponse"></a>
+
+### ReadEraConfigResponse
+Response containing the summary of eras
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| cardano | [utxorpc.v1alpha.cardano.EraConfig](#utxorpc-v1alpha-cardano-EraConfig) |  | Cardano era config |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-query-ReadEraSummaryRequest"></a>
 
 ### ReadEraSummaryRequest
@@ -2034,6 +2082,7 @@ Service definition for querying the state of the chain.
 | ReadData | [ReadDataRequest](#utxorpc-v1alpha-query-ReadDataRequest) | [ReadDataResponse](#utxorpc-v1alpha-query-ReadDataResponse) | Read specific datum by hash |
 | ReadTx | [ReadTxRequest](#utxorpc-v1alpha-query-ReadTxRequest) | [ReadTxResponse](#utxorpc-v1alpha-query-ReadTxResponse) | Get Txs by chain-specific criteria. |
 | ReadEraSummary | [ReadEraSummaryRequest](#utxorpc-v1alpha-query-ReadEraSummaryRequest) | [ReadEraSummaryResponse](#utxorpc-v1alpha-query-ReadEraSummaryResponse) | Get summary of all eras |
+| ReadEraConfig | [ReadEraConfigRequest](#utxorpc-v1alpha-query-ReadEraConfigRequest) | [ReadEraConfigResponse](#utxorpc-v1alpha-query-ReadEraConfigResponse) | Get configuration for an era |
 
  
 

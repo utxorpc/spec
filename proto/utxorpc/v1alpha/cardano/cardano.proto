@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package utxorpc.v1alpha.cardano;
 
+import "google/protobuf/struct.proto";
+
 // Purpose of the redeemer in a transaction.
 enum RedeemerPurpose {
   REDEEMER_PURPOSE_UNSPECIFIED = 0;
@@ -606,11 +608,13 @@ message EraSummary {
   string name = 1; // name of the era (ex: "shelley")
   EraBoundary start = 2; // start of this era
   EraBoundary end = 3; // end of this era (if the era has a well-defined ending)
-  // TODO: do we want a summary of parameter changed?
 }
-
 message EraSummaries {
   repeated EraSummary summaries = 1;
+}
+
+message EraConfig {
+   google.protobuf.Struct config = 1;
 }
 
 // EVALUATION

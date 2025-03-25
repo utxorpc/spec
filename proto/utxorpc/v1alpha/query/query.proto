@@ -35,6 +35,19 @@ message ReadEraSummaryResponse {
   }
 }
 
+// Request to get the configuration information for an era
+message ReadEraConfigRequest {
+  string name = 1; // name of the era
+}
+
+// Response containing the summary of eras
+message ReadEraConfigResponse {
+  oneof summary {
+    utxorpc.v1alpha.cardano.EraConfig cardano = 1; // Cardano era config
+  }
+}
+
+
 
 // An envelope that holds parameter data from any of the compatible chains
 message AnyChainParams {
@@ -149,6 +162,7 @@ service QueryService {
   rpc ReadData(ReadDataRequest) returns (ReadDataResponse); // Read specific datum by hash
   rpc ReadTx(ReadTxRequest) returns (ReadTxResponse); // Get Txs by chain-specific criteria.
   rpc ReadEraSummary(ReadEraSummaryRequest) returns (ReadEraSummaryResponse); // Get summary of all eras
+  rpc ReadEraConfig(ReadEraConfigRequest) returns (ReadEraConfigResponse); // Get configuration for an era
 
   // TODO: decide if we want to expand the scope
   // rpc DumpUtxos(ReadUtxosRequest) returns (stream ReadUtxosResponse); // Dump all available utxos
