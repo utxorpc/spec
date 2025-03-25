@@ -603,10 +603,9 @@ message EraBoundary {
   optional bytes hash = 4; // block hash of the first block of this era (if the era has started)
 }
 message EraSummary {
-  // TODO: do we want any kind of "era name" identifier?
-  //       a lot of tools expect a string name (ex: "shelley") to look up era info
-  EraBoundary start = 1; // start of this era
-  EraBoundary end = 2; // end of this era (if the era has a well-defined ending)
+  string name = 1; // name of the era (ex: "shelley")
+  EraBoundary start = 2; // start of this era
+  EraBoundary end = 3; // end of this era (if the era has a well-defined ending)
   // TODO: do we want a summary of parameter changed?
 }
 

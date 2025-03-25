@@ -528,9 +528,8 @@ Represents a constructor for Plutus data in Cardano.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| start | [EraBoundary](#utxorpc-v1alpha-cardano-EraBoundary) |  | TODO: do we want any kind of &#34;era name&#34; identifier? a lot of tools expect a string name (ex: &#34;shelley&#34;) to look up era info
-
-start of this era |
+| name | [string](#string) |  | name of the era (ex: &#34;shelley&#34;) |
+| start | [EraBoundary](#utxorpc-v1alpha-cardano-EraBoundary) |  | start of this era |
 | end | [EraBoundary](#utxorpc-v1alpha-cardano-EraBoundary) |  | end of this era (if the era has a well-defined ending) |
 
 
