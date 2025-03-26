@@ -101,6 +101,8 @@
     - [AnyUtxoData](#utxorpc-v1alpha-query-AnyUtxoData)
     - [AnyUtxoPattern](#utxorpc-v1alpha-query-AnyUtxoPattern)
     - [ChainPoint](#utxorpc-v1alpha-query-ChainPoint)
+    - [ReadChainIdRequest](#utxorpc-v1alpha-query-ReadChainIdRequest)
+    - [ReadChainIdResponse](#utxorpc-v1alpha-query-ReadChainIdResponse)
     - [ReadDataRequest](#utxorpc-v1alpha-query-ReadDataRequest)
     - [ReadDataResponse](#utxorpc-v1alpha-query-ReadDataResponse)
     - [ReadEraConfigRequest](#utxorpc-v1alpha-query-ReadEraConfigRequest)
@@ -1812,6 +1814,32 @@ Represents a specific point in the blockchain.
 
 
 
+<a name="utxorpc-v1alpha-query-ReadChainIdRequest"></a>
+
+### ReadChainIdRequest
+Request to get the chain ID
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-query-ReadChainIdResponse"></a>
+
+### ReadChainIdResponse
+Response containing the summary of eras
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| genesis | [bytes](#bytes) |  | genesis hash for the chain |
+| caip2 | [string](#string) |  | the caip-2 ID for this network |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-query-ReadDataRequest"></a>
 
 ### ReadDataRequest
@@ -2083,6 +2111,7 @@ Service definition for querying the state of the chain.
 | ReadTx | [ReadTxRequest](#utxorpc-v1alpha-query-ReadTxRequest) | [ReadTxResponse](#utxorpc-v1alpha-query-ReadTxResponse) | Get Txs by chain-specific criteria. |
 | ReadEraSummary | [ReadEraSummaryRequest](#utxorpc-v1alpha-query-ReadEraSummaryRequest) | [ReadEraSummaryResponse](#utxorpc-v1alpha-query-ReadEraSummaryResponse) | Get summary of all eras |
 | ReadEraConfig | [ReadEraConfigRequest](#utxorpc-v1alpha-query-ReadEraConfigRequest) | [ReadEraConfigResponse](#utxorpc-v1alpha-query-ReadEraConfigResponse) | Get configuration for an era |
+| ReadChainId | [ReadChainIdRequest](#utxorpc-v1alpha-query-ReadChainIdRequest) | [ReadChainIdResponse](#utxorpc-v1alpha-query-ReadChainIdResponse) | Get the chain ID for this network |
 
  
 
