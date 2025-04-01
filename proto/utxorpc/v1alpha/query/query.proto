@@ -24,6 +24,20 @@ message ReadParamsRequest {
   google.protobuf.FieldMask field_mask = 1; // Field mask to selectively return fields in the parsed response.
 }
 
+// Request to get the chain config
+message ReadChainConfigRequest {
+  google.protobuf.FieldMask field_mask = 1; // Field mask to selectively return fields in the parsed response.
+}
+
+// Response containing the chain config
+message ReadChainConfigResponse {
+  bytes genesis = 1; // genesis hash for the chain
+  string caip2 = 2; // the caip-2 ID for this network
+  oneof summary {
+    utxorpc.v1alpha.cardano.EraSummaries cardano = 3; // Cardano era summary
+  }
+}
+
 // An evenlope that holds parameter data from any of the compatible chains
 message AnyChainParams {
   oneof params {
@@ -135,7 +149,8 @@ service QueryService {
   rpc ReadUtxos(ReadUtxosRequest) returns (ReadUtxosResponse); // Read specific UTxOs by reference.
   rpc SearchUtxos(SearchUtxosRequest) returns (SearchUtxosResponse); // Search for UTxO based on a pattern.
   rpc ReadData(ReadDataRequest) returns (ReadDataResponse); // Read specific datum by hash
-  rpc ReadTx(GetTxRequest) returns (GetTxResponse); // Get Txs by by chain-specific criteria.
+  rpc ReadTx(ReadTxRequest) returns (ReadTxResponse); // Get Txs by chain-specific criteria.
+  rpc ReadChainConfig(ReadChainConfigRequest) returns (ReadChainConfigResponse); // Get the chain configuration
 
   // TODO: decide if we want to expand the scope
   // rpc DumpUtxos(ReadUtxosRequest) returns (stream ReadUtxosResponse); // Dump all available utxos
