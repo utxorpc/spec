@@ -68,6 +68,9 @@ plugins:
     opt:
       - target=ts
 
+  - plugin: buf.build/bufbuild/protoschema-jsonschema
+    out: gen/jsonschema/schema
+
   # haskell
 
   - plugin: haskell-protolens

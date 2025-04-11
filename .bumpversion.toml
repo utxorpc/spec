@@ -21,6 +21,9 @@ filename = "gen/rust/Cargo.toml"
 filename = "gen/node/package.json"
 
 [[tool.bumpversion.files]]
+filename = "gen/jsonschema/package.json"
+
+[[tool.bumpversion.files]]
 filename = "gen/haskell/utxorpc.cabal"
 
 [[tool.bumpversion.files]]
