@@ -37,6 +37,7 @@ message WatchTxRequest {
 message AnyChainTx {
   oneof chain {
     utxorpc.v1alpha.cardano.Tx cardano = 1; // A Cardano transaction.
+    BlockRef block = 2; // Block containing the transaction
   }
 }
 
