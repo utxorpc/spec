@@ -13,6 +13,13 @@ message ChainPoint {
   bytes hash = 2; // Block hash.
 }
 
+message AnyChainBlock {
+  bytes native_bytes = 1; // Original bytes as defined by the chain
+  oneof chain {
+    utxorpc.v1alpha.cardano.Block cardano = 2; // A parsed Cardano block.
+  }
+}
+
 // Represents a reference to a transaction output
 message TxoRef {
   bytes hash = 1; // Tx hash.
@@ -121,6 +128,7 @@ message AnyChainTx {
   oneof chain {
     utxorpc.v1alpha.cardano.Tx cardano = 2; // A Cardano transaction.
   }
+  AnyChainBlock block = 3; // Block containing the transaction
 }
 
 // Response containing the transaction associated with the requested hash.
