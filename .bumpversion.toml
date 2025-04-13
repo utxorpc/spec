@@ -24,6 +24,9 @@ filename = "gen/node/package.json"
 filename = "gen/jsonschema/package.json"
 
 [[tool.bumpversion.files]]
+filename = "gen/typebox/package.json"
+
+[[tool.bumpversion.files]]
 filename = "gen/haskell/utxorpc.cabal"
 
 [[tool.bumpversion.files]]
