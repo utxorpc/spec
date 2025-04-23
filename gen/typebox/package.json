@@ -1,0 +1,49 @@
+{
+  "name": "@utxorpc/typebox",
+  "version": "0.16.0",
+  "description": "UTxO RPC auto-generated Typebox definitions from JSON Schema",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "module": "./lib/index.mjs",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./lib/index.d.ts",
+        "default": "./lib/index.js"
+      },
+      "import": {
+        "types": "./lib/index.d.ts",
+        "import": "./lib/index.mjs"
+      }
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --out-dir lib"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/utxorpc/spec.git"
+  },
+  "keywords": [
+    "utxorpc",
+    "grpc",
+    "blockchain"
+  ],
+  "author": "utxorpc.org",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/utxorpc/spec/issues"
+  },
+  "homepage": "https://github.com/utxorpc/spec#readme",
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.34.33"
+  }
+}
