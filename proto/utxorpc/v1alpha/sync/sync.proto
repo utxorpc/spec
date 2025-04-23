@@ -5,10 +5,11 @@ package utxorpc.v1alpha.sync;
 import "google/protobuf/field_mask.proto";
 import "utxorpc/v1alpha/cardano/cardano.proto";
 
-// Represents a reference to a specific block
+// Represents a reference to a specific block by a chosen combination of fields
 message BlockRef {
-  uint64 index = 1; // Height or slot number (depending on the blockchain)
+  uint64 slot = 1; // Height or slot number (depending on the blockchain)
   bytes hash = 2; // Hash of the content of the block
+  uint64 height = 3; // Block height
 }
 
 message AnyChainBlock {
