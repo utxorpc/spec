@@ -11,6 +11,13 @@ message BlockRef {
   bytes hash = 2; // Hash of the content of the block
 }
 
+message AnyChainBlock {
+  bytes native_bytes = 1; // Original bytes as defined by the chain
+  oneof chain {
+    utxorpc.v1alpha.cardano.Block cardano = 2; // A parsed Cardano block.
+  }
+}
+
 // Represents a tx pattern from any supported blockchain.
 message AnyChainTxPattern {
   oneof chain {
@@ -38,6 +45,7 @@ message AnyChainTx {
   oneof chain {
     utxorpc.v1alpha.cardano.Tx cardano = 1; // A Cardano transaction.
   }
+  AnyChainBlock block = 2; // Block containing the transaction
 }
 
 // Response containing the matching chain transactions.
