@@ -94,6 +94,7 @@
     - [RedeemerPurpose](#utxorpc-v1alpha-cardano-RedeemerPurpose)
   
 - [utxorpc/v1alpha/query/query.proto](#utxorpc_v1alpha_query_query-proto)
+    - [AnyChainBlock](#utxorpc-v1alpha-query-AnyChainBlock)
     - [AnyChainDatum](#utxorpc-v1alpha-query-AnyChainDatum)
     - [AnyChainParams](#utxorpc-v1alpha-query-AnyChainParams)
     - [AnyChainTx](#utxorpc-v1alpha-query-AnyChainTx)
@@ -153,6 +154,7 @@
     - [SyncService](#utxorpc-v1alpha-sync-SyncService)
   
 - [utxorpc/v1alpha/watch/watch.proto](#utxorpc_v1alpha_watch_watch-proto)
+    - [AnyChainBlock](#utxorpc-v1alpha-watch-AnyChainBlock)
     - [AnyChainTx](#utxorpc-v1alpha-watch-AnyChainTx)
     - [AnyChainTxPattern](#utxorpc-v1alpha-watch-AnyChainTxPattern)
     - [BlockRef](#utxorpc-v1alpha-watch-BlockRef)
@@ -1698,6 +1700,22 @@ Purpose of the redeemer in a transaction.
 
 
 
+<a name="utxorpc-v1alpha-query-AnyChainBlock"></a>
+
+### AnyChainBlock
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| native_bytes | [bytes](#bytes) |  | Original bytes as defined by the chain |
+| cardano | [utxorpc.v1alpha.cardano.Block](#utxorpc-v1alpha-cardano-Block) |  | A parsed Cardano block. |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-query-AnyChainDatum"></a>
 
 ### AnyChainDatum
@@ -1740,6 +1758,7 @@ Represents a transaction from any supported blockchain.
 | ----- | ---- | ----- | ----------- |
 | native_bytes | [bytes](#bytes) |  | Original bytes as defined by the chain |
 | cardano | [utxorpc.v1alpha.cardano.Tx](#utxorpc-v1alpha-cardano-Tx) |  | A Cardano transaction. |
+| block | [AnyChainBlock](#utxorpc-v1alpha-query-AnyChainBlock) |  | Block containing the transaction |
 
 
 
@@ -2345,13 +2364,14 @@ Service definition for submitting transactions and checking their status.
 <a name="utxorpc-v1alpha-sync-BlockRef"></a>
 
 ### BlockRef
-Represents a reference to a specific block
+Represents a reference to a specific block by a chosen combination of fields
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| index | [uint64](#uint64) |  | Height or slot number (depending on the blockchain) |
+| slot | [uint64](#uint64) |  | Height or slot number (depending on the blockchain) |
 | hash | [bytes](#bytes) |  | Hash of the content of the block |
+| height | [uint64](#uint64) |  | Block height |
 
 
 
@@ -2509,6 +2529,22 @@ Service definition for syncing chain data.
 
 
 
+<a name="utxorpc-v1alpha-watch-AnyChainBlock"></a>
+
+### AnyChainBlock
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| native_bytes | [bytes](#bytes) |  | Original bytes as defined by the chain |
+| cardano | [utxorpc.v1alpha.cardano.Block](#utxorpc-v1alpha-cardano-Block) |  | A parsed Cardano block. |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-watch-AnyChainTx"></a>
 
 ### AnyChainTx
@@ -2518,6 +2554,7 @@ Represents a transaction from any supported blockchain.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | cardano | [utxorpc.v1alpha.cardano.Tx](#utxorpc-v1alpha-cardano-Tx) |  | A Cardano transaction. |
+| block | [AnyChainBlock](#utxorpc-v1alpha-watch-AnyChainBlock) |  | Block containing the transaction |
 
 
 
@@ -2542,13 +2579,14 @@ Represents a tx pattern from any supported blockchain.
 <a name="utxorpc-v1alpha-watch-BlockRef"></a>
 
 ### BlockRef
-Represents a reference to a specific block
+Represents a reference to a specific block by a chosen combination of fields
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| index | [uint64](#uint64) |  | Height or slot number (depending on the blockchain) |
+| slot | [uint64](#uint64) |  | Height or slot number (depending on the blockchain) |
 | hash | [bytes](#bytes) |  | Hash of the content of the block |
+| height | [uint64](#uint64) |  | Block height |
 
 
 
