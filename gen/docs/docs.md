@@ -2497,6 +2497,7 @@ Response containing the current tip of the blockchain.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | tip | [BlockRef](#utxorpc-v1alpha-sync-BlockRef) |  | The current tip of the blockchain. |
+| timestamp | [uint64](#uint64) |  | Block ms timestamp |
 
 
 
