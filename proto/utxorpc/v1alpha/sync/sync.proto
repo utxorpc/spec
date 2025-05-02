@@ -64,6 +64,7 @@ message ReadTipRequest {}
 // Response containing the current tip of the blockchain.
 message ReadTipResponse {
   BlockRef tip = 1; // The current tip of the blockchain.
+  uint64 timestamp = 2; // Block ms timestamp
 }
 
 // Service definition for syncing chain data.

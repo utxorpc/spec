@@ -203,6 +203,7 @@ message BlockBody {
 message Block {
   BlockHeader header = 1; // Block header.
   BlockBody body = 2; // Block body.
+  uint64 timestamp = 3; // Block ms timestamp
 }
 
 // Represents a VKey witness used to sign a transaction.
