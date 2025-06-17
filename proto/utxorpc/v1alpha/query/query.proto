@@ -11,6 +11,8 @@ import "utxorpc/v1alpha/cardano/cardano.proto";
 message ChainPoint {
   uint64 slot = 1; // Slot number.
   bytes hash = 2; // Block hash.
+  uint64 block_height = 3; // Block height.
+  uint64 timestamp = 4; // Block ms timestamp
 }
 
 message AnyChainBlock {
