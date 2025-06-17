@@ -144,7 +144,7 @@ message AnyChainTx {
   oneof chain {
     utxorpc.v1alpha.cardano.Tx cardano = 2; // A Cardano transaction.
   }
-  ChainPoint chain_point = 3; // Specific point in the blockchain where this transaction was included.
+  ChainPoint block_ref = 3; // The chain point that represents the block this transaction belongs to.
 }
 
 // Response containing the transaction associated with the requested hash.
