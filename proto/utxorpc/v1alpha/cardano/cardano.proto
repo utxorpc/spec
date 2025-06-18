@@ -637,11 +637,8 @@ message TxEval {
 
 // Supporting types for genesis configurations
 
-message Nonce {
-  oneof variant {
-    bytes hash = 1;
-    bool neutral = 2; // true for NeutralNonce
-  }
+message ExtraEntropy {
+  string tag = 1; // "NeutralNonce" or other values
 }
 
 // Types for Byron genesis config
@@ -727,7 +724,7 @@ message ShelleyProtocolParams {
   RationalNumber rho = 12; // monetary expansion
   RationalNumber tau = 13; // treasury expansion  
   RationalNumber decentralisation_param = 14;
-  Nonce extra_entropy = 15;
+  ExtraEntropy extra_entropy = 15;
   ProtocolVersion protocol_version = 16; 
   uint64 e_max = 17;
 }
