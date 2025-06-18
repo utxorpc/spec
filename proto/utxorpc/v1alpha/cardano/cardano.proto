@@ -642,9 +642,6 @@ message Nonce {
     bytes hash = 1;
     bool neutral = 2; // true for NeutralNonce
   }
-  // @TODO: JSON uses {"tag": "NeutralNonce"} format, needs mapping:
-  // - JSON: {"tag": "NeutralNonce"} → Proto: {neutral: true}
-  // - JSON: {"tag": "Nonce", "hash": "..."} → Proto: {hash: "..."}
 }
 
 // Types for Byron genesis config
@@ -731,7 +728,7 @@ message ShelleyProtocolParams {
   RationalNumber tau = 13; // treasury expansion  
   RationalNumber decentralisation_param = 14;
   Nonce extra_entropy = 15;
-  ProtocolVersion protocol_version = 16; // @TODO: reusing existing ProtocolVersion type - verify compatibility
+  ProtocolVersion protocol_version = 16; 
   uint64 e_max = 17;
 }
 
@@ -767,8 +764,6 @@ message AlonzoGenesisConfig {
   uint32 max_value_size = 5;
   uint32 collateral_percentage = 6;
   uint32 max_collateral_inputs = 7;
-  // Cost models in genesis use named parameters (e.g., "addInteger-cpu-arguments-intercept": 197209)
-  // while CostModel proto uses ordered array. Using map<string, map<string, int64>> to preserve names.
   map<string, CostModel> cost_models = 8;
 }
 
@@ -795,16 +790,15 @@ message DRepVotingThresholds {
   RationalNumber treasury_withdrawal = 10;
 }
 
-message InitialCommittee {
-  // @TODO: Committee naming conflict - using InitialCommittee to distinguish from UpdateCommitteeAction
+message GenesisCommittee {
   map<string, uint64> members = 1; // scriptHash -> expiry epoch
   RationalNumber threshold = 2;
 }
 
 // Genesis configuration for Conway era
 message ConwayGenesisConfig {
-  InitialCommittee committee = 1;
-  Constitution constitution = 2; // @TODO: reusing existing Constitution type - verify compatibility with genesis
+  GenesisCommittee committee = 1;
+  Constitution constitution = 2; 
   uint64 committee_min_size = 3;
   uint64 committee_max_term_length = 4;
   uint64 gov_action_lifetime = 5;
@@ -812,7 +806,7 @@ message ConwayGenesisConfig {
   uint64 drep_deposit = 7;
   uint64 drep_activity = 8;
   RationalNumber min_fee_ref_script_cost_per_byte = 9;
-  CostModel plutus_v3_cost_model = 10; // @TODO: reusing existing CostModel type - verify compatibility
+  CostModel plutus_v3_cost_model = 10; 
   DRepVotingThresholds drep_voting_thresholds = 11;
   PoolVotingThresholds pool_voting_thresholds = 12;
 }
