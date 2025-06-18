@@ -47,6 +47,7 @@
     - [EvalTrace](#utxorpc-v1alpha-cardano-EvalTrace)
     - [ExPrices](#utxorpc-v1alpha-cardano-ExPrices)
     - [ExUnits](#utxorpc-v1alpha-cardano-ExUnits)
+    - [ExtraEntropy](#utxorpc-v1alpha-cardano-ExtraEntropy)
     - [GenDelegs](#utxorpc-v1alpha-cardano-GenDelegs)
     - [GenesisCommittee](#utxorpc-v1alpha-cardano-GenesisCommittee)
     - [GenesisCommittee.MembersEntry](#utxorpc-v1alpha-cardano-GenesisCommittee-MembersEntry)
@@ -71,7 +72,6 @@
     - [NewCommitteeCredentials](#utxorpc-v1alpha-cardano-NewCommitteeCredentials)
     - [NewConstitutionAction](#utxorpc-v1alpha-cardano-NewConstitutionAction)
     - [NoConfidenceAction](#utxorpc-v1alpha-cardano-NoConfidenceAction)
-    - [Nonce](#utxorpc-v1alpha-cardano-Nonce)
     - [PParams](#utxorpc-v1alpha-cardano-PParams)
     - [ParameterChangeAction](#utxorpc-v1alpha-cardano-ParameterChangeAction)
     - [PlutusData](#utxorpc-v1alpha-cardano-PlutusData)
@@ -967,6 +967,21 @@ Genesis configuration for Conway era
 
 
 
+<a name="utxorpc-v1alpha-cardano-ExtraEntropy"></a>
+
+### ExtraEntropy
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| tag | [string](#string) |  | &#34;NeutralNonce&#34; or other values |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-GenDelegs"></a>
 
 ### GenDelegs
@@ -1364,22 +1379,6 @@ and the value is the expiration epoch for that credential
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | gov_action_id | [GovernanceActionId](#utxorpc-v1alpha-cardano-GovernanceActionId) |  |  |
-
-
-
-
-
-
-<a name="utxorpc-v1alpha-cardano-Nonce"></a>
-
-### Nonce
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| hash | [bytes](#bytes) |  |  |
-| neutral | [bool](#bool) |  | true for NeutralNonce |
 
 
 
@@ -1839,7 +1838,7 @@ Genesis configuration for Shelley era
 | rho | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  | monetary expansion |
 | tau | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  | treasury expansion |
 | decentralisation_param | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  |  |
-| extra_entropy | [Nonce](#utxorpc-v1alpha-cardano-Nonce) |  |  |
+| extra_entropy | [ExtraEntropy](#utxorpc-v1alpha-cardano-ExtraEntropy) |  |  |
 | protocol_version | [ProtocolVersion](#utxorpc-v1alpha-cardano-ProtocolVersion) |  |  |
 | e_max | [uint64](#uint64) |  |  |
 
