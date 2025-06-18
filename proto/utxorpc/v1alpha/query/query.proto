@@ -170,7 +170,7 @@ service QueryService {
   rpc SearchUtxos(SearchUtxosRequest) returns (SearchUtxosResponse); // Search for UTxO based on a pattern.
   rpc ReadData(ReadDataRequest) returns (ReadDataResponse); // Read specific datum by hash
   rpc ReadTx(ReadTxRequest) returns (ReadTxResponse); // Get Txs by chain-specific criteria.
-  rpc ReadGenesisConfig(ReadGenesisConfigRequest) returns (ReadGenesisConfigResponse); // Get the chain configuration
+  rpc ReadGenesisConfig(ReadGenesisConfigRequest) returns (ReadGenesisConfigResponse); // Get the genesis configuration
   rpc ReadEraSummary(ReadEraSummaryRequest) returns (ReadEraSummaryResponse); // Get the chain era summary
 
   // TODO: decide if we want to expand the scope
