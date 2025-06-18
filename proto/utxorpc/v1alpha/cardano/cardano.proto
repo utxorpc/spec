@@ -606,8 +606,9 @@ message EraSummary {
   string name = 1; // name of the era (ex: "shelley")
   EraBoundary start = 2; // start of this era
   EraBoundary end = 3; // end of this era (if the era has a well-defined ending)
-  string config = 4; // encoded structure of the configuration for this era
+  PParams protocol_params = 4; // protocol parameters for this era
 }
+
 message EraSummaries {
   repeated EraSummary summaries = 1;
 }
@@ -629,4 +630,202 @@ message TxEval {
   repeated EvalError errors = 3;
   repeated EvalTrace traces = 4;
   repeated Redeemer redeemers = 5;
+}
+
+// GENESIS CONFIGS
+// ===============
+
+// Supporting types for genesis configurations
+
+message Nonce {
+  oneof variant {
+    bytes hash = 1;
+    bool neutral = 2; // true for NeutralNonce
+  }
+  // @TODO: JSON uses {"tag": "NeutralNonce"} format, needs mapping:
+  // - JSON: {"tag": "NeutralNonce"} → Proto: {neutral: true}
+  // - JSON: {"tag": "Nonce", "hash": "..."} → Proto: {hash: "..."}
+}
+
+// Types for Byron genesis config
+
+message BlockVersionData {
+  uint32 script_version = 1;
+  string slot_duration = 2; // milliseconds as string
+  string max_block_size = 3;
+  string max_header_size = 4;
+  string max_tx_size = 5;
+  string max_proposal_size = 6;
+  string mpc_thd = 7;
+  string heavy_del_thd = 8;
+  string update_vote_thd = 9;
+  string update_proposal_thd = 10;
+  string update_implicit = 11;
+  SoftforkRule softfork_rule = 12;
+  TxFeePolicy tx_fee_policy = 13;
+  string unlock_stake_epoch = 14;
+}
+
+message SoftforkRule {
+  string init_thd = 1;
+  string min_thd = 2;
+  string thd_decrement = 3;
+}
+
+message TxFeePolicy {
+  string multiplier = 1;
+  string summand = 2;
+}
+
+message ProtocolConsts {
+  uint32 k = 1;
+  uint32 protocol_magic = 2;
+  uint32 vss_max_ttl = 3;
+  uint32 vss_min_ttl = 4;
+}
+
+// Heavy delegation certificate used in Byron genesis
+message HeavyDelegation {
+  string cert = 1; // Hex-encoded certificate
+  string delegate_pk = 2; // Base64-encoded delegate public key
+  string issuer_pk = 3; // Base64-encoded issuer public key
+  uint32 omega = 4; // Omega value
+}
+
+// VSS (Verifiable Secret Sharing) certificate used in Byron genesis
+message VssCert {
+  uint32 expiry_epoch = 1; // Epoch when the certificate expires
+  string signature = 2; // Hex-encoded signature
+  string signing_key = 3; // Base64-encoded signing key
+  string vss_key = 4; // Base64-encoded VSS key
+}
+
+// Genesis configuration for Byron era
+message ByronGenesisConfig {
+  map<string, string> avvm_distr = 1;
+  BlockVersionData block_version_data = 2;
+  string fts_seed = 3;
+  ProtocolConsts protocol_consts = 4;
+  uint64 start_time = 5;
+  map<string, uint64> boot_stakeholders = 6;
+  map<string, HeavyDelegation> heavy_delegation = 7;
+  map<string, string> non_avvm_balances = 8;
+  map<string, VssCert> vss_certs = 9;
+}
+
+// Types for Shelley genesis config
+
+message ShelleyProtocolParams {
+  uint32 min_fee_a = 1;
+  uint32 min_fee_b = 2;
+  uint32 max_block_body_size = 3;
+  uint32 max_tx_size = 4;
+  uint32 max_block_header_size = 5;
+  uint64 key_deposit = 6;
+  uint64 pool_deposit = 7;
+  uint64 min_utxo_value = 8;
+  uint64 min_pool_cost = 9;
+  uint32 n_opt = 10;
+  RationalNumber a0 = 11; // pool pledge influence
+  RationalNumber rho = 12; // monetary expansion
+  RationalNumber tau = 13; // treasury expansion  
+  RationalNumber decentralisation_param = 14;
+  Nonce extra_entropy = 15;
+  ProtocolVersion protocol_version = 16; // @TODO: reusing existing ProtocolVersion type - verify compatibility
+  uint64 e_max = 17;
+}
+
+message GenDelegs {
+  string delegate = 1;
+  string vrf = 2;
+}
+
+// Genesis configuration for Shelley era
+message ShelleyGenesisConfig {
+  RationalNumber active_slots_coeff = 1;
+  uint32 epoch_length = 2;
+  map<string, GenDelegs> gen_delegs = 3;
+  map<string, uint64> initial_funds = 4;
+  uint32 max_kes_evolutions = 5;
+  uint64 max_lovelace_supply = 6;
+  string network_id = 7;
+  uint32 network_magic = 8;
+  ShelleyProtocolParams protocol_params = 9;
+  uint32 security_param = 10;
+  uint32 slot_length = 11;
+  uint32 slots_per_kes_period = 12;
+  string system_start = 13;
+  uint32 update_quorum = 14;
+}
+
+// Genesis configuration for Alonzo era
+message AlonzoGenesisConfig {
+  uint64 lovelace_per_utxo_word = 1;
+  ExPrices execution_prices = 2; 
+  ExUnits max_tx_ex_units = 3; 
+  ExUnits max_block_ex_units = 4; 
+  uint32 max_value_size = 5;
+  uint32 collateral_percentage = 6;
+  uint32 max_collateral_inputs = 7;
+  // Cost models in genesis use named parameters (e.g., "addInteger-cpu-arguments-intercept": 197209)
+  // while CostModel proto uses ordered array. Using map<string, map<string, int64>> to preserve names.
+  map<string, CostModel> cost_models = 8;
+}
+
+// Types for Conway genesis config
+
+message PoolVotingThresholds {
+  RationalNumber motion_no_confidence = 1;
+  RationalNumber committee_normal = 2;
+  RationalNumber committee_no_confidence = 3;
+  RationalNumber hard_fork_initiation = 4;
+  RationalNumber pp_security_group = 5;
+}
+
+message DRepVotingThresholds {
+  RationalNumber motion_no_confidence = 1;
+  RationalNumber committee_normal = 2;
+  RationalNumber committee_no_confidence = 3;
+  RationalNumber update_to_constitution = 4;
+  RationalNumber hard_fork_initiation = 5;
+  RationalNumber pp_network_group = 6;
+  RationalNumber pp_economic_group = 7;
+  RationalNumber pp_technical_group = 8;
+  RationalNumber pp_gov_group = 9;
+  RationalNumber treasury_withdrawal = 10;
+}
+
+message InitialCommittee {
+  // @TODO: Committee naming conflict - using InitialCommittee to distinguish from UpdateCommitteeAction
+  map<string, uint64> members = 1; // scriptHash -> expiry epoch
+  RationalNumber threshold = 2;
+}
+
+// Genesis configuration for Conway era
+message ConwayGenesisConfig {
+  InitialCommittee committee = 1;
+  Constitution constitution = 2; // @TODO: reusing existing Constitution type - verify compatibility with genesis
+  uint64 committee_min_size = 3;
+  uint64 committee_max_term_length = 4;
+  uint64 gov_action_lifetime = 5;
+  uint64 gov_action_deposit = 6;
+  uint64 drep_deposit = 7;
+  uint64 drep_activity = 8;
+  RationalNumber min_fee_ref_script_cost_per_byte = 9;
+  CostModel plutus_v3_cost_model = 10; // @TODO: reusing existing CostModel type - verify compatibility
+  DRepVotingThresholds drep_voting_thresholds = 11;
+  PoolVotingThresholds pool_voting_thresholds = 12;
+}
+
+message GenesisConfig {
+  oneof genesis_config {
+    ByronGenesisConfig byron = 1; // Byron era genesis config
+    ShelleyGenesisConfig shelley = 2; // Shelley era genesis config
+    AlonzoGenesisConfig alonzo = 3; // Alonzo era genesis config
+    ConwayGenesisConfig conway = 4; // Conway era genesis config
+  }
+}
+
+message GenesisConfigs {
+  repeated GenesisConfig configs = 1; // List of genesis configurations for different eras
 }
