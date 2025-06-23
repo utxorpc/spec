@@ -11,7 +11,7 @@ import "utxorpc/v1alpha/cardano/cardano.proto";
 message ChainPoint {
   uint64 slot = 1; // Slot number.
   bytes hash = 2; // Block hash.
-  uint64 height = 3; // Block height
+  uint64 height = 3; // Block height.
   uint64 timestamp = 4; // Block ms timestamp
 }
 
@@ -144,7 +144,7 @@ message AnyChainTx {
   oneof chain {
     utxorpc.v1alpha.cardano.Tx cardano = 2; // A Cardano transaction.
   }
-  AnyChainBlock block = 3; // Block containing the transaction
+  ChainPoint block_ref = 3; // The chain point that represents the block this transaction belongs to.
 }
 
 // Response containing the transaction associated with the requested hash.
