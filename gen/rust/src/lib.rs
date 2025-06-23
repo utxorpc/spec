@@ -1,6 +1,12 @@
 // @generated
 pub mod utxorpc {
     pub mod v1alpha {
+        #[cfg(feature = "utxorpc-v1alpha-bitcoin")]
+        // @@protoc_insertion_point(attribute:utxorpc.v1alpha.bitcoin)
+        pub mod bitcoin {
+            include!("utxorpc.v1alpha.bitcoin.rs");
+            // @@protoc_insertion_point(utxorpc.v1alpha.bitcoin)
+        }
         #[cfg(feature = "utxorpc-v1alpha-cardano")]
         // @@protoc_insertion_point(attribute:utxorpc.v1alpha.cardano)
         pub mod cardano {
