@@ -300,6 +300,7 @@ Represents a complete block, including header and body.
 | ----- | ---- | ----- | ----------- |
 | header | [BlockHeader](#utxorpc-v1alpha-cardano-BlockHeader) |  | Block header. |
 | body | [BlockBody](#utxorpc-v1alpha-cardano-BlockBody) |  | Block body. |
+| timestamp | [uint64](#uint64) |  | Block ms timestamp |
 
 
 
@@ -1807,6 +1808,8 @@ Represents a specific point in the blockchain.
 | ----- | ---- | ----- | ----------- |
 | slot | [uint64](#uint64) |  | Slot number. |
 | hash | [bytes](#bytes) |  | Block hash. |
+| height | [uint64](#uint64) |  | Block height |
+| timestamp | [uint64](#uint64) |  | Block ms timestamp |
 
 
 
@@ -2494,6 +2497,7 @@ Response containing the current tip of the blockchain.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | tip | [BlockRef](#utxorpc-v1alpha-sync-BlockRef) |  | The current tip of the blockchain. |
+| timestamp | [uint64](#uint64) |  | Block ms timestamp |
 
 
 
