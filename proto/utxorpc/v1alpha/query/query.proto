@@ -34,16 +34,28 @@ message ReadParamsRequest {
 }
 
 // Request to get the chain config
-message ReadChainConfigRequest {
+message ReadGenesisRequest {
   google.protobuf.FieldMask field_mask = 1; // Field mask to selectively return fields in the parsed response.
 }
 
-// Response containing the chain config
-message ReadChainConfigResponse {
+// Request to get the era summary
+message ReadEraSummaryRequest {
+  google.protobuf.FieldMask field_mask = 1; // Field mask to selectively return fields in the parsed response.
+}
+
+// Response containing the genesis configs
+message ReadGenesisResponse {
   bytes genesis = 1; // genesis hash for the chain
   string caip2 = 2; // the caip-2 ID for this network
+  oneof config {
+    utxorpc.v1alpha.cardano.Genesis cardano = 3; // Cardano genesis
+  }
+}
+
+// Response containing the era summaries
+message ReadEraSummaryResponse {
   oneof summary {
-    utxorpc.v1alpha.cardano.EraSummaries cardano = 3; // Cardano era summary
+    utxorpc.v1alpha.cardano.EraSummaries cardano = 1; // Cardano era summaries
   }
 }
 
@@ -160,7 +172,8 @@ service QueryService {
   rpc SearchUtxos(SearchUtxosRequest) returns (SearchUtxosResponse); // Search for UTxO based on a pattern.
   rpc ReadData(ReadDataRequest) returns (ReadDataResponse); // Read specific datum by hash
   rpc ReadTx(ReadTxRequest) returns (ReadTxResponse); // Get Txs by chain-specific criteria.
-  rpc ReadChainConfig(ReadChainConfigRequest) returns (ReadChainConfigResponse); // Get the chain configuration
+  rpc ReadGenesis(ReadGenesisRequest) returns (ReadGenesisResponse); // Get the genesis configuration
+  rpc ReadEraSummary(ReadEraSummaryRequest) returns (ReadEraSummaryResponse); // Get the chain era summary
 
   // TODO: decide if we want to expand the scope
   // rpc DumpUtxos(ReadUtxosRequest) returns (stream ReadUtxosResponse); // Dump all available utxos
