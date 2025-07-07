@@ -720,6 +720,12 @@ message Committee {
   RationalNumber threshold = 2;
 }
 
+message CostModelMap {
+  CostModel plutus_v1 = 1;
+  CostModel plutus_v2 = 2;
+  CostModel plutus_v3 = 3;
+}
+
 // Unified Genesis configuration containing all parameters from all eras
 message Genesis {
   // ============ Byron Era Fields ============
@@ -757,7 +763,7 @@ message Genesis {
   uint32 max_value_size = 28;
   uint32 collateral_percentage = 29;
   uint32 max_collateral_inputs = 30;
-  map<string, CostModel> cost_models = 31;
+  CostModelMap cost_models = 31;
 
   // ============ Conway Era Fields ============
   Committee committee = 32;
@@ -769,8 +775,6 @@ message Genesis {
   uint64 drep_deposit = 38;
   uint64 drep_activity = 39;
   RationalNumber min_fee_ref_script_cost_per_byte = 40;
-  CostModel plutus_v3_cost_model = 41;
-  DRepVotingThresholds drep_voting_thresholds = 42;
-  PoolVotingThresholds pool_voting_thresholds = 43;
+  DRepVotingThresholds drep_voting_thresholds = 41;
+  PoolVotingThresholds pool_voting_thresholds = 42;
 }
-
