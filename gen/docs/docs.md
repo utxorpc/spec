@@ -12,8 +12,6 @@
   
 - [utxorpc/v1alpha/cardano/cardano.proto](#utxorpc_v1alpha_cardano_cardano-proto)
     - [AddressPattern](#utxorpc-v1alpha-cardano-AddressPattern)
-    - [AlonzoGenesisConfig](#utxorpc-v1alpha-cardano-AlonzoGenesisConfig)
-    - [AlonzoGenesisConfig.CostModelsEntry](#utxorpc-v1alpha-cardano-AlonzoGenesisConfig-CostModelsEntry)
     - [Anchor](#utxorpc-v1alpha-cardano-Anchor)
     - [Asset](#utxorpc-v1alpha-cardano-Asset)
     - [AssetPattern](#utxorpc-v1alpha-cardano-AssetPattern)
@@ -24,18 +22,14 @@
     - [BlockBody](#utxorpc-v1alpha-cardano-BlockBody)
     - [BlockHeader](#utxorpc-v1alpha-cardano-BlockHeader)
     - [BlockVersionData](#utxorpc-v1alpha-cardano-BlockVersionData)
-    - [ByronGenesisConfig](#utxorpc-v1alpha-cardano-ByronGenesisConfig)
-    - [ByronGenesisConfig.AvvmDistrEntry](#utxorpc-v1alpha-cardano-ByronGenesisConfig-AvvmDistrEntry)
-    - [ByronGenesisConfig.BootStakeholdersEntry](#utxorpc-v1alpha-cardano-ByronGenesisConfig-BootStakeholdersEntry)
-    - [ByronGenesisConfig.HeavyDelegationEntry](#utxorpc-v1alpha-cardano-ByronGenesisConfig-HeavyDelegationEntry)
-    - [ByronGenesisConfig.NonAvvmBalancesEntry](#utxorpc-v1alpha-cardano-ByronGenesisConfig-NonAvvmBalancesEntry)
-    - [ByronGenesisConfig.VssCertsEntry](#utxorpc-v1alpha-cardano-ByronGenesisConfig-VssCertsEntry)
     - [Certificate](#utxorpc-v1alpha-cardano-Certificate)
     - [Collateral](#utxorpc-v1alpha-cardano-Collateral)
+    - [Committee](#utxorpc-v1alpha-cardano-Committee)
+    - [Committee.MembersEntry](#utxorpc-v1alpha-cardano-Committee-MembersEntry)
     - [Constitution](#utxorpc-v1alpha-cardano-Constitution)
     - [Constr](#utxorpc-v1alpha-cardano-Constr)
-    - [ConwayGenesisConfig](#utxorpc-v1alpha-cardano-ConwayGenesisConfig)
     - [CostModel](#utxorpc-v1alpha-cardano-CostModel)
+    - [CostModelMap](#utxorpc-v1alpha-cardano-CostModelMap)
     - [CostModels](#utxorpc-v1alpha-cardano-CostModels)
     - [DRep](#utxorpc-v1alpha-cardano-DRep)
     - [DRepVotingThresholds](#utxorpc-v1alpha-cardano-DRepVotingThresholds)
@@ -49,10 +43,14 @@
     - [ExUnits](#utxorpc-v1alpha-cardano-ExUnits)
     - [ExtraEntropy](#utxorpc-v1alpha-cardano-ExtraEntropy)
     - [GenDelegs](#utxorpc-v1alpha-cardano-GenDelegs)
-    - [GenesisCommittee](#utxorpc-v1alpha-cardano-GenesisCommittee)
-    - [GenesisCommittee.MembersEntry](#utxorpc-v1alpha-cardano-GenesisCommittee-MembersEntry)
-    - [GenesisConfig](#utxorpc-v1alpha-cardano-GenesisConfig)
-    - [GenesisConfigs](#utxorpc-v1alpha-cardano-GenesisConfigs)
+    - [Genesis](#utxorpc-v1alpha-cardano-Genesis)
+    - [Genesis.AvvmDistrEntry](#utxorpc-v1alpha-cardano-Genesis-AvvmDistrEntry)
+    - [Genesis.BootStakeholdersEntry](#utxorpc-v1alpha-cardano-Genesis-BootStakeholdersEntry)
+    - [Genesis.GenDelegsEntry](#utxorpc-v1alpha-cardano-Genesis-GenDelegsEntry)
+    - [Genesis.HeavyDelegationEntry](#utxorpc-v1alpha-cardano-Genesis-HeavyDelegationEntry)
+    - [Genesis.InitialFundsEntry](#utxorpc-v1alpha-cardano-Genesis-InitialFundsEntry)
+    - [Genesis.NonAvvmBalancesEntry](#utxorpc-v1alpha-cardano-Genesis-NonAvvmBalancesEntry)
+    - [Genesis.VssCertsEntry](#utxorpc-v1alpha-cardano-Genesis-VssCertsEntry)
     - [GenesisKeyDelegationCert](#utxorpc-v1alpha-cardano-GenesisKeyDelegationCert)
     - [GovernanceAction](#utxorpc-v1alpha-cardano-GovernanceAction)
     - [GovernanceActionId](#utxorpc-v1alpha-cardano-GovernanceActionId)
@@ -92,10 +90,6 @@
     - [ResignCommitteeColdCert](#utxorpc-v1alpha-cardano-ResignCommitteeColdCert)
     - [Script](#utxorpc-v1alpha-cardano-Script)
     - [ScriptNOfK](#utxorpc-v1alpha-cardano-ScriptNOfK)
-    - [ShelleyGenesisConfig](#utxorpc-v1alpha-cardano-ShelleyGenesisConfig)
-    - [ShelleyGenesisConfig.GenDelegsEntry](#utxorpc-v1alpha-cardano-ShelleyGenesisConfig-GenDelegsEntry)
-    - [ShelleyGenesisConfig.InitialFundsEntry](#utxorpc-v1alpha-cardano-ShelleyGenesisConfig-InitialFundsEntry)
-    - [ShelleyProtocolParams](#utxorpc-v1alpha-cardano-ShelleyProtocolParams)
     - [SoftforkRule](#utxorpc-v1alpha-cardano-SoftforkRule)
     - [StakeCredential](#utxorpc-v1alpha-cardano-StakeCredential)
     - [StakeDelegationCert](#utxorpc-v1alpha-cardano-StakeDelegationCert)
@@ -139,8 +133,8 @@
     - [ReadDataResponse](#utxorpc-v1alpha-query-ReadDataResponse)
     - [ReadEraSummaryRequest](#utxorpc-v1alpha-query-ReadEraSummaryRequest)
     - [ReadEraSummaryResponse](#utxorpc-v1alpha-query-ReadEraSummaryResponse)
-    - [ReadGenesisConfigRequest](#utxorpc-v1alpha-query-ReadGenesisConfigRequest)
-    - [ReadGenesisConfigResponse](#utxorpc-v1alpha-query-ReadGenesisConfigResponse)
+    - [ReadGenesisRequest](#utxorpc-v1alpha-query-ReadGenesisRequest)
+    - [ReadGenesisResponse](#utxorpc-v1alpha-query-ReadGenesisResponse)
     - [ReadParamsRequest](#utxorpc-v1alpha-query-ReadParamsRequest)
     - [ReadParamsResponse](#utxorpc-v1alpha-query-ReadParamsResponse)
     - [ReadTxRequest](#utxorpc-v1alpha-query-ReadTxRequest)
@@ -339,44 +333,6 @@ Pattern of an address that can be used to evaluate matching predicates.
 
 
 
-<a name="utxorpc-v1alpha-cardano-AlonzoGenesisConfig"></a>
-
-### AlonzoGenesisConfig
-Genesis configuration for Alonzo era
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| lovelace_per_utxo_word | [uint64](#uint64) |  |  |
-| execution_prices | [ExPrices](#utxorpc-v1alpha-cardano-ExPrices) |  |  |
-| max_tx_ex_units | [ExUnits](#utxorpc-v1alpha-cardano-ExUnits) |  |  |
-| max_block_ex_units | [ExUnits](#utxorpc-v1alpha-cardano-ExUnits) |  |  |
-| max_value_size | [uint32](#uint32) |  |  |
-| collateral_percentage | [uint32](#uint32) |  |  |
-| max_collateral_inputs | [uint32](#uint32) |  |  |
-| cost_models | [AlonzoGenesisConfig.CostModelsEntry](#utxorpc-v1alpha-cardano-AlonzoGenesisConfig-CostModelsEntry) | repeated |  |
-
-
-
-
-
-
-<a name="utxorpc-v1alpha-cardano-AlonzoGenesisConfig-CostModelsEntry"></a>
-
-### AlonzoGenesisConfig.CostModelsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [CostModel](#utxorpc-v1alpha-cardano-CostModel) |  |  |
-
-
-
-
-
-
 <a name="utxorpc-v1alpha-cardano-Anchor"></a>
 
 ### Anchor
@@ -533,7 +489,7 @@ Contains the header information for a block.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | script_version | [uint32](#uint32) |  |  |
-| slot_duration | [string](#string) |  | milliseconds as string |
+| slot_duration | [string](#string) |  |  |
 | max_block_size | [string](#string) |  |  |
 | max_header_size | [string](#string) |  |  |
 | max_tx_size | [string](#string) |  |  |
@@ -546,109 +502,6 @@ Contains the header information for a block.
 | softfork_rule | [SoftforkRule](#utxorpc-v1alpha-cardano-SoftforkRule) |  |  |
 | tx_fee_policy | [TxFeePolicy](#utxorpc-v1alpha-cardano-TxFeePolicy) |  |  |
 | unlock_stake_epoch | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="utxorpc-v1alpha-cardano-ByronGenesisConfig"></a>
-
-### ByronGenesisConfig
-Genesis configuration for Byron era
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| avvm_distr | [ByronGenesisConfig.AvvmDistrEntry](#utxorpc-v1alpha-cardano-ByronGenesisConfig-AvvmDistrEntry) | repeated |  |
-| block_version_data | [BlockVersionData](#utxorpc-v1alpha-cardano-BlockVersionData) |  |  |
-| fts_seed | [string](#string) |  |  |
-| protocol_consts | [ProtocolConsts](#utxorpc-v1alpha-cardano-ProtocolConsts) |  |  |
-| start_time | [uint64](#uint64) |  |  |
-| boot_stakeholders | [ByronGenesisConfig.BootStakeholdersEntry](#utxorpc-v1alpha-cardano-ByronGenesisConfig-BootStakeholdersEntry) | repeated |  |
-| heavy_delegation | [ByronGenesisConfig.HeavyDelegationEntry](#utxorpc-v1alpha-cardano-ByronGenesisConfig-HeavyDelegationEntry) | repeated |  |
-| non_avvm_balances | [ByronGenesisConfig.NonAvvmBalancesEntry](#utxorpc-v1alpha-cardano-ByronGenesisConfig-NonAvvmBalancesEntry) | repeated |  |
-| vss_certs | [ByronGenesisConfig.VssCertsEntry](#utxorpc-v1alpha-cardano-ByronGenesisConfig-VssCertsEntry) | repeated |  |
-
-
-
-
-
-
-<a name="utxorpc-v1alpha-cardano-ByronGenesisConfig-AvvmDistrEntry"></a>
-
-### ByronGenesisConfig.AvvmDistrEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="utxorpc-v1alpha-cardano-ByronGenesisConfig-BootStakeholdersEntry"></a>
-
-### ByronGenesisConfig.BootStakeholdersEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="utxorpc-v1alpha-cardano-ByronGenesisConfig-HeavyDelegationEntry"></a>
-
-### ByronGenesisConfig.HeavyDelegationEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [HeavyDelegation](#utxorpc-v1alpha-cardano-HeavyDelegation) |  |  |
-
-
-
-
-
-
-<a name="utxorpc-v1alpha-cardano-ByronGenesisConfig-NonAvvmBalancesEntry"></a>
-
-### ByronGenesisConfig.NonAvvmBalancesEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="utxorpc-v1alpha-cardano-ByronGenesisConfig-VssCertsEntry"></a>
-
-### ByronGenesisConfig.VssCertsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [VssCert](#utxorpc-v1alpha-cardano-VssCert) |  |  |
 
 
 
@@ -706,6 +559,38 @@ Represents the collateral information for a transaction.
 
 
 
+<a name="utxorpc-v1alpha-cardano-Committee"></a>
+
+### Committee
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| members | [Committee.MembersEntry](#utxorpc-v1alpha-cardano-Committee-MembersEntry) | repeated |  |
+| threshold | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-Committee-MembersEntry"></a>
+
+### Committee.MembersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [uint64](#uint64) |  |  |
+
+
+
+
+
+
 <a name="utxorpc-v1alpha-cardano-Constitution"></a>
 
 ### Constitution
@@ -739,32 +624,6 @@ Represents a constructor for Plutus data in Cardano.
 
 
 
-<a name="utxorpc-v1alpha-cardano-ConwayGenesisConfig"></a>
-
-### ConwayGenesisConfig
-Genesis configuration for Conway era
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| committee | [GenesisCommittee](#utxorpc-v1alpha-cardano-GenesisCommittee) |  |  |
-| constitution | [Constitution](#utxorpc-v1alpha-cardano-Constitution) |  |  |
-| committee_min_size | [uint64](#uint64) |  |  |
-| committee_max_term_length | [uint64](#uint64) |  |  |
-| gov_action_lifetime | [uint64](#uint64) |  |  |
-| gov_action_deposit | [uint64](#uint64) |  |  |
-| drep_deposit | [uint64](#uint64) |  |  |
-| drep_activity | [uint64](#uint64) |  |  |
-| min_fee_ref_script_cost_per_byte | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  |  |
-| plutus_v3_cost_model | [CostModel](#utxorpc-v1alpha-cardano-CostModel) |  |  |
-| drep_voting_thresholds | [DRepVotingThresholds](#utxorpc-v1alpha-cardano-DRepVotingThresholds) |  |  |
-| pool_voting_thresholds | [PoolVotingThresholds](#utxorpc-v1alpha-cardano-PoolVotingThresholds) |  |  |
-
-
-
-
-
-
 <a name="utxorpc-v1alpha-cardano-CostModel"></a>
 
 ### CostModel
@@ -774,6 +633,23 @@ Genesis configuration for Conway era
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | values | [int64](#int64) | repeated |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-CostModelMap"></a>
+
+### CostModelMap
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| plutus_v1 | [CostModel](#utxorpc-v1alpha-cardano-CostModel) |  |  |
+| plutus_v2 | [CostModel](#utxorpc-v1alpha-cardano-CostModel) |  |  |
+| plutus_v3 | [CostModel](#utxorpc-v1alpha-cardano-CostModel) |  |  |
 
 
 
@@ -976,7 +852,7 @@ Genesis configuration for Conway era
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| tag | [string](#string) |  | &#34;NeutralNonce&#34; or other values |
+| tag | [string](#string) |  |  |
 
 
 
@@ -999,25 +875,81 @@ Genesis configuration for Conway era
 
 
 
-<a name="utxorpc-v1alpha-cardano-GenesisCommittee"></a>
+<a name="utxorpc-v1alpha-cardano-Genesis"></a>
 
-### GenesisCommittee
+### Genesis
+Unified Genesis configuration containing all parameters from all eras
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| avvm_distr | [Genesis.AvvmDistrEntry](#utxorpc-v1alpha-cardano-Genesis-AvvmDistrEntry) | repeated | ============ Byron Era Fields ============ |
+| block_version_data | [BlockVersionData](#utxorpc-v1alpha-cardano-BlockVersionData) |  |  |
+| fts_seed | [string](#string) |  |  |
+| protocol_consts | [ProtocolConsts](#utxorpc-v1alpha-cardano-ProtocolConsts) |  |  |
+| start_time | [uint64](#uint64) |  |  |
+| boot_stakeholders | [Genesis.BootStakeholdersEntry](#utxorpc-v1alpha-cardano-Genesis-BootStakeholdersEntry) | repeated |  |
+| heavy_delegation | [Genesis.HeavyDelegationEntry](#utxorpc-v1alpha-cardano-Genesis-HeavyDelegationEntry) | repeated |  |
+| non_avvm_balances | [Genesis.NonAvvmBalancesEntry](#utxorpc-v1alpha-cardano-Genesis-NonAvvmBalancesEntry) | repeated |  |
+| vss_certs | [Genesis.VssCertsEntry](#utxorpc-v1alpha-cardano-Genesis-VssCertsEntry) | repeated |  |
+| active_slots_coeff | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  | ============ Shelley Era Fields ============ |
+| epoch_length | [uint32](#uint32) |  |  |
+| gen_delegs | [Genesis.GenDelegsEntry](#utxorpc-v1alpha-cardano-Genesis-GenDelegsEntry) | repeated |  |
+| initial_funds | [Genesis.InitialFundsEntry](#utxorpc-v1alpha-cardano-Genesis-InitialFundsEntry) | repeated |  |
+| max_kes_evolutions | [uint32](#uint32) |  |  |
+| max_lovelace_supply | [uint64](#uint64) |  |  |
+| network_id | [string](#string) |  |  |
+| network_magic | [uint32](#uint32) |  |  |
+| protocol_params | [PParams](#utxorpc-v1alpha-cardano-PParams) |  | Using PParams as it&#39;s a superset of all protocol parameters |
+| security_param | [uint32](#uint32) |  |  |
+| slot_length | [uint32](#uint32) |  |  |
+| slots_per_kes_period | [uint32](#uint32) |  |  |
+| system_start | [string](#string) |  |  |
+| update_quorum | [uint32](#uint32) |  |  |
+| lovelace_per_utxo_word | [uint64](#uint64) |  | ============ Alonzo Era Fields ============ |
+| execution_prices | [ExPrices](#utxorpc-v1alpha-cardano-ExPrices) |  |  |
+| max_tx_ex_units | [ExUnits](#utxorpc-v1alpha-cardano-ExUnits) |  |  |
+| max_block_ex_units | [ExUnits](#utxorpc-v1alpha-cardano-ExUnits) |  |  |
+| max_value_size | [uint32](#uint32) |  |  |
+| collateral_percentage | [uint32](#uint32) |  |  |
+| max_collateral_inputs | [uint32](#uint32) |  |  |
+| cost_models | [CostModelMap](#utxorpc-v1alpha-cardano-CostModelMap) |  |  |
+| committee | [Committee](#utxorpc-v1alpha-cardano-Committee) |  | ============ Conway Era Fields ============ |
+| constitution | [Constitution](#utxorpc-v1alpha-cardano-Constitution) |  |  |
+| committee_min_size | [uint64](#uint64) |  |  |
+| committee_max_term_length | [uint64](#uint64) |  |  |
+| gov_action_lifetime | [uint64](#uint64) |  |  |
+| gov_action_deposit | [uint64](#uint64) |  |  |
+| drep_deposit | [uint64](#uint64) |  |  |
+| drep_activity | [uint64](#uint64) |  |  |
+| min_fee_ref_script_cost_per_byte | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  |  |
+| drep_voting_thresholds | [DRepVotingThresholds](#utxorpc-v1alpha-cardano-DRepVotingThresholds) |  |  |
+| pool_voting_thresholds | [PoolVotingThresholds](#utxorpc-v1alpha-cardano-PoolVotingThresholds) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-Genesis-AvvmDistrEntry"></a>
+
+### Genesis.AvvmDistrEntry
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| members | [GenesisCommittee.MembersEntry](#utxorpc-v1alpha-cardano-GenesisCommittee-MembersEntry) | repeated | scriptHash -&gt; expiry epoch |
-| threshold | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  |  |
+| key | [string](#string) |  |  |
+| value | [string](#string) |  |  |
 
 
 
 
 
 
-<a name="utxorpc-v1alpha-cardano-GenesisCommittee-MembersEntry"></a>
+<a name="utxorpc-v1alpha-cardano-Genesis-BootStakeholdersEntry"></a>
 
-### GenesisCommittee.MembersEntry
+### Genesis.BootStakeholdersEntry
 
 
 
@@ -1031,33 +963,80 @@ Genesis configuration for Conway era
 
 
 
-<a name="utxorpc-v1alpha-cardano-GenesisConfig"></a>
+<a name="utxorpc-v1alpha-cardano-Genesis-GenDelegsEntry"></a>
 
-### GenesisConfig
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| byron | [ByronGenesisConfig](#utxorpc-v1alpha-cardano-ByronGenesisConfig) |  | Byron era genesis config |
-| shelley | [ShelleyGenesisConfig](#utxorpc-v1alpha-cardano-ShelleyGenesisConfig) |  | Shelley era genesis config |
-| alonzo | [AlonzoGenesisConfig](#utxorpc-v1alpha-cardano-AlonzoGenesisConfig) |  | Alonzo era genesis config |
-| conway | [ConwayGenesisConfig](#utxorpc-v1alpha-cardano-ConwayGenesisConfig) |  | Conway era genesis config |
-
-
-
-
-
-
-<a name="utxorpc-v1alpha-cardano-GenesisConfigs"></a>
-
-### GenesisConfigs
+### Genesis.GenDelegsEntry
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| configs | [GenesisConfig](#utxorpc-v1alpha-cardano-GenesisConfig) | repeated | List of genesis configurations for different eras |
+| key | [string](#string) |  |  |
+| value | [GenDelegs](#utxorpc-v1alpha-cardano-GenDelegs) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-Genesis-HeavyDelegationEntry"></a>
+
+### Genesis.HeavyDelegationEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [HeavyDelegation](#utxorpc-v1alpha-cardano-HeavyDelegation) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-Genesis-InitialFundsEntry"></a>
+
+### Genesis.InitialFundsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-Genesis-NonAvvmBalancesEntry"></a>
+
+### Genesis.NonAvvmBalancesEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="utxorpc-v1alpha-cardano-Genesis-VssCertsEntry"></a>
+
+### Genesis.VssCertsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [VssCert](#utxorpc-v1alpha-cardano-VssCert) |  |  |
 
 
 
@@ -1157,15 +1136,15 @@ Define a governance action proposal
 <a name="utxorpc-v1alpha-cardano-HeavyDelegation"></a>
 
 ### HeavyDelegation
-Heavy delegation certificate used in Byron genesis
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| cert | [string](#string) |  | Hex-encoded certificate |
-| delegate_pk | [string](#string) |  | Base64-encoded delegate public key |
-| issuer_pk | [string](#string) |  | Base64-encoded issuer public key |
-| omega | [uint32](#uint32) |  | Omega value |
+| cert | [string](#string) |  |  |
+| delegate_pk | [string](#string) |  |  |
+| issuer_pk | [string](#string) |  |  |
+| omega | [uint32](#uint32) |  |  |
 
 
 
@@ -1757,97 +1736,6 @@ Represents a &#34;k out of n&#34; native script.
 
 
 
-<a name="utxorpc-v1alpha-cardano-ShelleyGenesisConfig"></a>
-
-### ShelleyGenesisConfig
-Genesis configuration for Shelley era
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| active_slots_coeff | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  |  |
-| epoch_length | [uint32](#uint32) |  |  |
-| gen_delegs | [ShelleyGenesisConfig.GenDelegsEntry](#utxorpc-v1alpha-cardano-ShelleyGenesisConfig-GenDelegsEntry) | repeated |  |
-| initial_funds | [ShelleyGenesisConfig.InitialFundsEntry](#utxorpc-v1alpha-cardano-ShelleyGenesisConfig-InitialFundsEntry) | repeated |  |
-| max_kes_evolutions | [uint32](#uint32) |  |  |
-| max_lovelace_supply | [uint64](#uint64) |  |  |
-| network_id | [string](#string) |  |  |
-| network_magic | [uint32](#uint32) |  |  |
-| protocol_params | [ShelleyProtocolParams](#utxorpc-v1alpha-cardano-ShelleyProtocolParams) |  |  |
-| security_param | [uint32](#uint32) |  |  |
-| slot_length | [uint32](#uint32) |  |  |
-| slots_per_kes_period | [uint32](#uint32) |  |  |
-| system_start | [string](#string) |  |  |
-| update_quorum | [uint32](#uint32) |  |  |
-
-
-
-
-
-
-<a name="utxorpc-v1alpha-cardano-ShelleyGenesisConfig-GenDelegsEntry"></a>
-
-### ShelleyGenesisConfig.GenDelegsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [GenDelegs](#utxorpc-v1alpha-cardano-GenDelegs) |  |  |
-
-
-
-
-
-
-<a name="utxorpc-v1alpha-cardano-ShelleyGenesisConfig-InitialFundsEntry"></a>
-
-### ShelleyGenesisConfig.InitialFundsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="utxorpc-v1alpha-cardano-ShelleyProtocolParams"></a>
-
-### ShelleyProtocolParams
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| min_fee_a | [uint32](#uint32) |  |  |
-| min_fee_b | [uint32](#uint32) |  |  |
-| max_block_body_size | [uint32](#uint32) |  |  |
-| max_tx_size | [uint32](#uint32) |  |  |
-| max_block_header_size | [uint32](#uint32) |  |  |
-| key_deposit | [uint64](#uint64) |  |  |
-| pool_deposit | [uint64](#uint64) |  |  |
-| min_utxo_value | [uint64](#uint64) |  |  |
-| min_pool_cost | [uint64](#uint64) |  |  |
-| n_opt | [uint32](#uint32) |  |  |
-| a0 | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  | pool pledge influence |
-| rho | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  | monetary expansion |
-| tau | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  | treasury expansion |
-| decentralisation_param | [RationalNumber](#utxorpc-v1alpha-cardano-RationalNumber) |  |  |
-| extra_entropy | [ExtraEntropy](#utxorpc-v1alpha-cardano-ExtraEntropy) |  |  |
-| protocol_version | [ProtocolVersion](#utxorpc-v1alpha-cardano-ProtocolVersion) |  |  |
-| e_max | [uint64](#uint64) |  |  |
-
-
-
-
-
-
 <a name="utxorpc-v1alpha-cardano-SoftforkRule"></a>
 
 ### SoftforkRule
@@ -2249,15 +2137,15 @@ Represents a VKey witness used to sign a transaction.
 <a name="utxorpc-v1alpha-cardano-VssCert"></a>
 
 ### VssCert
-VSS (Verifiable Secret Sharing) certificate used in Byron genesis
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| expiry_epoch | [uint32](#uint32) |  | Epoch when the certificate expires |
-| signature | [string](#string) |  | Hex-encoded signature |
-| signing_key | [string](#string) |  | Base64-encoded signing key |
-| vss_key | [string](#string) |  | Base64-encoded VSS key |
+| expiry_epoch | [uint32](#uint32) |  |  |
+| signature | [string](#string) |  |  |
+| signing_key | [string](#string) |  |  |
+| vss_key | [string](#string) |  |  |
 
 
 
@@ -2418,7 +2306,7 @@ Represents a transaction from any supported blockchain.
 | ----- | ---- | ----- | ----------- |
 | native_bytes | [bytes](#bytes) |  | Original bytes as defined by the chain |
 | cardano | [utxorpc.v1alpha.cardano.Tx](#utxorpc-v1alpha-cardano-Tx) |  | A Cardano transaction. |
-| block | [AnyChainBlock](#utxorpc-v1alpha-query-AnyChainBlock) |  | Block containing the transaction |
+| block_ref | [ChainPoint](#utxorpc-v1alpha-query-ChainPoint) |  | The chain point that represents the block this transaction belongs to. |
 
 
 
@@ -2467,7 +2355,7 @@ Represents a specific point in the blockchain.
 | ----- | ---- | ----- | ----------- |
 | slot | [uint64](#uint64) |  | Slot number. |
 | hash | [bytes](#bytes) |  | Block hash. |
-| height | [uint64](#uint64) |  | Block height |
+| height | [uint64](#uint64) |  | Block height. |
 | timestamp | [uint64](#uint64) |  | Block ms timestamp |
 
 
@@ -2537,9 +2425,9 @@ Response containing the era summaries
 
 
 
-<a name="utxorpc-v1alpha-query-ReadGenesisConfigRequest"></a>
+<a name="utxorpc-v1alpha-query-ReadGenesisRequest"></a>
 
-### ReadGenesisConfigRequest
+### ReadGenesisRequest
 Request to get the chain config
 
 
@@ -2552,9 +2440,9 @@ Request to get the chain config
 
 
 
-<a name="utxorpc-v1alpha-query-ReadGenesisConfigResponse"></a>
+<a name="utxorpc-v1alpha-query-ReadGenesisResponse"></a>
 
-### ReadGenesisConfigResponse
+### ReadGenesisResponse
 Response containing the genesis configs
 
 
@@ -2562,7 +2450,7 @@ Response containing the genesis configs
 | ----- | ---- | ----- | ----------- |
 | genesis | [bytes](#bytes) |  | genesis hash for the chain |
 | caip2 | [string](#string) |  | the caip-2 ID for this network |
-| cardano | [utxorpc.v1alpha.cardano.GenesisConfigs](#utxorpc-v1alpha-cardano-GenesisConfigs) |  | Cardano genesis configs |
+| cardano | [utxorpc.v1alpha.cardano.Genesis](#utxorpc-v1alpha-cardano-Genesis) |  | Cardano genesis |
 
 
 
@@ -2751,7 +2639,7 @@ Service definition for querying the state of the chain.
 | SearchUtxos | [SearchUtxosRequest](#utxorpc-v1alpha-query-SearchUtxosRequest) | [SearchUtxosResponse](#utxorpc-v1alpha-query-SearchUtxosResponse) | Search for UTxO based on a pattern. |
 | ReadData | [ReadDataRequest](#utxorpc-v1alpha-query-ReadDataRequest) | [ReadDataResponse](#utxorpc-v1alpha-query-ReadDataResponse) | Read specific datum by hash |
 | ReadTx | [ReadTxRequest](#utxorpc-v1alpha-query-ReadTxRequest) | [ReadTxResponse](#utxorpc-v1alpha-query-ReadTxResponse) | Get Txs by chain-specific criteria. |
-| ReadGenesisConfig | [ReadGenesisConfigRequest](#utxorpc-v1alpha-query-ReadGenesisConfigRequest) | [ReadGenesisConfigResponse](#utxorpc-v1alpha-query-ReadGenesisConfigResponse) | Get the genesis configuration |
+| ReadGenesis | [ReadGenesisRequest](#utxorpc-v1alpha-query-ReadGenesisRequest) | [ReadGenesisResponse](#utxorpc-v1alpha-query-ReadGenesisResponse) | Get the genesis configuration |
 | ReadEraSummary | [ReadEraSummaryRequest](#utxorpc-v1alpha-query-ReadEraSummaryRequest) | [ReadEraSummaryResponse](#utxorpc-v1alpha-query-ReadEraSummaryResponse) | Get the chain era summary |
 
  
