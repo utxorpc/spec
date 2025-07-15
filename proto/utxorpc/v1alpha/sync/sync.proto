@@ -56,6 +56,8 @@ message FollowTipResponse {
     AnyChainBlock undo = 2; // Undo this block.
     BlockRef reset = 3; // Reset to this block reference.
   }
+  BlockRef tip = 4; // The current tip of the blockchain after this action.
+  uint64 tip_timestamp = 5; // Block timestamp (ms) of the current tip.
 }
 
 // Request to read the current tip of the blockchain.
