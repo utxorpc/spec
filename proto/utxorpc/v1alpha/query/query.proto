@@ -94,6 +94,7 @@ message AnyUtxoData {
   oneof parsed_state {
     utxorpc.v1alpha.cardano.TxOutput cardano = 3; // A cardano UTxO
   }
+  ChainPoint block_ref = 4; // The chain point that represents the block this UTxO was created in.
 }
 
 // Request to get specific UTxOs
