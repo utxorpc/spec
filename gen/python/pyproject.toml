@@ -15,8 +15,8 @@ include = ["utxorpc_spec/**/*.py", "utxorpc_spec/**/*.pyi"]
 
 [tool.poetry.dependencies] # https://python-poetry.org/docs/dependency-specification/
 python = ">=3.9,<4.0"
-grpcio = "^1.73.1"
-protobuf = "^6.31.1"
+grpcio = ">=1.74,<2"
+protobuf = ">=6.32,<7"
 grpc-stubs = "^1.53.0.6"
 
 [[tool.poetry.source]]
