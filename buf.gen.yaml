@@ -53,7 +53,7 @@ plugins:
   - plugin: buf.build/protocolbuffers/pyi
     out: gen/python/utxorpc_spec
 
-  - plugin: buf.build/grpc/python:v1.64.2
+  - plugin: buf.build/grpc/python:v1.73.1
     out: gen/python/utxorpc_spec
 
   # node
