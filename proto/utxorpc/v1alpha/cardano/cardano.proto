@@ -33,7 +33,7 @@ message TxInput {
 // Represents a transaction output in the Cardano blockchain.
 message TxOutput {
   bytes address = 1; // Address receiving the output.
-  uint64 coin = 2; // Amount of ADA in the output.
+  uint64 coin = 2 [jstype = JS_STRING]; // Amount of ADA in the output.
   repeated Multiasset assets = 3; // Additional native (non-ADA) assets in the output.
   Datum datum = 4; // Plutus data associated with the output.
   Script script = 5; // Script associated with the output.
@@ -48,8 +48,8 @@ message Datum {
 // Represents a custom asset in the Cardano blockchain.
 message Asset {
   bytes name = 1; // Name of the custom asset.
-  uint64 output_coin = 2; // Quantity of the custom asset in case of an output.
-  int64 mint_coin = 3; // Quantity of the custom asset in case of a mint.
+  uint64 output_coin = 2 [jstype = JS_STRING]; // Quantity of the custom asset in case of an output.
+  int64 mint_coin = 3 [jstype = JS_STRING]; // Quantity of the custom asset in case of a mint.
 }
 
 // Represents a multi-asset group in the Cardano blockchain.
@@ -75,7 +75,7 @@ message Collateral {
 // Represents a withdrawal from a reward account.
 message Withdrawal {
   bytes reward_account = 1; // Address of the reward account.
-  uint64 coin = 2; // Amount of ADA withdrawn.
+  uint64 coin = 2 [jstype = JS_STRING]; // Amount of ADA withdrawn.
   Redeemer redeemer = 3; // Redeemer for the Plutus script.
 }
 
@@ -156,7 +156,7 @@ message TreasuryWithdrawalsAction {
 
 message WithdrawalAmount {
   bytes reward_account = 1;
-  uint64 coin = 2;
+  uint64 coin = 2 [jstype = JS_STRING];
 }
 
 message NoConfidenceAction {
@@ -410,7 +410,7 @@ enum MirSource {
 
 message MirTarget {
   StakeCredential stake_credential = 1;
-  int64 delta_coin = 2;
+  int64 delta_coin = 2 [jstype = JS_STRING];
 }
 
 // Represents a move instantaneous reward certificate in Cardano.
@@ -422,12 +422,12 @@ message MirCert {
 
 message RegCert {
   StakeCredential stake_credential = 1;
-  uint64 coin = 2;
+  uint64 coin = 2 [jstype = JS_STRING];
 }
 
 message UnRegCert {
   StakeCredential stake_credential = 1;
-  uint64 coin = 2;
+  uint64 coin = 2 [jstype = JS_STRING];
 }
 
 message DRep {
@@ -453,20 +453,20 @@ message StakeVoteDelegCert {
 message StakeRegDelegCert {
   StakeCredential stake_credential = 1;
   bytes pool_keyhash = 2;
-  uint64 coin = 3;
+  uint64 coin = 3 [jstype = JS_STRING];
 }
 
 message VoteRegDelegCert {
   StakeCredential stake_credential = 1;
   DRep drep = 2;
-  uint64 coin = 3;
+  uint64 coin = 3 [jstype = JS_STRING];
 }
 
 message StakeVoteRegDelegCert {
   StakeCredential stake_credential = 1;
   bytes pool_keyhash = 2;
   DRep drep = 3;
-  uint64 coin = 4;
+  uint64 coin = 4 [jstype = JS_STRING];
 }
 
 message AuthCommitteeHotCert {
@@ -486,13 +486,13 @@ message ResignCommitteeColdCert {
 
 message RegDRepCert {
   StakeCredential drep_credential = 1;
-  uint64 coin = 2;
+  uint64 coin = 2 [jstype = JS_STRING];
   Anchor anchor = 3;
 }
 
 message UnRegDRepCert {
   StakeCredential drep_credential = 1;
-  uint64 coin = 2;
+  uint64 coin = 2 [jstype = JS_STRING];
 }
 
 message UpdateDRepCert {
@@ -564,7 +564,7 @@ message VotingThresholds {
 }
 
 message PParams {
-  uint64 coins_per_utxo_byte = 1; // The number of coins per UTXO byte.
+  uint64 coins_per_utxo_byte = 1 [jstype = JS_STRING]; // The number of coins per UTXO byte.
   uint64 max_tx_size = 2; // The maximum transaction size.
   uint64 min_fee_coefficient = 3; // The minimum fee coefficient.
   uint64 min_fee_constant = 4; // The minimum fee constant.
