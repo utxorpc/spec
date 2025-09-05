@@ -28,6 +28,11 @@ message TxoRef {
   uint32 index = 2; // Output index.
 }
 
+// An array of TxoRefs
+message TxoRefArray {
+  repeated TxoRef items = 1;
+}
+
 // Request to get the chain parameters
 message ReadParamsRequest {
   google.protobuf.FieldMask field_mask = 1; // Field mask to selectively return fields in the parsed response.
@@ -99,7 +104,10 @@ message AnyUtxoData {
 
 // Request to get specific UTxOs
 message ReadUtxosRequest {
-  repeated TxoRef keys = 1; // List of keys UTxOs.
+  oneof query_args {
+    TxoRefArray txoRefs = 1; // Array of Tx Output references
+    utxorpc.v1alpha.cardano.AddressArray cardano_addresses = 2; // Array of Cardano addresses
+  }
   google.protobuf.FieldMask field_mask = 2; // Field mask to selectively return fields.
 }
 
