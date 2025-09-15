@@ -516,6 +516,38 @@ message AssetPattern {
   bytes asset_name = 2; // The asset should present this name
 }
 
+// Pattern of a certificate that can be used to evaluate matching predicates.
+message CertificatePattern {
+  oneof certificate_type {
+    StakeCredential stake_registration = 1; // Match stake registration for this credential
+    StakeCredential stake_deregistration = 2; // Match stake deregistration for this credential
+    StakeDelegationPattern stake_delegation = 3; // Match stake delegation pattern
+    PoolRegistrationPattern pool_registration = 4; // Match pool registration pattern
+    PoolRetirementPattern pool_retirement = 5; // Match pool retirement pattern
+    bytes any_stake_credential = 6; // Match any certificate involving this stake credential
+    bytes any_pool_keyhash = 7; // Match any certificate involving this pool
+    bytes any_drep = 8; // Match any certificate involving this DRep
+  }
+}
+
+// Pattern for stake delegation certificates
+message StakeDelegationPattern {
+  StakeCredential stake_credential = 1; // Match delegations from this credential
+  bytes pool_keyhash = 2; // Match delegations to this pool
+}
+
+// Pattern for pool registration certificates
+message PoolRegistrationPattern {
+  bytes operator = 1; // Match registrations by this operator
+  bytes pool_keyhash = 2; // Match registrations for this pool (derived from operator)
+}
+
+// Pattern for pool retirement certificates
+message PoolRetirementPattern {
+  bytes pool_keyhash = 1; // Match retirements of this pool
+  uint64 epoch = 2; // Match retirements in this epoch
+}
+
 // Pattern of a tx output that can be used to evaluate matching predicates.
 message TxOutputPattern {
   AddressPattern address = 1; // Match any address in the output that exhibits this pattern.
@@ -529,6 +561,7 @@ message TxPattern {
   AddressPattern has_address = 3; // Match any address (inputs, outputs, collateral, etc) that exhibits this pattern.
   AssetPattern moves_asset = 4; // Match any asset that exhibits this pattern.
   AssetPattern mints_asset = 5; // Match any tx that either mint or burn the the asset pattern.
+  CertificatePattern has_certificate = 6; // Match any transaction that includes this certificate pattern.
 }
 
 // PARAMS
