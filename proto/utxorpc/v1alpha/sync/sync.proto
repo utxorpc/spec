@@ -10,6 +10,7 @@ message BlockRef {
   uint64 slot = 1; // Height or slot number (depending on the blockchain)
   bytes hash = 2; // Hash of the content of the block
   uint64 height = 3; // Block height
+  uint64 timestamp = 4; // Block ms timestamp
 }
 
 message AnyChainBlock {
@@ -56,6 +57,7 @@ message FollowTipResponse {
     AnyChainBlock undo = 2; // Undo this block.
     BlockRef reset = 3; // Reset to this block reference.
   }
+  BlockRef tip = 4; // The current tip of the blockchain after this action.
 }
 
 // Request to read the current tip of the blockchain.
@@ -64,7 +66,6 @@ message ReadTipRequest {}
 // Response containing the current tip of the blockchain.
 message ReadTipResponse {
   BlockRef tip = 1; // The current tip of the blockchain.
-  uint64 timestamp = 2; // Block ms timestamp
 }
 
 // Service definition for syncing chain data.
