@@ -49,11 +49,12 @@ message AnyChainTx {
   AnyChainBlock block = 2; // Block containing the transaction
 }
 
-// Response containing the matching chain transactions.
+// Response containing the matching chain transactions or block progress signals.
 message WatchTxResponse {
   oneof action {
     AnyChainTx apply = 1; // Apply this transaction.
     AnyChainTx undo = 2; // Undo this transaction.
+    BlockRef idle = 3; // No-match signal for a block.
   }
 }
 

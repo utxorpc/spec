@@ -33,7 +33,7 @@ message TxInput {
 // Represents a transaction output in the Cardano blockchain.
 message TxOutput {
   bytes address = 1; // Address receiving the output.
-  uint64 coin = 2; // Amount of ADA in the output.
+  uint64 coin = 2 [jstype = JS_STRING]; // Amount of ADA in the output.
   repeated Multiasset assets = 3; // Additional native (non-ADA) assets in the output.
   Datum datum = 4; // Plutus data associated with the output.
   Script script = 5; // Script associated with the output.
@@ -49,8 +49,8 @@ message Datum {
 message Asset {
   bytes name = 1; // Name of the custom asset.
   oneof quantity {
-    uint64 output_coin = 2; // Quantity of the custom asset in case of an output.
-    int64 mint_coin = 3; // Quantity of the custom asset in case of a mint.
+    uint64 output_coin = 2 [jstype = JS_STRING]; // Quantity of the custom asset in case of an output.
+    int64 mint_coin = 3 [jstype = JS_STRING]; // Quantity of the custom asset in case of a mint.
   }
 }
 
@@ -71,13 +71,13 @@ message TxValidity {
 message Collateral {
   repeated TxInput collateral = 1; // Collateral inputs for the transaction.
   TxOutput collateral_return = 2; // Collateral return in case of script failure.
-  uint64 total_collateral = 3; // Total amount of collateral.
+  uint64 total_collateral = 3 [jstype = JS_STRING]; // Total amount of collateral.
 }
 
 // Represents a withdrawal from a reward account.
 message Withdrawal {
   bytes reward_account = 1; // Address of the reward account.
-  uint64 coin = 2; // Amount of ADA withdrawn.
+  uint64 coin = 2 [jstype = JS_STRING]; // Amount of ADA withdrawn.
   Redeemer redeemer = 3; // Redeemer for the Plutus script.
 }
 
@@ -104,7 +104,7 @@ message Tx {
   repeated TxInput reference_inputs = 6; // List of reference inputs
   WitnessSet witnesses = 7; // Witnesses that validte the transaction
   Collateral collateral = 8; // Collateral details in case of failed transaction
-  uint64 fee = 9; // Transaction fee in ADA
+  uint64 fee = 9 [jstype = JS_STRING]; // Transaction fee in ADA
   TxValidity validity = 10; // Validity interval of the transaction
   bool successful = 11; // Flag indicating whether the transaction was successful
   AuxData auxiliary = 12; // Auxiliary data not directly tied to the validation process
@@ -114,7 +114,7 @@ message Tx {
 
 // Define a governance action proposal
 message GovernanceActionProposal {
-  uint64 deposit = 1; // The amount deposited for the governance action
+  uint64 deposit = 1 [jstype = JS_STRING]; // The amount deposited for the governance action
   bytes reward_account = 2; // The reward account the deposit should be returned to
   GovernanceAction gov_action = 3;
   Anchor anchor = 4;
@@ -158,7 +158,7 @@ message TreasuryWithdrawalsAction {
 
 message WithdrawalAmount {
   bytes reward_account = 1;
-  uint64 coin = 2;
+  uint64 coin = 2 [jstype = JS_STRING];
 }
 
 message NoConfidenceAction {
@@ -247,7 +247,7 @@ message Constr {
 // Represents a big integer for Plutus data in Cardano.
 message BigInt {
   oneof big_int {
-    int64 int = 1;
+    int64 int = 1 [jstype = JS_STRING];
     bytes big_u_int = 2;
     bytes big_n_int = 3;
   }
@@ -264,7 +264,7 @@ message PlutusData {
   oneof plutus_data {
     Constr constr = 2; // Constructor.
     PlutusDataMap map = 3; // Map of Plutus data.
-    BigInt big_int = 4; // Big integer.
+    BigInt big_int = 4 [jstype = JS_STRING]; // Big integer.
     bytes bounded_bytes = 5; // Bounded bytes.
     PlutusDataArray array = 6; // Array of Plutus data.
   }
@@ -292,7 +292,7 @@ message Script {
 
 message Metadatum {
   oneof metadatum {
-    int64 int = 1;
+    int64 int = 1 [jstype = JS_STRING];
     bytes bytes = 2;
     string text = 3;
     MetadatumArray array = 4;
@@ -328,8 +328,8 @@ message StakeCredential {
 
 // Represents a rational number as a fraction.
 message RationalNumber {
-  int32 numerator = 1;
-  uint32 denominator = 2;
+  int32 numerator = 1 [jstype = JS_STRING];
+  uint32 denominator = 2 [jstype = JS_STRING];
 }
 
 // Represents a relay in Cardano.
@@ -382,8 +382,8 @@ message StakeDelegationCert {
 message PoolRegistrationCert {
   bytes operator = 1; // Operator key hash.
   bytes vrf_keyhash = 2; // VRF key hash.
-  uint64 pledge = 3; // Pledge amount.
-  uint64 cost = 4; // Pool cost.
+  uint64 pledge = 3 [jstype = JS_STRING]; // Pledge amount.
+  uint64 cost = 4 [jstype = JS_STRING]; // Pool cost.
   RationalNumber margin = 5; // Pool margin.
   bytes reward_account = 6; // Reward account.
   repeated bytes pool_owners = 7; // List of pool owner key hashes.
@@ -412,7 +412,7 @@ enum MirSource {
 
 message MirTarget {
   StakeCredential stake_credential = 1;
-  int64 delta_coin = 2;
+  int64 delta_coin = 2 [jstype = JS_STRING];
 }
 
 // Represents a move instantaneous reward certificate in Cardano.
@@ -424,12 +424,12 @@ message MirCert {
 
 message RegCert {
   StakeCredential stake_credential = 1;
-  uint64 coin = 2;
+  uint64 coin = 2 [jstype = JS_STRING];
 }
 
 message UnRegCert {
   StakeCredential stake_credential = 1;
-  uint64 coin = 2;
+  uint64 coin = 2 [jstype = JS_STRING];
 }
 
 message DRep {
@@ -455,20 +455,20 @@ message StakeVoteDelegCert {
 message StakeRegDelegCert {
   StakeCredential stake_credential = 1;
   bytes pool_keyhash = 2;
-  uint64 coin = 3;
+  uint64 coin = 3 [jstype = JS_STRING];
 }
 
 message VoteRegDelegCert {
   StakeCredential stake_credential = 1;
   DRep drep = 2;
-  uint64 coin = 3;
+  uint64 coin = 3 [jstype = JS_STRING];
 }
 
 message StakeVoteRegDelegCert {
   StakeCredential stake_credential = 1;
   bytes pool_keyhash = 2;
   DRep drep = 3;
-  uint64 coin = 4;
+  uint64 coin = 4 [jstype = JS_STRING];
 }
 
 message AuthCommitteeHotCert {
@@ -488,13 +488,13 @@ message ResignCommitteeColdCert {
 
 message RegDRepCert {
   StakeCredential drep_credential = 1;
-  uint64 coin = 2;
+  uint64 coin = 2 [jstype = JS_STRING];
   Anchor anchor = 3;
 }
 
 message UnRegDRepCert {
   StakeCredential drep_credential = 1;
-  uint64 coin = 2;
+  uint64 coin = 2 [jstype = JS_STRING];
 }
 
 message UpdateDRepCert {
@@ -518,6 +518,38 @@ message AssetPattern {
   bytes asset_name = 2; // The asset should present this name
 }
 
+// Pattern of a certificate that can be used to evaluate matching predicates.
+message CertificatePattern {
+  oneof certificate_type {
+    StakeCredential stake_registration = 1; // Match stake registration for this credential
+    StakeCredential stake_deregistration = 2; // Match stake deregistration for this credential
+    StakeDelegationPattern stake_delegation = 3; // Match stake delegation pattern
+    PoolRegistrationPattern pool_registration = 4; // Match pool registration pattern
+    PoolRetirementPattern pool_retirement = 5; // Match pool retirement pattern
+    bytes any_stake_credential = 6; // Match any certificate involving this stake credential
+    bytes any_pool_keyhash = 7; // Match any certificate involving this pool
+    bytes any_drep = 8; // Match any certificate involving this DRep
+  }
+}
+
+// Pattern for stake delegation certificates
+message StakeDelegationPattern {
+  StakeCredential stake_credential = 1; // Match delegations from this credential
+  bytes pool_keyhash = 2; // Match delegations to this pool
+}
+
+// Pattern for pool registration certificates
+message PoolRegistrationPattern {
+  bytes operator = 1; // Match registrations by this operator
+  bytes pool_keyhash = 2; // Match registrations for this pool (derived from operator)
+}
+
+// Pattern for pool retirement certificates
+message PoolRetirementPattern {
+  bytes pool_keyhash = 1; // Match retirements of this pool
+  uint64 epoch = 2; // Match retirements in this epoch
+}
+
 // Pattern of a tx output that can be used to evaluate matching predicates.
 message TxOutputPattern {
   AddressPattern address = 1; // Match any address in the output that exhibits this pattern.
@@ -531,14 +563,15 @@ message TxPattern {
   AddressPattern has_address = 3; // Match any address (inputs, outputs, collateral, etc) that exhibits this pattern.
   AssetPattern moves_asset = 4; // Match any asset that exhibits this pattern.
   AssetPattern mints_asset = 5; // Match any tx that either mint or burn the the asset pattern.
+  CertificatePattern has_certificate = 6; // Match any transaction that includes this certificate pattern.
 }
 
 // PARAMS
 // ======
 
 message ExUnits {
-  uint64 steps = 1;
-  uint64 memory = 2;
+  uint64 steps = 1 [jstype = JS_STRING];
+  uint64 memory = 2 [jstype = JS_STRING];
 }
 
 message ExPrices {
@@ -552,7 +585,7 @@ message ProtocolVersion {
 }
 
 message CostModel {
-  repeated int64 values = 1;
+  repeated int64 values = 1 [jstype = JS_STRING];
 }
 
 message CostModels {
@@ -566,24 +599,24 @@ message VotingThresholds {
 }
 
 message PParams {
-  uint64 coins_per_utxo_byte = 1; // The number of coins per UTXO byte.
-  uint64 max_tx_size = 2; // The maximum transaction size.
-  uint64 min_fee_coefficient = 3; // The minimum fee coefficient.
-  uint64 min_fee_constant = 4; // The minimum fee constant.
-  uint64 max_block_body_size = 5; // The maximum block body size.
-  uint64 max_block_header_size = 6; // The maximum block header size.
-  uint64 stake_key_deposit = 7; // The stake key deposit.
-  uint64 pool_deposit = 8; // The pool deposit.
+  uint64 coins_per_utxo_byte = 1 [jstype = JS_STRING]; // The number of coins per UTXO byte.
+  uint64 max_tx_size = 2 [jstype = JS_STRING]; // The maximum transaction size.
+  uint64 min_fee_coefficient = 3 [jstype = JS_STRING]; // The minimum fee coefficient.
+  uint64 min_fee_constant = 4 [jstype = JS_STRING]; // The minimum fee constant.
+  uint64 max_block_body_size = 5 [jstype = JS_STRING]; // The maximum block body size.
+  uint64 max_block_header_size = 6 [jstype = JS_STRING]; // The maximum block header size.
+  uint64 stake_key_deposit = 7 [jstype = JS_STRING]; // The stake key deposit.
+  uint64 pool_deposit = 8 [jstype = JS_STRING]; // The pool deposit.
   uint64 pool_retirement_epoch_bound = 9; // The pool retirement epoch bound.
   uint64 desired_number_of_pools = 10; // The desired number of pools.
   RationalNumber pool_influence = 11; // The pool influence.
   RationalNumber monetary_expansion = 12; // The monetary expansion.
   RationalNumber treasury_expansion = 13; // The treasury expansion.
-  uint64 min_pool_cost = 14; // The minimum pool cost.
+  uint64 min_pool_cost = 14 [jstype = JS_STRING]; // The minimum pool cost.
   ProtocolVersion protocol_version = 15; // The protocol version.
-  uint64 max_value_size = 16; // The maximum value size.
-  uint64 collateral_percentage = 17; // The collateral percentage.
-  uint64 max_collateral_inputs = 18; // The maximum collateral inputs.
+  uint64 max_value_size = 16 [jstype = JS_STRING]; // The maximum value size.
+  uint64 collateral_percentage = 17 [jstype = JS_STRING]; // The collateral percentage.
+  uint64 max_collateral_inputs = 18 [jstype = JS_STRING]; // The maximum collateral inputs.
   CostModels cost_models = 19; // The cost models.
   ExPrices prices = 20; // The prices.
   ExUnits max_execution_units_per_transaction = 21; // The maximum execution units per transaction.
@@ -594,15 +627,15 @@ message PParams {
   uint32 min_committee_size = 26; // The minimum committee size.
   uint64 committee_term_limit = 27; // The committee term limit.
   uint64 governance_action_validity_period = 28; // The governance action validity period.
-  uint64 governance_action_deposit = 29; // The governance action deposit.
-  uint64 drep_deposit = 30; // The drep deposit.
+  uint64 governance_action_deposit = 29 [jstype = JS_STRING]; // The governance action deposit.
+  uint64 drep_deposit = 30 [jstype = JS_STRING]; // The drep deposit.
   uint64 drep_inactivity_period = 31; // The drep inactivity period.
 }
 
 message EraBoundary {
-  uint64 time = 1; // ms timestamp
-  uint64 slot = 2; // absolute slot number of the first block of this era
-  uint64 epoch = 3; // first epoch for this era
+  uint64 time = 1 [jstype = JS_STRING]; // ms timestamp
+  uint64 slot = 2 [jstype = JS_STRING]; // absolute slot number of the first block of this era
+  uint64 epoch = 3 [jstype = JS_STRING]; // first epoch for this era
 }
 
 message EraSummary {
@@ -628,7 +661,7 @@ message EvalTrace {
 }
 
 message TxEval {
-  uint64 fee = 1;
+  uint64 fee = 1 [jstype = JS_STRING];
   ExUnits ex_units = 2;
   repeated EvalError errors = 3;
   repeated EvalTrace traces = 4;
@@ -685,7 +718,7 @@ message HeavyDelegation {
 }
 
 message VssCert {
-  uint32 expiry_epoch = 1;
+  uint32 expiry_epoch = 1 [jstype = JS_STRING];
   string signature = 2;
   string signing_key = 3;
   string vss_key = 4;
@@ -735,7 +768,7 @@ message Genesis {
   BlockVersionData block_version_data = 2;
   string fts_seed = 3;
   ProtocolConsts protocol_consts = 4;
-  uint64 start_time = 5;
+  uint64 start_time = 5 [jstype = JS_STRING];
   map<string, uint64> boot_stakeholders = 6;
   map<string, HeavyDelegation> heavy_delegation = 7;
   map<string, string> non_avvm_balances = 8;
@@ -752,19 +785,19 @@ message Genesis {
   uint32 network_magic = 17;
   PParams protocol_params = 18; // Using PParams as it's a superset of all protocol parameters
   uint32 security_param = 19;
-  uint32 slot_length = 20;
-  uint32 slots_per_kes_period = 21;
-  string system_start = 22;
+  uint32 slot_length = 20 [jstype = JS_STRING];
+  uint32 slots_per_kes_period = 21 [jstype = JS_STRING];
+  string system_start = 22 [jstype = JS_STRING];
   uint32 update_quorum = 23;
 
   // ============ Alonzo Era Fields ============
-  uint64 lovelace_per_utxo_word = 24;
+  uint64 lovelace_per_utxo_word = 24 [jstype = JS_STRING];
   ExPrices execution_prices = 25;
   ExUnits max_tx_ex_units = 26;
   ExUnits max_block_ex_units = 27;
-  uint32 max_value_size = 28;
-  uint32 collateral_percentage = 29;
-  uint32 max_collateral_inputs = 30;
+  uint32 max_value_size = 28 [jstype = JS_STRING];
+  uint32 collateral_percentage = 29 [jstype = JS_STRING];
+  uint32 max_collateral_inputs = 30 [jstype = JS_STRING];
   CostModelMap cost_models = 31;
 
   // ============ Conway Era Fields ============
@@ -773,8 +806,8 @@ message Genesis {
   uint64 committee_min_size = 34;
   uint64 committee_max_term_length = 35;
   uint64 gov_action_lifetime = 36;
-  uint64 gov_action_deposit = 37;
-  uint64 drep_deposit = 38;
+  uint64 gov_action_deposit = 37 [jstype = JS_STRING];
+  uint64 drep_deposit = 38 [jstype = JS_STRING];
   uint64 drep_activity = 39;
   RationalNumber min_fee_ref_script_cost_per_byte = 40;
   DRepVotingThresholds drep_voting_thresholds = 41;
