@@ -48,8 +48,10 @@ message Datum {
 // Represents a custom asset in the Cardano blockchain.
 message Asset {
   bytes name = 1; // Name of the custom asset.
-  uint64 output_coin = 2 [jstype = JS_STRING]; // Quantity of the custom asset in case of an output.
-  int64 mint_coin = 3 [jstype = JS_STRING]; // Quantity of the custom asset in case of a mint.
+  oneof quantity {
+    uint64 output_coin = 2 [jstype = JS_STRING]; // Quantity of the custom asset in case of an output.
+    int64 mint_coin = 3 [jstype = JS_STRING]; // Quantity of the custom asset in case of a mint.
+  }
 }
 
 // Represents a multi-asset group in the Cardano blockchain.
