@@ -30,6 +30,11 @@ message TxInput {
   Redeemer redeemer = 4; // Redeemer for the Plutus script.
 }
 
+// Represents a list of cardano addresses
+message AddressArray {
+  repeated bytes items = 1; // Array of Cardano addresses
+}
+
 // Represents a transaction output in the Cardano blockchain.
 message TxOutput {
   bytes address = 1; // Address receiving the output.
