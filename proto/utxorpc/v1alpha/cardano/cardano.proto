@@ -264,7 +264,7 @@ message PlutusData {
   oneof plutus_data {
     Constr constr = 2; // Constructor.
     PlutusDataMap map = 3; // Map of Plutus data.
-    BigInt big_int = 4 [jstype = JS_STRING]; // Big integer.
+    BigInt big_int = 4; // Big integer.
     bytes bounded_bytes = 5; // Bounded bytes.
     PlutusDataArray array = 6; // Array of Plutus data.
   }
@@ -328,8 +328,8 @@ message StakeCredential {
 
 // Represents a rational number as a fraction.
 message RationalNumber {
-  int32 numerator = 1 [jstype = JS_STRING];
-  uint32 denominator = 2 [jstype = JS_STRING];
+  int32 numerator = 1;
+  uint32 denominator = 2;
 }
 
 // Represents a relay in Cardano.
@@ -718,7 +718,7 @@ message HeavyDelegation {
 }
 
 message VssCert {
-  uint32 expiry_epoch = 1 [jstype = JS_STRING];
+  uint32 expiry_epoch = 1;
   string signature = 2;
   string signing_key = 3;
   string vss_key = 4;
@@ -785,9 +785,9 @@ message Genesis {
   uint32 network_magic = 17;
   PParams protocol_params = 18; // Using PParams as it's a superset of all protocol parameters
   uint32 security_param = 19;
-  uint32 slot_length = 20 [jstype = JS_STRING];
-  uint32 slots_per_kes_period = 21 [jstype = JS_STRING];
-  string system_start = 22 [jstype = JS_STRING];
+  uint32 slot_length = 20;
+  uint32 slots_per_kes_period = 21;
+  string system_start = 22;
   uint32 update_quorum = 23;
 
   // ============ Alonzo Era Fields ============
@@ -795,9 +795,9 @@ message Genesis {
   ExPrices execution_prices = 25;
   ExUnits max_tx_ex_units = 26;
   ExUnits max_block_ex_units = 27;
-  uint32 max_value_size = 28 [jstype = JS_STRING];
-  uint32 collateral_percentage = 29 [jstype = JS_STRING];
-  uint32 max_collateral_inputs = 30 [jstype = JS_STRING];
+  uint32 max_value_size = 28;
+  uint32 collateral_percentage = 29;
+  uint32 max_collateral_inputs = 30;
   CostModelMap cost_models = 31;
 
   // ============ Conway Era Fields ============
