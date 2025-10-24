@@ -328,8 +328,8 @@ message StakeCredential {
 
 // Represents a rational number as a fraction.
 message RationalNumber {
-  int32 numerator = 1;
-  uint32 denominator = 2;
+  BigInt numerator = 1;
+  BigInt denominator = 2;
 }
 
 // Represents a relay in Cardano.
