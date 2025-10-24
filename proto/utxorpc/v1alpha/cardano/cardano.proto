@@ -33,7 +33,7 @@ message TxInput {
 // Represents a transaction output in the Cardano blockchain.
 message TxOutput {
   bytes address = 1; // Address receiving the output.
-  uint64 coin = 2 [jstype = JS_STRING]; // Amount of ADA in the output.
+  BigInt coin = 2; // Amount of ADA in the output.
   repeated Multiasset assets = 3; // Additional native (non-ADA) assets in the output.
   Datum datum = 4; // Plutus data associated with the output.
   Script script = 5; // Script associated with the output.
@@ -49,8 +49,8 @@ message Datum {
 message Asset {
   bytes name = 1; // Name of the custom asset.
   oneof quantity {
-    uint64 output_coin = 2 [jstype = JS_STRING]; // Quantity of the custom asset in case of an output.
-    int64 mint_coin = 3 [jstype = JS_STRING]; // Quantity of the custom asset in case of a mint.
+    BigInt output_coin = 2; // Quantity of the custom asset in case of an output.
+    BigInt mint_coin = 3; // Quantity of the custom asset in case of a mint (can be negative for burning).
   }
 }
 
@@ -71,13 +71,13 @@ message TxValidity {
 message Collateral {
   repeated TxInput collateral = 1; // Collateral inputs for the transaction.
   TxOutput collateral_return = 2; // Collateral return in case of script failure.
-  uint64 total_collateral = 3 [jstype = JS_STRING]; // Total amount of collateral.
+  BigInt total_collateral = 3; // Total amount of collateral.
 }
 
 // Represents a withdrawal from a reward account.
 message Withdrawal {
   bytes reward_account = 1; // Address of the reward account.
-  uint64 coin = 2 [jstype = JS_STRING]; // Amount of ADA withdrawn.
+  BigInt coin = 2; // Amount of ADA withdrawn.
   Redeemer redeemer = 3; // Redeemer for the Plutus script.
 }
 
@@ -104,7 +104,7 @@ message Tx {
   repeated TxInput reference_inputs = 6; // List of reference inputs
   WitnessSet witnesses = 7; // Witnesses that validte the transaction
   Collateral collateral = 8; // Collateral details in case of failed transaction
-  uint64 fee = 9 [jstype = JS_STRING]; // Transaction fee in ADA
+  BigInt fee = 9; // Transaction fee in ADA
   TxValidity validity = 10; // Validity interval of the transaction
   bool successful = 11; // Flag indicating whether the transaction was successful
   AuxData auxiliary = 12; // Auxiliary data not directly tied to the validation process
@@ -114,7 +114,7 @@ message Tx {
 
 // Define a governance action proposal
 message GovernanceActionProposal {
-  uint64 deposit = 1 [jstype = JS_STRING]; // The amount deposited for the governance action
+  BigInt deposit = 1; // The amount deposited for the governance action
   bytes reward_account = 2; // The reward account the deposit should be returned to
   GovernanceAction gov_action = 3;
   Anchor anchor = 4;
@@ -158,7 +158,7 @@ message TreasuryWithdrawalsAction {
 
 message WithdrawalAmount {
   bytes reward_account = 1;
-  uint64 coin = 2 [jstype = JS_STRING];
+  BigInt coin = 2;
 }
 
 message NoConfidenceAction {
@@ -382,8 +382,8 @@ message StakeDelegationCert {
 message PoolRegistrationCert {
   bytes operator = 1; // Operator key hash.
   bytes vrf_keyhash = 2; // VRF key hash.
-  uint64 pledge = 3 [jstype = JS_STRING]; // Pledge amount.
-  uint64 cost = 4 [jstype = JS_STRING]; // Pool cost.
+  BigInt pledge = 3; // Pledge amount.
+  BigInt cost = 4; // Pool cost.
   RationalNumber margin = 5; // Pool margin.
   bytes reward_account = 6; // Reward account.
   repeated bytes pool_owners = 7; // List of pool owner key hashes.
@@ -412,7 +412,7 @@ enum MirSource {
 
 message MirTarget {
   StakeCredential stake_credential = 1;
-  int64 delta_coin = 2 [jstype = JS_STRING];
+  BigInt delta_coin = 2;
 }
 
 // Represents a move instantaneous reward certificate in Cardano.
@@ -424,12 +424,12 @@ message MirCert {
 
 message RegCert {
   StakeCredential stake_credential = 1;
-  uint64 coin = 2 [jstype = JS_STRING];
+  BigInt coin = 2;
 }
 
 message UnRegCert {
   StakeCredential stake_credential = 1;
-  uint64 coin = 2 [jstype = JS_STRING];
+  BigInt coin = 2;
 }
 
 message DRep {
@@ -455,20 +455,20 @@ message StakeVoteDelegCert {
 message StakeRegDelegCert {
   StakeCredential stake_credential = 1;
   bytes pool_keyhash = 2;
-  uint64 coin = 3 [jstype = JS_STRING];
+  BigInt coin = 3;
 }
 
 message VoteRegDelegCert {
   StakeCredential stake_credential = 1;
   DRep drep = 2;
-  uint64 coin = 3 [jstype = JS_STRING];
+  BigInt coin = 3;
 }
 
 message StakeVoteRegDelegCert {
   StakeCredential stake_credential = 1;
   bytes pool_keyhash = 2;
   DRep drep = 3;
-  uint64 coin = 4 [jstype = JS_STRING];
+  BigInt coin = 4;
 }
 
 message AuthCommitteeHotCert {
@@ -488,13 +488,13 @@ message ResignCommitteeColdCert {
 
 message RegDRepCert {
   StakeCredential drep_credential = 1;
-  uint64 coin = 2 [jstype = JS_STRING];
+  BigInt coin = 2;
   Anchor anchor = 3;
 }
 
 message UnRegDRepCert {
   StakeCredential drep_credential = 1;
-  uint64 coin = 2 [jstype = JS_STRING];
+  BigInt coin = 2;
 }
 
 message UpdateDRepCert {
@@ -599,20 +599,20 @@ message VotingThresholds {
 }
 
 message PParams {
-  uint64 coins_per_utxo_byte = 1 [jstype = JS_STRING]; // The number of coins per UTXO byte.
+  BigInt coins_per_utxo_byte = 1; // The number of coins per UTXO byte.
   uint64 max_tx_size = 2 [jstype = JS_STRING]; // The maximum transaction size.
-  uint64 min_fee_coefficient = 3 [jstype = JS_STRING]; // The minimum fee coefficient.
-  uint64 min_fee_constant = 4 [jstype = JS_STRING]; // The minimum fee constant.
+  BigInt min_fee_coefficient = 3; // The minimum fee coefficient.
+  BigInt min_fee_constant = 4; // The minimum fee constant.
   uint64 max_block_body_size = 5 [jstype = JS_STRING]; // The maximum block body size.
   uint64 max_block_header_size = 6 [jstype = JS_STRING]; // The maximum block header size.
-  uint64 stake_key_deposit = 7 [jstype = JS_STRING]; // The stake key deposit.
-  uint64 pool_deposit = 8 [jstype = JS_STRING]; // The pool deposit.
+  BigInt stake_key_deposit = 7; // The stake key deposit.
+  BigInt pool_deposit = 8; // The pool deposit.
   uint64 pool_retirement_epoch_bound = 9; // The pool retirement epoch bound.
   uint64 desired_number_of_pools = 10; // The desired number of pools.
   RationalNumber pool_influence = 11; // The pool influence.
   RationalNumber monetary_expansion = 12; // The monetary expansion.
   RationalNumber treasury_expansion = 13; // The treasury expansion.
-  uint64 min_pool_cost = 14 [jstype = JS_STRING]; // The minimum pool cost.
+  BigInt min_pool_cost = 14; // The minimum pool cost.
   ProtocolVersion protocol_version = 15; // The protocol version.
   uint64 max_value_size = 16 [jstype = JS_STRING]; // The maximum value size.
   uint64 collateral_percentage = 17 [jstype = JS_STRING]; // The collateral percentage.
@@ -627,8 +627,8 @@ message PParams {
   uint32 min_committee_size = 26; // The minimum committee size.
   uint64 committee_term_limit = 27; // The committee term limit.
   uint64 governance_action_validity_period = 28; // The governance action validity period.
-  uint64 governance_action_deposit = 29 [jstype = JS_STRING]; // The governance action deposit.
-  uint64 drep_deposit = 30 [jstype = JS_STRING]; // The drep deposit.
+  BigInt governance_action_deposit = 29; // The governance action deposit.
+  BigInt drep_deposit = 30; // The drep deposit.
   uint64 drep_inactivity_period = 31; // The drep inactivity period.
 }
 
@@ -661,7 +661,7 @@ message EvalTrace {
 }
 
 message TxEval {
-  uint64 fee = 1 [jstype = JS_STRING];
+  BigInt fee = 1;
   ExUnits ex_units = 2;
   repeated EvalError errors = 3;
   repeated EvalTrace traces = 4;
@@ -778,9 +778,9 @@ message Genesis {
   RationalNumber active_slots_coeff = 10;
   uint32 epoch_length = 11;
   map<string, GenDelegs> gen_delegs = 12;
-  map<string, uint64> initial_funds = 13;
+  map<string, BigInt> initial_funds = 13;
   uint32 max_kes_evolutions = 14;
-  uint64 max_lovelace_supply = 15;
+  BigInt max_lovelace_supply = 15;
   string network_id = 16;
   uint32 network_magic = 17;
   PParams protocol_params = 18; // Using PParams as it's a superset of all protocol parameters
@@ -791,7 +791,7 @@ message Genesis {
   uint32 update_quorum = 23;
 
   // ============ Alonzo Era Fields ============
-  uint64 lovelace_per_utxo_word = 24 [jstype = JS_STRING];
+  BigInt lovelace_per_utxo_word = 24;
   ExPrices execution_prices = 25;
   ExUnits max_tx_ex_units = 26;
   ExUnits max_block_ex_units = 27;
@@ -806,8 +806,8 @@ message Genesis {
   uint64 committee_min_size = 34;
   uint64 committee_max_term_length = 35;
   uint64 gov_action_lifetime = 36;
-  uint64 gov_action_deposit = 37 [jstype = JS_STRING];
-  uint64 drep_deposit = 38 [jstype = JS_STRING];
+  BigInt gov_action_deposit = 37;
+  BigInt drep_deposit = 38;
   uint64 drep_activity = 39;
   RationalNumber min_fee_ref_script_cost_per_byte = 40;
   DRepVotingThresholds drep_voting_thresholds = 41;
