@@ -1,0 +1,28 @@
+name: "PR Code Generation Check"
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+# Cancel outdated runs when new commits are pushed to the PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  codegen:
+    name: "Generate Code"
+    uses: ./.github/workflows/generate.yml
+
+  publish-dry-run:
+    name: "Validate Package Publishing"
+    needs: [codegen]
+    uses: ./.github/workflows/publish-all.yml
+    secrets: inherit
+    with:
+      mode: "dry-run"
