@@ -16,5 +16,13 @@ permissions:
 
 jobs:
   codegen:
-    name: "Validate Code Generation"
+    name: "Generate Code"
     uses: ./.github/workflows/generate.yml
+
+  publish-dry-run:
+    name: "Validate Package Publishing"
+    needs: [codegen]
+    uses: ./.github/workflows/publish-all.yml
+    secrets: inherit
+    with:
+      mode: "dry-run"
