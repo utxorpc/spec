@@ -247,7 +247,7 @@ message Constr {
 // Represents a big integer for Plutus data in Cardano.
 message BigInt {
   oneof big_int {
-    int64 int = 1 [jstype = JS_STRING];
+    int64 int = 1;
     bytes big_u_int = 2;
     bytes big_n_int = 3;
   }
@@ -292,7 +292,7 @@ message Script {
 
 message Metadatum {
   oneof metadatum {
-    int64 int = 1 [jstype = JS_STRING];
+    int64 int = 1;
     bytes bytes = 2;
     string text = 3;
     MetadatumArray array = 4;
@@ -570,8 +570,8 @@ message TxPattern {
 // ======
 
 message ExUnits {
-  uint64 steps = 1 [jstype = JS_STRING];
-  uint64 memory = 2 [jstype = JS_STRING];
+  uint64 steps = 1;
+  uint64 memory = 2;
 }
 
 message ExPrices {
@@ -585,7 +585,7 @@ message ProtocolVersion {
 }
 
 message CostModel {
-  repeated int64 values = 1 [jstype = JS_STRING];
+  repeated int64 values = 1;
 }
 
 message CostModels {
@@ -600,11 +600,11 @@ message VotingThresholds {
 
 message PParams {
   BigInt coins_per_utxo_byte = 1; // The number of coins per UTXO byte.
-  uint64 max_tx_size = 2 [jstype = JS_STRING]; // The maximum transaction size.
+  uint64 max_tx_size = 2; // The maximum transaction size.
   BigInt min_fee_coefficient = 3; // The minimum fee coefficient.
   BigInt min_fee_constant = 4; // The minimum fee constant.
-  uint64 max_block_body_size = 5 [jstype = JS_STRING]; // The maximum block body size.
-  uint64 max_block_header_size = 6 [jstype = JS_STRING]; // The maximum block header size.
+  uint64 max_block_body_size = 5; // The maximum block body size.
+  uint64 max_block_header_size = 6; // The maximum block header size.
   BigInt stake_key_deposit = 7; // The stake key deposit.
   BigInt pool_deposit = 8; // The pool deposit.
   uint64 pool_retirement_epoch_bound = 9; // The pool retirement epoch bound.
@@ -614,9 +614,9 @@ message PParams {
   RationalNumber treasury_expansion = 13; // The treasury expansion.
   BigInt min_pool_cost = 14; // The minimum pool cost.
   ProtocolVersion protocol_version = 15; // The protocol version.
-  uint64 max_value_size = 16 [jstype = JS_STRING]; // The maximum value size.
-  uint64 collateral_percentage = 17 [jstype = JS_STRING]; // The collateral percentage.
-  uint64 max_collateral_inputs = 18 [jstype = JS_STRING]; // The maximum collateral inputs.
+  uint64 max_value_size = 16; // The maximum value size.
+  uint64 collateral_percentage = 17; // The collateral percentage.
+  uint64 max_collateral_inputs = 18; // The maximum collateral inputs.
   CostModels cost_models = 19; // The cost models.
   ExPrices prices = 20; // The prices.
   ExUnits max_execution_units_per_transaction = 21; // The maximum execution units per transaction.
@@ -633,9 +633,9 @@ message PParams {
 }
 
 message EraBoundary {
-  uint64 time = 1 [jstype = JS_STRING]; // ms timestamp
-  uint64 slot = 2 [jstype = JS_STRING]; // absolute slot number of the first block of this era
-  uint64 epoch = 3 [jstype = JS_STRING]; // first epoch for this era
+  uint64 time = 1; // ms timestamp
+  uint64 slot = 2; // absolute slot number of the first block of this era
+  uint64 epoch = 3; // first epoch for this era
 }
 
 message EraSummary {
@@ -768,7 +768,7 @@ message Genesis {
   BlockVersionData block_version_data = 2;
   string fts_seed = 3;
   ProtocolConsts protocol_consts = 4;
-  uint64 start_time = 5 [jstype = JS_STRING];
+  uint64 start_time = 5;
   map<string, uint64> boot_stakeholders = 6;
   map<string, HeavyDelegation> heavy_delegation = 7;
   map<string, string> non_avvm_balances = 8;
