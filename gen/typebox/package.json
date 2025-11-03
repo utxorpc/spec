@@ -1,6 +1,6 @@
 {
   "name": "@utxorpc/typebox",
-  "version": "0.18.0",
+  "version": "0.18.1",
   "description": "UTxO RPC auto-generated Typebox definitions from JSON Schema",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
