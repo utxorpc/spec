@@ -1,6 +1,6 @@
 {
   "name": "@utxorpc/jsonschema",
-  "version": "0.18.0",
+  "version": "0.18.1",
   "description": "UTxO RPC auto-generated JSON Schema",
   "exports": {
     "./*": "./schema/*"
