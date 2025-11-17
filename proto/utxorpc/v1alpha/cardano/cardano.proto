@@ -287,6 +287,7 @@ message Script {
     bytes plutus_v1 = 2; // Plutus V1 script.
     bytes plutus_v2 = 3; // Plutus V2 script.
     bytes plutus_v3 = 4; // Plutus V3 script.
+    bytes plutus_v4 = 5; // Plutus V4 script.
   }
 }
 
@@ -592,6 +593,7 @@ message CostModels {
   CostModel plutus_v1 = 1;
   CostModel plutus_v2 = 2;
   CostModel plutus_v3 = 3;
+  CostModel plutus_v4 = 4;
 }
 
 message VotingThresholds {
@@ -759,6 +761,7 @@ message CostModelMap {
   CostModel plutus_v1 = 1;
   CostModel plutus_v2 = 2;
   CostModel plutus_v3 = 3;
+  CostModel plutus_v4 = 4;
 }
 
 // Unified Genesis configuration containing all parameters from all eras
