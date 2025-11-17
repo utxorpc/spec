@@ -58,7 +58,6 @@ message Asset {
 message Multiasset {
   bytes policy_id = 1; // Policy ID governing the custom assets.
   repeated Asset assets = 2; // List of custom assets.
-  Redeemer redeemer = 3; // Redeemer for the Plutus script.
 }
 
 // Represents the validity interval of a transaction.
