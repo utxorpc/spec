@@ -152,7 +152,7 @@ message HardForkInitiationAction {
 }
 
 message TreasuryWithdrawalsAction {
-  repeated WithdrawalAmount withdrawals = 1; // A map of the withdrawals to make
+  repeated WithdrawalAmount withdrawals = 1; // A list of the withdrawals to make
   bytes policy_hash = 2;
 }
 
@@ -245,11 +245,13 @@ message Constr {
 }
 
 // Represents a big integer for Plutus data in Cardano.
+// The representation here follows CBOR specification for bignums:
+// https://www.rfc-editor.org/rfc/rfc8949.html#name-bignums section 3.4.3.
 message BigInt {
   oneof big_int {
-    int64 int = 1;
-    bytes big_u_int = 2;
-    bytes big_n_int = 3;
+    int64 int = 1; // Stores value fitting within int64 range
+    bytes big_u_int = 2; // Stores unsigned value exceeding int64 range
+    bytes big_n_int = 3; // Stores negative value `n` exceeding int64 range as `-1 - n`
   }
 }
 
