@@ -217,7 +217,7 @@ message VKeyWitness {
 // Represents a native script in Cardano.
 message NativeScript {
   oneof native_script {
-    bytes script_pubkey = 1; // Script based on an address key hash.
+    bytes script_pubkey_hash = 1; // Script based on an address key hash.
     NativeScriptList script_all = 2; // Script that requires all nested scripts to be satisfied.
     NativeScriptList script_any = 3; // Script that requires any of the nested scripts to be satisfied.
     ScriptNOfK script_n_of_k = 4; // Script that requires k out of n nested scripts to be satisfied.
