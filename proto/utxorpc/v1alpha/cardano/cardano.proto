@@ -48,10 +48,7 @@ message Datum {
 // Represents a custom asset in the Cardano blockchain.
 message Asset {
   bytes name = 1; // Name of the custom asset.
-  oneof quantity {
-    BigInt output_coin = 2; // Quantity of the custom asset in case of an output.
-    BigInt mint_coin = 3; // Quantity of the custom asset in case of a mint (can be negative for burning).
-  }
+  BigInt quantity = 2; // Quantity of the custom asset. This can be negative only if it is in a `Tx.mint` field and the transaction is burning tokens.
 }
 
 // Represents a multi-asset group in the Cardano blockchain.
