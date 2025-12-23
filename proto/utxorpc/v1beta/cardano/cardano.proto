@@ -129,9 +129,7 @@ message GovernanceAction {
     NoConfidenceAction no_confidence_action = 4; //
     UpdateCommitteeAction update_committee_action = 5; // Update the Constitution Committee
     NewConstitutionAction new_constitution_action = 6; // Replace the Constitution
-
-    // TODO: revisit if there's a better way to handle this option because it doesn't actually need a value but proto syntax needs to require it
-    uint32 info_action = 7; // Info action should just be the integer number 6
+    InfoAction info_action = 7; // Info action
   }
 }
 
@@ -176,6 +174,8 @@ message NewConstitutionAction {
   GovernanceActionId gov_action_id = 1;
   Constitution constitution = 2; // The Constitution proposed
 }
+
+message InfoAction {}
 
 message Constitution {
   Anchor anchor = 1; // Anchor to the new document
