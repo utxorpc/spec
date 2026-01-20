@@ -83,7 +83,7 @@ message WitnessSet {
   repeated Script script = 2; // List of scripts.
   repeated PlutusData plutus_datums = 3; // List of Plutus data elements associated with the transaction.
   repeated Redeemer redeemers = 4; // List of redeemers
-  repeated BootstrapWitness bootstrapWitnesses = 5 // List of bootstrap witnesses
+  repeated BootstrapWitness bootstrapWitnesses = 5; // List of bootstrap witnesses
 }
 
 // Auxiliary data not directly tied to the validation process
