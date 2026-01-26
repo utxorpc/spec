@@ -64,6 +64,12 @@ jobs:
       - name: Generate code
         run: buf generate proto
 
+      - name: Generate dotnet v1alpha
+        run: buf generate --template buf.gen.dotnet.v1alpha.yaml
+
+      - name: Generate dotnet v1beta
+        run: buf generate --template buf.gen.dotnet.v1beta.yaml
+
       - name: Fix python imports
         run:
           find gen/python/utxorpc_spec -type f -exec sed -i '' 's@from
