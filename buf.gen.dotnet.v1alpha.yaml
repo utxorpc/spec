@@ -1,0 +1,13 @@
+version: v2
+
+inputs:
+  - directory: proto
+    paths:
+      - proto/utxorpc/v1alpha
+
+plugins:
+  - remote: buf.build/grpc/csharp:v1.76.0
+    out: gen/dotnet/v1alpha
+
+  - remote: buf.build/protocolbuffers/csharp:v29.3
+    out: gen/dotnet/v1alpha

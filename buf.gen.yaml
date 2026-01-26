@@ -78,11 +78,8 @@ plugins:
     out: gen/haskell
 
   # dotnet
-  - plugin: buf.build/grpc/csharp:v1.68.0
-    out: gen/dotnet
-    
-  - plugin: buf.build/protocolbuffers/csharp:v28.3
-    out: gen/dotnet
+  # NOTE: C# plugins are run separately via buf generate --path to handle v1alpha/v1beta separation
+  # See generate.yml workflow for details
 
   # other
 

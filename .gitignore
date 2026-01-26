@@ -2,7 +2,8 @@
 # .NET build files
 bin
 obj
-gen/dotnet/*.cs
+gen/dotnet/*
+!gen/dotnet/Utxorpc.Spec.csproj
 gen/go/utxorpc/
 gen/haskell/Proto
 gen/node/src/
