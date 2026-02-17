@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package utxorpc.v1beta.handshake;
+
+// Covenant action types for the Handshake naming system.
+enum CovenantAction {
+    COVENANT_ACTION_UNSPECIFIED = 0; // No covenant (regular transfer)
+    COVENANT_ACTION_CLAIM = 1; // Claim a reserved legacy DNS name
+    COVENANT_ACTION_OPEN = 2; // Open a name auction
+    COVENANT_ACTION_BID = 3; // Submit a blinded bid
+    COVENANT_ACTION_REVEAL = 4; // Reveal a bid amount
+    COVENANT_ACTION_REDEEM = 5; // Recover a losing bid
+    COVENANT_ACTION_REGISTER = 6; // Finalize name ownership after winning auction
+    COVENANT_ACTION_UPDATE = 7; // Update DNS resource data for a name
+    COVENANT_ACTION_RENEW = 8; // Renew name ownership
+    COVENANT_ACTION_TRANSFER = 9; // Initiate ownership transfer
+    COVENANT_ACTION_FINALIZE = 10; // Confirm ownership transfer
+    COVENANT_ACTION_REVOKE = 11; // Revoke a name permanently
+}
+
+// Represents a covenant attached to a transaction output.
+message Covenant {
+    CovenantAction action = 1; // The covenant action type
+    repeated bytes items = 2; // Covenant data items (name hash, resource data, etc.)
+}
+
+// Represents an input in a Handshake transaction.
+message TxInput {
+    optional bytes txid = 1; // Hash of the previous transaction being spent
+    uint32 output_index = 2; // Index of the output in the previous transaction
+    uint32 sequence = 3; // Sequence number, used for relative timelocks
+    repeated bytes witness = 4; // Witness stack items (Handshake is SegWit-only)
+}
+
+// Represents an output in a Handshake transaction.
+message TxOutput {
+    uint64 value = 1; // Amount in dollarydoos (smallest HNS unit, 1 HNS = 1,000,000 dollarydoos)
+    bytes address = 2; // Witness program address
+    Covenant covenant = 3; // Covenant restricting future use of this output
+}
+
+// Represents a transaction in the Handshake network.
+message Transaction {
+    uint32 version = 1; // Transaction version number
+    repeated TxInput vin = 2; // List of transaction inputs
+    repeated TxOutput vout = 3; // List of transaction outputs
+    uint32 locktime = 4; // Block height or timestamp when transaction is final
+    bytes hash = 5; // Hash of the transaction
+    optional bytes witness_hash = 6; // Witness-committed hash
+    optional bytes blockhash = 7; // Hash of the containing block
+    optional uint32 time = 8; // Timestamp of the transaction
+}
+
+// Represents a block in the Handshake blockchain.
+message Block {
+    uint32 version = 1; // Block version number
+    optional bytes previous_blockhash = 2; // Hash of the previous block
+    bytes merkle_root = 3; // Merkle root of base transaction data
+    bytes witness_root = 4; // Merkle root of transaction witness data
+    bytes tree_root = 5; // Root of the name-resource urkel tree
+    bytes reserved_root = 6; // Reserved root for future layer 2 expansion
+    uint32 time = 7; // Time when the block was created
+    uint32 bits = 8; // Target difficulty value
+    bytes nonce = 9; // Nonce used for Proof-of-Work
+    bytes extra_nonce = 10; // Extra nonce for expanded mining search space
+    bytes mask = 11; // Mask for committed block hash
+    repeated Transaction tx = 12; // List of transactions included in the block
+}
