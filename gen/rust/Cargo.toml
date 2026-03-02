@@ -11,7 +11,7 @@ readme = "README.md"
 authors = ["Santiago Carmuega <santiago@carmuega.me>"]
 
 [dependencies]
-bytes = "^1.4"
+bytes = "^1.11"
 futures-core = "0.3.30"
 pbjson = "^0.7"
 pbjson-types = "^0.7"
