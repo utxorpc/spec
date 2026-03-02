@@ -163,7 +163,7 @@ message Voter {
 message VotingProcedure {
   GovernanceActionId gov_action_id = 1;    // ID (tx_hash + index) of the action being voted on
   Vote vote = 2;                           // The choice selected (Yes, No, Abstain)
-  Anchor anchor = 3;                       // Optional anchor supplying context/justification
+  optional Anchor anchor = 3;                       // Optional anchor supplying context/justification
 }
 
 // Wrapper aggregating all votes cast by a single voter in the transaction
