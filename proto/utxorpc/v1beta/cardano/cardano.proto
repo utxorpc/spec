@@ -137,39 +137,31 @@ message GovernanceActionId {
   uint32 governance_action_index = 2;
 }
 
-// Role of the voter in Cardano governance (CIP-1694)
-enum VoterRole {
-  VOTER_ROLE_UNSPECIFIED = 0;
-  VOTER_ROLE_DREP = 1;                     // Delegated Representative
-  VOTER_ROLE_SPO = 2;                      // Stake Pool Operator
-  VOTER_ROLE_CONSTITUTIONAL_COMMITTEE = 3; // Constitutional Committee Member
-}
-
-// Valid vote choices for a governance action
+// Valid vote choices for a governance action (CIP-1694).
+// On-chain CBOR mapping: No=0, Yes=1, Abstain=2.
 enum Vote {
   VOTE_UNSPECIFIED = 0;
-  VOTE_YES = 1;                            // Vote in favor
-  VOTE_NO = 2;                             // Vote against
-  VOTE_ABSTAIN = 3;                        // Abstain from voting
+  VOTE_NO = 1;
+  VOTE_YES = 2;
+  VOTE_ABSTAIN = 3;
 }
 
-// Defines a voter by mapping their role to their specific credential
-message Voter {
-  VoterRole role = 1;                      // The role assumed by the voter
-  StakeCredential credential = 2;          // Credential (Key Hash or Script Hash) identifying the voter
-}
-
-// A single cast vote, linking a specific governance action to the vote and an optional anchor
+// A single cast vote on a governance action.
 message VotingProcedure {
-  GovernanceActionId gov_action_id = 1;    // ID (tx_hash + index) of the action being voted on
-  Vote vote = 2;                           // The choice selected (Yes, No, Abstain)
-  optional Anchor anchor = 3;                       // Optional anchor supplying context/justification
+  GovernanceActionId gov_action_id = 1; // ID of the governance action being voted on.
+  Vote vote = 2;                        // The vote cast.
+  optional Anchor anchor = 3;           // Optional anchor for voter rationale.
 }
 
-// Wrapper aggregating all votes cast by a single voter in the transaction
+// Groups a voter with all votes they cast in the transaction.
+// SPOs can only identify via pool key hash; DReps and CC members may use key or script hash.
 message VoterVotes {
-  Voter voter = 1;                         // The entity casting the votes
-  repeated VotingProcedure votes = 2;      // The list of voting procedures submitted by this voter
+  oneof voter {
+    StakeCredential constitutional_committee = 1; // Constitutional Committee member.
+    StakeCredential drep = 2;                     // Delegated Representative.
+    bytes spo = 3;                                // Stake Pool Operator (pool key hash).
+  }
+  repeated VotingProcedure votes = 4; // Votes cast by this voter.
 }
 
 message ParameterChangeAction {
