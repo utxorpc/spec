@@ -3,7 +3,7 @@ description: 'Pushes go code to the sdk repo'
 inputs:
   repository-token:
     description: token for git authentication
-    required: true
+    required: false
   mode:
     description: supported values are 'release' and 'dry-run'
     required: true
@@ -17,11 +17,16 @@ runs:
       with:
         go-version: 1.25.x
 
+    - name: Validate release token
+      if: inputs.mode == 'release' && inputs.repository-token == ''
+      shell: bash
+      run: |
+        echo "repository-token is required in release mode" >&2
+        exit 1
+
     - name: Attempt Build
       working-directory: codegen/go
       shell: bash
-      env:
-        TOKEN: ${{ inputs.repository-token }}
       run: |
         go get -v -t -d ./...
         go build -v ./...
@@ -30,7 +35,7 @@ runs:
       with:
         repository: utxorpc/go-codegen
         fetch-depth: 0
-        token: ${{ inputs.repository-token }}
+        token: ${{ inputs.repository-token || github.token }}
         path: go-codegen
 
     - name: Copy new spec
