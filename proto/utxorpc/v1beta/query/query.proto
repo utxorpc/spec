@@ -72,6 +72,32 @@ message ReadParamsResponse {
   ChainPoint ledger_tip = 2; // The chain point that represent the ledger current position.
 }
 
+// An envelope that wraps a chain-specific ledger-state query.
+message AnyChainLedgerQuery {
+  oneof query {
+    utxorpc.v1beta.cardano.LedgerStateQuery cardano = 1; // A Cardano ledger-state query.
+  }
+}
+
+// An envelope that wraps a chain-specific ledger-state query result.
+message AnyChainLedgerQueryResult {
+  oneof result {
+    utxorpc.v1beta.cardano.LedgerStateQueryResult cardano = 1; // A Cardano ledger-state query result.
+  }
+}
+
+// Request to run a chain-specific ledger-state query against the current ledger snapshot.
+message QueryLedgerStateRequest {
+  AnyChainLedgerQuery query = 1; // The chain-specific query to evaluate.
+  google.protobuf.FieldMask field_mask = 2; // Field mask to selectively return fields.
+}
+
+// Response carrying the ledger-state query result.
+message QueryLedgerStateResponse {
+  AnyChainLedgerQueryResult result = 1; // The query result.
+  ChainPoint ledger_tip = 2; // Chain point representing the snapshot the query was evaluated against.
+}
+
 // An evenlope that holds an UTxO patterns from any of compatible chains
 message AnyUtxoPattern {
   oneof utxo_pattern {
@@ -175,6 +201,7 @@ service QueryService {
   rpc ReadTx(ReadTxRequest) returns (ReadTxResponse); // Get Txs by chain-specific criteria.
   rpc ReadGenesis(ReadGenesisRequest) returns (ReadGenesisResponse); // Get the genesis configuration
   rpc ReadEraSummary(ReadEraSummaryRequest) returns (ReadEraSummaryResponse); // Get the chain era summary
+  rpc QueryLedgerState(QueryLedgerStateRequest) returns (QueryLedgerStateResponse); // Run a chain-specific ledger-state query (e.g. stake pool distribution).
 
   // TODO: decide if we want to expand the scope
   // rpc DumpUtxos(ReadUtxosRequest) returns (stream ReadUtxosResponse); // Dump all available utxos

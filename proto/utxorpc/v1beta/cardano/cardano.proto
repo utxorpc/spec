@@ -539,6 +539,46 @@ message UpdateDRepCert {
   Anchor anchor = 2;
 }
 
+// LEDGER-STATE QUERIES
+// ====================
+//
+// Cardano-specific queries that mirror the Ouroboros node-to-client
+// LocalStateQuery mini-protocol. The oneof envelope lets new queries be
+// added later without changing the chain-agnostic QueryService surface.
+
+// Envelope of a Cardano ledger-state query.
+message LedgerStateQuery {
+  oneof query {
+    GetStakePoolDistribution stake_pool_distribution = 1; // Active stake distribution across pools.
+  }
+}
+
+// Envelope of a Cardano ledger-state query result.
+message LedgerStateQueryResult {
+  oneof result {
+    StakePoolDistribution stake_pool_distribution = 1; // Result of a stake pool distribution query.
+  }
+}
+
+// Stake pool distribution query. Mirrors Ouroboros GetPoolDistr / GetFilteredPoolDistr.
+message GetStakePoolDistribution {
+  // If non-empty, restrict the result to the listed pool key hashes.
+  // If empty, return the distribution for every pool.
+  repeated bytes pool_keyhashes = 1;
+}
+
+// Per-pool stake share. Mirrors Ouroboros IndividualPoolStake.
+message PoolStakeShare {
+  bytes pool_keyhash = 1; // Pool key hash (pool id).
+  RationalNumber stake_fraction = 2; // Fraction of total active stake delegated to this pool.
+  bytes vrf_keyhash = 3; // Pool's VRF key hash, as reported by the node.
+}
+
+// Result of a stake pool distribution query.
+message StakePoolDistribution {
+  repeated PoolStakeShare pools = 1; // One entry per pool present in the snapshot.
+}
+
 // PATTERN MATCHING
 // ================
 
