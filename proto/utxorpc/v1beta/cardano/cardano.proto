@@ -547,14 +547,14 @@ message UpdateDRepCert {
 // added later without changing the chain-agnostic QueryService surface.
 
 // Envelope of a Cardano ledger-state query.
-message LedgerStateQuery {
+message StateQuery {
   oneof query {
     GetStakePoolDistribution stake_pool_distribution = 1; // Active stake distribution across pools.
   }
 }
 
 // Envelope of a Cardano ledger-state query result.
-message LedgerStateQueryResult {
+message StateResult {
   oneof result {
     StakePoolDistribution stake_pool_distribution = 1; // Result of a stake pool distribution query.
   }
