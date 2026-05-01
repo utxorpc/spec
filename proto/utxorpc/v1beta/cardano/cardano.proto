@@ -37,6 +37,7 @@ message TxOutput {
   repeated Multiasset assets = 3; // Additional native (non-ADA) assets in the output.
   optional Datum datum = 4; // Plutus data associated with the output.
   optional Script script = 5; // Script associated with the output.
+  optional bytes original_cbor = 6; // Original cbor-encoded output as seen on-chain.
 }
 
 message Datum {
