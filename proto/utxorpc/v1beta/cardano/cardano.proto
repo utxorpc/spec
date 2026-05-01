@@ -554,7 +554,7 @@ message StateQuery {
 }
 
 // Envelope of a Cardano ledger-state query result.
-message StateResult {
+message StateData {
   oneof result {
     StakePoolDistribution stake_pool_distribution = 1; // Result of a stake pool distribution query.
   }

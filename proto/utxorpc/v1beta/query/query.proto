@@ -80,9 +80,9 @@ message AnyChainStateQuery {
 }
 
 // An envelope that wraps a chain-specific ledger-state query result.
-message AnyChainStateResult {
+message AnyChainStateData {
   oneof result {
-    utxorpc.v1beta.cardano.StateResult cardano = 1; // A Cardano ledger-state query result.
+    utxorpc.v1beta.cardano.StateData cardano = 1; // A Cardano ledger-state query result.
   }
 }
 
@@ -94,7 +94,7 @@ message ReadStateRequest {
 
 // Response carrying the ledger-state query result.
 message ReadStateResponse {
-  AnyChainStateResult result = 1; // The query result.
+  AnyChainStateData result = 1; // The query result.
   ChainPoint ledger_tip = 2; // Chain point representing the snapshot the query was evaluated against.
 }
 
