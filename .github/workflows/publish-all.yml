@@ -46,6 +46,11 @@ jobs:
   publish-node:
     runs-on: ubuntu-latest
 
+    # Required for npm trusted publishing (OIDC).
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -57,7 +62,6 @@ jobs:
 
       - uses: ./.github/actions/publish-node
         with:
-          registry-token: ${{ secrets.NPM_REGISTRY_TOKEN }}
           mode: ${{ inputs.mode }}
 
   publish-go:
