@@ -70,10 +70,26 @@ jobs:
       - name: Generate dotnet v1beta
         run: buf generate --template buf.gen.dotnet.v1beta.yaml
 
+      # The protobuf Python plugin emits absolute imports rooted at the proto
+      # package (e.g. `from utxorpc.v1alpha...`), which do not resolve once the
+      # code is packaged under `utxorpc_spec`. protoletariat rewrites the
+      # proto-generated imports to relative imports so the single utxorpc-spec
+      # package works regardless of where it is mounted.
       - name: Fix python imports
-        run:
-          find gen/python/utxorpc_spec -type f -exec sed -i '' 's@from
-          utxorpc@from utxorpc_spec.utxorpc@g' {} \;
+        run: |
+          pipx install protoletariat
+          protol \
+            --create-package \
+            --in-place \
+            --exclude-google-imports \
+            --python-out gen/python/utxorpc_spec \
+            buf proto
+
+      - name: Smoke-test python imports
+        run: |
+          pip install --quiet protobuf grpcio
+          cd gen/python
+          python -c "import utxorpc_spec.utxorpc.v1alpha.sync.sync_pb2, utxorpc_spec.utxorpc.v1beta.sync.sync_pb2; print('python import OK')"
 
       - name: Create codegen artifact
         uses: actions/upload-artifact@v4
