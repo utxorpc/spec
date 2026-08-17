@@ -22,6 +22,12 @@ jobs:
   publish-dry-run:
     name: "Validate Package Publishing"
     needs: [codegen]
+    # publish-all's publish-node job needs id-token: write for npm trusted
+    # publishing. A called workflow cannot request more than its caller grants,
+    # and this workflow is capped at contents: read above, so grant it here.
+    permissions:
+      id-token: write
+      contents: read
     uses: ./.github/workflows/publish-all.yml
     secrets: inherit
     with:
