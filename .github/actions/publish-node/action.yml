@@ -26,12 +26,16 @@ runs:
         npm install
         npm run build
 
-    - name: Publish dry run
+    # `npm publish --dry-run` still asks the registry whether the version
+    # already exists, so it can only pass in the window between a version bump
+    # and the release that publishes it. `npm pack` performs the same packing
+    # and manifest validation without contacting the registry.
+    - name: Validate package
       if: inputs.mode == 'dry-run'
       working-directory: codegen/node
       shell: bash
       run: |
-        npm publish --dry-run
+        npm pack --dry-run
     
     # Authentication is handled via OIDC trusted publishing; no token
     # is needed. Requires `id-token: write` permission on the calling job.

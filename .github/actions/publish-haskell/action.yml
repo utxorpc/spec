@@ -83,14 +83,13 @@ runs:
       working-directory: codegen/haskell
       run: stack haddock --haddock-for-hackage
 
-    - name: Upload candidate to Hackage
-      if: inputs.mode == 'dry-run'
-      shell: bash
-      working-directory: codegen/haskell
-      run: |
-        export HACKAGE_KEY=${{ inputs.registry-token }}
-        stack upload --candidate --test-tarball .
-        stack upload --candidate -d .
+    # dry-run validates locally only. The steps above already run `stack test`,
+    # `stack sdist` and `stack haddock --haddock-for-hackage`, which is every
+    # check a pull request needs. Uploading a candidate here was not a
+    # simulation: it pushed a real candidate release to Hackage from unreviewed
+    # code, and it fails outright once the version in the cabal file has been
+    # published, because the docs upload targets a candidate that no longer
+    # exists and returns 404.
 
     - name: Upload to Hackage
       if: inputs.mode == 'release' && startsWith(github.ref, 'refs/tags/v')
