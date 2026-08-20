@@ -150,9 +150,9 @@ message SearchUtxosResponse {
   optional string next_token = 3; // Token to retrieve the next page of results, absent if there are no more results.
 }
 
-// Request to get data (as in plural of datum)
+// Request to get a datum
 message ReadDataRequest {
-  repeated bytes keys = 1;
+  bytes key = 1; // Hash of the datum to fetch.
   google.protobuf.FieldMask field_mask = 2; // Field mask to selectively return fields in the response.
 }
 
@@ -165,9 +165,9 @@ message AnyChainDatum {
   }
 }
 
-// Response containing data (as in plural of datum)
+// Response containing the requested datum
 message ReadDataResponse {
-  repeated AnyChainDatum values = 1; // The value of each datum.
+  AnyChainDatum value = 1; // The value of the datum.
   ChainPoint ledger_tip = 2; // The chain point that represent the ledger current position.
 }
 
@@ -197,7 +197,7 @@ service QueryService {
   rpc ReadParams(ReadParamsRequest) returns (ReadParamsResponse); // Get overall chain state.
   rpc ReadUtxos(ReadUtxosRequest) returns (ReadUtxosResponse); // Read specific UTxOs by reference.
   rpc SearchUtxos(SearchUtxosRequest) returns (SearchUtxosResponse); // Search for UTxO based on a pattern.
-  rpc ReadData(ReadDataRequest) returns (ReadDataResponse); // Read specific datum by hash
+  rpc ReadData(ReadDataRequest) returns (ReadDataResponse); // Read a specific datum by hash
   rpc ReadTx(ReadTxRequest) returns (ReadTxResponse); // Get Txs by chain-specific criteria.
   rpc ReadGenesis(ReadGenesisRequest) returns (ReadGenesisResponse); // Get the genesis configuration
   rpc ReadEraSummary(ReadEraSummaryRequest) returns (ReadEraSummaryResponse); // Get the chain era summary
