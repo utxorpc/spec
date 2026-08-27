@@ -101,6 +101,11 @@ jobs:
   publish-dotnet:
     runs-on: ubuntu-latest
 
+    # Required for NuGet trusted publishing (OIDC).
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -112,5 +117,5 @@ jobs:
 
       - uses: ./.github/actions/publish-dotnet
         with:
-          registry-token: ${{ secrets.NUGET_REGISTRY_TOKEN }}
+          user: ${{ vars.NUGET_USER }}
           mode: ${{ inputs.mode }}
