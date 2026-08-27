@@ -1,9 +1,9 @@
 name: 'publish dotnet'
 description: 'Generates nuget package and publishes to nuget.org'
 inputs:
-  registry-token:
-    description: token to authenticate to nuget.org
-    required: false
+  user:
+    description: nuget.org profile name owning the trusted publishing policy
+    required: true
   mode:
     description: supported values are 'release' and 'dry-run'
     required: true
@@ -32,8 +32,18 @@ runs:
       working-directory: codegen/dotnet
       run: dotnet pack --configuration Release --no-build --output ./nupkgs
       
+    # The issued key lives for one hour and is single-use, so the exchange runs
+    # immediately before the push. Dry-runs skip it: they must not contact live
+    # registries, and a token exchange is a live call.
+    - name: NuGet login
+      if: inputs.mode == 'release'
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: ${{ inputs.user }}
+
     - name: Publish to NuGet
       if: inputs.mode == 'release'
       shell: bash
       working-directory: codegen/dotnet
-      run: dotnet nuget push ./nupkgs/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ inputs.registry-token }} --skip-duplicate
+      run: dotnet nuget push ./nupkgs/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
