@@ -26,6 +26,22 @@ extra-source-files:
 
 library
   exposed-modules:
+      Proto.Utxorpc.V1.Bitcoin.Bitcoin
+      Proto.Utxorpc.V1.Bitcoin.Bitcoin_Fields
+      Proto.Utxorpc.V1.Cardano.Cardano
+      Proto.Utxorpc.V1.Cardano.Cardano_Fields
+      Proto.Utxorpc.V1.Handshake.Handshake
+      Proto.Utxorpc.V1.Handshake.Handshake_Fields
+      Proto.Utxorpc.V1.Query.Query
+      Proto.Utxorpc.V1.Query.Query_Fields
+      Proto.Utxorpc.V1.Submit.Submit
+      Proto.Utxorpc.V1.Submit.Submit_Fields
+      Proto.Utxorpc.V1.Sync.Sync
+      Proto.Utxorpc.V1.Sync.Sync_Fields
+      Proto.Utxorpc.V1.Watch.Watch
+      Proto.Utxorpc.V1.Watch.Watch_Fields
+      Proto.Utxorpc.V1alpha.Bitcoin.Bitcoin
+      Proto.Utxorpc.V1alpha.Bitcoin.Bitcoin_Fields
       Proto.Utxorpc.V1alpha.Cardano.Cardano
       Proto.Utxorpc.V1alpha.Cardano.Cardano_Fields
       Proto.Utxorpc.V1alpha.Query.Query
@@ -36,6 +52,20 @@ library
       Proto.Utxorpc.V1alpha.Sync.Sync_Fields
       Proto.Utxorpc.V1alpha.Watch.Watch
       Proto.Utxorpc.V1alpha.Watch.Watch_Fields
+      Proto.Utxorpc.V1beta.Bitcoin.Bitcoin
+      Proto.Utxorpc.V1beta.Bitcoin.Bitcoin_Fields
+      Proto.Utxorpc.V1beta.Cardano.Cardano
+      Proto.Utxorpc.V1beta.Cardano.Cardano_Fields
+      Proto.Utxorpc.V1beta.Handshake.Handshake
+      Proto.Utxorpc.V1beta.Handshake.Handshake_Fields
+      Proto.Utxorpc.V1beta.Query.Query
+      Proto.Utxorpc.V1beta.Query.Query_Fields
+      Proto.Utxorpc.V1beta.Submit.Submit
+      Proto.Utxorpc.V1beta.Submit.Submit_Fields
+      Proto.Utxorpc.V1beta.Sync.Sync
+      Proto.Utxorpc.V1beta.Sync.Sync_Fields
+      Proto.Utxorpc.V1beta.Watch.Watch
+      Proto.Utxorpc.V1beta.Watch.Watch_Fields
   hs-source-dirs:
       .
   build-depends:
