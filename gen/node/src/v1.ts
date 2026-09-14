@@ -1,0 +1,11 @@
+export * as bitcoin from "./utxorpc/v1/bitcoin/bitcoin_pb.js";
+export * as cardano from "./utxorpc/v1/cardano/cardano_pb.js";
+export * as handshake from "./utxorpc/v1/handshake/handshake_pb.js";
+export * as query from "./utxorpc/v1/query/query_pb.js";
+export * as queryConnect from "./utxorpc/v1/query/query_connect.js";
+export * as submit from "./utxorpc/v1/submit/submit_pb.js";
+export * as submitConnect from "./utxorpc/v1/submit/submit_connect.js";
+export * as sync from "./utxorpc/v1/sync/sync_pb.js";
+export * as syncConnect from "./utxorpc/v1/sync/sync_connect.js";
+export * as watch from "./utxorpc/v1/watch/watch_pb.js";
+export * as watchConnect from "./utxorpc/v1/watch/watch_connect.js";

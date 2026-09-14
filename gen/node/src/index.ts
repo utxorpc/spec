@@ -1,9 +1,8 @@
-export * as cardano from "./utxorpc/v1alpha/cardano/cardano_pb.js";
-export * as query from "./utxorpc/v1alpha/query/query_pb.js";
-export * as queryConnect from "./utxorpc/v1alpha/query/query_connect.js";
-export * as submit from "./utxorpc/v1alpha/submit/submit_pb.js";
-export * as submitConnect from "./utxorpc/v1alpha/submit/submit_connect.js";
-export * as sync from "./utxorpc/v1alpha/sync/sync_pb.js";
-export * as syncConnect from "./utxorpc/v1alpha/sync/sync_connect.js";
-export * as watch from "./utxorpc/v1alpha/watch/watch_pb.js";
-export * as watchConnect from "./utxorpc/v1alpha/watch/watch_connect.js";
+export * as v1 from "./v1.js";
+export * as v1alpha from "./v1alpha.js";
+export * as v1beta from "./v1beta.js";
+
+// Back-compat: before the interface held side-by-side versions, this package
+// re-exported v1alpha's modules at the root. Keep resolving them there so
+// existing `spec.sync` / `spec.cardano` callers are unaffected.
+export * from "./v1alpha.js";

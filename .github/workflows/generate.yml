@@ -70,6 +70,9 @@ jobs:
       - name: Generate dotnet v1beta
         run: buf generate --template buf.gen.dotnet.v1beta.yaml
 
+      - name: Generate dotnet v1
+        run: buf generate --template buf.gen.dotnet.v1.yaml
+
       # The protobuf Python plugin emits absolute imports rooted at the proto
       # package (e.g. `from utxorpc.v1alpha...`), which do not resolve once the
       # code is packaged under `utxorpc_spec`. protoletariat rewrites the
@@ -89,7 +92,7 @@ jobs:
         run: |
           pip install --quiet protobuf grpcio
           cd gen/python
-          python -c "import utxorpc_spec.utxorpc.v1alpha.sync.sync_pb2, utxorpc_spec.utxorpc.v1beta.sync.sync_pb2; print('python import OK')"
+          python -c "import utxorpc_spec.utxorpc.v1alpha.sync.sync_pb2, utxorpc_spec.utxorpc.v1beta.sync.sync_pb2, utxorpc_spec.utxorpc.v1.sync.sync_pb2; print('python import OK')"
 
       - name: Create codegen artifact
         uses: actions/upload-artifact@v4

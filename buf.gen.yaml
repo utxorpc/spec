@@ -78,7 +78,9 @@ plugins:
     out: gen/haskell
 
   # dotnet
-  # NOTE: C# plugins are run separately via buf generate --path to handle v1alpha/v1beta separation
+  # NOTE: the C# generators emit flat files named after the proto basename, so every
+  # interface version would collide on Query.cs, Sync.cs, etc. in a single output dir.
+  # They run as one buf invocation per version instead, from buf.gen.dotnet.<version>.yaml.
   # See generate.yml workflow for details
 
   # other

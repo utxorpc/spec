@@ -6,7 +6,11 @@ gen/dotnet/*
 !gen/dotnet/Utxorpc.Spec.csproj
 gen/go/utxorpc/
 gen/haskell/Proto
-gen/node/src/
+gen/node/src/*
+!gen/node/src/index.ts
+!gen/node/src/v1.ts
+!gen/node/src/v1alpha.ts
+!gen/node/src/v1beta.ts
 gen/openapi/
 gen/jsonschema/schema/
 gen/typebox/src/
