@@ -1,0 +1,39 @@
+name: "setup proto-lens-protoc"
+description: "setup proto-lens-protoc plugin (Haskell codegen)"
+
+inputs:
+  ghc-version:
+    description: GHC used to build the plugin (9.14 does not solve yet, lens-family needs containers < 0.8)
+    required: false
+    default: 9.12.4
+  proto-lens-protoc-version:
+    description: proto-lens-protoc version installed from Hackage
+    required: false
+    default: 0.9.0.1
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Haskell
+      id: setup-hs
+      uses: haskell-actions/setup@v2
+      with:
+        ghc-version: ${{ inputs.ghc-version }}
+
+    - name: Restore Cabal cache
+      uses: actions/cache/restore@v4
+      id: restore-cabal-store
+      with:
+        path: ${{ steps.setup-hs.outputs.cabal-store }}
+        key: cabal-store-ghc-${{ inputs.ghc-version }}-proto-lens-protoc-${{ inputs.proto-lens-protoc-version }}
+
+    - name: Install Haskell plugin from Hackage
+      shell: bash
+      run: cabal install proto-lens-protoc-${{ inputs.proto-lens-protoc-version }}
+
+    - name: Save Cabal cache
+      if: steps.restore-cabal-store.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ steps.setup-hs.outputs.cabal-store }}
+        key: cabal-store-ghc-${{ inputs.ghc-version }}-proto-lens-protoc-${{ inputs.proto-lens-protoc-version }}
