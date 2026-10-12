@@ -26,7 +26,7 @@ runs:
         path: |
           ${{ steps.setup-hs.outputs.stack-root }}
           codegen/haskell/.stack-work
-        key: stack-${{ hashFiles('stack.yaml.lock') }}
+        key: stack-${{ hashFiles('gen/haskell/stack.yaml.lock') }}
         restore-keys: stack-
 
     - name: Install protoc
@@ -107,4 +107,4 @@ runs:
         path: |
           ${{ steps.setup-hs.outputs.stack-root }}
           codegen/haskell/.stack-work
-        key: stack-${{ hashFiles('stack.yaml.lock') }}
+        key: stack-${{ hashFiles('gen/haskell/stack.yaml.lock') }}
