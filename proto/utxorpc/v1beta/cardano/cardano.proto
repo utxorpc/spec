@@ -11,7 +11,6 @@ enum RedeemerPurpose {
   REDEEMER_PURPOSE_REWARD = 4;
   REDEEMER_PURPOSE_VOTE = 5;
   REDEEMER_PURPOSE_PROPOSE = 6;
-  REDEEMER_PURPOSE_GUARDING = 7;
 }
 
 // Redeemer information for a Plutus script.
@@ -111,39 +110,6 @@ message Tx {
   bytes hash = 13; // Hash of the transaction that serves as main identifier
   repeated GovernanceActionProposal proposals = 14; // List of governance actions proposed
   repeated VoterVotes votes = 15; // List of voters and their corresponding votes cast in this transaction
-  repeated Tx sub_transactions = 16; // List of sub transactions, in body order
-  repeated DirectDeposit direct_deposits = 17; // List of deposits into reward accounts
-  repeated AccountBalanceInterval account_balance_intervals = 18; // List of account balance intervals
-  repeated AccountBalanceInterval starting_account_balance_intervals = 19; // List of starting account balance intervals
-  repeated StakeCredential guards = 20; // List of credentials in body key 14, the required signers from Alonzo and the guards from Dijkstra
-  repeated RequiredTopLevelGuard required_top_level_guards = 21; // List of credentials the top level transaction must hold in its guards
-}
-
-// Represents a deposit into a reward account.
-message DirectDeposit {
-  bytes reward_account = 1; // Address of the reward account.
-  BigInt coin = 2; // Amount of ADA deposited.
-}
-
-// Represents an interval a reward account balance must fall within.
-message AccountBalanceInterval {
-  bytes reward_account = 1; // Address of the reward account.
-  oneof interval {
-    AccountBalanceRange range = 2; // Balance range with at least one bound.
-    BigInt exact = 3; // Balance the account must equal.
-  }
-}
-
-// Represents a balance range with an inclusive lower bound and an exclusive upper bound.
-message AccountBalanceRange {
-  optional BigInt inclusive_lower_bound = 1; // Lowest balance allowed.
-  optional BigInt exclusive_upper_bound = 2; // Balance the account must stay below.
-}
-
-// Represents a credential the top level transaction must hold in its guards.
-message RequiredTopLevelGuard {
-  StakeCredential credential = 1; // Credential required in the top level guards.
-  optional PlutusData datum = 2; // Datum given to the guard script, if any.
 }
 
 // Define a governance action proposal
@@ -292,7 +258,6 @@ message NativeScript {
     ScriptNOfK script_n_of_k = 4; // Script that requires k out of n nested scripts to be satisfied.
     uint64 invalid_before = 5; // Slot number before which the script is invalid.
     uint64 invalid_hereafter = 6; // Slot number after which the script is invalid.
-    StakeCredential script_require_guard = 7; // Script that requires this credential to guard the transaction.
   }
 }
 
@@ -462,13 +427,6 @@ message PoolRegistrationCert {
   repeated bytes pool_owners = 7; // List of pool owner key hashes.
   repeated Relay relays = 8; // List of relays.
   PoolMetadata pool_metadata = 9; // Pool metadata.
-  PoolBlsKey bls_key = 10; // Pool BLS key.
-}
-
-// Represents a pool BLS public key and its proof of possession.
-message PoolBlsKey {
-  bytes bls_pubkey = 1; // BLS public key.
-  bytes bls_possession_proof = 2; // Proof of possession of the BLS key.
 }
 
 // Represents a pool retirement certificate in Cardano.
@@ -677,7 +635,6 @@ message TxOutputPattern {
 }
 
 // Pattern of a Tx that can be used to evaluate matching predicates.
-// Each field of the pattern is checked against the Tx together with its sub transactions.
 message TxPattern {
   TxOutputPattern consumes = 1; // Match any input that exhibits this pattern.
   TxOutputPattern produces = 2; // Match any output that exhibits this pattern.
@@ -752,21 +709,6 @@ message PParams {
   BigInt governance_action_deposit = 29; // The governance action deposit.
   BigInt drep_deposit = 30; // The drep deposit.
   uint64 drep_inactivity_period = 31; // The drep inactivity period.
-  uint64 max_ref_script_size_per_block = 32; // The maximum reference script size per block.
-  uint64 max_ref_script_size_per_tx = 33; // The maximum reference script size per transaction.
-  uint64 ref_script_cost_stride = 34; // The reference script cost stride.
-  RationalNumber ref_script_cost_multiplier = 35; // The reference script cost multiplier.
-  RationalNumber max_pledge_leverage = 36; // The maximum pledge leverage.
-  RationalNumber min_pool_margin = 37; // The minimum pool margin.
-  uint64 leios_announcement_period_length = 38; // The Leios announcement period length in milliseconds.
-  uint64 leios_vote_period_length = 39; // The Leios vote period length in milliseconds.
-  uint64 leios_diffusion_period_length = 40; // The Leios diffusion period length in milliseconds.
-  uint32 leios_committee_size = 41; // The Leios committee size.
-  RationalNumber leios_quorum_stake_threshold = 42; // The Leios quorum stake threshold.
-  uint64 max_endorser_block_references_size = 43; // The maximum endorser block references size.
-  uint64 max_endorser_block_txs_size = 44; // The maximum endorser block transactions size.
-  ExUnits max_endorser_block_execution_units = 45; // The maximum execution units per endorser block.
-  uint64 max_ref_script_size_per_endorser_block = 46; // The maximum reference script size per endorser block.
 }
 
 message EraBoundary {
