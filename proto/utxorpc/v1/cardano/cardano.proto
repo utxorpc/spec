@@ -767,6 +767,14 @@ message PParams {
   uint64 max_endorser_block_txs_size = 44; // The maximum endorser block transactions size.
   ExUnits max_endorser_block_execution_units = 45; // The maximum execution units per endorser block.
   uint64 max_ref_script_size_per_endorser_block = 46; // The maximum reference script size per endorser block.
+  uint64 peras_min_candidate_block_age = 47; // The Peras minimum candidate block age in slots.
+  RationalNumber peras_healing_factor = 48; // The Peras healing factor for the cooldown length.
+  uint32 peras_cert_boost = 49; // The Peras chain weight boost per certificate.
+  uint32 peras_target_committee_size = 50; // The Peras target committee size.
+  optional uint64 peras_bootstrap_round = 51; // The Peras round that bootstraps voting, if set.
+  RationalNumber peras_quorum_threshold_safety_margin = 52; // The Peras quorum threshold safety margin.
+  BigInt ref_inputs_cost_per_multi_asset_policy = 53; // The fee per multi-asset policy in reference inputs.
+  BigInt ref_inputs_cost_per_datum_byte = 54; // The fee per datum byte in reference inputs.
 }
 
 message EraBoundary {
