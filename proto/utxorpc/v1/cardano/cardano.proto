@@ -50,7 +50,7 @@ message Datum {
 // Represents a custom asset in the Cardano blockchain.
 message Asset {
   bytes name = 1; // Name of the custom asset.
-  BigInt quantity = 2; // Quantity of the custom asset. This can be negative only if it is in a `Tx.mint` field and the transaction is burning tokens.
+  BigInt quantity = 2; // Quantity of the custom asset. This can be negative only if it is in a `TxCommon.mint` field and the transaction is burning tokens.
 }
 
 // Represents a multi-asset group in the Cardano blockchain.
@@ -94,59 +94,39 @@ message AuxData {
   repeated Script scripts = 2; // List of auxiliary scripts.
 }
 
-// Represents a transaction in the Cardano blockchain.
-message Tx {
+// Represents the fields that top level and sub transactions share.
+message TxCommon {
   repeated TxInput inputs = 1; // List of transaction inputs
   repeated TxOutput outputs = 2; // List of transaction outputs
   repeated Certificate certificates = 3; // List of certificates
   repeated Withdrawal withdrawals = 4; // List of withdrawals
   repeated Multiasset mint = 5; // List of minted custom assets
   repeated TxInput reference_inputs = 6; // List of reference inputs
-  WitnessSet witnesses = 7; // Witnesses that validte the transaction
-  Collateral collateral = 8; // Collateral details in case of failed transaction
-  BigInt fee = 9; // Transaction fee in ADA
-  TxValidity validity = 10; // Validity interval of the transaction
-  bool successful = 11; // Flag indicating whether the transaction was successful
-  AuxData auxiliary = 12; // Auxiliary data not directly tied to the validation process
-  bytes hash = 13; // Hash of the transaction that serves as main identifier
-  repeated GovernanceActionProposal proposals = 14; // List of governance actions proposed
-  repeated VoterVotes votes = 15; // List of voters and their corresponding votes cast in this transaction
-  repeated SubTx sub_transactions = 16; // List of sub transactions, in body order
-  repeated DirectDeposit direct_deposits = 17; // List of deposits into reward accounts
-  repeated AccountBalanceInterval account_balance_intervals = 18; // List of account balance intervals
-  repeated AccountBalanceInterval starting_account_balance_intervals = 19; // List of starting account balance intervals
-  repeated StakeCredential guards = 20; // List of credentials in body key 14, the required signers from Alonzo and the guards from Dijkstra
-  repeated RequiredTopLevelGuard required_top_level_guards = 21; // List of credentials the top level transaction must include in its guards
-  bytes auxiliary_data_hash = 22; // Hash of the auxiliary data
-  bytes script_data_hash = 23; // Hash of the script data
-  optional uint32 network_id = 24; // Network id of the transaction
-  optional BigInt treasury_value = 25; // Current treasury value stated by the transaction
-  optional BigInt treasury_donation = 26; // Amount donated to the treasury
+  WitnessSet witnesses = 7; // Witnesses that validate the transaction
+  optional TxValidity validity = 8; // Validity interval of the transaction
+  optional AuxData auxiliary = 9; // Auxiliary data not directly tied to the validation process
+  bytes hash = 10; // Hash of the transaction body, which identifies the transaction
+  repeated GovernanceActionProposal proposals = 11; // List of governance actions proposed
+  repeated VoterVotes votes = 12; // List of voters and their corresponding votes cast in this transaction
+  repeated StakeCredential guards = 13; // List of credentials in body key 14, the required signers from Alonzo and the guards from Dijkstra
+  repeated RequiredTopLevelGuard required_top_level_guards = 14; // List of credentials the top level transaction must include in its guards
+  repeated DirectDeposit direct_deposits = 15; // List of deposits into reward accounts
+  repeated AccountBalanceInterval account_balance_intervals = 16; // List of account balance intervals
+  bytes auxiliary_data_hash = 17; // Hash of the auxiliary data
+  bytes script_data_hash = 18; // Hash of the script data
+  optional uint32 network_id = 19; // Network id of the transaction
+  optional BigInt treasury_value = 20; // Current treasury value stated by the transaction
+  optional BigInt treasury_donation = 21; // Amount donated to the treasury
 }
 
-// Represents a sub transaction of a Cardano transaction.
-message SubTx {
-  repeated TxInput inputs = 1; // List of sub transaction inputs
-  repeated TxOutput outputs = 2; // List of sub transaction outputs
-  repeated Certificate certificates = 3; // List of certificates
-  repeated Withdrawal withdrawals = 4; // List of withdrawals
-  repeated Multiasset mint = 5; // List of minted custom assets
-  repeated TxInput reference_inputs = 6; // List of reference inputs
-  WitnessSet witnesses = 7; // Witnesses that validate the sub transaction
-  TxValidity validity = 10; // Validity interval of the sub transaction
-  AuxData auxiliary = 12; // Auxiliary data not directly tied to the validation process
-  bytes hash = 13; // Hash of the sub transaction body
-  repeated GovernanceActionProposal proposals = 14; // List of governance actions proposed
-  repeated VoterVotes votes = 15; // List of voters and their corresponding votes cast in this sub transaction
-  repeated DirectDeposit direct_deposits = 17; // List of deposits into reward accounts
-  repeated AccountBalanceInterval account_balance_intervals = 18; // List of account balance intervals
-  repeated StakeCredential guards = 20; // List of guard credentials
-  repeated RequiredTopLevelGuard required_top_level_guards = 21; // List of credentials the top level transaction must include in its guards
-  bytes auxiliary_data_hash = 22; // Hash of the auxiliary data
-  bytes script_data_hash = 23; // Hash of the script data
-  optional uint32 network_id = 24; // Network id of the sub transaction
-  optional BigInt treasury_value = 25; // Current treasury value stated by the sub transaction
-  optional BigInt treasury_donation = 26; // Amount donated to the treasury
+// Represents a transaction in the Cardano blockchain.
+message Tx {
+  TxCommon common = 1; // Fields the transaction shares with its sub transactions
+  optional Collateral collateral = 2; // Collateral details in case of failed transaction
+  BigInt fee = 3; // Transaction fee in ADA
+  bool successful = 4; // Flag indicating whether the transaction was successful
+  repeated TxCommon sub_transactions = 5; // List of sub transactions, in body order
+  repeated AccountBalanceInterval starting_account_balance_intervals = 6; // List of starting account balance intervals
 }
 
 // Represents a deposit into a reward account.
@@ -739,7 +719,7 @@ message TxOutputPattern {
 }
 
 // Pattern of a Tx that can be used to evaluate matching predicates.
-// Each field of the pattern is checked against the Tx together with its sub transactions.
+// Each field of the pattern is checked against the Tx, including its common fields, and against each TxCommon in its sub transactions.
 message TxPattern {
   TxOutputPattern consumes = 1; // Match any input that exhibits this pattern.
   TxOutputPattern produces = 2; // Match any output that exhibits this pattern.
