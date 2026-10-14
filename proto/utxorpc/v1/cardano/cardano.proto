@@ -61,8 +61,8 @@ message Multiasset {
 
 // Represents the validity interval of a transaction.
 message TxValidity {
-  uint64 start = 1; // Start of the validity interval.
-  uint64 ttl = 2; // End of the validity interval (TTL: Time to Live).
+  optional uint64 start = 1; // Start of the validity interval.
+  optional uint64 ttl = 2; // End of the validity interval (TTL: Time to Live).
 }
 
 // Represents the collateral information for a transaction.
@@ -111,12 +111,42 @@ message Tx {
   bytes hash = 13; // Hash of the transaction that serves as main identifier
   repeated GovernanceActionProposal proposals = 14; // List of governance actions proposed
   repeated VoterVotes votes = 15; // List of voters and their corresponding votes cast in this transaction
-  repeated Tx sub_transactions = 16; // List of sub transactions, in body order
+  repeated SubTx sub_transactions = 16; // List of sub transactions, in body order
   repeated DirectDeposit direct_deposits = 17; // List of deposits into reward accounts
   repeated AccountBalanceInterval account_balance_intervals = 18; // List of account balance intervals
   repeated AccountBalanceInterval starting_account_balance_intervals = 19; // List of starting account balance intervals
   repeated StakeCredential guards = 20; // List of credentials in body key 14, the required signers from Alonzo and the guards from Dijkstra
-  repeated RequiredTopLevelGuard required_top_level_guards = 21; // List of credentials the top level transaction must hold in its guards
+  repeated RequiredTopLevelGuard required_top_level_guards = 21; // List of credentials the top level transaction must include in its guards
+  bytes auxiliary_data_hash = 22; // Hash of the auxiliary data
+  bytes script_data_hash = 23; // Hash of the script data
+  optional uint32 network_id = 24; // Network id of the transaction
+  optional BigInt treasury_value = 25; // Current treasury value stated by the transaction
+  optional BigInt treasury_donation = 26; // Amount donated to the treasury
+}
+
+// Represents a sub transaction of a Cardano transaction.
+message SubTx {
+  repeated TxInput inputs = 1; // List of sub transaction inputs
+  repeated TxOutput outputs = 2; // List of sub transaction outputs
+  repeated Certificate certificates = 3; // List of certificates
+  repeated Withdrawal withdrawals = 4; // List of withdrawals
+  repeated Multiasset mint = 5; // List of minted custom assets
+  repeated TxInput reference_inputs = 6; // List of reference inputs
+  WitnessSet witnesses = 7; // Witnesses that validate the sub transaction
+  TxValidity validity = 10; // Validity interval of the sub transaction
+  AuxData auxiliary = 12; // Auxiliary data not directly tied to the validation process
+  bytes hash = 13; // Hash of the sub transaction body
+  repeated GovernanceActionProposal proposals = 14; // List of governance actions proposed
+  repeated VoterVotes votes = 15; // List of voters and their corresponding votes cast in this sub transaction
+  repeated DirectDeposit direct_deposits = 17; // List of deposits into reward accounts
+  repeated AccountBalanceInterval account_balance_intervals = 18; // List of account balance intervals
+  repeated StakeCredential guards = 20; // List of guard credentials
+  repeated RequiredTopLevelGuard required_top_level_guards = 21; // List of credentials the top level transaction must include in its guards
+  bytes auxiliary_data_hash = 22; // Hash of the auxiliary data
+  bytes script_data_hash = 23; // Hash of the script data
+  optional uint32 network_id = 24; // Network id of the sub transaction
+  optional BigInt treasury_value = 25; // Current treasury value stated by the sub transaction
+  optional BigInt treasury_donation = 26; // Amount donated to the treasury
 }
 
 // Represents a deposit into a reward account.
@@ -140,7 +170,7 @@ message AccountBalanceRange {
   optional BigInt exclusive_upper_bound = 2; // Balance the account must stay below.
 }
 
-// Represents a credential the top level transaction must hold in its guards.
+// Represents a credential the top level transaction must include in its guards.
 message RequiredTopLevelGuard {
   StakeCredential credential = 1; // Credential required in the top level guards.
   optional PlutusData datum = 2; // Datum given to the guard script, if any.
@@ -201,7 +231,7 @@ message VoterVotes {
 
 message ParameterChangeAction {
   GovernanceActionId gov_action_id = 1;
-  PParams protocol_param_update = 2; // The updates proposed
+  PParamsUpdate protocol_param_update = 2; // The updates proposed
   bytes policy_hash = 3;
 }
 
@@ -255,11 +285,28 @@ message BlockHeader {
   uint64 slot = 1; // Slot number.
   bytes hash = 2; // Block hash.
   uint64 height = 3; // Block height.
+  optional EndorserBlockAnnouncement endorser_block_announcement = 4; // Endorser block announced by this block, if any.
+  bool body_contains_leios_certificate = 5; // Whether the block body contains a Leios certificate.
 }
 
-// Contains the transaction data for a block.
+// Represents the announcement of an endorser block in a block header.
+message EndorserBlockAnnouncement {
+  bytes references_hash = 1; // Hash of the endorser block references.
+  uint32 references_size = 2; // Size of the endorser block references.
+}
+
+// Contains the transactions and the Leios and Peras certificates of a block.
 message BlockBody {
   repeated Tx tx = 1; // List of transactions.
+  optional LeiosCertificate leios_certificate = 2; // Leios certificate for an endorser block, if any.
+  // TODO: change to a message if IntersectMBO/cardano-ledger#6164 replaces the bytes encoding before the Dijkstra types freeze.
+  bytes peras_certificate = 3; // Raw Peras certificate bytes, if any.
+}
+
+// Represents a Leios certificate over an endorser block.
+message LeiosCertificate {
+  bytes signers = 1; // Bitfield of the committee seats that signed, most significant bit first.
+  bytes signature = 2; // Aggregate BLS signature of the signers.
 }
 
 // Represents a complete block, including header and body.
@@ -267,6 +314,20 @@ message Block {
   BlockHeader header = 1; // Block header.
   BlockBody body = 2; // Block body.
   uint64 timestamp = 3; // Block ms timestamp
+  optional EndorserBlock endorser_block = 4; // Endorser block the Leios certificate in the body certifies, if any.
+}
+
+// Represents a Leios endorser block.
+message EndorserBlock {
+  repeated EndorserBlockReference references = 1; // References to the transactions, in the order the endorser block encodes them.
+  repeated Tx tx = 2; // List of transactions.
+  bytes references_hash = 3; // Hash of the endorser block references.
+}
+
+// Represents a reference to a transaction in an endorser block.
+message EndorserBlockReference {
+  bytes tx_hash = 1; // Hash of the transaction.
+  uint32 tx_size = 2; // Size of the transaction.
 }
 
 // Represents bootstrap keys from Byron era
@@ -462,7 +523,7 @@ message PoolRegistrationCert {
   repeated bytes pool_owners = 7; // List of pool owner key hashes.
   repeated Relay relays = 8; // List of relays.
   PoolMetadata pool_metadata = 9; // Pool metadata.
-  PoolBlsKey bls_key = 10; // Pool BLS key.
+  optional PoolBlsKey bls_key = 10; // Pool BLS key.
 }
 
 // Represents a pool BLS public key and its proof of possession.
@@ -615,6 +676,7 @@ message PoolStakeShare {
   bytes pool_keyhash = 1; // Pool key hash (pool id).
   RationalNumber stake_fraction = 2; // Fraction of total active stake delegated to this pool.
   bytes vrf_keyhash = 3; // Pool's VRF key hash, as reported by the node.
+  optional PoolBlsKey bls_key = 4; // Pool BLS key.
 }
 
 // Result of a stake pool distribution query.
@@ -752,29 +814,102 @@ message PParams {
   BigInt governance_action_deposit = 29; // The governance action deposit.
   BigInt drep_deposit = 30; // The drep deposit.
   uint64 drep_inactivity_period = 31; // The drep inactivity period.
-  uint64 max_ref_script_size_per_block = 32; // The maximum reference script size per block.
-  uint64 max_ref_script_size_per_tx = 33; // The maximum reference script size per transaction.
-  uint64 ref_script_cost_stride = 34; // The reference script cost stride.
+  optional uint64 max_ref_script_size_per_block = 32; // The maximum reference script size per block.
+  optional uint64 max_ref_script_size_per_tx = 33; // The maximum reference script size per transaction.
+  optional uint64 ref_script_cost_stride = 34; // The reference script cost stride.
   RationalNumber ref_script_cost_multiplier = 35; // The reference script cost multiplier.
-  RationalNumber max_pledge_leverage = 36; // The maximum pledge leverage.
+  RationalNumber max_pledge_leverage = 36; // The maximum pledge leverage, absent when there is no limit.
   RationalNumber min_pool_margin = 37; // The minimum pool margin.
-  uint64 leios_announcement_period_length = 38; // The Leios announcement period length in milliseconds.
-  uint64 leios_vote_period_length = 39; // The Leios vote period length in milliseconds.
-  uint64 leios_diffusion_period_length = 40; // The Leios diffusion period length in milliseconds.
-  uint32 leios_committee_size = 41; // The Leios committee size.
+  optional uint64 leios_announcement_period_length = 38; // The Leios announcement period length in milliseconds.
+  optional uint64 leios_vote_period_length = 39; // The Leios vote period length in milliseconds.
+  optional uint64 leios_diffusion_period_length = 40; // The Leios diffusion period length in milliseconds.
+  optional uint32 leios_committee_size = 41; // The Leios committee size.
   RationalNumber leios_quorum_stake_threshold = 42; // The Leios quorum stake threshold.
-  uint64 max_endorser_block_references_size = 43; // The maximum endorser block references size.
-  uint64 max_endorser_block_txs_size = 44; // The maximum endorser block transactions size.
+  optional uint64 max_endorser_block_references_size = 43; // The maximum endorser block references size.
+  optional uint64 max_endorser_block_txs_size = 44; // The maximum endorser block transactions size.
   ExUnits max_endorser_block_execution_units = 45; // The maximum execution units per endorser block.
-  uint64 max_ref_script_size_per_endorser_block = 46; // The maximum reference script size per endorser block.
-  uint64 peras_min_candidate_block_age = 47; // The Peras minimum candidate block age in slots.
+  optional uint64 max_ref_script_size_per_endorser_block = 46; // The maximum reference script size per endorser block.
+  optional uint64 peras_min_candidate_block_age = 47; // The Peras minimum candidate block age in slots.
   RationalNumber peras_healing_factor = 48; // The Peras healing factor for the cooldown length.
-  uint32 peras_cert_boost = 49; // The Peras chain weight boost per certificate.
-  uint32 peras_target_committee_size = 50; // The Peras target committee size.
+  optional uint32 peras_cert_boost = 49; // The Peras chain weight boost per certificate.
+  optional uint32 peras_target_committee_size = 50; // The Peras target committee size.
   optional uint64 peras_bootstrap_round = 51; // The Peras round that bootstraps voting, if set.
   RationalNumber peras_quorum_threshold_safety_margin = 52; // The Peras quorum threshold safety margin.
   BigInt ref_inputs_cost_per_multi_asset_policy = 53; // The fee per multi-asset policy in reference inputs.
   BigInt ref_inputs_cost_per_datum_byte = 54; // The fee per datum byte in reference inputs.
+}
+
+// Protocol parameter changes, where an absent field leaves the parameter unchanged.
+message PParamsUpdate {
+  BigInt coins_per_utxo_byte = 1;
+  optional uint64 max_tx_size = 2;
+  BigInt min_fee_coefficient = 3;
+  BigInt min_fee_constant = 4;
+  optional uint64 max_block_body_size = 5;
+  optional uint64 max_block_header_size = 6;
+  BigInt stake_key_deposit = 7;
+  BigInt pool_deposit = 8;
+  optional uint64 pool_retirement_epoch_bound = 9;
+  optional uint64 desired_number_of_pools = 10;
+  RationalNumber pool_influence = 11;
+  RationalNumber monetary_expansion = 12;
+  RationalNumber treasury_expansion = 13;
+  BigInt min_pool_cost = 14;
+  optional uint64 max_value_size = 16;
+  optional uint64 collateral_percentage = 17;
+  optional uint64 max_collateral_inputs = 18;
+  CostModels cost_models = 19;
+  ExPrices prices = 20;
+  ExUnits max_execution_units_per_transaction = 21;
+  ExUnits max_execution_units_per_block = 22;
+  RationalNumber min_fee_script_ref_cost_per_byte = 23;
+  VotingThresholds pool_voting_thresholds = 24;
+  VotingThresholds drep_voting_thresholds = 25;
+  optional uint32 min_committee_size = 26;
+  optional uint64 committee_term_limit = 27;
+  optional uint64 governance_action_validity_period = 28;
+  BigInt governance_action_deposit = 29;
+  BigInt drep_deposit = 30;
+  optional uint64 drep_inactivity_period = 31;
+  optional uint64 max_ref_script_size_per_block = 32;
+  optional uint64 max_ref_script_size_per_tx = 33;
+  optional uint64 ref_script_cost_stride = 34;
+  RationalNumber ref_script_cost_multiplier = 35;
+  MaxPledgeLeverageUpdate max_pledge_leverage = 36;
+  RationalNumber min_pool_margin = 37;
+  optional uint64 leios_announcement_period_length = 38;
+  optional uint64 leios_vote_period_length = 39;
+  optional uint64 leios_diffusion_period_length = 40;
+  optional uint32 leios_committee_size = 41;
+  RationalNumber leios_quorum_stake_threshold = 42;
+  optional uint64 max_endorser_block_references_size = 43;
+  optional uint64 max_endorser_block_txs_size = 44;
+  ExUnits max_endorser_block_execution_units = 45;
+  optional uint64 max_ref_script_size_per_endorser_block = 46;
+  optional uint64 peras_min_candidate_block_age = 47;
+  RationalNumber peras_healing_factor = 48;
+  optional uint32 peras_cert_boost = 49;
+  optional uint32 peras_target_committee_size = 50;
+  PerasBootstrapRoundUpdate peras_bootstrap_round = 51;
+  RationalNumber peras_quorum_threshold_safety_margin = 52;
+  BigInt ref_inputs_cost_per_multi_asset_policy = 53;
+  BigInt ref_inputs_cost_per_datum_byte = 54;
+}
+
+// Change to the maximum pledge leverage.
+message MaxPledgeLeverageUpdate {
+  oneof update {
+    RationalNumber leverage = 1; // New maximum pledge leverage.
+    bool no_limit = 2; // Removes the maximum pledge leverage.
+  }
+}
+
+// Change to the Peras bootstrap round.
+message PerasBootstrapRoundUpdate {
+  oneof update {
+    uint64 round = 1; // New Peras bootstrap round.
+    bool unset = 2; // Clears the Peras bootstrap round.
+  }
 }
 
 message EraBoundary {
@@ -961,4 +1096,29 @@ message Genesis {
   RationalNumber min_fee_ref_script_cost_per_byte = 40;
   DRepVotingThresholds drep_voting_thresholds = 41;
   PoolVotingThresholds pool_voting_thresholds = 42;
+
+  // ============ Dijkstra Era Fields ============
+  optional uint64 max_ref_script_size_per_block = 43;
+  optional uint64 max_ref_script_size_per_tx = 44;
+  optional uint64 ref_script_cost_stride = 45;
+  RationalNumber ref_script_cost_multiplier = 46;
+  RationalNumber max_pledge_leverage = 47;
+  RationalNumber min_pool_margin = 48;
+  optional uint64 leios_announcement_period_length = 49;
+  optional uint64 leios_vote_period_length = 50;
+  optional uint64 leios_diffusion_period_length = 51;
+  optional uint32 leios_committee_size = 52;
+  RationalNumber leios_quorum_stake_threshold = 53;
+  optional uint64 max_endorser_block_references_size = 54;
+  optional uint64 max_endorser_block_txs_size = 55;
+  ExUnits max_endorser_block_execution_units = 56;
+  optional uint64 max_ref_script_size_per_endorser_block = 57;
+  optional uint64 peras_min_candidate_block_age = 58;
+  RationalNumber peras_healing_factor = 59;
+  optional uint32 peras_cert_boost = 60;
+  optional uint32 peras_target_committee_size = 61;
+  optional uint64 peras_bootstrap_round = 62;
+  RationalNumber peras_quorum_threshold_safety_margin = 63;
+  BigInt ref_inputs_cost_per_multi_asset_policy = 64;
+  BigInt ref_inputs_cost_per_datum_byte = 65;
 }
