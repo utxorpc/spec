@@ -1,0 +1,14 @@
+# Dependabot version updates. Scope is GitHub Actions only: the generated
+# packages' dependency versions are tied to the codegen plugins that write
+# against them, so bumping those is a codegen change, not a Dependabot one.
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    # "/" covers .github/workflows; the glob covers the composite actions.
+    directories:
+      - "/"
+      - "/.github/actions/*"
+    schedule:
+      interval: "weekly"
