@@ -277,7 +277,7 @@ message EndorserBlockAnnouncement {
 
 // Contains the transactions and the Leios and Peras certificates of a block.
 message BlockBody {
-  repeated Tx tx = 1; // List of transactions.
+  repeated Tx tx = 1; // List of transactions. For a block with a Leios certificate, the transactions of the certified endorser block.
   optional LeiosCertificate leios_certificate = 2; // Leios certificate for an endorser block, if any.
   // TODO: change to a message if IntersectMBO/cardano-ledger#6164 replaces the bytes encoding before the Dijkstra types freeze.
   bytes peras_certificate = 3; // Raw Peras certificate bytes, if any.
@@ -294,20 +294,6 @@ message Block {
   BlockHeader header = 1; // Block header.
   BlockBody body = 2; // Block body.
   uint64 timestamp = 3; // Block ms timestamp
-  optional EndorserBlock endorser_block = 4; // Endorser block the Leios certificate in the body certifies, if any.
-}
-
-// Represents a Leios endorser block.
-message EndorserBlock {
-  repeated EndorserBlockReference references = 1; // References to the transactions, in the order the endorser block encodes them.
-  repeated Tx tx = 2; // List of transactions.
-  bytes references_hash = 3; // Hash of the endorser block references.
-}
-
-// Represents a reference to a transaction in an endorser block.
-message EndorserBlockReference {
-  bytes tx_hash = 1; // Hash of the transaction.
-  uint32 tx_size = 2; // Size of the transaction.
 }
 
 // Represents bootstrap keys from Byron era
