@@ -31,7 +31,7 @@ runs:
         go get -v -t -d ./...
         go build -v ./...
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         repository: utxorpc/go-codegen
         fetch-depth: 0
