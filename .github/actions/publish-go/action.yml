@@ -12,10 +12,10 @@ runs:
   using: 'composite'
   steps:
    
-    - name: Set up Go 1.x
-      uses: actions/setup-go@v2
+    - name: Set up Go 1.26.x
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
       with:
-        go-version: 1.25.x
+        go-version: 1.26.x
 
     - name: Validate release token
       if: inputs.mode == 'release' && inputs.repository-token == ''
@@ -30,6 +30,19 @@ runs:
       run: |
         go get -v -t -d ./...
         go build -v ./...
+        go test ./...
+
+    - name: Set up Go 1.27.x
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      with:
+        go-version: 1.27.x
+
+    - name: Test with Go 1.27.x
+      working-directory: codegen/go
+      shell: bash
+      run: |
+        go build -v ./...
+        go test ./...
 
     - uses: actions/checkout@v4
       with:
