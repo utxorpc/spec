@@ -16,6 +16,7 @@ runs:
       uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
       with:
         go-version: 1.26.x
+        check-latest: true
 
     - name: Validate release token
       if: inputs.mode == 'release' && inputs.repository-token == ''
@@ -36,6 +37,7 @@ runs:
       uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
       with:
         go-version: 1.27.x
+        check-latest: true
 
     - name: Test with Go 1.27.x
       working-directory: codegen/go
