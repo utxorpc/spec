@@ -21,6 +21,7 @@ build-type:     Simple
 author:         TxPipe <registrant@txpipe.io>
 maintainer:     TxPipe <registrant@txpipe.io>
                 Dominic Mayhew <dominic.j.mayhew@gmail.com>
+                Mateusz Galazyn <mateusz.galazyn@blockpqr.io>
 extra-source-files:
     README.md
 
@@ -69,9 +70,9 @@ library
   hs-source-dirs:
       .
   build-depends:
-      base >=4.7 && <5
-    , proto-lens >= 0.7.1 && < 0.8
+      base >= 4.18 && < 5
+    , proto-lens >= 0.7.1.7 && < 0.8
     -- >= 0.7.2 required as it contains support for `FieldMask`
-    , proto-lens-protobuf-types >= 0.7.2 && < 0.8
-    , proto-lens-runtime >= 0.7.0.6
+    , proto-lens-protobuf-types >= 0.7.2.3 && < 0.8
+    , proto-lens-runtime >= 0.7.0.8 && < 0.8
   default-language: Haskell2010

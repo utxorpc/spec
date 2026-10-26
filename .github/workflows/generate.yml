@@ -56,7 +56,7 @@ jobs:
           version: 0.4.0
 
       - name: Setup Haskell
-        uses: ./.github/actions/setup-protoc-hololens
+        uses: ./.github/actions/setup-proto-lens-protoc
 
       - name: Install Buf from npm
         run: npm install -g @bufbuild/buf
