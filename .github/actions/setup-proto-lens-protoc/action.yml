@@ -21,7 +21,7 @@ runs:
         ghc-version: ${{ inputs.ghc-version }}
 
     - name: Restore Cabal cache
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v6
       id: restore-cabal-store
       with:
         path: ${{ steps.setup-hs.outputs.cabal-store }}
@@ -33,7 +33,7 @@ runs:
 
     - name: Save Cabal cache
       if: steps.restore-cabal-store.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v6
       with:
         path: ${{ steps.setup-hs.outputs.cabal-store }}
         key: cabal-store-ghc-${{ inputs.ghc-version }}-proto-lens-protoc-${{ inputs.proto-lens-protoc-version }}
