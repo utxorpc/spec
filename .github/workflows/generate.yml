@@ -1,8 +1,36 @@
 name: "Run Buf Code Generation"
 
 on:
-  workflow_dispatch: {}
-  workflow_call: {}
+  workflow_dispatch:
+    inputs:
+      channel:
+        type: choice
+        description: "'stable' leaves out the unstable versions, 'next' generates everything"
+        options: [stable, next]
+        default: stable
+      version:
+        type: string
+        description: "next channel only: pre-release tag to stamp, e.g. v0.20.0-next.1"
+        required: false
+  workflow_call:
+    inputs:
+      channel:
+        type: string
+        description: "'stable' leaves out the unstable versions, 'next' generates everything"
+        default: stable
+      version:
+        type: string
+        description: "next channel only: pre-release tag to stamp, e.g. v0.20.0-next.1"
+        required: false
+        default: ""
+
+env:
+  # Interface versions still under construction, i.e. allowed to break. Stable
+  # releases leave them out of every package; they ship only in the next
+  # channel's `vX.Y.Z-next.N` pre-releases. This is the single list: freezing a
+  # version means removing it from here and cutting a stable release. See
+  # "Unstable versions and pre-releases" in README.md.
+  UNSTABLE_VERSIONS: "v1"
 
 jobs:
   codegen:
@@ -10,6 +38,48 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      # Exports BUF_EXCLUDES (the --exclude-path flags for buf) and
+      # INCLUDED_VERSIONS (the interface versions this build ships) for the
+      # steps below. This is the only channel-aware step: everything after it
+      # follows from what buf generates.
+      - name: Select channel
+        env:
+          CHANNEL: ${{ inputs.channel }}
+        run: |
+          case "$CHANNEL" in
+            stable) excluded="$UNSTABLE_VERSIONS" ;;
+            next) excluded="" ;;
+            *) echo "unknown channel '$CHANNEL'" >&2; exit 1 ;;
+          esac
+
+          excludes=""
+          included=""
+          for dir in proto/utxorpc/*/; do
+            v=$(basename "$dir")
+            if [[ " $excluded " == *" $v "* ]]; then
+              excludes="$excludes --exclude-path proto/utxorpc/$v"
+            else
+              included="$included $v"
+            fi
+          done
+
+          echo "channel $CHANNEL ships:$included"
+          echo "BUF_EXCLUDES=${excludes# }" >> "$GITHUB_ENV"
+          echo "INCLUDED_VERSIONS=${included# }" >> "$GITHUB_ENV"
+
+      # Pull requests and dry-runs have no tag; they stamp a placeholder so the
+      # stamping itself is exercised.
+      - name: Stamp pre-release version
+        if: inputs.channel == 'next'
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          if [[ -z "$VERSION" ]]; then
+            current=$(sed -nE 's/^current_version = "([^"]+)"$/\1/p' .bumpversion.toml)
+            VERSION="v$current-next.0"
+          fi
+          .github/scripts/stamp-prerelease.sh "$VERSION"
 
       - name: Install protoc
         run: |
@@ -62,40 +132,50 @@ jobs:
         run: npm install -g @bufbuild/buf
 
       - name: Generate code
-        run: buf generate proto
+        run: buf generate proto $BUF_EXCLUDES
 
-      - name: Generate dotnet v1alpha
-        run: buf generate --template buf.gen.dotnet.v1alpha.yaml
+      # Writes the Node version barrels and index, and the Haskell module list,
+      # from the generated tree, so no scaffold names a version by hand.
+      - name: Derive version scaffolds
+        run: .github/scripts/derive-scaffolds.sh
 
-      - name: Generate dotnet v1beta
-        run: buf generate --template buf.gen.dotnet.v1beta.yaml
-
-      - name: Generate dotnet v1
-        run: buf generate --template buf.gen.dotnet.v1.yaml
+      # The C# generators emit flat files named after the proto basename, so
+      # each interface version runs as its own buf invocation (see the note in
+      # buf.gen.yaml).
+      - name: Generate dotnet
+        run: |
+          for v in $INCLUDED_VERSIONS; do
+            buf generate --template "buf.gen.dotnet.$v.yaml"
+          done
 
       # The protobuf Python plugin emits absolute imports rooted at the proto
       # package (e.g. `from utxorpc.v1alpha...`), which do not resolve once the
       # code is packaged under `utxorpc_spec`. protoletariat rewrites the
       # proto-generated imports to relative imports so the single utxorpc-spec
-      # package works regardless of where it is mounted.
+      # package works regardless of where it is mounted. It reads a descriptor
+      # set built with the same excludes as the generation above, so it only
+      # visits files that were generated.
       - name: Fix python imports
         run: |
           pipx install protoletariat
+          buf build proto $BUF_EXCLUDES -o "$RUNNER_TEMP/descriptors.binpb"
           protol \
             --create-package \
             --in-place \
             --exclude-google-imports \
             --python-out gen/python/utxorpc_spec \
-            buf proto
+            raw "$RUNNER_TEMP/descriptors.binpb"
 
       - name: Smoke-test python imports
         run: |
           pip install --quiet protobuf grpcio
           cd gen/python
-          python -c "import utxorpc_spec.utxorpc.v1alpha.sync.sync_pb2, utxorpc_spec.utxorpc.v1beta.sync.sync_pb2, utxorpc_spec.utxorpc.v1.sync.sync_pb2; print('python import OK')"
+          for v in $INCLUDED_VERSIONS; do
+            python -c "import utxorpc_spec.utxorpc.$v.sync.sync_pb2; print('python import OK: $v')"
+          done
 
       - name: Create codegen artifact
         uses: actions/upload-artifact@v7
         with:
-          name: codegen
+          name: codegen-${{ inputs.channel }}
           path: "gen/**"
