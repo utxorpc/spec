@@ -41,18 +41,15 @@ jobs:
 
       # Exports BUF_EXCLUDES (the --exclude-path flags for buf) and
       # INCLUDED_VERSIONS (the interface versions this build ships) for the
-      # steps below.
+      # steps below. This is the only channel-aware step: everything after it
+      # follows from what buf generates.
       - name: Select channel
         env:
           CHANNEL: ${{ inputs.channel }}
         run: |
-          excluded=""
           case "$CHANNEL" in
-            stable)
-              .github/scripts/prune-unstable.sh $UNSTABLE_VERSIONS
-              excluded="$UNSTABLE_VERSIONS"
-              ;;
-            next) ;;
+            stable) excluded="$UNSTABLE_VERSIONS" ;;
+            next) excluded="" ;;
             *) echo "unknown channel '$CHANNEL'" >&2; exit 1 ;;
           esac
 
@@ -136,6 +133,11 @@ jobs:
 
       - name: Generate code
         run: buf generate proto $BUF_EXCLUDES
+
+      # Writes the Node version barrels and index, and the Haskell module list,
+      # from the generated tree, so no scaffold names a version by hand.
+      - name: Derive version scaffolds
+        run: .github/scripts/derive-scaffolds.sh
 
       # The C# generators emit flat files named after the proto basename, so
       # each interface version runs as its own buf invocation (see the note in

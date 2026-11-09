@@ -55,6 +55,8 @@ We use the [buf](https://buf.build) toolchain to simplify the process of working
 
 The `/gen` folder contains the project scaffold for each supported language. These are a bunch of static files or templates to complement the auto-generated code from _buf_.
 
+No scaffold lists the interface versions by hand. Whatever _buf_ generates determines what each package exposes: `.github/scripts/derive-scaffolds.sh` writes the Node version barrels (`gen/node/src/{version}.ts` and `index.ts`) and the Haskell `exposed-modules` list, and `protoc-gen-prost-crate` writes the Rust `lib.rs` and feature list. Adding an interface version takes its folder under `proto/utxorpc/` and a `buf.gen.dotnet.{version}.yaml` template.
+
 The generated code isn't committed to the git repo. A github workflow is used to generate, package and publish each of the language-specific libraries of the spec.
 
 ## Spec-wide versioning
@@ -129,7 +131,7 @@ The Go pre-release is a tag on `go-codegen` that sits on no branch: its `main` k
 
 Pull requests build both channels, so changes to an unstable version are still compiled and packaged before merge. A dry-run of either channel can be started by hand from the `Release Dry-run` workflow.
 
-To **freeze** an unstable version, remove it from `UNSTABLE_VERSIONS` and cut a stable release. From then on it gets the stability guarantees above.
+To **freeze** an unstable version, remove it from `UNSTABLE_VERSIONS`, add its cardano feature to the `ledgers` bundle in `gen/rust/Cargo.toml` if it should be part of it, and cut a stable release. From then on it gets the stability guarantees above.
 
 ## Language-specific packages
 
