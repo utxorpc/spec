@@ -2,10 +2,18 @@ name: "Release Dry-run"
 
 on:
   workflow_dispatch:
+    inputs:
+      channel:
+        type: choice
+        description: "'stable' leaves out the unstable versions, 'next' generates everything"
+        options: [stable, next]
+        default: stable
 
 jobs:
   generate:
     uses: ./.github/workflows/generate.yml
+    with:
+      channel: ${{ inputs.channel }}
 
   publish-dry-run:
     needs: [generate]
@@ -13,3 +21,4 @@ jobs:
     secrets: inherit
     with:
       mode: "dry-run"
+      channel: ${{ inputs.channel }}

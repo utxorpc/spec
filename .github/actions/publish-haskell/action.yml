@@ -7,6 +7,12 @@ inputs:
   mode:
     description: supported values are 'release' and 'dry-run'
     required: true
+  channel:
+    description: >-
+      'stable' or 'next'. Hackage has no pre-release concept, so next builds,
+      tests and documents the package but never uploads it.
+    required: false
+    default: stable
 
 runs:
   using: "composite"
@@ -69,7 +75,7 @@ runs:
         echo "TARBALL=$TARBALL" >> "$GITHUB_OUTPUT"
 
     - name: Upload GitHub artifacts
-      if: inputs.mode == 'release'
+      if: inputs.mode == 'release' && inputs.channel != 'next'
       uses: actions/upload-artifact@v7
       env:
         version: ${{ steps.package-version.outputs.VERSION }}
@@ -92,7 +98,7 @@ runs:
     # exists and returns 404.
 
     - name: Upload to Hackage
-      if: inputs.mode == 'release' && startsWith(github.ref, 'refs/tags/v')
+      if: inputs.mode == 'release' && inputs.channel != 'next' && startsWith(github.ref, 'refs/tags/v')
       shell: bash
       working-directory: codegen/haskell
       run: |

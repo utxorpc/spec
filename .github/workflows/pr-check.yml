@@ -14,14 +14,27 @@ concurrency:
 permissions:
   contents: read
 
+# Both channels run: the stable leg checks what a plain release would ship,
+# and the next leg is the only one that compiles and packages the unstable
+# interface versions.
 jobs:
   codegen:
-    name: "Generate Code"
+    name: "Generate Code (${{ matrix.channel }})"
+    strategy:
+      fail-fast: false
+      matrix:
+        channel: [stable, next]
     uses: ./.github/workflows/generate.yml
+    with:
+      channel: ${{ matrix.channel }}
 
   publish-dry-run:
-    name: "Validate Package Publishing"
+    name: "Validate Package Publishing (${{ matrix.channel }})"
     needs: [codegen]
+    strategy:
+      fail-fast: false
+      matrix:
+        channel: [stable, next]
     # publish-all's publish-node job needs id-token: write for npm trusted
     # publishing. A called workflow cannot request more than its caller grants,
     # and this workflow is capped at contents: read above, so grant it here.
@@ -32,3 +45,4 @@ jobs:
     secrets: inherit
     with:
       mode: "dry-run"
+      channel: ${{ matrix.channel }}
