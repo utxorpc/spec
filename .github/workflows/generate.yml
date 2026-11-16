@@ -90,9 +90,10 @@ jobs:
 
       - name: Smoke-test python imports
         run: |
-          pip install --quiet protobuf grpcio
+          python3 -m venv "$RUNNER_TEMP/smoke"
+          "$RUNNER_TEMP/smoke/bin/python" -m pip install --quiet ./gen/python
           cd gen/python
-          python -c "import utxorpc_spec.utxorpc.v1alpha.sync.sync_pb2, utxorpc_spec.utxorpc.v1beta.sync.sync_pb2, utxorpc_spec.utxorpc.v1.sync.sync_pb2; print('python import OK')"
+          "$RUNNER_TEMP/smoke/bin/python" -c "import utxorpc_spec.utxorpc.v1alpha.sync.sync_pb2, utxorpc_spec.utxorpc.v1beta.sync.sync_pb2, utxorpc_spec.utxorpc.v1.sync.sync_pb2; print('python import OK')"
 
       - name: Create codegen artifact
         uses: actions/upload-artifact@v7
