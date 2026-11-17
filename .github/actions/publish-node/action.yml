@@ -4,13 +4,17 @@ inputs:
   mode:
     description: supported values are 'release' and 'dry-run'
     required: true
+  channel:
+    description: "'stable' or 'next'; next publishes under the `next` dist-tag"
+    required: false
+    default: stable
 
 runs:
   using: 'composite'
   steps:
 
     - name: Setup npm
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
         # Node 24.5.0 bundles npm 11.5.1, the minimum required for
         # OIDC trusted publishing.
@@ -39,9 +43,15 @@ runs:
     
     # Authentication is handled via OIDC trusted publishing; no token
     # is needed. Requires `id-token: write` permission on the calling job.
+    #
+    # Pre-releases go under the `next` dist-tag. Publishing without --tag
+    # would move `latest`, handing the unstable interface versions to every
+    # plain `npm install @utxorpc/spec`.
     - name: Publish to npm
       if: inputs.mode == 'release'
       working-directory: codegen/node
       shell: bash
+      env:
+        DIST_TAG: ${{ inputs.channel == 'next' && 'next' || 'latest' }}
       run: |
-        npm publish --access public
+        npm publish --access public --tag "$DIST_TAG"
