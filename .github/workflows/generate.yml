@@ -168,10 +168,11 @@ jobs:
 
       - name: Smoke-test python imports
         run: |
-          pip install --quiet protobuf grpcio
+          python3 -m venv "$RUNNER_TEMP/smoke"
+          "$RUNNER_TEMP/smoke/bin/python" -m pip install --quiet ./gen/python
           cd gen/python
           for v in $INCLUDED_VERSIONS; do
-            python -c "import utxorpc_spec.utxorpc.$v.sync.sync_pb2; print('python import OK: $v')"
+            "$RUNNER_TEMP/smoke/bin/python" -c "import utxorpc_spec.utxorpc.$v.sync.sync_pb2; print('python import OK: $v')"
           done
 
       - name: Create codegen artifact
