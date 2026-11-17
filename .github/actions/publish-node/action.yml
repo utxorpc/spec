@@ -4,6 +4,10 @@ inputs:
   mode:
     description: supported values are 'release' and 'dry-run'
     required: true
+  channel:
+    description: "'stable' or 'next'; next publishes under the `next` dist-tag"
+    required: false
+    default: stable
 
 runs:
   using: 'composite'
@@ -39,9 +43,15 @@ runs:
     
     # Authentication is handled via OIDC trusted publishing; no token
     # is needed. Requires `id-token: write` permission on the calling job.
+    #
+    # Pre-releases go under the `next` dist-tag. Publishing without --tag
+    # would move `latest`, handing the unstable interface versions to every
+    # plain `npm install @utxorpc/spec`.
     - name: Publish to npm
       if: inputs.mode == 'release'
       working-directory: codegen/node
       shell: bash
+      env:
+        DIST_TAG: ${{ inputs.channel == 'next' && 'next' || 'latest' }}
       run: |
-        npm publish --access public
+        npm publish --access public --tag "$DIST_TAG"
