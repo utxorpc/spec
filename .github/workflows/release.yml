@@ -1,5 +1,11 @@
 name: "Release"
 
+# A plain `vX.Y.Z` tag is a stable release: the unstable interface versions are
+# left out. A `vX.Y.Z-next.N` tag is a next-channel pre-release: everything is
+# generated and each registry publishes it as a pre-release. Any other
+# hyphenated tag is rejected when the version is stamped. See "Unstable
+# versions and pre-releases" in README.md.
+
 on:
   workflow_dispatch:
   push:
@@ -8,6 +14,9 @@ on:
 jobs:
   generate:
     uses: ./.github/workflows/generate.yml
+    with:
+      channel: ${{ github.ref_type == 'tag' && contains(github.ref_name, '-') && 'next' || 'stable' }}
+      version: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
 
   publish-dry-run:
     needs: [generate]
@@ -15,6 +24,7 @@ jobs:
     secrets: inherit
     with:
       mode: "dry-run"
+      channel: ${{ github.ref_type == 'tag' && contains(github.ref_name, '-') && 'next' || 'stable' }}
 
   publish:
     needs: [publish-dry-run]
@@ -22,3 +32,4 @@ jobs:
     secrets: inherit
     with:
       mode: "release"
+      channel: ${{ github.ref_type == 'tag' && contains(github.ref_name, '-') && 'next' || 'stable' }}

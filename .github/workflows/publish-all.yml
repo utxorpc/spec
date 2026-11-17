@@ -5,8 +5,14 @@ on:
     inputs:
       mode:
         type: string
-        description: supporte values are 'release' and 'dry-run'
+        description: supported values are 'release' and 'dry-run'
         required: true
+      channel:
+        type: string
+        description: >-
+          'stable' or 'next'; selects the codegen artifact and, for next, the
+          registries' pre-release handling (see generate.yml)
+        default: stable
 
 jobs:
   publish-rust:
@@ -18,7 +24,7 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: codegen
+          name: codegen-${{ inputs.channel }}
           path: ./codegen
 
       - uses: ./.github/actions/publish-rust
@@ -35,7 +41,7 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: codegen
+          name: codegen-${{ inputs.channel }}
           path: ./codegen
 
       - uses: ./.github/actions/publish-python
@@ -57,12 +63,13 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: codegen
+          name: codegen-${{ inputs.channel }}
           path: ./codegen
 
       - uses: ./.github/actions/publish-node
         with:
           mode: ${{ inputs.mode }}
+          channel: ${{ inputs.channel }}
 
   publish-go:
     runs-on: ubuntu-latest
@@ -73,13 +80,14 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: codegen
+          name: codegen-${{ inputs.channel }}
           path: ./codegen
 
       - uses: ./.github/actions/publish-go
         with:
           repository-token: ${{ secrets.GOSDK_REPOSITORY_TOKEN }}
           mode: ${{ inputs.mode }}
+          channel: ${{ inputs.channel }}
 
   publish-haskell:
     runs-on: ubuntu-latest
@@ -90,13 +98,14 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: codegen
+          name: codegen-${{ inputs.channel }}
           path: ./codegen
 
       - uses: ./.github/actions/publish-haskell
         with:
           registry-token: ${{ secrets.HACKAGE_REGISTRY_TOKEN }}
           mode: ${{ inputs.mode }}
+          channel: ${{ inputs.channel }}
 
   publish-dotnet:
     runs-on: ubuntu-latest
@@ -112,7 +121,7 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: codegen
+          name: codegen-${{ inputs.channel }}
           path: ./codegen
 
       - uses: ./.github/actions/publish-dotnet

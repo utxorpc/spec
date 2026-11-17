@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageId>Utxorpc.Spec</PackageId>
-        <Version>0.19.2-alpha</Version>
+        <Version>0.19.2</Version>
         <Authors>clark@txpipe.io</Authors>
         <Company>TxPipe LLC</Company>
         <PackageDescription>
