@@ -81,8 +81,8 @@ runs:
         git add .
         git commit --allow-empty -m "GHA: automatic publish: ${RELEASE_VERSION}"
         if [[ ${CHANNEL} == next ]]; then
-          if [[ ${RELEASE_VERSION} != v*-next.* ]]; then
-            echo "next channel needs a vX.Y.Z-next.N tag, got '${RELEASE_VERSION}'" >&2
+          if [[ ${RELEASE_VERSION} != v*-dev.* ]]; then
+            echo "next channel needs a vX.Y.Z-dev.N tag, got '${RELEASE_VERSION}'" >&2
             exit 1
           fi
           git tag ${RELEASE_VERSION}

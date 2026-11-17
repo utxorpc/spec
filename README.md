@@ -78,17 +78,18 @@ The spec-wide version will follow semantic-versioning. It starts from version `1
 
 The release cadence is not strict. Many independent changes can be stacked together before cutting a new release.
 
-The maintainer in charge of the release will start the process locally by bumping the version in all required files and tagging the commit with the version label. This is automated via a tool called [bump-my-version](https://github.com/callowayproject/bump-my-version). To execute this step run the following command:
+The maintainer in charge of the release bumps the version in all required files, commits it and tags the commit with the version label. This is automated via a tool called [bump-my-version](https://github.com/callowayproject/bump-my-version), configured in `.bumpversion.toml`. Run one of the following, depending on the release:
 
-```sh
-bump-my-version bump {component} --commit --tag
-```
+| Release | Command | Example |
+| ------- | ------- | ------- |
+| Start a pre-release cycle for the next version | `bump-my-version bump {component} --commit --tag` | `0.19.2` → `0.20.0-dev.1` |
+| Next pre-release, only inside a cycle | `bump-my-version bump pre_n --commit --tag` | `0.20.0-dev.1` → `0.20.0-dev.2` |
+| Stable release that ends the cycle | `bump-my-version bump pre_l --commit --tag` | `0.20.0-dev.2` → `0.20.0` |
+| Stable release with no pre-release | `bump-my-version bump --new-version {X.Y.Z} --commit --tag` | `0.20.0` → `0.20.1` |
 
-Where `{component}` needs to be replace by the semantic-versioning component that needs to be bumped. Allowed values are: `major`, `minor`, `patch`.
+Where `{component}` is the semantic-versioning component to bump: `major`, `minor` or `patch`. Bumping a component always starts a pre-release cycle at `-dev.1`; `pre_l` turns the current pre-release into the stable version.
 
-If successful, the local repo should hold a new commit tagged with the corresponding version. File inside the `/gen` folder that required a change should show the new version value.
-
-The next step is to push the commit directly into the main branch including the new tag.
+If successful, the local repo holds a new commit tagged with the new version, and the files inside the `/gen` folder show the new value (`X.Y.Z.devN` in the Python package, the base `0.X.Y.Z` in the Haskell one). Then push the commit directly into the main branch, including the new tag:
 
 ```sh
 git push origin main --tags
@@ -104,28 +105,21 @@ The maintainer in charge of the release should monitor the workflow run and make
 
 An interface version that is still under construction is listed in `UNSTABLE_VERSIONS` at the top of `.github/workflows/generate.yml`. Its folder keeps its final name (e.g. `proto/utxorpc/v1`), so the code maintainers test is the code that eventually ships. What changes is which releases include it.
 
-Releases come in two channels, selected by the tag:
+Releases come in two channels, selected by the version (see [Release process](#release-process) for the bump commands):
 
-- **stable**, tag `vX.Y.Z`: the release process above. Unstable versions are left out of codegen and every package.
-- **next**, tag `vX.Y.Z-next.N`: everything is generated, unstable versions included, and each registry publishes the result as a pre-release. Nobody gets it unless they ask for it.
+- **stable**, version and tag `X.Y.Z`: unstable versions are left out of codegen and every package.
+- **next**, version and tag `X.Y.Z-dev.N`: everything is generated, unstable versions included, and each registry publishes the result as a pre-release. Nobody gets it unless they ask for it.
 
-A pre-release needs no bump commit. The committed manifests keep the last stable version, and CI stamps the pre-release version from the tag. Pick the next stable version as `X.Y.Z` and count `N` up from 1:
+The release workflow fails if the tag differs from the version committed in `.bumpversion.toml`. Consumers opt in explicitly:
 
-```sh
-git tag v0.20.0-next.1
-git push origin v0.20.0-next.1
-```
-
-Any other hyphenated tag fails the release. Consumers opt in explicitly:
-
-| Lang    | Pre-release version | How to depend on it                                     |
-| ------- | ------------------- | ------------------------------------------------------- |
-| Rust    | `0.20.0-next.1`     | `utxorpc-spec = "=0.20.0-next.1"`                       |
-| Node    | `0.20.0-next.1`     | `npm install @utxorpc/spec@next` (the `next` dist-tag)  |
-| Python  | `0.20.0.dev1`       | `pip install utxorpc-spec==0.20.0.dev1`                 |
-| Go      | `v0.20.0-next.1`    | `go get github.com/utxorpc/go-codegen@v0.20.0-next.1`   |
-| .NET    | `0.20.0-next.1`     | `dotnet add package Utxorpc.Spec --version 0.20.0-next.1` |
-| Haskell | not published       | Hackage has no pre-releases; build from this repo       |
+| Lang    | Pre-release version | How to depend on it                                      |
+| ------- | ------------------- | -------------------------------------------------------- |
+| Rust    | `0.20.0-dev.1`      | `utxorpc-spec = "=0.20.0-dev.1"`                         |
+| Node    | `0.20.0-dev.1`      | `npm install @utxorpc/spec@next` (the `next` dist-tag)   |
+| Python  | `0.20.0.dev1`       | `pip install utxorpc-spec==0.20.0.dev1`                  |
+| Go      | `v0.20.0-dev.1`     | `go get github.com/utxorpc/go-codegen@v0.20.0-dev.1`     |
+| .NET    | `0.20.0-dev.1`      | `dotnet add package Utxorpc.Spec --version 0.20.0-dev.1` |
+| Haskell | not published       | Hackage has no pre-releases; build from this repo        |
 
 The Go pre-release is a tag on `go-codegen` that sits on no branch: its `main` keeps tracking stable releases.
 
