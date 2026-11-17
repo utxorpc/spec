@@ -1,5 +1,5 @@
 [tool.bumpversion]
-current_version = "0.19.2"
+current_version = "0.20.0-dev.1"
 # Stable versions are X.Y.Z. Next-channel pre-releases are X.Y.Z-dev.N and
 # carry the unstable interface versions (UNSTABLE_VERSIONS in generate.yml).
 # See "Release process" in README.md.
