@@ -1,10 +1,10 @@
 name: "Release"
 
-# A plain `vX.Y.Z` tag is a stable release: the unstable interface versions are
-# left out. A `vX.Y.Z-next.N` tag is a next-channel pre-release: everything is
-# generated and each registry publishes it as a pre-release. Any other
-# hyphenated tag is rejected when the version is stamped. See "Unstable
-# versions and pre-releases" in README.md.
+# Triggered by the tag that bump-my-version creates (see "Release process" in
+# README.md). A plain `vX.Y.Z` tag is a stable release: the unstable interface
+# versions are left out. A `vX.Y.Z-dev.N` tag is a next-channel pre-release:
+# everything is generated and each registry publishes it as a pre-release.
+# generate.yml rejects a tag that differs from the committed version.
 
 on:
   workflow_dispatch:

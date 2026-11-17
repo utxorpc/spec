@@ -10,7 +10,7 @@ on:
         default: stable
       version:
         type: string
-        description: "next channel only: pre-release tag to stamp, e.g. v0.20.0-next.1"
+        description: "tag being released, e.g. v0.20.0-dev.1; must match the committed version"
         required: false
   workflow_call:
     inputs:
@@ -20,14 +20,14 @@ on:
         default: stable
       version:
         type: string
-        description: "next channel only: pre-release tag to stamp, e.g. v0.20.0-next.1"
+        description: "tag being released, e.g. v0.20.0-dev.1; must match the committed version"
         required: false
         default: ""
 
 env:
   # Interface versions still under construction, i.e. allowed to break. Stable
   # releases leave them out of every package; they ship only in the next
-  # channel's `vX.Y.Z-next.N` pre-releases. This is the single list: freezing a
+  # channel's `vX.Y.Z-dev.N` pre-releases. This is the single list: freezing a
   # version means removing it from here and cutting a stable release. See
   # "Unstable versions and pre-releases" in README.md.
   UNSTABLE_VERSIONS: "v1"
@@ -68,18 +68,28 @@ jobs:
           echo "BUF_EXCLUDES=${excludes# }" >> "$GITHUB_ENV"
           echo "INCLUDED_VERSIONS=${included# }" >> "$GITHUB_ENV"
 
-      # Pull requests and dry-runs have no tag; they stamp a placeholder so the
-      # stamping itself is exercised.
-      - name: Stamp pre-release version
-        if: inputs.channel == 'next'
+      # Versions are committed by bump-my-version (see "Release process" in
+      # README.md), never written by CI. A release only checks that its tag is
+      # the committed version and matches its channel: `-dev.N` versions are
+      # next-channel pre-releases, plain X.Y.Z versions are stable.
+      - name: Check release version
+        if: inputs.version != ''
         env:
-          VERSION: ${{ inputs.version }}
+          TAG: ${{ inputs.version }}
+          CHANNEL: ${{ inputs.channel }}
         run: |
-          if [[ -z "$VERSION" ]]; then
-            current=$(sed -nE 's/^current_version = "([^"]+)"$/\1/p' .bumpversion.toml)
-            VERSION="v$current-next.0"
+          current=$(sed -nE 's/^current_version = "([^"]+)"$/\1/p' .bumpversion.toml)
+          if [[ "$TAG" != "v$current" ]]; then
+            echo "tag $TAG does not match the committed version v$current; run bump-my-version" >&2
+            exit 1
           fi
-          .github/scripts/stamp-prerelease.sh "$VERSION"
+          case "$CHANNEL:$current" in
+            next:*-dev.*) ;;
+            stable:*-*) echo "stable channel got pre-release version $current" >&2; exit 1 ;;
+            stable:*) ;;
+            *) echo "next channel needs an X.Y.Z-dev.N version, got $current" >&2; exit 1 ;;
+          esac
+          echo "releasing $current on the $CHANNEL channel"
 
       - name: Install protoc
         run: |
