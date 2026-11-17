@@ -4,6 +4,7 @@
         <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageId>Utxorpc.Spec</PackageId>
         <Version>0.19.2-alpha</Version>
         <Authors>clark@txpipe.io</Authors>
