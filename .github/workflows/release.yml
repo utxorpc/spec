@@ -34,3 +34,34 @@ jobs:
     with:
       mode: "release"
       channel: ${{ github.ref_type == 'tag' && contains(github.ref_name, '-') && 'next' || 'stable' }}
+
+  # PyPI trusted publishing (OIDC) cannot run inside a reusable workflow, so
+  # unlike the other registries this upload lives here rather than in
+  # publish-all.yml. The PyPI trusted publisher for utxorpc-spec names this
+  # file, release.yml. Tag pushes only: a manual run on a branch has no
+  # version to publish.
+  publish-pypi:
+    needs: [publish-dry-run]
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: codegen-${{ contains(github.ref_name, '-') && 'next' || 'stable' }}
+          path: ./codegen
+
+      - uses: ./.github/actions/publish-python
+        with:
+          mode: build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: codegen/python/dist/

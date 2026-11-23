@@ -1,16 +1,21 @@
 name: "Publish python"
-description: 'Publishes python package to PyPI'
+description: 'Validates or builds the python package; the PyPI upload runs in release.yml'
 inputs:
-  registry-token:
-    description: token to authenticate to pypi
-    required: false
   mode:
-    description: supported values are 'release' and 'dry-run'
+    description: >-
+      'dry-run' validates the package without contacting PyPI; 'build' writes
+      the sdist and wheel to codegen/python/dist for release.yml to upload.
     required: true
+
+# PyPI trusted publishing cannot run inside a reusable workflow
+# (https://docs.pypi.org/trusted-publishers/troubleshooting/, warehouse#11096),
+# and pypa/gh-action-pypi-publish cannot run inside a composite action. So this
+# action never uploads: release.yml calls it with mode 'build' and runs the
+# upload itself, in its own top-level `publish-pypi` job.
 
 runs:
   using: 'composite'
-  steps: 
+  steps:
 
     - name: Set up Python
       uses: actions/setup-python@v7
@@ -27,12 +32,10 @@ runs:
       shell: bash
       run: |
         poetry publish --build --dry-run
-    
-    - name: Publish to PyPI
-      if: inputs.mode == 'release'
+
+    - name: Build
+      if: inputs.mode == 'build'
       working-directory: codegen/python
       shell: bash
-      env:
-        PYPI_TOKEN: ${{ inputs.registry-token }}
       run: |
-        poetry publish --build --username __token__ --password $PYPI_TOKEN
+        poetry build
